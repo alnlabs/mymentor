@@ -7,13 +7,13 @@ import { Loading } from "@/shared/components/Loading";
 import { AuthButton } from "@/shared/components/AuthButton";
 import { SuperAdminLogin } from "@/shared/components/SuperAdminLogin";
 import { useAuthContext } from "@/shared/components/AuthContext";
-import { AuthRedirect } from "@/shared/components/AuthRedirect";
+
 import { ProblemCard } from "@/modules/problems/components/ProblemCard";
 import { MCQCard } from "@/modules/mcq/components/MCQCard";
 import { Problem, MCQQuestion } from "@/shared/types/common";
 
 export default function HomePage() {
-  const { user, userRole, isAdmin, isSuperAdmin } = useAuthContext();
+  const { user, userRole, isAdmin, isSuperAdmin, loading: authLoading } = useAuthContext();
   const [activeTab, setActiveTab] = useState<"problems" | "mcq" | "interviews">(
     "problems"
   );
@@ -22,6 +22,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!authLoading && (user || isSuperAdmin)) {
+      console.log("Homepage: User authenticated, redirecting to dashboard");
+      window.location.href = '/dashboard';
+    }
+  }, [user, isSuperAdmin, authLoading]);
 
   useEffect(() => {
     fetchData();
@@ -74,8 +82,7 @@ export default function HomePage() {
   }
 
   return (
-    <AuthRedirect>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -649,6 +656,5 @@ export default function HomePage() {
         />
       )}
     </div>
-    </AuthRedirect>
   );
 }

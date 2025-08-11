@@ -162,9 +162,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Manually trigger user role fetch after successful sign-in
       await fetchUserRole(result);
 
-      // Force a small delay to ensure state updates
+      // Redirect to dashboard after successful sign-in
       setTimeout(() => {
-        window.location.reload();
+        console.log("Google sign-in successful, redirecting to dashboard...");
+        window.location.href = '/dashboard';
       }, 500);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
