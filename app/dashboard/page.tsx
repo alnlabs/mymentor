@@ -259,7 +259,7 @@ export default function DashboardPage() {
                     : user?.displayName || user?.email || "User"}
                 </span>
               </div>
-              
+
               {/* Sign Out Button */}
               <Button
                 variant="outline"
@@ -273,7 +273,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-        
+
         {/* Mobile Navigation Menu */}
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-2">
