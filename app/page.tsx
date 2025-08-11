@@ -13,7 +13,7 @@ import { MCQCard } from "@/modules/mcq/components/MCQCard";
 import { Problem, MCQQuestion } from "@/shared/types/common";
 
 export default function HomePage() {
-  const { user, userRole, isAdmin, isSuperAdmin, loading: authLoading } = useAuthContext();
+  const { user, userRole, isAdmin, isSuperAdmin } = useAuthContext();
   const [activeTab, setActiveTab] = useState<"problems" | "mcq" | "interviews">(
     "problems"
   );
@@ -23,13 +23,7 @@ export default function HomePage() {
   const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Redirect authenticated users to dashboard
-  useEffect(() => {
-    if (!authLoading && (user || isSuperAdmin)) {
-      console.log("Homepage: User authenticated, redirecting to dashboard");
-      window.location.href = '/dashboard';
-    }
-  }, [user, isSuperAdmin, authLoading]);
+
 
   useEffect(() => {
     fetchData();
@@ -105,6 +99,12 @@ export default function HomePage() {
                 >
                   Home
                 </a>
+                <a
+                  href="/dashboard"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Dashboard
+                </a>
                 {(isAdmin || isSuperAdmin) && (
                   <a
                     href="/admin"
@@ -152,6 +152,13 @@ export default function HomePage() {
                     {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
                   </span>
                   </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => (window.location.href = "/dashboard")}
+                  >
+                    Dashboard
+                  </Button>
                   <Button variant="outline" size="sm" onClick={handleSignOut}>
                     Sign Out
                   </Button>

@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             displayName: dbUser.name, // Use database name as displayName
             email: dbUser.email,
           });
-          
+
           if (dbUser.role) {
             const role = dbUser.role.toLowerCase();
             console.log("Setting user role to:", role);
@@ -182,7 +182,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Redirect to dashboard after successful sign-in
       setTimeout(() => {
         console.log("Google sign-in successful, redirecting to dashboard...");
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
       }, 500);
     } catch (error) {
       console.error("Google Sign-In Error:", error);
@@ -216,7 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Redirect to homepage after sign out
       console.log("Redirecting to homepage...");
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (error) {
       console.error("Sign-Out Error:", error);
       // Even if there's an error, try to clear local state and redirect
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUserRole("guest");
       setIsAdmin(false);
       setIsSuperAdmin(false);
-      window.location.href = '/';
+      window.location.href = "/";
     }
   }, [user, userRole]);
 
