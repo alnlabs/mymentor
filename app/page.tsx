@@ -127,6 +127,12 @@ export default function HomePage() {
                 >
                   Home
                 </a>
+                <a
+                  href="/dashboard"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Dashboard
+                </a>
                 {(isAdmin || isSuperAdmin) && (
                   <a
                     href="/admin"
@@ -138,8 +144,6 @@ export default function HomePage() {
                 )}
               </nav>
             )}
-
-
 
             <div className="flex items-center space-x-4">
               {user || isSuperAdmin ? (
@@ -161,6 +165,13 @@ export default function HomePage() {
                     </span>
                   </div>
 
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => (window.location.href = "/dashboard")}
+                  >
+                    Dashboard
+                  </Button>
                   <Button variant="outline" size="sm" onClick={handleSignOut}>
                     Sign Out
                   </Button>
