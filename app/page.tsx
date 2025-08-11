@@ -1,43 +1,77 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/shared/components/Card';
-import { Button } from '@/shared/components/Button';
-import { Loading } from '@/shared/components/Loading';
-import { AuthButton } from '@/shared/components/AuthButton';
-import { SuperAdminLogin } from '@/shared/components/SuperAdminLogin';
-import { useAuthContext } from '@/shared/components/AuthContext';
-import { ProblemCard } from '@/modules/problems/components/ProblemCard';
-import { MCQCard } from '@/modules/mcq/components/MCQCard';
-import { Problem, MCQQuestion } from '@/shared/types/common';
+import React, { useState, useEffect } from "react";
+import { Card } from "@/shared/components/Card";
+import { Button } from "@/shared/components/Button";
+import { Loading } from "@/shared/components/Loading";
+import { AuthButton } from "@/shared/components/AuthButton";
+
+import { useAuthContext } from "@/shared/components/AuthContext";
+
+import { ProblemCard } from "@/modules/problems/components/ProblemCard";
+import { MCQCard } from "@/modules/mcq/components/MCQCard";
+import { Problem, MCQQuestion } from "@/shared/types/common";
 
 export default function HomePage() {
   const { user, userRole, isAdmin, isSuperAdmin } = useAuthContext();
-  const [activeTab, setActiveTab] = useState<'problems' | 'mcq'>('problems');
+  const [activeTab, setActiveTab] = useState<"problems" | "mcq" | "interviews">(
+    "problems"
+  );
   const [problems, setProblems] = useState<Problem[]>([]);
   const [mcqQuestions, setMCQQuestions] = useState<MCQQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
 
   useEffect(() => {
-    fetchData();
+    const timeoutId = setTimeout(() => {
+      console.log("Data fetch timeout - forcing loading to false");
+      setLoading(false);
+    }, 10000); // 10 second timeout
+
+    fetchData().finally(() => {
+      clearTimeout(timeoutId);
+    });
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const fetchData = async () => {
     try {
+      console.log("Fetching homepage data...");
+
       const [problemsRes, mcqRes] = await Promise.all([
-        fetch('/api/problems'),
-        fetch('/api/mcq')
+        fetch("/api/problems"),
+        fetch("/api/mcq"),
       ]);
-      
-      const problemsData = await problemsRes.json();
-      const mcqData = await mcqRes.json();
-      
+
+      console.log("API responses received:", {
+        problemsStatus: problemsRes.status,
+        mcqStatus: mcqRes.status,
+      });
+
+      const problemsData = problemsRes.ok
+        ? await problemsRes.json()
+        : { success: false, data: [] };
+      const mcqData = mcqRes.ok
+        ? await mcqRes.json()
+        : { success: false, data: [] };
+
+      console.log("Data parsed:", {
+        problemsSuccess: problemsData.success,
+        mcqSuccess: mcqData.success,
+        problemsCount: problemsData.data?.length || 0,
+        mcqCount: mcqData.data?.length || 0,
+      });
+
       if (problemsData.success) setProblems(problemsData.data);
       if (mcqData.success) setMCQQuestions(mcqData.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
+      // Set empty arrays to prevent infinite loading
+      setProblems([]);
+      setMCQQuestions([]);
     } finally {
+      console.log("Setting loading to false");
       setLoading(false);
     }
   };
@@ -51,13 +85,13 @@ export default function HomePage() {
   };
 
   const handleSuperAdminSuccess = (superAdminUser: any) => {
-    localStorage.setItem('superAdminUser', JSON.stringify(superAdminUser));
+    localStorage.setItem("superAdminUser", JSON.stringify(superAdminUser));
     setShowSuperAdminLogin(false);
     window.location.reload();
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('superAdminUser');
+    localStorage.removeItem("superAdminUser");
     window.location.reload();
   };
 
@@ -83,60 +117,77 @@ export default function HomePage() {
                 MyMentor
               </h1>
             </div>
+
+            {/* Navigation Menu */}
+            {(user || isSuperAdmin) && (
+              <nav className="hidden md:flex items-center space-x-8">
+                <a
+                  href="/"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Home
+                </a>
+                <a
+                  href="/dashboard"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Dashboard
+                </a>
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center space-x-1"
+                  >
+                    <span>⚙️</span>
+                    <span>Admin Panel</span>
+                  </a>
+                )}
+              </nav>
+            )}
+
             <div className="flex items-center space-x-4">
               {user || isSuperAdmin ? (
                 <>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
-                        {isSuperAdmin ? 'S' : (user?.name?.charAt(0) || 'U')}
+                        {isSuperAdmin
+                          ? "S"
+                          : user?.displayName?.charAt(0) ||
+                            user?.email?.charAt(0) ||
+                            "U"}
                       </span>
                     </div>
                     <span className="text-sm text-gray-700 font-medium">
-                      {isSuperAdmin ? 'SuperAdmin' : (user?.name || 'User')}
+                      {isSuperAdmin
+                        ? "SuperAdmin"
+                        : user?.displayName || user?.email || "User"}
                     </span>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={handleSignOut}
-                  >
+
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
                     Sign Out
                   </Button>
                   {isAdmin && (
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
-                      onClick={() => window.location.href = '/admin'}
+                      onClick={() => (window.location.href = "/admin")}
                     >
                       Admin Panel
-                    </Button>
-                  )}
-                  {!isSuperAdmin && (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => setShowSuperAdminLogin(true)}
-                    >
-                      Switch to SuperAdmin
                     </Button>
                   )}
                 </>
               ) : (
                 <>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => window.location.href = '/login'}
-                  >
-                    Sign In
-                  </Button>
                   <AuthButton />
                 </>
               )}
             </div>
           </div>
         </div>
+
+
       </header>
 
       {/* Hero Section */}
@@ -156,37 +207,38 @@ export default function HomePage() {
               </h1>
             </div>
             <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-              Your personal AI-powered mentor for technical interview preparation. 
-              Practice coding problems, solve MCQs, and track your progress with 
+              Your personal AI-powered mentor for technical interview
+              preparation. Practice coding problems, solve MCQs, and track your
+              progress with
               <span className="font-semibold text-blue-600"> MyMentor</span>.
             </p>
             {!user && !isSuperAdmin ? (
               <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <Button 
+                <Button
                   size="lg"
-                  onClick={() => window.location.href = '/login'}
+                  onClick={() => (window.location.href = "/login")}
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   �� Get Started Free
                 </Button>
-                <AuthButton 
-                  size="lg" 
+                <AuthButton
+                  size="lg"
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 />
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <Button 
-                  size="lg" 
-                  onClick={() => setActiveTab('problems')}
+                <Button
+                  size="lg"
+                  onClick={() => setActiveTab("problems")}
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   💻 Start Coding
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  onClick={() => setActiveTab('mcq')}
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setActiveTab("mcq")}
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   ❓ Take MCQ Quiz
@@ -205,41 +257,48 @@ export default function HomePage() {
               Why Choose MyMentor?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Comprehensive interview preparation platform designed for modern tech professionals
+              Comprehensive interview preparation platform designed for modern
+              tech professionals
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">💻</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Coding Problems</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Coding Problems
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Practice with real-world coding challenges from top tech companies. 
-                Get instant feedback and detailed solutions.
+                Practice with real-world coding challenges from top tech
+                companies. Get instant feedback and detailed solutions.
               </p>
             </Card>
-            
+
             <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">❓</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">MCQ Questions</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                MCQ Questions
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Test your knowledge with carefully curated multiple-choice questions 
-                covering all major technical concepts.
+                Test your knowledge with carefully curated multiple-choice
+                questions covering all major technical concepts.
               </p>
             </Card>
-            
+
             <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">📊</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Progress Tracking</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Progress Tracking
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Monitor your performance with detailed analytics. 
-                Track improvement over time and identify weak areas.
+                Monitor your performance with detailed analytics. Track
+                improvement over time and identify weak areas.
               </p>
             </Card>
 
@@ -247,10 +306,12 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">🎯</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Company Specific</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Company Specific
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Practice problems specifically designed for your target companies. 
-                Get familiar with their interview patterns.
+                Practice problems specifically designed for your target
+                companies. Get familiar with their interview patterns.
               </p>
             </Card>
 
@@ -258,10 +319,25 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">⚡</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Real-time Feedback</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Real-time Feedback
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Get instant feedback on your solutions. 
-                Learn from detailed explanations and optimize your approach.
+                Get instant feedback on your solutions. Learn from detailed
+                explanations and optimize your approach.
+              </p>
+            </Card>
+
+            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span className="text-white text-2xl">🎯</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Mock Interviews
+              </h3>
+              <p className="text-gray-600 leading-relaxed">
+                Practice with realistic interview scenarios. Take timed mock
+                interviews with questions from top tech companies.
               </p>
             </Card>
 
@@ -269,10 +345,12 @@ export default function HomePage() {
               <div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <span className="text-white text-2xl">🔒</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Secure & Private</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Secure & Private
+              </h3>
               <p className="text-gray-600 leading-relaxed">
-                Your data is secure and private. 
-                Practice with confidence knowing your progress is protected.
+                Your data is secure and private. Practice with confidence
+                knowing your progress is protected.
               </p>
             </Card>
           </div>
@@ -287,10 +365,11 @@ export default function HomePage() {
               Trusted by Developers Worldwide
             </h2>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Join thousands of developers who have improved their interview skills with MyMentor
+              Join thousands of developers who have improved their interview
+              skills with MyMentor
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="text-4xl font-bold text-white mb-2">500+</div>
@@ -317,32 +396,42 @@ export default function HomePage() {
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Tab Navigation */}
-            <div className="flex space-x-1 bg-white/80 backdrop-blur-sm p-1 rounded-2xl shadow-lg mb-12 max-w-2xl mx-auto">
+            <div className="flex space-x-1 bg-white/80 backdrop-blur-sm p-1 rounded-2xl shadow-lg mb-12 max-w-3xl mx-auto">
               <button
-                onClick={() => setActiveTab('problems')}
+                onClick={() => setActiveTab("problems")}
                 className={`flex-1 py-3 px-6 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  activeTab === 'problems'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  activeTab === "problems"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
                 💻 Coding Problems ({problems.length})
               </button>
               <button
-                onClick={() => setActiveTab('mcq')}
+                onClick={() => setActiveTab("mcq")}
                 className={`flex-1 py-3 px-6 rounded-xl text-sm font-medium transition-all duration-300 ${
-                  activeTab === 'mcq'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  activeTab === "mcq"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
                 ❓ MCQ Questions ({mcqQuestions.length})
+              </button>
+              <button
+                onClick={() => setActiveTab("interviews")}
+                className={`flex-1 py-3 px-6 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  activeTab === "interviews"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+                }`}
+              >
+                🎯 Mock Interviews
               </button>
             </div>
 
             {/* Content Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {activeTab === 'problems' ? (
+              {activeTab === "problems" ? (
                 problems.map((problem) => (
                   <ProblemCard
                     key={problem.id}
@@ -350,7 +439,7 @@ export default function HomePage() {
                     onSelect={handleProblemSelect}
                   />
                 ))
-              ) : (
+              ) : activeTab === "mcq" ? (
                 mcqQuestions.map((question) => (
                   <MCQCard
                     key={question.id}
@@ -358,6 +447,29 @@ export default function HomePage() {
                     onSelect={handleMCQSelect}
                   />
                 ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <div className="max-w-md mx-auto">
+                    <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                      <span className="text-white text-2xl">🎯</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                      Mock Interviews
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Practice with realistic interview scenarios. Take timed
+                      mock interviews with questions from top tech companies.
+                    </p>
+                    <Button
+                      onClick={() =>
+                        (window.location.href = "/admin/interviews")
+                      }
+                      className="w-full"
+                    >
+                      Manage Mock Interviews
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -377,27 +489,28 @@ export default function HomePage() {
                   Ready to Ace Your Interviews?
                 </h2>
                 <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  Join thousands of developers who have improved their interview skills 
-                  and landed their dream jobs with MyMentor.
+                  Join thousands of developers who have improved their interview
+                  skills and landed their dream jobs with MyMentor.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <Button 
+                <Button
                   size="lg"
-                  onClick={() => window.location.href = '/login'}
+                  onClick={() => (window.location.href = "/login")}
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   🚀 Start Your Journey
                 </Button>
-                <AuthButton 
-                  size="lg" 
+                <AuthButton
+                  size="lg"
                   className="text-lg px-8 py-4 shadow-lg hover:shadow-xl transition-all duration-300"
                 />
               </div>
-              
+
               <div className="mt-8 text-sm text-gray-500">
-                No credit card required • Free forever • Start practicing in seconds
+                No credit card required • Free forever • Start practicing in
+                seconds
               </div>
             </Card>
           </div>
@@ -416,43 +529,95 @@ export default function HomePage() {
                 <span className="text-xl font-bold">MyMentor</span>
               </div>
               <p className="text-gray-400">
-                Your personal AI-powered mentor for technical interview preparation.
+                Your personal AI-powered mentor for technical interview
+                preparation.
               </p>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-4">Platform</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Coding Problems</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">MCQ Questions</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Progress Tracking</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Analytics</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Coding Problems
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    MCQ Questions
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Progress Tracking
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Analytics
+                  </a>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-4">Support</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Contact Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    API
+                  </a>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h3 className="font-semibold mb-4">Company</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Privacy
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 MyMentor. All rights reserved. Built with ❤️ for developers.</p>
+            <p>
+              &copy; 2024 MyMentor. All rights reserved. Built with ❤️ for
+              developers.
+            </p>
           </div>
         </div>
       </footer>

@@ -27,7 +27,7 @@ export function AuthButton({ className = '', size = 'md' }: AuthButtonProps) {
       className={className}
       size={size}
     >
-      {user ? `Sign Out (${user.name || 'User'})` : 'Sign In with Google'}
+      {user ? `Sign Out (${user.displayName || user.email || 'User'})` : 'Sign In with Google'}
     </Button>
   );
 }

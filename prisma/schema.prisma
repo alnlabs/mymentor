@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,67 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  superadmin
-  admin
-  user
-}
-
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String?  // Added password field for SuperAdmin
-  avatar    String?
-  provider  String   // google, github, email
-  role      UserRole @default(user)
-  isActive  Boolean  @default(true)
-  progress  Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  submissions Submission[]
-  userProgress UserProgress[]
+  id               String          @id @default(cuid())
+  email            String          @unique
+  name             String
+  password         String?
+  avatar           String?
+  provider         String
+  role             UserRole        @default(user)
+  isActive         Boolean         @default(true)
+  progress         Int             @default(0)
+  firstName        String?
+  lastName         String?
+  emailVerified    Boolean         @default(false)
+  phoneNumber      String?
+  locale           String?         @default("en")
+  timezone         String?         @default("UTC")
+  preferences      String?
+  profileCompleted Boolean         @default(false)
+  lastLoginAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  mockInterviews   MockInterview[]
+  submissions      Submission[]
+  userProgress     UserProgress[]
 
   @@map("users")
 }
 
 model Problem {
-  id          String   @id @default(cuid())
-  title       String   @unique
-  description String
-  difficulty  String
-  category    String
-  testCases   String   // JSON string
-  solution    String?
-  hints       String?  // JSON string
-  tags        String?  // JSON string
-  companies   String?  // JSON string
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  submissions Submission[]
+  id           String         @id @default(cuid())
+  title        String         @unique
+  description  String
+  difficulty   String
+  category     String
+  testCases    String
+  solution     String?
+  hints        String?
+  tags         String?
+  companies    String?
+  isActive     Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  submissions  Submission[]
   userProgress UserProgress[]
 
   @@map("problems")
 }
 
 model MCQQuestion {
-  id            String   @id @default(cuid())
-  question      String   @unique
-  options       String   // JSON string
+  id            String         @id @default(cuid())
+  question      String         @unique
+  options       String
   correctAnswer Int
   explanation   String?
   category      String
   difficulty    String
-  tags          String?  // JSON string
-  companies     String?  // JSON string
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  userProgress UserProgress[]
+  tags          String?
+  companies     String?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userProgress  UserProgress[]
 
   @@map("mcq_questions")
 }
@@ -81,33 +79,130 @@ model Submission {
   problemId String
   code      String
   language  String
-  status    String   // accepted, wrong_answer, time_limit, runtime_error
+  status    String
   score     Int
-  runtime   Int?     // in milliseconds
-  memory    Int?     // in MB
+  runtime   Int?
+  memory    Int?
   createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id])
-  problem Problem @relation(fields: [problemId], references: [id])
+  problem   Problem  @relation(fields: [problemId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("submissions")
 }
 
 model UserProgress {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   userId       String
   problemId    String?
   questionId   String?
-  questionType String   // coding, mcq
-  status       String   // not_started, in_progress, completed, failed
-  score        Int      @default(0)
-  startedAt    DateTime @default(now())
+  questionType String
+  status       String
+  score        Int          @default(0)
+  startedAt    DateTime     @default(now())
   completedAt  DateTime?
-  updatedAt    DateTime @updatedAt
-
-  user    User       @relation(fields: [userId], references: [id])
-  problem Problem?   @relation(fields: [problemId], references: [id])
-  question MCQQuestion? @relation(fields: [questionId], references: [id])
+  updatedAt    DateTime     @updatedAt
+  question     MCQQuestion? @relation(fields: [questionId], references: [id])
+  problem      Problem?     @relation(fields: [problemId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
 
   @@map("user_progress")
+}
+
+model InterviewTemplate {
+  id             String              @id @default(cuid())
+  name           String              @unique
+  description    String
+  duration       Int
+  difficulty     String
+  category       String
+  companies      String?
+  isActive       Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  questions      InterviewQuestion[]
+  mockInterviews MockInterview[]
+
+  @@map("interview_templates")
+}
+
+model MockInterview {
+  id          String             @id @default(cuid())
+  userId      String
+  templateId  String
+  status      String
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  totalScore  Int                @default(0)
+  maxScore    Int                @default(0)
+  notes       String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  answers     InterviewAnswer[]
+  feedback    InterviewFeedback?
+  template    InterviewTemplate  @relation(fields: [templateId], references: [id])
+  user        User               @relation(fields: [userId], references: [id])
+
+  @@map("mock_interviews")
+}
+
+model InterviewQuestion {
+  id            String            @id @default(cuid())
+  templateId    String
+  questionType  String
+  question      String
+  options       String?
+  correctAnswer String?
+  explanation   String?
+  points        Int               @default(10)
+  timeLimit     Int?
+  order         Int               @default(0)
+  isActive      Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  answers       InterviewAnswer[]
+  template      InterviewTemplate @relation(fields: [templateId], references: [id])
+
+  @@map("interview_questions")
+}
+
+model InterviewAnswer {
+  id             String            @id @default(cuid())
+  interviewId    String
+  questionId     String
+  answer         String?
+  selectedOption Int?
+  isCorrect      Boolean?
+  score          Int               @default(0)
+  timeSpent      Int?
+  feedback       String?
+  createdAt      DateTime          @default(now())
+  question       InterviewQuestion @relation(fields: [questionId], references: [id])
+  interview      MockInterview     @relation(fields: [interviewId], references: [id])
+
+  @@map("interview_answers")
+}
+
+model InterviewFeedback {
+  id                  String        @id @default(cuid())
+  interviewId         String        @unique
+  overallScore        Int           @default(0)
+  technicalScore      Int           @default(0)
+  communicationScore  Int           @default(0)
+  problemSolvingScore Int           @default(0)
+  strengths           String?
+  weaknesses          String?
+  suggestions         String?
+  detailedFeedback    String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  interview           MockInterview @relation(fields: [interviewId], references: [id])
+
+  @@map("interview_feedback")
+}
+
+enum UserRole {
+  superadmin
+  admin
+  user
 }
