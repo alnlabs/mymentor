@@ -3,6 +3,46 @@ import { prisma } from '@/shared/lib/database';
 import { ApiResponse } from '@/shared/types/common';
 import { executeJavaScriptCode, validateCode } from '@/shared/utils/codeExecution';
 
+export async function GET(request: NextRequest) {
+  try {
+    const submissions = await prisma.submission.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        problem: {
+          select: {
+            id: true,
+            title: true,
+            difficulty: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const response: ApiResponse = {
+      success: true,
+      data: submissions,
+    };
+
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error('Error fetching submissions:', error);
+    const response: ApiResponse = {
+      success: false,
+      error: 'Failed to fetch submissions',
+    };
+    return NextResponse.json(response, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

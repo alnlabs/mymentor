@@ -1,22 +1,23 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useAuthContext } from '@/shared/components/AuthContext';
-import { Card } from '@/shared/components/Card';
-import { Button } from '@/shared/components/Button';
-import { Loading } from '@/shared/components/Loading';
-import { 
-  BookOpen, 
-  Code, 
-  Target, 
-  Users, 
-  Settings, 
+import React from "react";
+import { useAuthContext } from "@/shared/components/AuthContext";
+import { Card } from "@/shared/components/Card";
+import { Button } from "@/shared/components/Button";
+import { Loading } from "@/shared/components/Loading";
+import {
+  BookOpen,
+  Code,
+  Target,
+  Users,
+  Settings,
   BarChart3,
-  LogOut 
-} from 'lucide-react';
+  LogOut,
+} from "lucide-react";
 
 export default function DashboardPage() {
-  const { user, loading, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
+  const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
+    useAuthContext();
 
   if (loading) {
     return (
@@ -28,55 +29,55 @@ export default function DashboardPage() {
 
   const dashboardItems = [
     {
-      title: 'Mock Interviews',
-      description: 'Practice with realistic interview scenarios',
+      title: "Mock Interviews",
+      description: "Practice with realistic interview scenarios",
       icon: Target,
-      href: '/admin/interviews',
-      color: 'bg-blue-500',
-      adminOnly: true
+      href: "/admin/interviews",
+      color: "bg-blue-500",
+      adminOnly: true,
     },
     {
-      title: 'Coding Problems',
-      description: 'Solve algorithmic and coding challenges',
+      title: "Coding Problems",
+      description: "Solve algorithmic and coding challenges",
       icon: Code,
-      href: '/problems',
-      color: 'bg-green-500'
+      href: "/problems",
+      color: "bg-green-500",
     },
     {
-      title: 'MCQ Questions',
-      description: 'Test your knowledge with multiple choice questions',
+      title: "MCQ Questions",
+      description: "Test your knowledge with multiple choice questions",
       icon: BookOpen,
-      href: '/mcq',
-      color: 'bg-purple-500'
+      href: "/mcq",
+      color: "bg-purple-500",
     },
     {
-      title: 'User Management',
-      description: 'Manage users and their roles',
+      title: "User Management",
+      description: "Manage users and their roles",
       icon: Users,
-      href: '/admin/users',
-      color: 'bg-orange-500',
-      adminOnly: true
+      href: "/admin/users",
+      color: "bg-orange-500",
+      adminOnly: true,
     },
     {
-      title: 'Analytics',
-      description: 'View performance metrics and insights',
+      title: "Analytics",
+      description: "View performance metrics and insights",
       icon: BarChart3,
-      href: '/admin/analytics',
-      color: 'bg-red-500',
-      adminOnly: true
+      href: "/admin/analytics",
+      color: "bg-red-500",
+      adminOnly: true,
     },
     {
-      title: 'Settings',
-      description: 'Configure your account and preferences',
+      title: "Settings",
+      description: "Configure your account and preferences",
       icon: Settings,
-      href: '/admin/settings',
-      color: 'bg-gray-500',
-      adminOnly: true
-    }
+      href: "/admin/settings",
+      color: "bg-gray-500",
+      adminOnly: true,
+    },
   ];
 
-  const filteredItems = dashboardItems.filter(item => 
-    !item.adminOnly || isAdmin || isSuperAdmin
+  const filteredItems = dashboardItems.filter(
+    (item) => !item.adminOnly || isAdmin || isSuperAdmin
   );
 
   return (
@@ -98,15 +99,15 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {isSuperAdmin ? 'S' : user?.name?.charAt(0) || 'U'}
+                    {isSuperAdmin ? "S" : user?.name?.charAt(0) || "U"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin ? 'SuperAdmin' : user?.name || 'User'}
+                  {isSuperAdmin ? "SuperAdmin" : user?.name || "User"}
                 </span>
               </div>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={signOutUser}
                 className="flex items-center space-x-2"
@@ -124,20 +125,22 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {isSuperAdmin ? 'SuperAdmin' : user?.name || 'User'}! 👋
+            Welcome back, {isSuperAdmin ? "SuperAdmin" : user?.name || "User"}!
+            👋
           </h2>
           <p className="text-gray-600">
-            Ready to continue your learning journey? Choose from the options below.
+            Ready to continue your learning journey? Choose from the options
+            below.
           </p>
         </div>
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item, index) => (
-            <Card 
-              key={index} 
+            <Card
+              key={index}
               className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-              onClick={() => window.location.href = item.href}
+              onClick={() => (window.location.href = item.href)}
             >
               <div className="flex items-start space-x-4">
                 <div className={`p-3 rounded-lg ${item.color} text-white`}>
@@ -150,11 +153,7 @@ export default function DashboardPage() {
                   <p className="text-gray-600 text-sm mb-4">
                     {item.description}
                   </p>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="w-full"
-                  >
+                  <Button variant="outline" size="sm" className="w-full">
                     Open {item.title}
                   </Button>
                 </div>
@@ -165,12 +164,16 @@ export default function DashboardPage() {
 
         {/* Quick Stats */}
         <div className="mt-12">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">Quick Stats</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            Quick Stats
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Problems Solved</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Problems Solved
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">24</p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-lg">
@@ -181,7 +184,9 @@ export default function DashboardPage() {
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">MCQ Completed</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    MCQ Completed
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">156</p>
                 </div>
                 <div className="p-3 bg-purple-100 rounded-lg">
@@ -192,7 +197,9 @@ export default function DashboardPage() {
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Interviews Taken</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Interviews Taken
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">8</p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-lg">

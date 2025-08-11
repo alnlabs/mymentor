@@ -27,6 +27,7 @@ export default function AdminDashboard() {
 
   const fetchDashboardStats = async () => {
     try {
+      setLoading(true);
       const [usersRes, problemsRes, mcqRes, submissionsRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/problems'),
@@ -34,10 +35,11 @@ export default function AdminDashboard() {
         fetch('/api/submissions'),
       ]);
 
-      const usersData = await usersRes.json();
-      const problemsData = await problemsRes.json();
-      const mcqData = await mcqRes.json();
-      const submissionsData = await submissionsRes.json();
+      // Check if responses are ok before parsing JSON
+      const usersData = usersRes.ok ? await usersRes.json() : { success: false, data: [] };
+      const problemsData = problemsRes.ok ? await problemsRes.json() : { success: false, data: [] };
+      const mcqData = mcqRes.ok ? await mcqRes.json() : { success: false, data: [] };
+      const submissionsData = submissionsRes.ok ? await submissionsRes.json() : { success: false, data: [] };
 
       setStats({
         totalUsers: usersData.success ? usersData.data.length : 0,
@@ -47,6 +49,13 @@ export default function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
+      // Set default stats on error
+      setStats({
+        totalUsers: 0,
+        totalProblems: 0,
+        totalMCQs: 0,
+        totalSubmissions: 0,
+      });
     } finally {
       setLoading(false);
     }
