@@ -60,6 +60,8 @@ export default function UploadPage() {
   const [result, setResult] = useState<any>(null);
   const [existingItems, setExistingItems] = useState<any[]>([]);
   const [loadingExisting, setLoadingExisting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   // Form states
   const [problems, setProblems] = useState<Problem[]>([
@@ -155,10 +157,10 @@ export default function UploadPage() {
 
   const handleFormUpload = async () => {
     const data = uploadType === "problems" ? problems : mcqs;
-    const validData = data.filter(item => 
-      uploadType === "problems" 
-        ? item.title && item.description 
-        : item.question && item.options.some(opt => opt.trim())
+    const validData = data.filter((item) =>
+      uploadType === "problems"
+        ? item.title && item.description
+        : item.question && item.options.some((opt) => opt.trim())
     );
 
     if (validData.length === 0) {
@@ -183,32 +185,36 @@ export default function UploadPage() {
 
       const result = await response.json();
       setResult(result);
-      
+
       if (result.success) {
         // Reset forms on success
         if (uploadType === "problems") {
-          setProblems([{
-            title: "",
-            description: "",
-            difficulty: "easy",
-            category: "",
-            testCases: "",
-            solution: "",
-            hints: "",
-            tags: "",
-            companies: "",
-          }]);
+          setProblems([
+            {
+              title: "",
+              description: "",
+              difficulty: "easy",
+              category: "",
+              testCases: "",
+              solution: "",
+              hints: "",
+              tags: "",
+              companies: "",
+            },
+          ]);
         } else {
-          setMcqs([{
-            question: "",
-            options: ["", "", "", ""],
-            correctAnswer: 0,
-            explanation: "",
-            category: "",
-            difficulty: "easy",
-            tags: "",
-            companies: "",
-          }]);
+          setMcqs([
+            {
+              question: "",
+              options: ["", "", "", ""],
+              correctAnswer: 0,
+              explanation: "",
+              category: "",
+              difficulty: "easy",
+              tags: "",
+              companies: "",
+            },
+          ]);
         }
         fetchExistingItems();
       }
@@ -245,7 +251,7 @@ export default function UploadPage() {
 
       const result = await response.json();
       setResult(result);
-      
+
       if (result.success) {
         setJsonData("");
         fetchExistingItems();
@@ -261,22 +267,90 @@ export default function UploadPage() {
   };
 
   const handleBulkUpload = async () => {
-    // This would handle CSV/Excel file uploads
-    alert("Bulk upload feature coming soon!");
+    if (!selectedFile) {
+      alert("Please select a file to upload");
+      return;
+    }
+
+    setUploading(true);
+    setResult(null);
+
+    try {
+      const fileContent = await readFileContent(selectedFile);
+      const fileType = getFileType(selectedFile.name);
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: uploadType,
+          fileContent,
+          fileType,
+        }),
+      });
+
+      const result = await response.json();
+      setResult(result);
+      
+      if (result.success) {
+        setSelectedFile(null);
+        setFileInputKey(prev => prev + 1);
+        fetchExistingItems();
+      }
+    } catch (error: any) {
+      setResult({
+        success: false,
+        error: error.message || "Bulk upload failed",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const readFileContent = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        resolve(content);
+      };
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsText(file);
+    });
+  };
+
+  const getFileType = (filename: string): string => {
+    const extension = filename.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'csv':
+        return 'csv';
+      case 'xlsx':
+      case 'xls':
+        return 'excel';
+      case 'json':
+        return 'json';
+      default:
+        return 'unknown';
+    }
   };
 
   const addProblem = () => {
-    setProblems([...problems, {
-      title: "",
-      description: "",
-      difficulty: "easy",
-      category: "",
-      testCases: "",
-      solution: "",
-      hints: "",
-      tags: "",
-      companies: "",
-    }]);
+    setProblems([
+      ...problems,
+      {
+        title: "",
+        description: "",
+        difficulty: "easy",
+        category: "",
+        testCases: "",
+        solution: "",
+        hints: "",
+        tags: "",
+        companies: "",
+      },
+    ]);
   };
 
   const removeProblem = (index: number) => {
@@ -285,23 +359,30 @@ export default function UploadPage() {
     }
   };
 
-  const updateProblem = (index: number, field: keyof Problem, value: string) => {
+  const updateProblem = (
+    index: number,
+    field: keyof Problem,
+    value: string
+  ) => {
     const updated = [...problems];
     updated[index] = { ...updated[index], [field]: value };
     setProblems(updated);
   };
 
   const addMCQ = () => {
-    setMcqs([...mcqs, {
-      question: "",
-      options: ["", "", "", ""],
-      correctAnswer: 0,
-      explanation: "",
-      category: "",
-      difficulty: "easy",
-      tags: "",
-      companies: "",
-    }]);
+    setMcqs([
+      ...mcqs,
+      {
+        question: "",
+        options: ["", "", "", ""],
+        correctAnswer: 0,
+        explanation: "",
+        category: "",
+        difficulty: "easy",
+        tags: "",
+        companies: "",
+      },
+    ]);
   };
 
   const removeMCQ = (index: number) => {
@@ -320,26 +401,37 @@ export default function UploadPage() {
     setMcqs(updated);
   };
 
-  const updateMCQOption = (mcqIndex: number, optionIndex: number, value: string) => {
+  const updateMCQOption = (
+    mcqIndex: number,
+    optionIndex: number,
+    value: string
+  ) => {
     const updated = [...mcqs];
     updated[mcqIndex].options[optionIndex] = value;
     setMcqs(updated);
   };
 
   const downloadTemplate = (format: "json" | "csv") => {
-    const template = uploadType === "problems" 
-      ? (format === "json" ? problemTemplate : problemCSVTemplate)
-      : (format === "json" ? mcqTemplate : mcqCSVTemplate);
-    
-    const blob = new Blob([template], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${uploadType}-template.${format}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (format === "json") {
+      const template = uploadType === "problems" ? problemTemplate : mcqTemplate;
+      const blob = new Blob([template], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${uploadType}-template.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      // Download actual CSV template file
+      const a = document.createElement("a");
+      a.href = `/templates/${uploadType}-template.csv`;
+      a.download = `${uploadType}-template.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   const loadTemplate = () => {
@@ -357,7 +449,8 @@ export default function UploadPage() {
       <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg p-6 text-white">
         <h2 className="text-2xl font-bold mb-2">Content Management</h2>
         <p className="text-green-100">
-          Upload, manage, and organize coding problems and MCQ questions with advanced CRUD operations.
+          Upload, manage, and organize coding problems and MCQ questions with
+          advanced CRUD operations.
         </p>
       </div>
 
@@ -375,7 +468,9 @@ export default function UploadPage() {
                     type="radio"
                     value="problems"
                     checked={uploadType === "problems"}
-                    onChange={(e) => setUploadType(e.target.value as ContentType)}
+                    onChange={(e) =>
+                      setUploadType(e.target.value as ContentType)
+                    }
                     className="mr-2"
                   />
                   <Code className="w-4 h-4 mr-1" />
@@ -386,7 +481,9 @@ export default function UploadPage() {
                     type="radio"
                     value="mcq"
                     checked={uploadType === "mcq"}
-                    onChange={(e) => setUploadType(e.target.value as ContentType)}
+                    onChange={(e) =>
+                      setUploadType(e.target.value as ContentType)
+                    }
                     className="mr-2"
                   />
                   <FileText className="w-4 h-4 mr-1" />
@@ -419,7 +516,11 @@ export default function UploadPage() {
               onClick={fetchExistingItems}
               disabled={loadingExisting}
             >
-              <RefreshCw className={`w-4 h-4 mr-2 ${loadingExisting ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 mr-2 ${
+                  loadingExisting ? "animate-spin" : ""
+                }`}
+              />
               Refresh
             </Button>
           </div>
@@ -470,7 +571,7 @@ export default function UploadPage() {
                         Add Problem
                       </Button>
                     </div>
-                    
+
                     {problems.map((problem, index) => (
                       <Card key={index} className="mb-4">
                         <div className="flex items-center justify-between mb-4">
@@ -485,7 +586,7 @@ export default function UploadPage() {
                             </Button>
                           )}
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -494,12 +595,14 @@ export default function UploadPage() {
                             <input
                               type="text"
                               value={problem.title}
-                              onChange={(e) => updateProblem(index, "title", e.target.value)}
+                              onChange={(e) =>
+                                updateProblem(index, "title", e.target.value)
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Problem title"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Category *
@@ -507,19 +610,27 @@ export default function UploadPage() {
                             <input
                               type="text"
                               value={problem.category}
-                              onChange={(e) => updateProblem(index, "category", e.target.value)}
+                              onChange={(e) =>
+                                updateProblem(index, "category", e.target.value)
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="e.g., arrays, strings, algorithms"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Difficulty *
                             </label>
                             <select
                               value={problem.difficulty}
-                              onChange={(e) => updateProblem(index, "difficulty", e.target.value as any)}
+                              onChange={(e) =>
+                                updateProblem(
+                                  index,
+                                  "difficulty",
+                                  e.target.value as any
+                                )
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="easy">Easy</option>
@@ -527,7 +638,7 @@ export default function UploadPage() {
                               <option value="hard">Hard</option>
                             </select>
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Tags
@@ -535,39 +646,49 @@ export default function UploadPage() {
                             <input
                               type="text"
                               value={problem.tags}
-                              onChange={(e) => updateProblem(index, "tags", e.target.value)}
+                              onChange={(e) =>
+                                updateProblem(index, "tags", e.target.value)
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="comma-separated tags"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Description *
                           </label>
                           <textarea
                             value={problem.description}
-                            onChange={(e) => updateProblem(index, "description", e.target.value)}
+                            onChange={(e) =>
+                              updateProblem(
+                                index,
+                                "description",
+                                e.target.value
+                              )
+                            }
                             rows={3}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Problem description"
                           />
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Test Cases *
                           </label>
                           <textarea
                             value={problem.testCases}
-                            onChange={(e) => updateProblem(index, "testCases", e.target.value)}
+                            onChange={(e) =>
+                              updateProblem(index, "testCases", e.target.value)
+                            }
                             rows={2}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
                           />
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -575,27 +696,31 @@ export default function UploadPage() {
                             </label>
                             <textarea
                               value={problem.solution}
-                              onChange={(e) => updateProblem(index, "solution", e.target.value)}
+                              onChange={(e) =>
+                                updateProblem(index, "solution", e.target.value)
+                              }
                               rows={2}
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Solution approach"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Hints
                             </label>
                             <textarea
                               value={problem.hints}
-                              onChange={(e) => updateProblem(index, "hints", e.target.value)}
+                              onChange={(e) =>
+                                updateProblem(index, "hints", e.target.value)
+                              }
                               rows={2}
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Helpful hints"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Companies
@@ -603,7 +728,9 @@ export default function UploadPage() {
                           <input
                             type="text"
                             value={problem.companies}
-                            onChange={(e) => updateProblem(index, "companies", e.target.value)}
+                            onChange={(e) =>
+                              updateProblem(index, "companies", e.target.value)
+                            }
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="comma-separated companies"
                           />
@@ -620,7 +747,7 @@ export default function UploadPage() {
                         Add MCQ
                       </Button>
                     </div>
-                    
+
                     {mcqs.map((mcq, index) => (
                       <Card key={index} className="mb-4">
                         <div className="flex items-center justify-between mb-4">
@@ -635,7 +762,7 @@ export default function UploadPage() {
                             </Button>
                           )}
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -644,19 +771,27 @@ export default function UploadPage() {
                             <input
                               type="text"
                               value={mcq.category}
-                              onChange={(e) => updateMCQ(index, "category", e.target.value)}
+                              onChange={(e) =>
+                                updateMCQ(index, "category", e.target.value)
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="e.g., algorithms, data-structures"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Difficulty *
                             </label>
                             <select
                               value={mcq.difficulty}
-                              onChange={(e) => updateMCQ(index, "difficulty", e.target.value as any)}
+                              onChange={(e) =>
+                                updateMCQ(
+                                  index,
+                                  "difficulty",
+                                  e.target.value as any
+                                )
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="easy">Easy</option>
@@ -665,44 +800,57 @@ export default function UploadPage() {
                             </select>
                           </div>
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Question *
                           </label>
                           <textarea
                             value={mcq.question}
-                            onChange={(e) => updateMCQ(index, "question", e.target.value)}
+                            onChange={(e) =>
+                              updateMCQ(index, "question", e.target.value)
+                            }
                             rows={3}
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="MCQ question"
                           />
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Options *
                           </label>
                           {mcq.options.map((option, optionIndex) => (
-                            <div key={optionIndex} className="flex items-center space-x-2 mb-2">
+                            <div
+                              key={optionIndex}
+                              className="flex items-center space-x-2 mb-2"
+                            >
                               <input
                                 type="radio"
                                 name={`correct-${index}`}
                                 checked={mcq.correctAnswer === optionIndex}
-                                onChange={() => updateMCQ(index, "correctAnswer", optionIndex)}
+                                onChange={() =>
+                                  updateMCQ(index, "correctAnswer", optionIndex)
+                                }
                                 className="mr-2"
                               />
                               <input
                                 type="text"
                                 value={option}
-                                onChange={(e) => updateMCQOption(index, optionIndex, e.target.value)}
+                                onChange={(e) =>
+                                  updateMCQOption(
+                                    index,
+                                    optionIndex,
+                                    e.target.value
+                                  )
+                                }
                                 className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder={`Option ${optionIndex + 1}`}
                               />
                             </div>
                           ))}
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -710,13 +858,15 @@ export default function UploadPage() {
                             </label>
                             <textarea
                               value={mcq.explanation}
-                              onChange={(e) => updateMCQ(index, "explanation", e.target.value)}
+                              onChange={(e) =>
+                                updateMCQ(index, "explanation", e.target.value)
+                              }
                               rows={2}
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Explanation for the correct answer"
                             />
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Tags
@@ -724,13 +874,15 @@ export default function UploadPage() {
                             <input
                               type="text"
                               value={mcq.tags}
-                              onChange={(e) => updateMCQ(index, "tags", e.target.value)}
+                              onChange={(e) =>
+                                updateMCQ(index, "tags", e.target.value)
+                              }
                               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="comma-separated tags"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="mt-4">
                           <label className="block text-sm font-medium text-gray-700 mb-1">
                             Companies
@@ -738,7 +890,9 @@ export default function UploadPage() {
                           <input
                             type="text"
                             value={mcq.companies}
-                            onChange={(e) => updateMCQ(index, "companies", e.target.value)}
+                            onChange={(e) =>
+                              updateMCQ(index, "companies", e.target.value)
+                            }
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="comma-separated companies"
                           />
@@ -779,25 +933,139 @@ export default function UploadPage() {
 
             {/* Bulk Upload Mode */}
             {uploadMode === "bulk" && (
-              <div className="text-center py-12">
-                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Bulk Upload Coming Soon
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Upload CSV or Excel files with multiple items at once.
-                </p>
-                <Button variant="outline" disabled>
-                  <FileSpreadsheet className="w-4 h-4 mr-2" />
-                  Upload File
-                </Button>
+              <div className="space-y-6">
+                <div className="text-center py-8">
+                  <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    Bulk Upload {uploadType === "problems" ? "Problems" : "MCQs"}
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Upload CSV, Excel, or JSON files with multiple items at once.
+                  </p>
+                  
+                  {/* File Upload Area */}
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 transition-colors">
+                    <input
+                      key={fileInputKey}
+                      type="file"
+                      accept=".csv,.xlsx,.xls,.json"
+                      onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                      className="hidden"
+                      id="file-upload"
+                    />
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer flex flex-col items-center"
+                    >
+                      <FileSpreadsheet className="w-12 h-12 text-gray-400 mb-4" />
+                      <span className="text-lg font-medium text-gray-700 mb-2">
+                        {selectedFile ? selectedFile.name : "Choose a file"}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {selectedFile 
+                          ? `Size: ${(selectedFile.size / 1024).toFixed(1)} KB`
+                          : "CSV, Excel, or JSON files up to 10MB"
+                        }
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* File Info */}
+                  {selectedFile && (
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <FileSpreadsheet className="w-5 h-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium text-blue-900">{selectedFile.name}</p>
+                            <p className="text-sm text-blue-700">
+                              Type: {getFileType(selectedFile.name).toUpperCase()} • 
+                              Size: {(selectedFile.size / 1024).toFixed(1)} KB
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedFile(null);
+                            setFileInputKey(prev => prev + 1);
+                          }}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Supported Formats */}
+                  <div className="mt-6">
+                    <h4 className="font-medium text-gray-900 mb-3">Supported Formats:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <FileText className="w-5 h-5 text-green-600 mr-2" />
+                          <span className="font-medium">CSV</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Comma-separated values with headers
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <FileSpreadsheet className="w-5 h-5 text-blue-600 mr-2" />
+                          <span className="font-medium">Excel</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          .xlsx or .xls files with tabular data
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <FileText className="w-5 h-5 text-purple-600 mr-2" />
+                          <span className="font-medium">JSON</span>
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          JSON array with structured data
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Template Downloads */}
+                  <div className="mt-6">
+                    <h4 className="font-medium text-gray-900 mb-3">Download Templates:</h4>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => downloadTemplate("csv")}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        CSV Template
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => downloadTemplate("json")}
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        JSON Template
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
             {/* Upload Button */}
             <Button
               onClick={handleUpload}
-              disabled={uploading || (uploadMode === "json" && !jsonData.trim())}
+              disabled={
+                uploading || 
+                (uploadMode === "json" && !jsonData.trim()) ||
+                (uploadMode === "bulk" && !selectedFile)
+              }
               className="w-full"
             >
               {uploading ? (
@@ -805,7 +1073,10 @@ export default function UploadPage() {
               ) : (
                 <>
                   <Upload className="w-4 h-4 mr-2" />
-                  Upload {uploadType === "problems" ? "Problems" : "MCQs"}
+                  {uploadMode === "bulk" 
+                    ? `Upload ${selectedFile?.name || "File"}`
+                    : `Upload ${uploadType === "problems" ? "Problems" : "MCQs"}`
+                  }
                 </>
               )}
             </Button>
@@ -880,7 +1151,7 @@ export default function UploadPage() {
               <Database className="w-5 h-5 mr-2" />
               Recent {uploadType === "problems" ? "Problems" : "MCQs"}
             </h3>
-            
+
             {loadingExisting ? (
               <div className="text-center py-4">
                 <Loading size="sm" text="Loading..." />
@@ -895,7 +1166,9 @@ export default function UploadPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {uploadType === "problems" ? item.title : item.question}
+                          {uploadType === "problems"
+                            ? item.title
+                            : item.question}
                         </p>
                         <p className="text-xs text-gray-500">
                           {item.category} • {item.difficulty}
@@ -938,25 +1211,38 @@ export default function UploadPage() {
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Total {uploadType}:</span>
-                <span className="text-sm font-medium">{existingItems.length}</span>
+                <span className="text-sm text-gray-600">
+                  Total {uploadType}:
+                </span>
+                <span className="text-sm font-medium">
+                  {existingItems.length}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">Easy:</span>
                 <span className="text-sm font-medium text-green-600">
-                  {existingItems.filter(item => item.difficulty === "easy").length}
+                  {
+                    existingItems.filter((item) => item.difficulty === "easy")
+                      .length
+                  }
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">Medium:</span>
                 <span className="text-sm font-medium text-yellow-600">
-                  {existingItems.filter(item => item.difficulty === "medium").length}
+                  {
+                    existingItems.filter((item) => item.difficulty === "medium")
+                      .length
+                  }
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">Hard:</span>
                 <span className="text-sm font-medium text-red-600">
-                  {existingItems.filter(item => item.difficulty === "hard").length}
+                  {
+                    existingItems.filter((item) => item.difficulty === "hard")
+                      .length
+                  }
                 </span>
               </div>
             </div>

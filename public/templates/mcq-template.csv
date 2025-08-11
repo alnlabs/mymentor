@@ -1,0 +1,4 @@
+question,options,correctAnswer,explanation,category,difficulty,tags,companies
+"What is the time complexity of binary search?","O(n);O(log n);O(n²);O(1)",1,"Binary search divides the search space in half with each iteration.","algorithms","easy","binary-search,complexity","Google,Amazon,Microsoft"
+"What data structure is best for implementing a queue?","Array;Stack;Linked List;Tree",2,"Linked lists allow O(1) insertion and deletion at both ends.","data-structures","easy","queues,linked-lists","Facebook,Google,Amazon"
+"What is the time complexity of quicksort in the worst case?","O(n log n);O(n²);O(n);O(log n)",1,"Worst case occurs when pivot is always the smallest or largest element.","algorithms","medium","sorting,quicksort","Microsoft,Apple,Google"
