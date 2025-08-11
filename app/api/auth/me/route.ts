@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/shared/lib/database';
-import { ApiResponse } from '@/shared/types/common';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/shared/lib/database";
+import { ApiResponse } from "@/shared/types/common";
 
 export async function GET(request: NextRequest) {
   try {
     // Get user ID from headers
-    const userId = request.headers.get('x-user-id');
-    const superAdminUser = request.headers.get('x-superadmin-user');
-    
+    const userId = request.headers.get("x-user-id");
+    const superAdminUser = request.headers.get("x-superadmin-user");
+
     // Handle SuperAdmin session
     if (superAdminUser) {
       try {
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
           },
         });
       } catch (error) {
-        console.error('Error parsing superadmin user:', error);
+        console.error("Error parsing superadmin user:", error);
       }
     }
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
           });
         }
       } catch (error) {
-        console.error('Error fetching user from database:', error);
+        console.error("Error fetching user from database:", error);
       }
     }
 
@@ -62,17 +62,17 @@ export async function GET(request: NextRequest) {
     const response: ApiResponse = {
       success: true,
       data: {
-        role: 'user', // Default role
+        role: "user", // Default role
         isActive: true,
       },
     };
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error("Error fetching user:", error);
     const response: ApiResponse = {
       success: false,
-      error: 'Failed to fetch user',
+      error: "Failed to fetch user",
     };
     return NextResponse.json(response, { status: 500 });
   }
