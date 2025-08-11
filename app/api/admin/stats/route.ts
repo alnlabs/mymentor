@@ -4,6 +4,8 @@ import { ApiResponse } from "@/shared/types/common";
 
 export async function GET(request: NextRequest) {
   try {
+    console.log("Fetching admin statistics...");
+    
     // Fetch comprehensive admin statistics
     const [
       totalUsers,
@@ -19,157 +21,158 @@ export async function GET(request: NextRequest) {
       recentInterviews,
       userStats,
       problemStats,
-      submissionStats
+      submissionStats,
     ] = await Promise.all([
       // Total users
       prisma.user.count(),
-      
+
       // Active users (last 30 days)
       prisma.user.count({
         where: {
           lastLoginAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-          }
-        }
+            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+          },
+        },
       }),
-      
+
       // Total problems
       prisma.problem.count(),
-      
+
       // Total MCQ questions
       prisma.mCQQuestion.count(),
-      
+
       // Total submissions
       prisma.submission.count(),
-      
+
       // Accepted submissions
       prisma.submission.count({
         where: {
-          status: "accepted"
-        }
+          status: "accepted",
+        },
       }),
-      
+
       // Total interviews
       prisma.mockInterview.count(),
-      
+
       // Completed interviews
       prisma.mockInterview.count({
         where: {
-          status: "completed"
-        }
+          status: "completed",
+        },
       }),
-      
+
       // Recent users (last 7 days)
       prisma.user.findMany({
         where: {
           createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          }
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          },
         },
         select: {
           id: true,
           name: true,
           email: true,
           createdAt: true,
-          role: true
+          role: true,
         },
         orderBy: {
-          createdAt: "desc"
+          createdAt: "desc",
         },
-        take: 5
+        take: 5,
       }),
-      
+
       // Recent submissions (last 7 days)
       prisma.submission.findMany({
         where: {
           createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          }
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          },
         },
         include: {
           user: {
             select: {
               name: true,
-              email: true
-            }
+              email: true,
+            },
           },
           problem: {
             select: {
-              title: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: "desc"
-        },
-        take: 5
-      }),
-      
-      // Recent interviews (last 7 days)
-      prisma.mockInterview.findMany({
-        where: {
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          }
-        },
-        include: {
-          user: {
-            select: {
-              name: true,
-              email: true
-            }
+              title: true,
+            },
           },
-          template: {
-            select: {
-              title: true
-            }
-          }
         },
         orderBy: {
-          createdAt: "desc"
+          createdAt: "desc",
         },
-        take: 5
+        take: 5,
       }),
-      
+
+              // Recent interviews (last 7 days)
+        prisma.mockInterview.findMany({
+          where: {
+            createdAt: {
+              gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            },
+          },
+          include: {
+            user: {
+              select: {
+                name: true,
+                email: true,
+              },
+            },
+            template: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 5,
+        }),
+
       // User statistics by role
       prisma.user.groupBy({
         by: ["role"],
         _count: {
-          role: true
-        }
+          role: true,
+        },
       }),
-      
+
       // Problem statistics by difficulty
       prisma.problem.groupBy({
         by: ["difficulty"],
         _count: {
-          difficulty: true
-        }
+          difficulty: true,
+        },
       }),
-      
+
       // Submission statistics by status
       prisma.submission.groupBy({
         by: ["status"],
         _count: {
-          status: true
-        }
-      })
+          status: true,
+        },
+      }),
     ]);
 
     // Calculate success rate
-    const successRate = totalSubmissions > 0 
-      ? Math.round((acceptedSubmissions / totalSubmissions) * 100)
-      : 0;
+    const successRate =
+      totalSubmissions > 0
+        ? Math.round((acceptedSubmissions / totalSubmissions) * 100)
+        : 0;
 
     // Calculate completion rate for interviews
-    const interviewCompletionRate = totalInterviews > 0
-      ? Math.round((completedInterviews / totalInterviews) * 100)
-      : 0;
+    const interviewCompletionRate =
+      totalInterviews > 0
+        ? Math.round((completedInterviews / totalInterviews) * 100)
+        : 0;
 
     // Calculate user engagement rate
-    const userEngagementRate = totalUsers > 0
-      ? Math.round((activeUsers / totalUsers) * 100)
-      : 0;
+    const userEngagementRate =
+      totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
 
     const stats = {
       overview: {
@@ -183,34 +186,34 @@ export async function GET(request: NextRequest) {
         completedInterviews,
         successRate,
         interviewCompletionRate,
-        userEngagementRate
+        userEngagementRate,
       },
       recentActivity: {
-        recentUsers: recentUsers.map(user => ({
+        recentUsers: recentUsers.map((user) => ({
           id: user.id,
           name: user.name,
           email: user.email,
           role: user.role,
-          joinedAt: user.createdAt
+          joinedAt: user.createdAt,
         })),
-        recentSubmissions: recentSubmissions.map(sub => ({
+        recentSubmissions: recentSubmissions.map((sub) => ({
           id: sub.id,
           userName: sub.user.name,
           userEmail: sub.user.email,
           problemTitle: sub.problem.title,
           status: sub.status,
           score: sub.score,
-          submittedAt: sub.createdAt
+          submittedAt: sub.createdAt,
         })),
-        recentInterviews: recentInterviews.map(interview => ({
+        recentInterviews: recentInterviews.map((interview) => ({
           id: interview.id,
           userName: interview.user.name,
           userEmail: interview.user.email,
-          templateTitle: interview.template.title,
+          templateTitle: interview.template.name,
           status: interview.status,
-          score: interview.score || 0,
-          startedAt: interview.createdAt
-        }))
+          score: interview.totalScore || 0,
+          startedAt: interview.createdAt,
+        })),
       },
       analytics: {
         userStats: userStats.reduce((acc, stat) => {
@@ -224,22 +227,35 @@ export async function GET(request: NextRequest) {
         submissionStats: submissionStats.reduce((acc, stat) => {
           acc[stat.status] = stat._count.status;
           return acc;
-        }, {} as Record<string, number>)
-      }
+        }, {} as Record<string, number>),
+      },
     };
+
+    console.log("Admin statistics fetched successfully:", {
+      totalUsers,
+      totalProblems,
+      totalMCQs,
+      totalSubmissions,
+      totalInterviews
+    });
 
     const response: ApiResponse = {
       success: true,
       data: stats,
-      message: "Admin statistics retrieved successfully"
+      message: "Admin statistics retrieved successfully",
     };
 
     return NextResponse.json(response);
   } catch (error) {
     console.error("Error fetching admin stats:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    
     const response: ApiResponse = {
       success: false,
-      error: "Failed to retrieve admin statistics"
+      error: "Failed to retrieve admin statistics",
     };
     return NextResponse.json(response, { status: 500 });
   }
