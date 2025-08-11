@@ -11,6 +11,12 @@ import { Filter, Search, Plus } from "lucide-react";
 
 export default function InterviewsPage() {
   const { user, isAdmin, isSuperAdmin } = useAuthContext();
+  
+  // Redirect non-admin users to admin panel
+  if (user && !isAdmin && !isSuperAdmin) {
+    window.location.href = '/admin/interviews';
+    return null;
+  }
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

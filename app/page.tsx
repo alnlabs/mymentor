@@ -20,6 +20,7 @@ export default function HomePage() {
   const [mcqQuestions, setMCQQuestions] = useState<MCQQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -85,6 +86,40 @@ export default function HomePage() {
                 MyMentor
               </h1>
             </div>
+            
+            {/* Navigation Menu */}
+            {(user || isSuperAdmin) && (
+              <nav className="hidden md:flex items-center space-x-8">
+                <a
+                  href="/"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Home
+                </a>
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center space-x-1"
+                  >
+                    <span>⚙️</span>
+                    <span>Admin Panel</span>
+                  </a>
+                )}
+              </nav>
+            )}
+            
+            {/* Mobile menu button */}
+            {(user || isSuperAdmin) && (
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            )}
+            
             <div className="flex items-center space-x-4">
               {user || isSuperAdmin ? (
                 <>
@@ -135,6 +170,31 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (user || isSuperAdmin) && (
+          <div className="md:hidden bg-white border-t border-gray-200">
+            <div className="px-4 py-2 space-y-1">
+              <a
+                href="/"
+                className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </a>
+              {(isAdmin || isSuperAdmin) && (
+                <a
+                  href="/admin"
+                  className="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium flex items-center space-x-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span>⚙️</span>
+                  <span>Admin Panel</span>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
@@ -408,10 +468,10 @@ export default function HomePage() {
                       mock interviews with questions from top tech companies.
                     </p>
                     <Button
-                      onClick={() => (window.location.href = "/interviews")}
+                      onClick={() => (window.location.href = "/admin/interviews")}
                       className="w-full"
                     >
-                      Start Mock Interview
+                      Manage Mock Interviews
                     </Button>
                   </div>
                 </div>
