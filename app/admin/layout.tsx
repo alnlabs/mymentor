@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/shared/components/Button";
 import { RouteGuard } from "@/shared/components/RouteGuard";
+import { useAuthContext } from "@/shared/components/AuthContext";
 import {
   BarChart3,
   Upload,
@@ -23,22 +24,72 @@ interface AdminLayoutProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: BarChart3, description: "Overview & Statistics" },
-  { name: "Mock Interviews", href: "/admin/interviews", icon: Target, description: "Templates & Sessions" },
-  { name: "Upload Content", href: "/admin/upload", icon: Upload, description: "Problems & MCQs" },
-  { name: "Manage Users", href: "/admin/users", icon: Users, description: "User Accounts" },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3, description: "Performance Data" },
-  { name: "Settings", href: "/admin/settings", icon: Settings, description: "System Config" },
+  {
+    name: "Dashboard",
+    href: "/admin",
+    icon: BarChart3,
+    description: "Overview & Statistics",
+  },
+  {
+    name: "Mock Interviews",
+    href: "/admin/interviews",
+    icon: Target,
+    description: "Templates & Sessions",
+  },
+  {
+    name: "Upload Content",
+    href: "/admin/upload",
+    icon: Upload,
+    description: "Problems & MCQs",
+  },
+  {
+    name: "Manage Users",
+    href: "/admin/users",
+    icon: Users,
+    description: "User Accounts",
+  },
+  {
+    name: "Analytics",
+    href: "/admin/analytics",
+    icon: BarChart3,
+    description: "Performance Data",
+  },
+  {
+    name: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
+    description: "System Config",
+  },
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const { user, userRole, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
 
-  const handleSignOut = () => {
-    localStorage.removeItem("superAdminUser");
-    window.location.href = "/";
+  const handleSignOut = async () => {
+    await signOutUser();
   };
+
+  // Get user display info
+  const getUserDisplayInfo = () => {
+    if (isSuperAdmin) {
+      return {
+        name: "SuperAdmin",
+        email: user?.email || "superadmin@mymentor.com",
+        avatar: "S",
+        role: "superadmin"
+      };
+    }
+    return {
+      name: user?.displayName || user?.email?.split("@")[0] || "Admin",
+      email: user?.email || "admin@mymentor.com",
+      avatar: user?.displayName?.charAt(0) || user?.email?.charAt(0) || "A",
+      role: userRole
+    };
+  };
+
+  const userInfo = getUserDisplayInfo();
 
   return (
     <RouteGuard requiredRole="admin">
@@ -110,13 +161,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex-shrink-0 p-4 border-t border-gray-200">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">S</span>
+                <span className="text-white text-sm font-medium">{userInfo.avatar}</span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  SuperAdmin
+                  {userInfo.name}
                 </p>
-                <p className="text-xs text-gray-500 truncate">superadmin</p>
+                <p className="text-xs text-gray-500 truncate">{userInfo.role}</p>
               </div>
             </div>
           </div>
@@ -155,7 +206,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     <Target className="w-4 h-4 mr-1" />
                     Interviews
                   </Button>
-                  
+
                   <Button
                     onClick={() => (window.location.href = "/admin/upload")}
                     variant="outline"
@@ -164,7 +215,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     <Upload className="w-4 h-4 mr-1" />
                     Upload
                   </Button>
-                  
+
                   <Button
                     onClick={() => (window.location.href = "/admin/users")}
                     variant="outline"
@@ -173,7 +224,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     <Users className="w-4 h-4 mr-1" />
                     Users
                   </Button>
-                  
+
                   <Button
                     onClick={() => (window.location.href = "/admin/analytics")}
                     variant="outline"
@@ -190,7 +241,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <span>Online</span>
                 </div>
 
-                {/* User Menu */}
+                                {/* User Menu */}
                 <div className="relative group">
                   <Button
                     variant="outline"
@@ -198,9 +249,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     className="flex items-center space-x-2"
                   >
                     <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">A</span>
+                      <span className="text-white text-xs font-medium">{userInfo.avatar}</span>
                     </div>
-                    <span className="hidden sm:inline">Admin</span>
+                    <span className="hidden sm:inline">{userInfo.name}</span>
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -220,12 +271,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-1">
                       <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                        <div className="font-medium">Admin User</div>
-                        <div className="text-gray-500">admin@mymentor.com</div>
+                        <div className="font-medium">{userInfo.name}</div>
+                        <div className="text-gray-500">{userInfo.email}</div>
                       </div>
-                      
+
                       <Button
-                        onClick={() => (window.location.href = "/admin/settings")}
+                        onClick={() =>
+                          (window.location.href = "/admin/settings")
+                        }
                         variant="ghost"
                         size="sm"
                         className="w-full justify-start px-4 py-2 text-sm"
@@ -233,7 +286,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         <Settings className="w-4 h-4 mr-2" />
                         Settings
                       </Button>
-                      
+
                       <Button
                         onClick={() => (window.location.href = "/")}
                         variant="ghost"
@@ -243,7 +296,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         <Eye className="w-4 h-4 mr-2" />
                         View Site
                       </Button>
-                      
+
                       <div className="border-t border-gray-100">
                         <Button
                           onClick={handleSignOut}
