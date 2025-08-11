@@ -116,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set up Firebase auth state listener
     const unsubscribe = onAuthStateChange((firebaseUser) => {
       console.log("Firebase auth state changed:", firebaseUser?.email);
+      console.log("Firebase user object:", firebaseUser);
       setUser(firebaseUser);
       fetchUserRole(firebaseUser);
       setLoading(false);
@@ -136,13 +137,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: result.displayName,
         photoURL: result.photoURL,
         // Additional profile fields
-        firstName: result.displayName?.split(' ')[0] || '',
-        lastName: result.displayName?.split(' ').slice(1).join(' ') || '',
+        firstName: result.displayName?.split(" ")[0] || "",
+        lastName: result.displayName?.split(" ").slice(1).join(" ") || "",
         emailVerified: result.emailVerified || false,
         phoneNumber: result.phoneNumber || null,
         // Get additional info from browser
-        locale: navigator.language || 'en',
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+        locale: navigator.language || "en",
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC",
       };
 
       // Create or update user in database
@@ -176,24 +177,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOutUser = useCallback(async () => {
     try {
       console.log("Starting sign out process...");
-      
+      console.log("Current user before sign out:", user);
+      console.log("Current user role before sign out:", userRole);
+
       // Clear SuperAdmin session
       localStorage.removeItem("superAdminUser");
+      console.log("SuperAdmin session cleared");
 
       // Sign out from Firebase
+      console.log("Calling Firebase sign out...");
       await firebaseSignOut();
-      
       console.log("Firebase sign out completed");
-      
-      // Force page reload to ensure clean state
-      window.location.reload();
+
+      // Manually reset state immediately
+      setUser(null);
+      setUserRole("guest");
+      setIsAdmin(false);
+      setIsSuperAdmin(false);
+      console.log("State reset completed");
+
+      // Redirect to homepage after sign out
+      console.log("Redirecting to homepage...");
+      window.location.href = '/';
     } catch (error) {
       console.error("Sign-Out Error:", error);
-      // Even if there's an error, try to clear local state and reload
+      // Even if there's an error, try to clear local state and redirect
       localStorage.removeItem("superAdminUser");
-      window.location.reload();
+      setUser(null);
+      setUserRole("guest");
+      setIsAdmin(false);
+      setIsSuperAdmin(false);
+      window.location.href = '/';
     }
-  }, []);
+  }, [user, userRole]);
 
   const updateUserRole = useCallback(
     (role: "superadmin" | "admin" | "user" | "guest") => {

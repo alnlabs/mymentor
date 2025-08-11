@@ -1,32 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/shared/lib/database';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/shared/lib/database";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      uid, 
-      email, 
-      name, 
-      photoURL, 
-      firstName, 
-      lastName, 
-      emailVerified, 
-      phoneNumber, 
-      locale, 
-      timezone 
+    const {
+      uid,
+      email,
+      name,
+      photoURL,
+      firstName,
+      lastName,
+      emailVerified,
+      phoneNumber,
+      locale,
+      timezone,
     } = body;
 
     if (!uid || !email) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: "Missing required fields" },
         { status: 400 }
       );
     }
 
     // Check if user already exists
     let user = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!user) {
@@ -35,26 +35,26 @@ export async function POST(request: NextRequest) {
         data: {
           id: uid,
           email,
-          name: name || email.split('@')[0],
+          name: name || email.split("@")[0],
           avatar: photoURL,
-          provider: 'google',
-          role: 'user',
+          provider: "google",
+          role: "user",
           // Additional profile fields
-          firstName: firstName || name?.split(' ')[0] || '',
-          lastName: lastName || name?.split(' ').slice(1).join(' ') || '',
+          firstName: firstName || name?.split(" ")[0] || "",
+          lastName: lastName || name?.split(" ").slice(1).join(" ") || "",
           emailVerified: emailVerified || false,
           phoneNumber: phoneNumber,
-          locale: locale || 'en',
-          timezone: timezone || 'UTC',
+          locale: locale || "en",
+          timezone: timezone || "UTC",
           // Set default preferences
           preferences: JSON.stringify({
-            theme: 'light',
+            theme: "light",
             notifications: true,
-            language: locale || 'en'
+            language: locale || "en",
           }),
           // Set profile completion status
           profileCompleted: !!(firstName && lastName && photoURL),
-        }
+        },
       });
     } else {
       // Update existing user's info with new profile data
@@ -65,7 +65,8 @@ export async function POST(request: NextRequest) {
           avatar: photoURL || user.avatar,
           firstName: firstName || user.firstName,
           lastName: lastName || user.lastName,
-          emailVerified: emailVerified !== undefined ? emailVerified : user.emailVerified,
+          emailVerified:
+            emailVerified !== undefined ? emailVerified : user.emailVerified,
           phoneNumber: phoneNumber || user.phoneNumber,
           locale: locale || user.locale,
           timezone: timezone || user.timezone,
@@ -74,7 +75,7 @@ export async function POST(request: NextRequest) {
           profileCompleted: !!(firstName && lastName && photoURL),
           // Update last login
           lastLoginAt: new Date(),
-        }
+        },
       });
     }
 
@@ -97,13 +98,13 @@ export async function POST(request: NextRequest) {
         preferences: user.preferences ? JSON.parse(user.preferences) : null,
         lastLoginAt: user.lastLoginAt,
         createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }
+        updatedAt: user.updatedAt,
+      },
     });
   } catch (error) {
-    console.error('Google auth error:', error);
+    console.error("Google auth error:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to authenticate user' },
+      { success: false, error: "Failed to authenticate user" },
       { status: 500 }
     );
   }

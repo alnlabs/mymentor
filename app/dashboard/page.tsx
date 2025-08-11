@@ -5,7 +5,7 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
-import { SignOutTest } from "@/shared/components/SignOutTest";
+
 import {
   BookOpen,
   Code,
@@ -19,6 +19,13 @@ import {
 export default function DashboardPage() {
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
+
+  // Redirect to homepage if not authenticated
+  if (!loading && !user && !isSuperAdmin) {
+    console.log('Dashboard: User not authenticated, redirecting to homepage');
+    window.location.href = '/';
+    return null;
+  }
 
   if (loading) {
     return (
@@ -162,6 +169,8 @@ export default function DashboardPage() {
             </Card>
           ))}
         </div>
+
+
 
         {/* Quick Stats */}
         <div className="mt-12">
