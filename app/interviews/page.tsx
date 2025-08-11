@@ -10,7 +10,7 @@ import { InterviewTemplate } from "@/shared/types/common";
 import { Filter, Search, Plus } from "lucide-react";
 
 export default function InterviewsPage() {
-  const { user, isAdmin } = useAuthContext();
+  const { user, isAdmin, isSuperAdmin } = useAuthContext();
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,7 +38,7 @@ export default function InterviewsPage() {
   };
 
   const handleTemplateSelect = async (template: InterviewTemplate) => {
-    if (!user) {
+    if (!user && !isSuperAdmin) {
       alert("Please sign in to start an interview");
       return;
     }
@@ -50,7 +50,7 @@ export default function InterviewsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: user.id,
+          userId: user?.id || 'superadmin-user',
           templateId: template.id,
         }),
       });
@@ -114,7 +114,7 @@ export default function InterviewsPage() {
                 Practice with realistic interview scenarios
               </p>
             </div>
-            {isAdmin && (
+                          {(isAdmin || isSuperAdmin) && (
               <Button
                 onClick={() => setShowCreateModal(true)}
                 className="flex items-center space-x-2"
