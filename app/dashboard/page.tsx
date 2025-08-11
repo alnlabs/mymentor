@@ -5,7 +5,6 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
-
 import {
   BookOpen,
   Code,
@@ -22,6 +21,16 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  Star,
+  Trophy,
+  Zap,
+  Play,
+  Bookmark,
+  Eye,
+  ArrowRight,
+  Plus,
+  Target as TargetIcon,
+  Home,
 } from "lucide-react";
 
 interface UserStats {
@@ -51,14 +60,6 @@ export default function DashboardPage() {
     recentActivity: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
-
-  // Debug authentication state
-  console.log("Dashboard: Auth state:", {
-    user: user ? { email: user.email, displayName: user.displayName } : null,
-    loading,
-    isAdmin,
-    isSuperAdmin,
-  });
 
   // Fetch user statistics
   React.useEffect(() => {
@@ -173,6 +174,16 @@ export default function DashboardPage() {
     (item) => !item.adminOnly || isAdmin || isSuperAdmin
   );
 
+  const getLevel = (problemsSolved: number) => {
+    if (problemsSolved >= 50) return { level: "Expert", color: "text-purple-600", bg: "bg-purple-100" };
+    if (problemsSolved >= 25) return { level: "Advanced", color: "text-blue-600", bg: "bg-blue-100" };
+    if (problemsSolved >= 10) return { level: "Intermediate", color: "text-green-600", bg: "bg-green-100" };
+    if (problemsSolved >= 5) return { level: "Beginner", color: "text-yellow-600", bg: "bg-yellow-100" };
+    return { level: "Newbie", color: "text-gray-600", bg: "bg-gray-100" };
+  };
+
+  const level = getLevel(userStats.problemsSolved);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -221,226 +232,260 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
+        {/* Hero Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back,{" "}
-            {isSuperAdmin
-              ? "SuperAdmin"
-              : user?.displayName || user?.email || "User"}
-            ! 👋
-          </h2>
-          <p className="text-gray-600">
-            Ready to continue your learning journey? Choose from the options
-            below.
-          </p>
-        </div>
-
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item, index) => (
-            <Card
-              key={index}
-              className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-              onClick={() => (window.location.href = item.href)}
-            >
-              <div className="flex items-start space-x-4">
-                <div className={`p-3 rounded-lg ${item.color} text-white`}>
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {item.description}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-16 -translate-x-16"></div>
+            
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-3xl font-bold mb-2">
+                    Welcome back,{" "}
+                    {isSuperAdmin
+                      ? "SuperAdmin"
+                      : user?.displayName || user?.email || "User"}
+                    ! 👋
+                  </h2>
+                  <p className="text-blue-100 text-lg">
+                    Ready to level up your coding skills?
                   </p>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Open {item.title}
-                  </Button>
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {/* User Statistics */}
-        {!isSuperAdmin && (
-          <div className="mt-12 space-y-8">
-            {/* Stats Overview */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
-                Your Progress
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Problems Solved
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {statsLoading ? "..." : userStats.problemsSolved}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {userStats.totalSubmissions > 0 &&
-                          `${userStats.successRate}% success rate`}
-                      </p>
+                {!isSuperAdmin && (
+                  <div className="text-right">
+                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${level.bg} ${level.color}`}>
+                      <Trophy className="w-4 h-4 mr-1" />
+                      {level.level}
                     </div>
-                    <div className="p-3 bg-green-100 rounded-lg">
-                      <Code className="w-6 h-6 text-green-600" />
-                    </div>
+                    <p className="text-blue-100 text-sm mt-1">
+                      {userStats.problemsSolved} problems solved
+                    </p>
                   </div>
-                </Card>
-
-                <Card className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        MCQ Completed
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {statsLoading ? "..." : userStats.mcqCompleted}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Knowledge questions
-                      </p>
-                    </div>
-                    <div className="p-3 bg-purple-100 rounded-lg">
-                      <BookOpen className="w-6 h-6 text-purple-600" />
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Interviews Taken
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {statsLoading ? "..." : userStats.interviewsTaken}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Mock interviews
-                      </p>
-                    </div>
-                    <div className="p-3 bg-blue-100 rounded-lg">
-                      <Target className="w-6 h-6 text-blue-600" />
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">
-                        Total Submissions
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {statsLoading ? "..." : userStats.totalSubmissions}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Code submissions
-                      </p>
-                    </div>
-                    <div className="p-3 bg-orange-100 rounded-lg">
-                      <Activity className="w-6 h-6 text-orange-600" />
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
-            {/* Recent Activity */}
-            {userStats.recentActivity.length > 0 && (
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                  <Clock className="w-5 h-5 mr-2 text-blue-600" />
-                  Recent Activity
-                </h3>
-                <Card className="p-6">
-                  <div className="space-y-4">
-                    {userStats.recentActivity.map((activity) => (
-                      <div
-                        key={activity.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                      >
-                        <div className="flex items-center space-x-3">
-                          {activity.status === "accepted" ? (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : activity.status === "rejected" ? (
-                            <XCircle className="w-5 h-5 text-red-600" />
-                          ) : (
-                            <AlertCircle className="w-5 h-5 text-yellow-600" />
-                          )}
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {activity.problemTitle}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {new Date(
-                                activity.createdAt
-                              ).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p
-                            className={`text-sm font-medium ${
-                              activity.status === "accepted"
-                                ? "text-green-600"
-                                : activity.status === "rejected"
-                                ? "text-red-600"
-                                : "text-yellow-600"
-                            }`}
-                          >
-                            {activity.status.charAt(0).toUpperCase() +
-                              activity.status.slice(1)}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Score: {activity.score}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-            )}
-
-            {/* Quick Actions */}
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-                <Award className="w-5 h-5 mr-2 text-blue-600" />
-                Quick Actions
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Button
-                  onClick={() => (window.location.href = "/problems")}
-                  className="flex items-center justify-center space-x-2 h-16 text-lg"
-                >
-                  <Code className="w-5 h-5" />
-                  <span>Start Coding</span>
-                </Button>
-                <Button
-                  onClick={() => (window.location.href = "/mcq")}
-                  className="flex items-center justify-center space-x-2 h-16 text-lg"
-                >
-                  <BookOpen className="w-5 h-5" />
-                  <span>Take MCQ</span>
-                </Button>
-                {(isAdmin || isSuperAdmin) && (
-                  <Button
-                    onClick={() => (window.location.href = "/admin/interviews")}
-                    className="flex items-center justify-center space-x-2 h-16 text-lg"
-                  >
-                    <Target className="w-5 h-5" />
-                    <span>Mock Interview</span>
-                  </Button>
                 )}
               </div>
+              
+              {!isSuperAdmin && (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold">{userStats.problemsSolved}</div>
+                    <div className="text-blue-100 text-sm">Problems</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold">{userStats.mcqCompleted}</div>
+                    <div className="text-blue-100 text-sm">MCQs</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold">{userStats.interviewsTaken}</div>
+                    <div className="text-blue-100 text-sm">Interviews</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold">{userStats.successRate}%</div>
+                    <div className="text-blue-100 text-sm">Success Rate</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+            <Zap className="w-5 h-5 mr-2 text-blue-600" />
+            Quick Start
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-green-200">
+              <div className="p-6 text-center" onClick={() => window.location.href = "/problems"}>
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Code className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Start Coding</h3>
+                <p className="text-gray-600 mb-4">Solve algorithmic challenges and improve your problem-solving skills</p>
+                <Button className="w-full group-hover:bg-green-600 transition-colors">
+                  <Play className="w-4 h-4 mr-2" />
+                  Begin Practice
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-purple-200">
+              <div className="p-6 text-center" onClick={() => window.location.href = "/mcq"}>
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Take MCQ Test</h3>
+                <p className="text-gray-600 mb-4">Test your knowledge with multiple choice questions</p>
+                <Button className="w-full group-hover:bg-purple-600 transition-colors">
+                  <Bookmark className="w-4 h-4 mr-2" />
+                  Start Quiz
+                </Button>
+              </div>
+            </Card>
+
+            {(isAdmin || isSuperAdmin) && (
+              <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-blue-200">
+                <div className="p-6 text-center" onClick={() => window.location.href = "/admin/interviews"}>
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Mock Interview</h3>
+                  <p className="text-gray-600 mb-4">Practice with realistic interview scenarios</p>
+                  <Button className="w-full group-hover:bg-blue-600 transition-colors">
+                    <Eye className="w-4 h-4 mr-2" />
+                    Start Interview
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </div>
+        </div>
+
+        {/* Main Navigation Grid */}
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+            <Award className="w-5 h-5 mr-2 text-blue-600" />
+            All Features
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item, index) => (
+              <Card
+                key={index}
+                className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-gray-200"
+                onClick={() => (window.location.href = item.href)}
+              >
+                <div className="p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className={`p-3 rounded-xl ${item.color} text-white group-hover:scale-110 transition-transform`}>
+                      <item.icon className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-4">
+                        {item.description}
+                      </p>
+                      <div className="flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                        <span>Explore</span>
+                        <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        {!isSuperAdmin && userStats.recentActivity.length > 0 && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <Activity className="w-5 h-5 mr-2 text-blue-600" />
+              Recent Activity
+            </h3>
+            <Card className="p-6">
+              <div className="space-y-4">
+                {userStats.recentActivity.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center space-x-4">
+                      {activity.status === "accepted" ? (
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                        </div>
+                      ) : activity.status === "rejected" ? (
+                        <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                          <XCircle className="w-5 h-5 text-red-600" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <AlertCircle className="w-5 h-5 text-yellow-600" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-semibold text-gray-900">
+                          {activity.problemTitle}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(activity.createdAt).toLocaleDateString("en-US", {
+                            weekday: "short",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p
+                        className={`text-sm font-semibold ${
+                          activity.status === "accepted"
+                            ? "text-green-600"
+                            : activity.status === "rejected"
+                            ? "text-red-600"
+                            : "text-yellow-600"
+                        }`}
+                      >
+                        {activity.status.charAt(0).toUpperCase() +
+                          activity.status.slice(1)}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Score: {activity.score}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* Progress Insights */}
+        {!isSuperAdmin && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+              Your Progress
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900">Success Rate</h4>
+                  <div className="text-2xl font-bold text-blue-600">{userStats.successRate}%</div>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500"
+                    style={{ width: `${userStats.successRate}%` }}
+                  ></div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  {userStats.problemsSolved} out of {userStats.totalSubmissions} problems solved successfully
+                </p>
+              </Card>
+
+              <Card className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900">Learning Streak</h4>
+                  <div className="text-2xl font-bold text-green-600">
+                    {userStats.recentActivity.length > 0 ? "🔥 Active" : "Start Today"}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Problems this week</span>
+                    <span className="font-semibold">{userStats.recentActivity.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Total practice time</span>
+                    <span className="font-semibold">~{Math.round(userStats.totalSubmissions * 15)} min</span>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         )}
