@@ -17,6 +17,7 @@ import {
   LogOut,
   Menu,
   X,
+  Eye,
 } from "lucide-react";
 
 interface AdminLayoutProps {
