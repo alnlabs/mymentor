@@ -4,22 +4,11 @@ import { ApiResponse } from '@/shared/types/common';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user from session/token (simplified for demo)
-    // In production, you'd get this from JWT token or session
-    const authHeader = request.headers.get('authorization');
-    
-    if (!authHeader) {
-      const response: ApiResponse = {
-        success: false,
-        error: 'No authorization header',
-      };
-      return NextResponse.json(response, { status: 401 });
-    }
-
-    // For demo purposes, we'll check for SuperAdmin session
-    // In production, validate JWT token here
+    // Get user ID from headers
+    const userId = request.headers.get('x-user-id');
     const superAdminUser = request.headers.get('x-superadmin-user');
     
+    // Handle SuperAdmin session
     if (superAdminUser) {
       try {
         const user = JSON.parse(superAdminUser);
@@ -34,12 +23,42 @@ export async function GET(request: NextRequest) {
           },
         });
       } catch (error) {
-        // Continue to normal user lookup
+        console.error('Error parsing superadmin user:', error);
       }
     }
 
-    // For now, return a default user role
-    // In production, this would come from your auth system
+    // Handle Firebase user
+    if (userId) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            isActive: true,
+          },
+        });
+
+        if (user) {
+          return NextResponse.json({
+            success: true,
+            data: {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role,
+              isActive: user.isActive,
+            },
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user from database:', error);
+      }
+    }
+
+    // Return default user role if no user found
     const response: ApiResponse = {
       success: true,
       data: {

@@ -61,11 +61,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchUserRole = useCallback(
     async (firebaseUser: User | null) => {
       if (!firebaseUser) {
+        console.log('No Firebase user, setting guest role');
         setUserRole("guest");
         setIsAdmin(false);
         setIsSuperAdmin(false);
         return;
       }
+
+      console.log('Fetching user role for:', firebaseUser.email);
 
       // Check for SuperAdmin session first
       if (checkSuperAdminSession()) {
@@ -80,12 +83,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         });
         const result = await response.json();
+        console.log('User role API response:', result);
         if (result.success && result.data && result.data.role) {
           const role = result.data.role.toLowerCase();
+          console.log('Setting user role to:', role);
           setUserRole(role);
           setIsAdmin(role === "admin" || role === "superadmin");
           setIsSuperAdmin(role === "superadmin");
         } else {
+          console.log('No role found, setting default user role');
           setUserRole("user");
           setIsAdmin(false);
           setIsSuperAdmin(false);
@@ -109,6 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Set up Firebase auth state listener
     const unsubscribe = onAuthStateChange((firebaseUser) => {
+      console.log('Firebase auth state changed:', firebaseUser?.email);
       setUser(firebaseUser);
       fetchUserRole(firebaseUser);
       setLoading(false);
@@ -139,13 +146,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!response.ok) {
         throw new Error("Failed to create user in database");
       }
+
+      // Manually trigger user role fetch after successful sign-in
+      await fetchUserRole(result);
+      
+      // Force a small delay to ensure state updates
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      
     } catch (error) {
       console.error("Google Sign-In Error:", error);
       alert("Failed to sign in with Google. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchUserRole]);
 
   const signOutUser = useCallback(async () => {
     try {
