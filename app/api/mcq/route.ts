@@ -56,10 +56,10 @@ export async function GET(request: NextRequest) {
           description: `Test your knowledge in ${category} with ${categoryQuestions.length} carefully selected questions.`,
           category: category,
           difficulty: avgDifficulty as "easy" | "medium" | "hard",
-          timeLimit: Math.ceil(categoryQuestions.length * 1.5), // 1.5 minutes per question
-          questionCount: categoryQuestions.length,
-          participants: Math.floor(Math.random() * 100) + 10, // Mock participants
-          averageScore: Math.floor(Math.random() * 30) + 60, // Mock average score
+                  timeLimit: Math.ceil(categoryQuestions.length * 1.5), // 1.5 minutes per question
+        questionCount: categoryQuestions.length,
+        participants: categoryQuestions.length > 0 ? Math.floor(Math.random() * 50) + 5 : 0, // Mock participants
+        averageScore: categoryQuestions.length > 0 ? Math.floor(Math.random() * 30) + 60 : 0, // Mock average score
         };
       }
     );

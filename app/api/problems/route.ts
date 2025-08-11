@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       timeLimit: 30, // Default time limit
       memoryLimit: 256, // Default memory limit in MB
       submissions: problem._count.submissions,
-      successRate: Math.floor(Math.random() * 40) + 60, // Mock success rate for now
+      successRate: problem._count.submissions > 0 ? Math.floor(Math.random() * 40) + 60 : 0, // Mock success rate for now
     }));
 
     const response: ApiResponse = {

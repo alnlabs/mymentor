@@ -14,11 +14,43 @@ import {
   Settings,
   BarChart3,
   LogOut,
+  TrendingUp,
+  Clock,
+  Award,
+  Calendar,
+  Activity,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
 } from "lucide-react";
+
+interface UserStats {
+  problemsSolved: number;
+  mcqCompleted: number;
+  interviewsTaken: number;
+  totalSubmissions: number;
+  successRate: number;
+  recentActivity: Array<{
+    id: string;
+    problemTitle: string;
+    status: string;
+    score: number;
+    createdAt: string;
+  }>;
+}
 
 export default function DashboardPage() {
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
+  const [userStats, setUserStats] = useState<UserStats>({
+    problemsSolved: 0,
+    mcqCompleted: 0,
+    interviewsTaken: 0,
+    totalSubmissions: 0,
+    successRate: 0,
+    recentActivity: []
+  });
+  const [statsLoading, setStatsLoading] = useState(true);
 
   // Debug authentication state
   console.log('Dashboard: Auth state:', {
@@ -27,6 +59,15 @@ export default function DashboardPage() {
     isAdmin,
     isSuperAdmin
   });
+
+  // Fetch user statistics
+  React.useEffect(() => {
+    if (user && !isSuperAdmin) {
+      fetchUserStats();
+    } else if (isSuperAdmin) {
+      setStatsLoading(false);
+    }
+  }, [user, isSuperAdmin]);
 
   // Redirect to homepage if not authenticated (with delay to prevent immediate redirects)
   React.useEffect(() => {
@@ -38,6 +79,28 @@ export default function DashboardPage() {
       return () => clearTimeout(timer);
     }
   }, [user, loading, isSuperAdmin]);
+
+  const fetchUserStats = async () => {
+    try {
+      setStatsLoading(true);
+      const response = await fetch('/api/user/stats', {
+        headers: {
+          'x-user-id': user?.uid || ''
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setUserStats(data.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
 
   // Show loading while checking authentication
   if (loading) {
@@ -194,53 +257,156 @@ export default function DashboardPage() {
 
 
 
-        {/* Quick Stats */}
-        <div className="mt-12">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">
-            Quick Stats
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Problems Solved
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">24</p>
-                </div>
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <Code className="w-6 h-6 text-green-600" />
-                </div>
+        {/* User Statistics */}
+        {!isSuperAdmin && (
+          <div className="mt-12 space-y-8">
+            {/* Stats Overview */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                Your Progress
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Problems Solved</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {statsLoading ? "..." : userStats.problemsSolved}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {userStats.totalSubmissions > 0 && `${userStats.successRate}% success rate`}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-green-100 rounded-lg">
+                      <Code className="w-6 h-6 text-green-600" />
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">MCQ Completed</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {statsLoading ? "..." : userStats.mcqCompleted}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Knowledge questions</p>
+                    </div>
+                    <div className="p-3 bg-purple-100 rounded-lg">
+                      <BookOpen className="w-6 h-6 text-purple-600" />
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Interviews Taken</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {statsLoading ? "..." : userStats.interviewsTaken}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Mock interviews</p>
+                    </div>
+                    <div className="p-3 bg-blue-100 rounded-lg">
+                      <Target className="w-6 h-6 text-blue-600" />
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Submissions</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {statsLoading ? "..." : userStats.totalSubmissions}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">Code submissions</p>
+                    </div>
+                    <div className="p-3 bg-orange-100 rounded-lg">
+                      <Activity className="w-6 h-6 text-orange-600" />
+                    </div>
+                  </div>
+                </Card>
               </div>
-            </Card>
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    MCQ Completed
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">156</p>
-                </div>
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <BookOpen className="w-6 h-6 text-purple-600" />
-                </div>
+            </div>
+
+            {/* Recent Activity */}
+            {userStats.recentActivity.length > 0 && (
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                  <Clock className="w-5 h-5 mr-2 text-blue-600" />
+                  Recent Activity
+                </h3>
+                <Card className="p-6">
+                  <div className="space-y-4">
+                    {userStats.recentActivity.map((activity) => (
+                      <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          {activity.status === 'accepted' ? (
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                          ) : activity.status === 'rejected' ? (
+                            <XCircle className="w-5 h-5 text-red-600" />
+                          ) : (
+                            <AlertCircle className="w-5 h-5 text-yellow-600" />
+                          )}
+                          <div>
+                            <p className="font-medium text-gray-900">{activity.problemTitle}</p>
+                            <p className="text-sm text-gray-500">
+                              {new Date(activity.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-sm font-medium ${
+                            activity.status === 'accepted' ? 'text-green-600' : 
+                            activity.status === 'rejected' ? 'text-red-600' : 'text-yellow-600'
+                          }`}>
+                            {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+                          </p>
+                          <p className="text-xs text-gray-500">Score: {activity.score}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
               </div>
-            </Card>
-            <Card className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Interviews Taken
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">8</p>
-                </div>
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Target className="w-6 h-6 text-blue-600" />
-                </div>
+            )}
+
+            {/* Quick Actions */}
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                <Award className="w-5 h-5 mr-2 text-blue-600" />
+                Quick Actions
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button
+                  onClick={() => window.location.href = '/problems'}
+                  className="flex items-center justify-center space-x-2 h-16 text-lg"
+                >
+                  <Code className="w-5 h-5" />
+                  <span>Start Coding</span>
+                </Button>
+                <Button
+                  onClick={() => window.location.href = '/mcq'}
+                  className="flex items-center justify-center space-x-2 h-16 text-lg"
+                >
+                  <BookOpen className="w-5 h-5" />
+                  <span>Take MCQ</span>
+                </Button>
+                {(isAdmin || isSuperAdmin) && (
+                  <Button
+                    onClick={() => window.location.href = '/admin/interviews'}
+                    className="flex items-center justify-center space-x-2 h-16 text-lg"
+                  >
+                    <Target className="w-5 h-5" />
+                    <span>Mock Interview</span>
+                  </Button>
+                )}
               </div>
-            </Card>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
