@@ -11,17 +11,11 @@ import {
   Plus,
   Edit,
   Trash2,
-  Eye,
-  Save,
   X,
   Check,
   AlertCircle,
   FileSpreadsheet,
-  Database,
-  Settings,
-  RefreshCw,
   Code,
-  BarChart3,
 } from "lucide-react";
 
 interface Problem {
@@ -58,8 +52,7 @@ export default function UploadPage() {
   const [uploadMode, setUploadMode] = useState<UploadMode>("form");
   const [jsonData, setJsonData] = useState("");
   const [result, setResult] = useState<any>(null);
-  const [existingItems, setExistingItems] = useState<any[]>([]);
-  const [loadingExisting, setLoadingExisting] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
 
@@ -126,24 +119,7 @@ export default function UploadPage() {
   const mcqCSVTemplate = `question,options,correctAnswer,explanation,category,difficulty,tags,companies
 "What is the time complexity of binary search?","O(n);O(log n);O(n²);O(1)",1,"Binary search divides the search space in half with each iteration.","algorithms","easy","binary-search,complexity","Google,Amazon,Microsoft"`;
 
-  useEffect(() => {
-    fetchExistingItems();
-  }, [uploadType]);
 
-  const fetchExistingItems = async () => {
-    setLoadingExisting(true);
-    try {
-      const response = await fetch(`/api/${uploadType}`);
-      const data = await response.json();
-      if (data.success) {
-        setExistingItems(data.data.slice(0, 10)); // Show last 10 items
-      }
-    } catch (error) {
-      console.error("Error fetching existing items:", error);
-    } finally {
-      setLoadingExisting(false);
-    }
-  };
 
   const handleUpload = async () => {
     if (uploadMode === "form") {
@@ -216,7 +192,6 @@ export default function UploadPage() {
             },
           ]);
         }
-        fetchExistingItems();
       }
     } catch (error: any) {
       setResult({
@@ -254,7 +229,6 @@ export default function UploadPage() {
 
       if (result.success) {
         setJsonData("");
-        fetchExistingItems();
       }
     } catch (error: any) {
       setResult({
@@ -293,11 +267,10 @@ export default function UploadPage() {
 
       const result = await response.json();
       setResult(result);
-      
+
       if (result.success) {
         setSelectedFile(null);
-        setFileInputKey(prev => prev + 1);
-        fetchExistingItems();
+        setFileInputKey((prev) => prev + 1);
       }
     } catch (error: any) {
       setResult({
@@ -322,17 +295,17 @@ export default function UploadPage() {
   };
 
   const getFileType = (filename: string): string => {
-    const extension = filename.split('.').pop()?.toLowerCase();
+    const extension = filename.split(".").pop()?.toLowerCase();
     switch (extension) {
-      case 'csv':
-        return 'csv';
-      case 'xlsx':
-      case 'xls':
-        return 'excel';
-      case 'json':
-        return 'json';
+      case "csv":
+        return "csv";
+      case "xlsx":
+      case "xls":
+        return "excel";
+      case "json":
+        return "json";
       default:
-        return 'unknown';
+        return "unknown";
     }
   };
 
@@ -413,7 +386,8 @@ export default function UploadPage() {
 
   const downloadTemplate = (format: "json" | "csv") => {
     if (format === "json") {
-      const template = uploadType === "problems" ? problemTemplate : mcqTemplate;
+      const template =
+        uploadType === "problems" ? problemTemplate : mcqTemplate;
       const blob = new Blob([template], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -510,26 +484,14 @@ export default function UploadPage() {
               <FileSpreadsheet className="w-4 h-4 mr-2" />
               CSV Template
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchExistingItems}
-              disabled={loadingExisting}
-            >
-              <RefreshCw
-                className={`w-4 h-4 mr-2 ${
-                  loadingExisting ? "animate-spin" : ""
-                }`}
-              />
-              Refresh
-            </Button>
+
           </div>
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="space-y-6">
         {/* Upload Section */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
           {/* Upload Mode Selection */}
           <Card>
             <div className="flex space-x-4 mb-6">
@@ -598,7 +560,7 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateProblem(index, "title", e.target.value)
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Problem title"
                             />
                           </div>
@@ -613,7 +575,7 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateProblem(index, "category", e.target.value)
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="e.g., arrays, strings, algorithms"
                             />
                           </div>
@@ -631,7 +593,7 @@ export default function UploadPage() {
                                   e.target.value as any
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="easy">Easy</option>
                               <option value="medium">Medium</option>
@@ -649,7 +611,7 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateProblem(index, "tags", e.target.value)
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="comma-separated tags"
                             />
                           </div>
@@ -668,8 +630,8 @@ export default function UploadPage() {
                                 e.target.value
                               )
                             }
-                            rows={3}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            rows={5}
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Problem description"
                           />
                         </div>
@@ -683,8 +645,8 @@ export default function UploadPage() {
                             onChange={(e) =>
                               updateProblem(index, "testCases", e.target.value)
                             }
-                            rows={2}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            rows={4}
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
                           />
                         </div>
@@ -699,8 +661,8 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateProblem(index, "solution", e.target.value)
                               }
-                              rows={2}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={4}
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Solution approach"
                             />
                           </div>
@@ -714,8 +676,8 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateProblem(index, "hints", e.target.value)
                               }
-                              rows={2}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={4}
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Helpful hints"
                             />
                           </div>
@@ -731,7 +693,7 @@ export default function UploadPage() {
                             onChange={(e) =>
                               updateProblem(index, "companies", e.target.value)
                             }
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="comma-separated companies"
                           />
                         </div>
@@ -774,7 +736,7 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateMCQ(index, "category", e.target.value)
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="e.g., algorithms, data-structures"
                             />
                           </div>
@@ -792,7 +754,7 @@ export default function UploadPage() {
                                   e.target.value as any
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                               <option value="easy">Easy</option>
                               <option value="medium">Medium</option>
@@ -810,8 +772,8 @@ export default function UploadPage() {
                             onChange={(e) =>
                               updateMCQ(index, "question", e.target.value)
                             }
-                            rows={3}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            rows={5}
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="MCQ question"
                           />
                         </div>
@@ -844,7 +806,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="flex-1 border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 placeholder={`Option ${optionIndex + 1}`}
                               />
                             </div>
@@ -861,8 +823,8 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateMCQ(index, "explanation", e.target.value)
                               }
-                              rows={2}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={4}
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="Explanation for the correct answer"
                             />
                           </div>
@@ -877,7 +839,7 @@ export default function UploadPage() {
                               onChange={(e) =>
                                 updateMCQ(index, "tags", e.target.value)
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder="comma-separated tags"
                             />
                           </div>
@@ -893,7 +855,7 @@ export default function UploadPage() {
                             onChange={(e) =>
                               updateMCQ(index, "companies", e.target.value)
                             }
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="comma-separated companies"
                           />
                         </div>
@@ -914,8 +876,8 @@ export default function UploadPage() {
                   <textarea
                     value={jsonData}
                     onChange={(e) => setJsonData(e.target.value)}
-                    rows={15}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={20}
+                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Paste your JSON data here..."
                   />
                 </div>
@@ -937,19 +899,23 @@ export default function UploadPage() {
                 <div className="text-center py-8">
                   <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Bulk Upload {uploadType === "problems" ? "Problems" : "MCQs"}
+                    Bulk Upload{" "}
+                    {uploadType === "problems" ? "Problems" : "MCQs"}
                   </h3>
                   <p className="text-gray-600 mb-6">
-                    Upload CSV, Excel, or JSON files with multiple items at once.
+                    Upload CSV, Excel, or JSON files with multiple items at
+                    once.
                   </p>
-                  
+
                   {/* File Upload Area */}
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 transition-colors">
                     <input
                       key={fileInputKey}
                       type="file"
                       accept=".csv,.xlsx,.xls,.json"
-                      onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                      onChange={(e) =>
+                        setSelectedFile(e.target.files?.[0] || null)
+                      }
                       className="hidden"
                       id="file-upload"
                     />
@@ -962,10 +928,9 @@ export default function UploadPage() {
                         {selectedFile ? selectedFile.name : "Choose a file"}
                       </span>
                       <span className="text-sm text-gray-500">
-                        {selectedFile 
+                        {selectedFile
                           ? `Size: ${(selectedFile.size / 1024).toFixed(1)} KB`
-                          : "CSV, Excel, or JSON files up to 10MB"
-                        }
+                          : "CSV, Excel, or JSON files up to 10MB"}
                       </span>
                     </label>
                   </div>
@@ -977,9 +942,12 @@ export default function UploadPage() {
                         <div className="flex items-center space-x-3">
                           <FileSpreadsheet className="w-5 h-5 text-blue-600" />
                           <div>
-                            <p className="font-medium text-blue-900">{selectedFile.name}</p>
+                            <p className="font-medium text-blue-900">
+                              {selectedFile.name}
+                            </p>
                             <p className="text-sm text-blue-700">
-                              Type: {getFileType(selectedFile.name).toUpperCase()} • 
+                              Type:{" "}
+                              {getFileType(selectedFile.name).toUpperCase()} •
                               Size: {(selectedFile.size / 1024).toFixed(1)} KB
                             </p>
                           </div>
@@ -989,7 +957,7 @@ export default function UploadPage() {
                           size="sm"
                           onClick={() => {
                             setSelectedFile(null);
-                            setFileInputKey(prev => prev + 1);
+                            setFileInputKey((prev) => prev + 1);
                           }}
                         >
                           <X className="w-4 h-4" />
@@ -1000,7 +968,9 @@ export default function UploadPage() {
 
                   {/* Supported Formats */}
                   <div className="mt-6">
-                    <h4 className="font-medium text-gray-900 mb-3">Supported Formats:</h4>
+                    <h4 className="font-medium text-gray-900 mb-3">
+                      Supported Formats:
+                    </h4>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <div className="flex items-center mb-2">
@@ -1034,7 +1004,9 @@ export default function UploadPage() {
 
                   {/* Template Downloads */}
                   <div className="mt-6">
-                    <h4 className="font-medium text-gray-900 mb-3">Download Templates:</h4>
+                    <h4 className="font-medium text-gray-900 mb-3">
+                      Download Templates:
+                    </h4>
                     <div className="flex flex-wrap gap-3 justify-center">
                       <Button
                         variant="outline"
@@ -1062,7 +1034,7 @@ export default function UploadPage() {
             <Button
               onClick={handleUpload}
               disabled={
-                uploading || 
+                uploading ||
                 (uploadMode === "json" && !jsonData.trim()) ||
                 (uploadMode === "bulk" && !selectedFile)
               }
@@ -1073,10 +1045,11 @@ export default function UploadPage() {
               ) : (
                 <>
                   <Upload className="w-4 h-4 mr-2" />
-                  {uploadMode === "bulk" 
+                  {uploadMode === "bulk"
                     ? `Upload ${selectedFile?.name || "File"}`
-                    : `Upload ${uploadType === "problems" ? "Problems" : "MCQs"}`
-                  }
+                    : `Upload ${
+                        uploadType === "problems" ? "Problems" : "MCQs"
+                      }`}
                 </>
               )}
             </Button>
@@ -1140,142 +1113,6 @@ export default function UploadPage() {
                   )}
               </div>
             )}
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Recent Items */}
-          <Card>
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Database className="w-5 h-5 mr-2" />
-              Recent {uploadType === "problems" ? "Problems" : "MCQs"}
-            </h3>
-
-            {loadingExisting ? (
-              <div className="text-center py-4">
-                <Loading size="sm" text="Loading..." />
-              </div>
-            ) : existingItems.length > 0 ? (
-              <div className="space-y-3">
-                {existingItems.map((item, index) => (
-                  <div
-                    key={item.id || index}
-                    className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {uploadType === "problems"
-                            ? item.title
-                            : item.question}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {item.category} • {item.difficulty}
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-1 ml-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="p-1"
-                          title="View"
-                        >
-                          <Eye className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="p-1"
-                          title="Edit"
-                        >
-                          <Edit className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 text-center py-4">
-                No {uploadType} found
-              </p>
-            )}
-          </Card>
-
-          {/* Quick Stats */}
-          <Card>
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <BarChart3 className="w-5 h-5 mr-2" />
-              Quick Stats
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">
-                  Total {uploadType}:
-                </span>
-                <span className="text-sm font-medium">
-                  {existingItems.length}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Easy:</span>
-                <span className="text-sm font-medium text-green-600">
-                  {
-                    existingItems.filter((item) => item.difficulty === "easy")
-                      .length
-                  }
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Medium:</span>
-                <span className="text-sm font-medium text-yellow-600">
-                  {
-                    existingItems.filter((item) => item.difficulty === "medium")
-                      .length
-                  }
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-gray-600">Hard:</span>
-                <span className="text-sm font-medium text-red-600">
-                  {
-                    existingItems.filter((item) => item.difficulty === "hard")
-                      .length
-                  }
-                </span>
-              </div>
-            </div>
-          </Card>
-
-          {/* Tips */}
-          <Card>
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <Settings className="w-5 h-5 mr-2" />
-              Tips & Guidelines
-            </h3>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div className="flex items-start">
-                <Check className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                <span>Use clear, descriptive titles for problems</span>
-              </div>
-              <div className="flex items-start">
-                <Check className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                <span>Provide comprehensive test cases</span>
-              </div>
-              <div className="flex items-start">
-                <Check className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                <span>Include detailed explanations for MCQs</span>
-              </div>
-              <div className="flex items-start">
-                <Check className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                <span>Tag content appropriately for better organization</span>
-              </div>
-              <div className="flex items-start">
-                <Check className="w-4 h-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                <span>Use consistent difficulty levels</span>
-              </div>
-            </div>
           </Card>
         </div>
       </div>

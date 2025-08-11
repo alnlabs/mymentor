@@ -1,35 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/shared/lib/database';
-import { ApiResponse } from '@/shared/types/common';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/shared/lib/database";
+import { ApiResponse } from "@/shared/types/common";
 
 // Generate unique ID based on title/question
 function generateId(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .substring(0, 50) // Limit length
-    + '-' + Date.now().toString().slice(-6); // Add timestamp
+  return (
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "") // Remove special characters
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .substring(0, 50) + // Limit length
+    "-" +
+    Date.now().toString().slice(-6)
+  ); // Add timestamp
 }
 
 // Check for duplicate content
-async function checkDuplicateContent(type: string, content: string): Promise<boolean> {
-  if (type === 'problems') {
+async function checkDuplicateContent(
+  type: string,
+  content: string
+): Promise<boolean> {
+  if (type === "problems") {
     const existing = await prisma.problem.findFirst({
       where: {
         title: {
           equals: content,
-          mode: 'insensitive', // Case-insensitive comparison
+          mode: "insensitive", // Case-insensitive comparison
         },
       },
     });
     return !!existing;
-  } else if (type === 'mcq') {
+  } else if (type === "mcq") {
     const existing = await prisma.mCQQuestion.findFirst({
       where: {
         question: {
           equals: content,
-          mode: 'insensitive', // Case-insensitive comparison
+          mode: "insensitive", // Case-insensitive comparison
         },
       },
     });
@@ -39,9 +45,9 @@ async function checkDuplicateContent(type: string, content: string): Promise<boo
 }
 
 // Parse CSV content
-function parseCSV(csvContent: string, type: 'problems' | 'mcq'): any[] {
-  const lines = csvContent.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+function parseCSV(csvContent: string, type: "problems" | "mcq"): any[] {
+  const lines = csvContent.trim().split("\n");
+  const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
   const data: any[] = [];
 
   for (let i = 1; i < lines.length; i++) {
@@ -50,21 +56,21 @@ function parseCSV(csvContent: string, type: 'problems' | 'mcq'): any[] {
 
     // Handle quoted values with commas
     const values: string[] = [];
-    let current = '';
+    let current = "";
     let inQuotes = false;
-    
+
     for (let j = 0; j < line.length; j++) {
       const char = line[j];
       if (char === '"') {
         inQuotes = !inQuotes;
-      } else if (char === ',' && !inQuotes) {
-        values.push(current.trim().replace(/^"|"$/g, ''));
-        current = '';
+      } else if (char === "," && !inQuotes) {
+        values.push(current.trim().replace(/^"|"$/g, ""));
+        current = "";
       } else {
         current += char;
       }
     }
-    values.push(current.trim().replace(/^"|"$/g, ''));
+    values.push(current.trim().replace(/^"|"$/g, ""));
 
     const row: any = {};
     headers.forEach((header, index) => {
@@ -74,30 +80,32 @@ function parseCSV(csvContent: string, type: 'problems' | 'mcq'): any[] {
     });
 
     // Transform data based on type
-    if (type === 'problems') {
+    if (type === "problems") {
       data.push({
-        title: row.title || '',
-        description: row.description || '',
-        difficulty: row.difficulty || 'easy',
-        category: row.category || '',
-        testCases: row.testCases || '',
-        solution: row.solution || '',
-        hints: row.hints || '',
-        tags: row.tags || '',
-        companies: row.companies || '',
+        title: row.title || "",
+        description: row.description || "",
+        difficulty: row.difficulty || "easy",
+        category: row.category || "",
+        testCases: row.testCases || "",
+        solution: row.solution || "",
+        hints: row.hints || "",
+        tags: row.tags || "",
+        companies: row.companies || "",
       });
-    } else if (type === 'mcq') {
+    } else if (type === "mcq") {
       // Parse options from semicolon-separated string
-      const options = row.options ? row.options.split(';').map((opt: string) => opt.trim()) : ['', '', '', ''];
+      const options = row.options
+        ? row.options.split(";").map((opt: string) => opt.trim())
+        : ["", "", "", ""];
       data.push({
-        question: row.question || '',
+        question: row.question || "",
         options: options,
         correctAnswer: parseInt(row.correctAnswer) || 0,
-        explanation: row.explanation || '',
-        category: row.category || '',
-        difficulty: row.difficulty || 'easy',
-        tags: row.tags || '',
-        companies: row.companies || '',
+        explanation: row.explanation || "",
+        category: row.category || "",
+        difficulty: row.difficulty || "easy",
+        tags: row.tags || "",
+        companies: row.companies || "",
       });
     }
   }
@@ -106,18 +114,18 @@ function parseCSV(csvContent: string, type: 'problems' | 'mcq'): any[] {
 }
 
 // Parse Excel content (basic implementation - can be enhanced with proper Excel library)
-function parseExcel(excelContent: string, type: 'problems' | 'mcq'): any[] {
+function parseExcel(excelContent: string, type: "problems" | "mcq"): any[] {
   // For now, treat Excel as CSV with tab separation
   // In a real implementation, you'd use a library like 'xlsx' or 'exceljs'
-  const lines = excelContent.trim().split('\n');
-  const headers = lines[0].split('\t').map(h => h.trim().replace(/"/g, ''));
+  const lines = excelContent.trim().split("\n");
+  const headers = lines[0].split("\t").map((h) => h.trim().replace(/"/g, ""));
   const data: any[] = [];
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i];
     if (!line.trim()) continue;
 
-    const values = line.split('\t').map(v => v.trim().replace(/"/g, ''));
+    const values = line.split("\t").map((v) => v.trim().replace(/"/g, ""));
     const row: any = {};
     headers.forEach((header, index) => {
       if (values[index] !== undefined) {
@@ -126,29 +134,31 @@ function parseExcel(excelContent: string, type: 'problems' | 'mcq'): any[] {
     });
 
     // Transform data based on type
-    if (type === 'problems') {
+    if (type === "problems") {
       data.push({
-        title: row.title || '',
-        description: row.description || '',
-        difficulty: row.difficulty || 'easy',
-        category: row.category || '',
-        testCases: row.testCases || '',
-        solution: row.solution || '',
-        hints: row.hints || '',
-        tags: row.tags || '',
-        companies: row.companies || '',
+        title: row.title || "",
+        description: row.description || "",
+        difficulty: row.difficulty || "easy",
+        category: row.category || "",
+        testCases: row.testCases || "",
+        solution: row.solution || "",
+        hints: row.hints || "",
+        tags: row.tags || "",
+        companies: row.companies || "",
       });
-    } else if (type === 'mcq') {
-      const options = row.options ? row.options.split(';').map((opt: string) => opt.trim()) : ['', '', '', ''];
+    } else if (type === "mcq") {
+      const options = row.options
+        ? row.options.split(";").map((opt: string) => opt.trim())
+        : ["", "", "", ""];
       data.push({
-        question: row.question || '',
+        question: row.question || "",
         options: options,
         correctAnswer: parseInt(row.correctAnswer) || 0,
-        explanation: row.explanation || '',
-        category: row.category || '',
-        difficulty: row.difficulty || 'easy',
-        tags: row.tags || '',
-        companies: row.companies || '',
+        explanation: row.explanation || "",
+        category: row.category || "",
+        difficulty: row.difficulty || "easy",
+        tags: row.tags || "",
+        companies: row.companies || "",
       });
     }
   }
@@ -157,43 +167,56 @@ function parseExcel(excelContent: string, type: 'problems' | 'mcq'): any[] {
 }
 
 // Validate data structure
-function validateData(data: any[], type: 'problems' | 'mcq'): { valid: boolean; errors: string[] } {
+function validateData(
+  data: any[],
+  type: "problems" | "mcq"
+): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   if (!Array.isArray(data)) {
-    errors.push('Data must be an array');
+    errors.push("Data must be an array");
     return { valid: false, errors };
   }
 
   data.forEach((item, index) => {
-    if (type === 'problems') {
-      if (!item.title || item.title.trim() === '') {
+    if (type === "problems") {
+      if (!item.title || item.title.trim() === "") {
         errors.push(`Row ${index + 1}: Title is required`);
       }
-      if (!item.description || item.description.trim() === '') {
+      if (!item.description || item.description.trim() === "") {
         errors.push(`Row ${index + 1}: Description is required`);
       }
-      if (!item.category || item.category.trim() === '') {
+      if (!item.category || item.category.trim() === "") {
         errors.push(`Row ${index + 1}: Category is required`);
       }
-      if (!['easy', 'medium', 'hard'].includes(item.difficulty)) {
-        errors.push(`Row ${index + 1}: Difficulty must be easy, medium, or hard`);
+      if (!["easy", "medium", "hard"].includes(item.difficulty)) {
+        errors.push(
+          `Row ${index + 1}: Difficulty must be easy, medium, or hard`
+        );
       }
-    } else if (type === 'mcq') {
-      if (!item.question || item.question.trim() === '') {
+    } else if (type === "mcq") {
+      if (!item.question || item.question.trim() === "") {
         errors.push(`Row ${index + 1}: Question is required`);
       }
       if (!Array.isArray(item.options) || item.options.length < 2) {
         errors.push(`Row ${index + 1}: At least 2 options are required`);
       }
-      if (typeof item.correctAnswer !== 'number' || item.correctAnswer < 0 || item.correctAnswer >= item.options.length) {
-        errors.push(`Row ${index + 1}: Correct answer must be a valid option index`);
+      if (
+        typeof item.correctAnswer !== "number" ||
+        item.correctAnswer < 0 ||
+        item.correctAnswer >= item.options.length
+      ) {
+        errors.push(
+          `Row ${index + 1}: Correct answer must be a valid option index`
+        );
       }
-      if (!item.category || item.category.trim() === '') {
+      if (!item.category || item.category.trim() === "") {
         errors.push(`Row ${index + 1}: Category is required`);
       }
-      if (!['easy', 'medium', 'hard'].includes(item.difficulty)) {
-        errors.push(`Row ${index + 1}: Difficulty must be easy, medium, or hard`);
+      if (!["easy", "medium", "hard"].includes(item.difficulty)) {
+        errors.push(
+          `Row ${index + 1}: Difficulty must be easy, medium, or hard`
+        );
       }
     }
   });
@@ -206,7 +229,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, data, fileContent, fileType } = body;
 
-    if (!type || (type !== 'problems' && type !== 'mcq')) {
+    if (!type || (type !== "problems" && type !== "mcq")) {
       const response: ApiResponse = {
         success: false,
         error: 'Invalid type. Use "problems" or "mcq"',
@@ -222,21 +245,21 @@ export async function POST(request: NextRequest) {
       // File upload processing
       try {
         switch (fileType.toLowerCase()) {
-          case 'csv':
+          case "csv":
             processedData = parseCSV(fileContent, type);
             break;
-          case 'excel':
-          case 'xlsx':
-          case 'xls':
+          case "excel":
+          case "xlsx":
+          case "xls":
             processedData = parseExcel(fileContent, type);
             break;
-          case 'json':
+          case "json":
             processedData = JSON.parse(fileContent);
             break;
           default:
             const response: ApiResponse = {
               success: false,
-              error: 'Unsupported file type. Use CSV, Excel, or JSON',
+              error: "Unsupported file type. Use CSV, Excel, or JSON",
             };
             return NextResponse.json(response, { status: 400 });
         }
@@ -246,7 +269,7 @@ export async function POST(request: NextRequest) {
         if (!validation.valid) {
           const response: ApiResponse = {
             success: false,
-            error: 'Data validation failed',
+            error: "Data validation failed",
             data: { errors: validation.errors },
           };
           return NextResponse.json(response, { status: 400 });
@@ -261,13 +284,13 @@ export async function POST(request: NextRequest) {
     } else if (data && Array.isArray(data)) {
       // Direct JSON data
       processedData = data;
-      
+
       // Validate data
       const validation = validateData(processedData, type);
       if (!validation.valid) {
         const response: ApiResponse = {
           success: false,
-          error: 'Data validation failed',
+          error: "Data validation failed",
           data: { errors: validation.errors },
         };
         return NextResponse.json(response, { status: 400 });
@@ -275,7 +298,8 @@ export async function POST(request: NextRequest) {
     } else {
       const response: ApiResponse = {
         success: false,
-        error: 'Invalid data format. Provide either data array or fileContent with fileType',
+        error:
+          "Invalid data format. Provide either data array or fileContent with fileType",
       };
       return NextResponse.json(response, { status: 400 });
     }
@@ -285,12 +309,15 @@ export async function POST(request: NextRequest) {
     let errors: string[] = [];
     let duplicates: string[] = [];
 
-    if (type === 'problems') {
+    if (type === "problems") {
       for (const problem of processedData) {
         try {
           // Check for duplicate title
-          const isDuplicate = await checkDuplicateContent('problems', problem.title);
-          
+          const isDuplicate = await checkDuplicateContent(
+            "problems",
+            problem.title
+          );
+
           if (isDuplicate) {
             duplicates.push(`Problem "${problem.title}" already exists`);
             skipped++;
@@ -299,7 +326,7 @@ export async function POST(request: NextRequest) {
 
           // Generate unique ID if not provided
           const problemId = problem.id || generateId(problem.title);
-          
+
           await prisma.problem.create({
             data: {
               id: problemId,
@@ -317,24 +344,31 @@ export async function POST(request: NextRequest) {
           });
           imported++;
         } catch (error: any) {
-          errors.push(`Failed to import problem "${problem.title}": ${error.message}`);
+          errors.push(
+            `Failed to import problem "${problem.title}": ${error.message}`
+          );
         }
       }
-    } else if (type === 'mcq') {
+    } else if (type === "mcq") {
       for (const question of processedData) {
         try {
           // Check for duplicate question
-          const isDuplicate = await checkDuplicateContent('mcq', question.question);
-          
+          const isDuplicate = await checkDuplicateContent(
+            "mcq",
+            question.question
+          );
+
           if (isDuplicate) {
-            duplicates.push(`MCQ "${question.question.substring(0, 50)}..." already exists`);
+            duplicates.push(
+              `MCQ "${question.question.substring(0, 50)}..." already exists`
+            );
             skipped++;
             continue;
           }
 
           // Generate unique ID if not provided
           const questionId = question.id || generateId(question.question);
-          
+
           await prisma.mCQQuestion.create({
             data: {
               id: questionId,
@@ -351,7 +385,9 @@ export async function POST(request: NextRequest) {
           });
           imported++;
         } catch (error: any) {
-          errors.push(`Failed to import MCQ "${question.question}": ${error.message}`);
+          errors.push(
+            `Failed to import MCQ "${question.question}": ${error.message}`
+          );
         }
       }
     }
@@ -371,10 +407,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error: any) {
-    console.error('Upload error:', error);
+    console.error("Upload error:", error);
     const response: ApiResponse = {
       success: false,
-      error: 'Failed to upload data',
+      error: "Failed to upload data",
     };
     return NextResponse.json(response, { status: 500 });
   }
