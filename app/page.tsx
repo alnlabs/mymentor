@@ -165,13 +165,6 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => (window.location.href = "/dashboard")}
-                  >
-                    Dashboard
-                  </Button>
                   <Button variant="outline" size="sm" onClick={handleSignOut}>
                     Sign Out
                   </Button>
