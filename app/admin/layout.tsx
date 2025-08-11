@@ -65,7 +65,8 @@ const navigation = [
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const { user, userRole, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
+  const { user, userRole, isAdmin, isSuperAdmin, signOutUser } =
+    useAuthContext();
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -78,14 +79,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         name: "SuperAdmin",
         email: user?.email || "superadmin@mymentor.com",
         avatar: "S",
-        role: "superadmin"
+        role: "superadmin",
       };
     }
     return {
       name: user?.displayName || user?.email?.split("@")[0] || "Admin",
       email: user?.email || "admin@mymentor.com",
       avatar: user?.displayName?.charAt(0) || user?.email?.charAt(0) || "A",
-      role: userRole
+      role: userRole,
     };
   };
 
@@ -161,13 +162,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="flex-shrink-0 p-4 border-t border-gray-200">
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">{userInfo.avatar}</span>
+                <span className="text-white text-sm font-medium">
+                  {userInfo.avatar}
+                </span>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {userInfo.name}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{userInfo.role}</p>
+                <p className="text-xs text-gray-500 truncate">
+                  {userInfo.role}
+                </p>
               </div>
             </div>
           </div>
@@ -241,7 +246,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <span>Online</span>
                 </div>
 
-                                {/* User Menu */}
+                {/* User Menu */}
                 <div className="relative group">
                   <Button
                     variant="outline"
@@ -249,7 +254,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                     className="flex items-center space-x-2"
                   >
                     <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-medium">{userInfo.avatar}</span>
+                      <span className="text-white text-xs font-medium">
+                        {userInfo.avatar}
+                      </span>
                     </div>
                     <span className="hidden sm:inline">{userInfo.name}</span>
                     <svg
@@ -266,7 +273,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       />
                     </svg>
                   </Button>
-                  
+
                   {/* Dropdown Menu */}
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-1">

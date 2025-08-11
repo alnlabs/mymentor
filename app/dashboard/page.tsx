@@ -212,6 +212,37 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center space-x-4">
+              {/* Navigation Menu */}
+              <nav className="hidden md:flex items-center space-x-6">
+                <a
+                  href="/"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Home
+                </a>
+                <a
+                  href="/problems"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Problems
+                </a>
+                <a
+                  href="/mcq"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  MCQs
+                </a>
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin"
+                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                  >
+                    Admin
+                  </a>
+                )}
+              </nav>
+
+              {/* User Info */}
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
@@ -228,6 +259,8 @@ export default function DashboardPage() {
                     : user?.displayName || user?.email || "User"}
                 </span>
               </div>
+              
+              {/* Sign Out Button */}
               <Button
                 variant="outline"
                 size="sm"
@@ -237,6 +270,44 @@ export default function DashboardPage() {
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>
               </Button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile Navigation Menu */}
+        <div className="md:hidden bg-white border-t border-gray-200">
+          <div className="px-4 py-2">
+            <div className="grid grid-cols-4 gap-2">
+              <a
+                href="/"
+                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+              >
+                <Home className="w-4 h-4 mb-1" />
+                Home
+              </a>
+              <a
+                href="/problems"
+                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+              >
+                <Code className="w-4 h-4 mb-1" />
+                Problems
+              </a>
+              <a
+                href="/mcq"
+                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+              >
+                <BookOpen className="w-4 h-4 mb-1" />
+                MCQs
+              </a>
+              {(isAdmin || isSuperAdmin) && (
+                <a
+                  href="/admin"
+                  className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+                >
+                  <Settings className="w-4 h-4 mb-1" />
+                  Admin
+                </a>
+              )}
             </div>
           </div>
         </div>

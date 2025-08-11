@@ -5,7 +5,7 @@ import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import { AuthButton } from "@/shared/components/AuthButton";
-import { SuperAdminLogin } from "@/shared/components/SuperAdminLogin";
+
 import { useAuthContext } from "@/shared/components/AuthContext";
 
 import { ProblemCard } from "@/modules/problems/components/ProblemCard";
@@ -204,15 +204,6 @@ export default function HomePage() {
                       onClick={() => (window.location.href = "/admin")}
                     >
                       Admin Panel
-                    </Button>
-                  )}
-                  {!isSuperAdmin && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowSuperAdminLogin(true)}
-                    >
-                      Switch to SuperAdmin
                     </Button>
                   )}
                 </>

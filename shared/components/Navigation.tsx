@@ -6,10 +6,9 @@ import { useAuthContext } from "./AuthContext";
 
 interface NavigationProps {
   onSignOut?: () => void;
-  onSuperAdminLogin?: () => void;
 }
 
-export function Navigation({ onSignOut, onSuperAdminLogin }: NavigationProps) {
+export function Navigation({ onSignOut }: NavigationProps) {
   const { user, isAdmin, isSuperAdmin } = useAuthContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -94,15 +93,6 @@ export function Navigation({ onSignOut, onSuperAdminLogin }: NavigationProps) {
                     onClick={() => (window.location.href = "/admin")}
                   >
                     Admin Panel
-                  </Button>
-                )}
-                {!isSuperAdmin && onSuperAdminLogin && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={onSuperAdminLogin}
-                  >
-                    Switch to SuperAdmin
                   </Button>
                 )}
               </>
