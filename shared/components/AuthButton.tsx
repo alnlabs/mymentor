@@ -3,34 +3,31 @@
 import React from 'react';
 import { Button } from './Button';
 import { useAuthContext } from './AuthContext';
-import { Loading } from './Loading';
 
-export const AuthButton: React.FC = () => {
-  const { user, loading, signInWithGoogle, signOut } = useAuthContext();
+interface AuthButtonProps {
+  className?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
 
-  const handleAuth = async () => {
-    try {
-      if (user) {
-        await signOut();
-      } else {
-        await signInWithGoogle();
-      }
-    } catch (error) {
-      console.error('Auth error:', error);
+export function AuthButton({ className = '', size = 'md' }: AuthButtonProps) {
+  const { user, loading, signInWithGoogle, signOutUser } = useAuthContext();
+
+  const handleClick = async () => {
+    if (user) {
+      await signOutUser();
+    } else {
+      await signInWithGoogle();
     }
   };
 
-  if (loading) {
-    return <Loading size="sm" text="" />;
-  }
-
   return (
     <Button
-      onClick={handleAuth}
-      variant={user ? 'outline' : 'primary'}
-      size="sm"
+      onClick={handleClick}
+      disabled={loading}
+      className={className}
+      size={size}
     >
-      {user ? `Sign Out (${user.displayName})` : 'Sign In with Google'}
+      {user ? `Sign Out (${user.name || 'User'})` : 'Sign In with Google'}
     </Button>
   );
-};
+}

@@ -10,12 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  superadmin
+  admin
+  user
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String
+  password  String?  // Added password field for SuperAdmin
   avatar    String?
-  provider  String   // google, github
+  provider  String   // google, github, email
+  role      UserRole @default(user)
+  isActive  Boolean  @default(true)
   progress  Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,10 +37,10 @@ model User {
 
 model Problem {
   id          String   @id @default(cuid())
-  title       String
+  title       String   @unique
   description String
-  difficulty  String   // easy, medium, hard
-  category    String   // arrays, strings, algorithms, etc.
+  difficulty  String
+  category    String
   testCases   String   // JSON string
   solution    String?
   hints       String?  // JSON string
@@ -48,18 +57,18 @@ model Problem {
 }
 
 model MCQQuestion {
-  id             String   @id @default(cuid())
-  question       String
-  options        String   // JSON string
-  correctAnswer  Int
-  explanation    String?
-  category       String
-  difficulty     String   // easy, medium, hard
-  tags           String?  // JSON string
-  companies      String?  // JSON string
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id            String   @id @default(cuid())
+  question      String   @unique
+  options       String   // JSON string
+  correctAnswer Int
+  explanation   String?
+  category      String
+  difficulty    String
+  tags          String?  // JSON string
+  companies     String?  // JSON string
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   userProgress UserProgress[]
 
@@ -67,16 +76,16 @@ model MCQQuestion {
 }
 
 model Submission {
-  id            String   @id @default(cuid())
-  userId        String
-  problemId     String
-  code          String
-  language      String   // javascript, python, java, cpp
-  executionTime Float?
-  memoryUsed    Int?
-  testResults   String?  // JSON string
-  status        String   // accepted, wrong_answer, time_limit, runtime_error
-  submittedAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  problemId String
+  code      String
+  language  String
+  status    String   // accepted, wrong_answer, time_limit, runtime_error
+  score     Int
+  runtime   Int?     // in milliseconds
+  memory    Int?     // in MB
+  createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id])
   problem Problem @relation(fields: [problemId], references: [id])
@@ -88,18 +97,17 @@ model UserProgress {
   id           String   @id @default(cuid())
   userId       String
   problemId    String?
-  mcqId        String?
+  questionId   String?
   questionType String   // coding, mcq
   status       String   // not_started, in_progress, completed, failed
-  score        Float?
-  timeTaken    Int?     // seconds
+  score        Int      @default(0)
+  startedAt    DateTime @default(now())
   completedAt  DateTime?
-  createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   user    User       @relation(fields: [userId], references: [id])
   problem Problem?   @relation(fields: [problemId], references: [id])
-  mcq     MCQQuestion? @relation(fields: [mcqId], references: [id])
+  question MCQQuestion? @relation(fields: [questionId], references: [id])
 
   @@map("user_progress")
 }
