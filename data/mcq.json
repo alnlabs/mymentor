@@ -1,0 +1,112 @@
+[
+  {
+    "id": "binary-search-complexity",
+    "question": "What is the time complexity of binary search?",
+    "options": "[\"O(n)\", \"O(log n)\", \"O(n²)\", \"O(1)\"]",
+    "correctAnswer": 1,
+    "explanation": "Binary search divides the search space in half with each iteration, resulting in logarithmic time complexity.",
+    "category": "algorithms",
+    "difficulty": "easy",
+    "tags": "[\"binary-search\", \"complexity\"]",
+    "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]"
+  },
+  {
+    "id": "stack-lifo",
+    "question": "Which data structure uses LIFO (Last In, First Out) principle?",
+    "options": "[\"Queue\", \"Stack\", \"Tree\", \"Graph\"]",
+    "correctAnswer": 1,
+    "explanation": "Stack follows LIFO principle where the last element added is the first one to be removed.",
+    "category": "data-structures",
+    "difficulty": "easy",
+    "tags": "[\"stack\", \"lifo\"]",
+    "companies": "[\"Microsoft\", \"Apple\"]"
+  },
+  {
+    "id": "array-access-time",
+    "question": "What is the time complexity of accessing an element in an array by index?",
+    "options": "[\"O(n)\", \"O(log n)\", \"O(1)\", \"O(n²)\"]",
+    "correctAnswer": 2,
+    "explanation": "Array access by index is O(1) because arrays use direct memory addressing.",
+    "category": "data-structures",
+    "difficulty": "easy",
+    "tags": "[\"arrays\", \"complexity\"]",
+    "companies": "[\"Google\", \"Amazon\"]"
+  },
+  {
+    "id": "hash-table-advantage",
+    "question": "What is the main advantage of a hash table?",
+    "options": "[\"Ordered storage\", \"O(1) average case lookup\", \"Memory efficient\", \"Easy to implement\"]",
+    "correctAnswer": 1,
+    "explanation": "Hash tables provide O(1) average case time complexity for insertions and lookups.",
+    "category": "data-structures",
+    "difficulty": "easy",
+    "tags": "[\"hash-table\", \"complexity\"]",
+    "companies": "[\"Google\", \"Facebook\"]"
+  },
+  {
+    "id": "recursive-fibonacci-space",
+    "question": "What is the space complexity of recursive Fibonacci without memoization?",
+    "options": "[\"O(1)\", \"O(n)\", \"O(2^n)\", \"O(log n)\"]",
+    "correctAnswer": 1,
+    "explanation": "Recursive Fibonacci without memoization has O(n) space complexity due to the call stack depth.",
+    "category": "algorithms",
+    "difficulty": "medium",
+    "tags": "[\"recursion\", \"fibonacci\", \"complexity\"]",
+    "companies": "[\"Microsoft\", \"Apple\"]"
+  },
+  {
+    "id": "merge-sort-complexity",
+    "question": "What is the time complexity of merge sort?",
+    "options": "[\"O(n)\", \"O(n log n)\", \"O(n²)\", \"O(log n)\"]",
+    "correctAnswer": 1,
+    "explanation": "Merge sort has O(n log n) time complexity in all cases (best, average, worst).",
+    "category": "algorithms",
+    "difficulty": "medium",
+    "tags": "[\"merge-sort\", \"complexity\"]",
+    "companies": "[\"Google\", \"Amazon\"]"
+  },
+  {
+    "id": "queue-fifo",
+    "question": "Which data structure uses FIFO (First In, First Out) principle?",
+    "options": "[\"Stack\", \"Queue\", \"Tree\", \"Graph\"]",
+    "correctAnswer": 1,
+    "explanation": "Queue follows FIFO principle where the first element added is the first one to be removed.",
+    "category": "data-structures",
+    "difficulty": "easy",
+    "tags": "[\"queue\", \"fifo\"]",
+    "companies": "[\"Microsoft\", \"Apple\"]"
+  },
+  {
+    "id": "bubble-sort-complexity",
+    "question": "What is the worst-case time complexity of bubble sort?",
+    "options": "[\"O(n)\", \"O(n log n)\", \"O(n²)\", \"O(log n)\"]",
+    "correctAnswer": 2,
+    "explanation": "Bubble sort has O(n²) worst-case time complexity due to nested loops.",
+    "category": "algorithms",
+    "difficulty": "easy",
+    "tags": "[\"bubble-sort\", \"complexity\"]",
+    "companies": "[\"Microsoft\", \"Apple\"]"
+  },
+  {
+    "id": "binary-tree-height",
+    "question": "What is the maximum height of a binary tree with n nodes?",
+    "options": "[\"log n\", \"n\", \"n/2\", \"2^n\"]",
+    "correctAnswer": 1,
+    "explanation": "The maximum height of a binary tree with n nodes is n (when it's a linear chain).",
+    "category": "data-structures",
+    "difficulty": "medium",
+    "tags": "[\"binary-tree\", \"height\"]",
+    "companies": "[\"Google\", \"Amazon\"]"
+  },
+  {
+    "id": "dynamic-programming",
+    "question": "What is the main principle behind dynamic programming?",
+    "options": "[\"Divide and conquer\", \"Greedy approach\", \"Memoization and optimal substructure\", \"Backtracking\"]",
+    "correctAnswer": 2,
+    "explanation": "Dynamic programming uses memoization to store results of subproblems and relies on optimal substructure.",
+    "category": "algorithms",
+    "difficulty": "medium",
+    "tags": "[\"dynamic-programming\", \"memoization\"]",
+    "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]"
+  }
+]

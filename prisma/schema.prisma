@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  avatar    String?
+  provider  String   // google, github
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  submissions Submission[]
+  userProgress UserProgress[]
+
+  @@map("users")
+}
+
+model Problem {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  difficulty  String   // easy, medium, hard
+  category    String   // arrays, strings, algorithms, etc.
+  testCases   String   // JSON string
+  solution    String?
+  hints       String?  // JSON string
+  tags        String?  // JSON string
+  companies   String?  // JSON string
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  submissions Submission[]
+  userProgress UserProgress[]
+
+  @@map("problems")
+}
+
+model MCQQuestion {
+  id             String   @id @default(cuid())
+  question       String
+  options        String   // JSON string
+  correctAnswer  Int
+  explanation    String?
+  category       String
+  difficulty     String   // easy, medium, hard
+  tags           String?  // JSON string
+  companies      String?  // JSON string
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userProgress UserProgress[]
+
+  @@map("mcq_questions")
+}
+
+model Submission {
+  id            String   @id @default(cuid())
+  userId        String
+  problemId     String
+  code          String
+  language      String   // javascript, python, java, cpp
+  executionTime Float?
+  memoryUsed    Int?
+  testResults   String?  // JSON string
+  status        String   // accepted, wrong_answer, time_limit, runtime_error
+  submittedAt   DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+
+  @@map("submissions")
+}
+
+model UserProgress {
+  id           String   @id @default(cuid())
+  userId       String
+  problemId    String?
+  mcqId        String?
+  questionType String   // coding, mcq
+  status       String   // not_started, in_progress, completed, failed
+  score        Float?
+  timeTaken    Int?     // seconds
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user    User       @relation(fields: [userId], references: [id])
+  problem Problem?   @relation(fields: [problemId], references: [id])
+  mcq     MCQQuestion? @relation(fields: [mcqId], references: [id])
+
+  @@map("user_progress")
+}
