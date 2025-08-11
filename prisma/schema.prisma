@@ -31,6 +31,7 @@ model User {
 
   submissions Submission[]
   userProgress UserProgress[]
+  mockInterviews MockInterview[]
 
   @@map("users")
 }
@@ -110,4 +111,103 @@ model UserProgress {
   question MCQQuestion? @relation(fields: [questionId], references: [id])
 
   @@map("user_progress")
+}
+
+// Mock Interview System Models
+model InterviewTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  duration    Int      // in minutes
+  difficulty  String   // easy, medium, hard
+  category    String   // frontend, backend, fullstack, ml, etc.
+  companies   String?  // JSON string of target companies
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  mockInterviews MockInterview[]
+  questions     InterviewQuestion[]
+
+  @@map("interview_templates")
+}
+
+model MockInterview {
+  id                String   @id @default(cuid())
+  userId            String
+  templateId        String
+  status            String   // scheduled, in_progress, completed, cancelled
+  scheduledAt       DateTime?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  totalScore        Int      @default(0)
+  maxScore          Int      @default(0)
+  notes             String?  // User's notes during interview
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id])
+  template InterviewTemplate @relation(fields: [templateId], references: [id])
+  answers  InterviewAnswer[]
+  feedback InterviewFeedback?
+
+  @@map("mock_interviews")
+}
+
+model InterviewQuestion {
+  id           String   @id @default(cuid())
+  templateId   String
+  questionType String   // coding, mcq, behavioral, system_design
+  question     String
+  options      String?  // JSON string for MCQ questions
+  correctAnswer String? // For MCQ questions
+  explanation  String?
+  points       Int      @default(10)
+  timeLimit    Int?     // in minutes, null for no limit
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  template InterviewTemplate @relation(fields: [templateId], references: [id])
+  answers  InterviewAnswer[]
+
+  @@map("interview_questions")
+}
+
+model InterviewAnswer {
+  id              String   @id @default(cuid())
+  interviewId     String
+  questionId      String
+  answer          String?  // User's answer (code for coding, text for others)
+  selectedOption  Int?     // For MCQ questions
+  isCorrect       Boolean?
+  score           Int      @default(0)
+  timeSpent       Int?     // in seconds
+  feedback        String?  // Specific feedback for this answer
+  createdAt       DateTime @default(now())
+
+  interview MockInterview    @relation(fields: [interviewId], references: [id])
+  question  InterviewQuestion @relation(fields: [questionId], references: [id])
+
+  @@map("interview_answers")
+}
+
+model InterviewFeedback {
+  id          String   @id @default(cuid())
+  interviewId String   @unique
+  overallScore Int     @default(0)
+  technicalScore Int   @default(0)
+  communicationScore Int @default(0)
+  problemSolvingScore Int @default(0)
+  strengths   String?  // JSON string
+  weaknesses  String?  // JSON string
+  suggestions String?  // JSON string
+  detailedFeedback String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  interview MockInterview @relation(fields: [interviewId], references: [id])
+
+  @@map("interview_feedback")
 }
