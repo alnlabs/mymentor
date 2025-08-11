@@ -177,6 +177,77 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Navigation Links */}
+        <div className="mb-8">
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <Globe className="w-5 h-5 mr-2 text-blue-600" />
+              Platform Navigation
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              <Button
+                onClick={() => (window.location.href = "/admin/interviews")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-blue-50 hover:border-blue-300"
+              >
+                <Target className="w-6 h-6 text-blue-600 mb-2" />
+                <span className="text-sm font-medium">Mock Interviews</span>
+                <span className="text-xs text-gray-500 mt-1">Templates & Sessions</span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/admin/upload")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-green-50 hover:border-green-300"
+              >
+                <Upload className="w-6 h-6 text-green-600 mb-2" />
+                <span className="text-sm font-medium">Upload Content</span>
+                <span className="text-xs text-gray-500 mt-1">Problems & MCQs</span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/admin/users")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-purple-50 hover:border-purple-300"
+              >
+                <Users className="w-6 h-6 text-purple-600 mb-2" />
+                <span className="text-sm font-medium">Manage Users</span>
+                <span className="text-xs text-gray-500 mt-1">Accounts & Roles</span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/admin/analytics")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-orange-50 hover:border-orange-300"
+              >
+                <BarChart3 className="w-6 h-6 text-orange-600 mb-2" />
+                <span className="text-sm font-medium">Analytics</span>
+                <span className="text-xs text-gray-500 mt-1">Performance Data</span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/admin/settings")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-gray-50 hover:border-gray-300"
+              >
+                <Settings className="w-6 h-6 text-gray-600 mb-2" />
+                <span className="text-sm font-medium">Settings</span>
+                <span className="text-xs text-gray-500 mt-1">System Config</span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-indigo-50 hover:border-indigo-300"
+              >
+                <Eye className="w-6 h-6 text-indigo-600 mb-2" />
+                <span className="text-sm font-medium">View Site</span>
+                <span className="text-xs text-gray-500 mt-1">Public Pages</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Overview Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="p-6 hover:shadow-lg transition-shadow">
@@ -330,6 +401,20 @@ export default function AdminDashboard() {
             </h3>
             <div className="space-y-4">
               <Button
+                onClick={() => (window.location.href = "/admin/interviews")}
+                className="w-full justify-start h-12 text-left bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+              >
+                <Target className="w-5 h-5 mr-3" />
+                <div>
+                  <div className="font-medium">Mock Interviews</div>
+                  <div className="text-sm text-blue-100">
+                    Manage interview templates and sessions
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
+              </Button>
+
+              <Button
                 onClick={() => (window.location.href = "/admin/upload")}
                 className="w-full justify-start h-12 text-left"
               >
@@ -340,6 +425,7 @@ export default function AdminDashboard() {
                     Add problems, MCQs, or interview templates
                   </div>
                 </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
 
               <Button
@@ -354,6 +440,7 @@ export default function AdminDashboard() {
                     View and manage user accounts
                   </div>
                 </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
 
               <Button
@@ -368,6 +455,7 @@ export default function AdminDashboard() {
                     Detailed performance insights
                   </div>
                 </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
 
               <Button
@@ -382,6 +470,7 @@ export default function AdminDashboard() {
                     Configure platform settings
                   </div>
                 </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
             </div>
           </Card>

@@ -23,8 +23,6 @@ export default function HomePage() {
   const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-
-
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       console.log("Data fetch timeout - forcing loading to false");
@@ -41,7 +39,7 @@ export default function HomePage() {
   const fetchData = async () => {
     try {
       console.log("Fetching homepage data...");
-      
+
       const [problemsRes, mcqRes] = await Promise.all([
         fetch("/api/problems"),
         fetch("/api/mcq"),
@@ -49,17 +47,21 @@ export default function HomePage() {
 
       console.log("API responses received:", {
         problemsStatus: problemsRes.status,
-        mcqStatus: mcqRes.status
+        mcqStatus: mcqRes.status,
       });
 
-      const problemsData = problemsRes.ok ? await problemsRes.json() : { success: false, data: [] };
-      const mcqData = mcqRes.ok ? await mcqRes.json() : { success: false, data: [] };
+      const problemsData = problemsRes.ok
+        ? await problemsRes.json()
+        : { success: false, data: [] };
+      const mcqData = mcqRes.ok
+        ? await mcqRes.json()
+        : { success: false, data: [] };
 
       console.log("Data parsed:", {
         problemsSuccess: problemsData.success,
         mcqSuccess: mcqData.success,
         problemsCount: problemsData.data?.length || 0,
-        mcqCount: mcqData.data?.length || 0
+        mcqCount: mcqData.data?.length || 0,
       });
 
       if (problemsData.success) setProblems(problemsData.data);
@@ -171,13 +173,19 @@ export default function HomePage() {
                 <>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                                          <span className="text-white text-sm font-medium">
-                      {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                      <span className="text-white text-sm font-medium">
+                        {isSuperAdmin
+                          ? "S"
+                          : user?.displayName?.charAt(0) ||
+                            user?.email?.charAt(0) ||
+                            "U"}
+                      </span>
+                    </div>
+                    <span className="text-sm text-gray-700 font-medium">
+                      {isSuperAdmin
+                        ? "SuperAdmin"
+                        : user?.displayName || user?.email || "User"}
                     </span>
-                  </div>
-                  <span className="text-sm text-gray-700 font-medium">
-                    {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
-                  </span>
                   </div>
                   <Button
                     variant="outline"
