@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
@@ -48,16 +48,16 @@ export default function DashboardPage() {
     interviewsTaken: 0,
     totalSubmissions: 0,
     successRate: 0,
-    recentActivity: []
+    recentActivity: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
 
   // Debug authentication state
-  console.log('Dashboard: Auth state:', {
+  console.log("Dashboard: Auth state:", {
     user: user ? { email: user.email, displayName: user.displayName } : null,
     loading,
     isAdmin,
-    isSuperAdmin
+    isSuperAdmin,
   });
 
   // Fetch user statistics
@@ -72,9 +72,9 @@ export default function DashboardPage() {
   // Redirect to homepage if not authenticated (with delay to prevent immediate redirects)
   React.useEffect(() => {
     if (!loading && !user && !isSuperAdmin) {
-      console.log('Dashboard: User not authenticated, redirecting to homepage');
+      console.log("Dashboard: User not authenticated, redirecting to homepage");
       const timer = setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = "/";
       }, 1000); // 1 second delay
       return () => clearTimeout(timer);
     }
@@ -83,12 +83,12 @@ export default function DashboardPage() {
   const fetchUserStats = async () => {
     try {
       setStatsLoading(true);
-      const response = await fetch('/api/user/stats', {
+      const response = await fetch("/api/user/stats", {
         headers: {
-          'x-user-id': user?.uid || ''
-        }
+          "x-user-id": user?.uid || "",
+        },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -96,7 +96,7 @@ export default function DashboardPage() {
         }
       }
     } catch (error) {
-      console.error('Error fetching user stats:', error);
+      console.error("Error fetching user stats:", error);
     } finally {
       setStatsLoading(false);
     }
@@ -192,11 +192,17 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                    {isSuperAdmin
+                      ? "S"
+                      : user?.displayName?.charAt(0) ||
+                        user?.email?.charAt(0) ||
+                        "U"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
+                  {isSuperAdmin
+                    ? "SuperAdmin"
+                    : user?.displayName || user?.email || "User"}
                 </span>
               </div>
               <Button
@@ -218,8 +224,11 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}!
-            👋
+            Welcome back,{" "}
+            {isSuperAdmin
+              ? "SuperAdmin"
+              : user?.displayName || user?.email || "User"}
+            ! 👋
           </h2>
           <p className="text-gray-600">
             Ready to continue your learning journey? Choose from the options
@@ -255,8 +264,6 @@ export default function DashboardPage() {
           ))}
         </div>
 
-
-
         {/* User Statistics */}
         {!isSuperAdmin && (
           <div className="mt-12 space-y-8">
@@ -270,12 +277,15 @@ export default function DashboardPage() {
                 <Card className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Problems Solved</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Problems Solved
+                      </p>
                       <p className="text-2xl font-bold text-gray-900">
                         {statsLoading ? "..." : userStats.problemsSolved}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {userStats.totalSubmissions > 0 && `${userStats.successRate}% success rate`}
+                        {userStats.totalSubmissions > 0 &&
+                          `${userStats.successRate}% success rate`}
                       </p>
                     </div>
                     <div className="p-3 bg-green-100 rounded-lg">
@@ -287,11 +297,15 @@ export default function DashboardPage() {
                 <Card className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">MCQ Completed</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        MCQ Completed
+                      </p>
                       <p className="text-2xl font-bold text-gray-900">
                         {statsLoading ? "..." : userStats.mcqCompleted}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Knowledge questions</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Knowledge questions
+                      </p>
                     </div>
                     <div className="p-3 bg-purple-100 rounded-lg">
                       <BookOpen className="w-6 h-6 text-purple-600" />
@@ -302,11 +316,15 @@ export default function DashboardPage() {
                 <Card className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Interviews Taken</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Interviews Taken
+                      </p>
                       <p className="text-2xl font-bold text-gray-900">
                         {statsLoading ? "..." : userStats.interviewsTaken}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Mock interviews</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Mock interviews
+                      </p>
                     </div>
                     <div className="p-3 bg-blue-100 rounded-lg">
                       <Target className="w-6 h-6 text-blue-600" />
@@ -317,11 +335,15 @@ export default function DashboardPage() {
                 <Card className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Total Submissions</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Total Submissions
+                      </p>
                       <p className="text-2xl font-bold text-gray-900">
                         {statsLoading ? "..." : userStats.totalSubmissions}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Code submissions</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Code submissions
+                      </p>
                     </div>
                     <div className="p-3 bg-orange-100 rounded-lg">
                       <Activity className="w-6 h-6 text-orange-600" />
@@ -341,30 +363,45 @@ export default function DashboardPage() {
                 <Card className="p-6">
                   <div className="space-y-4">
                     {userStats.recentActivity.map((activity) => (
-                      <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={activity.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div className="flex items-center space-x-3">
-                          {activity.status === 'accepted' ? (
+                          {activity.status === "accepted" ? (
                             <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : activity.status === 'rejected' ? (
+                          ) : activity.status === "rejected" ? (
                             <XCircle className="w-5 h-5 text-red-600" />
                           ) : (
                             <AlertCircle className="w-5 h-5 text-yellow-600" />
                           )}
                           <div>
-                            <p className="font-medium text-gray-900">{activity.problemTitle}</p>
+                            <p className="font-medium text-gray-900">
+                              {activity.problemTitle}
+                            </p>
                             <p className="text-sm text-gray-500">
-                              {new Date(activity.createdAt).toLocaleDateString()}
+                              {new Date(
+                                activity.createdAt
+                              ).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className={`text-sm font-medium ${
-                            activity.status === 'accepted' ? 'text-green-600' : 
-                            activity.status === 'rejected' ? 'text-red-600' : 'text-yellow-600'
-                          }`}>
-                            {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+                          <p
+                            className={`text-sm font-medium ${
+                              activity.status === "accepted"
+                                ? "text-green-600"
+                                : activity.status === "rejected"
+                                ? "text-red-600"
+                                : "text-yellow-600"
+                            }`}
+                          >
+                            {activity.status.charAt(0).toUpperCase() +
+                              activity.status.slice(1)}
                           </p>
-                          <p className="text-xs text-gray-500">Score: {activity.score}</p>
+                          <p className="text-xs text-gray-500">
+                            Score: {activity.score}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -381,14 +418,14 @@ export default function DashboardPage() {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button
-                  onClick={() => window.location.href = '/problems'}
+                  onClick={() => (window.location.href = "/problems")}
                   className="flex items-center justify-center space-x-2 h-16 text-lg"
                 >
                   <Code className="w-5 h-5" />
                   <span>Start Coding</span>
                 </Button>
                 <Button
-                  onClick={() => window.location.href = '/mcq'}
+                  onClick={() => (window.location.href = "/mcq")}
                   className="flex items-center justify-center space-x-2 h-16 text-lg"
                 >
                   <BookOpen className="w-5 h-5" />
@@ -396,7 +433,7 @@ export default function DashboardPage() {
                 </Button>
                 {(isAdmin || isSuperAdmin) && (
                   <Button
-                    onClick={() => window.location.href = '/admin/interviews'}
+                    onClick={() => (window.location.href = "/admin/interviews")}
                     className="flex items-center justify-center space-x-2 h-16 text-lg"
                   >
                     <Target className="w-5 h-5" />
