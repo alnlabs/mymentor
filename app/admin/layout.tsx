@@ -143,19 +143,121 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </h1>
               </div>
 
-              {/* Right side actions */}
+              {/* Header Menu for all admin users */}
               <div className="flex items-center space-x-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => (window.location.href = "/")}
-                >
-                  ← Back to Site
-                </Button>
-                <Button variant="outline" size="sm" onClick={handleSignOut}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </Button>
+                {/* Quick Access Menu */}
+                <div className="hidden md:flex items-center space-x-2">
+                  <Button
+                    onClick={() => (window.location.href = "/admin/interviews")}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Target className="w-4 h-4 mr-1" />
+                    Interviews
+                  </Button>
+                  
+                  <Button
+                    onClick={() => (window.location.href = "/admin/upload")}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Upload className="w-4 h-4 mr-1" />
+                    Upload
+                  </Button>
+                  
+                  <Button
+                    onClick={() => (window.location.href = "/admin/users")}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Users className="w-4 h-4 mr-1" />
+                    Users
+                  </Button>
+                  
+                  <Button
+                    onClick={() => (window.location.href = "/admin/analytics")}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <BarChart3 className="w-4 h-4 mr-1" />
+                    Analytics
+                  </Button>
+                </div>
+
+                {/* System Status */}
+                <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Online</span>
+                </div>
+
+                {/* User Menu */}
+                <div className="relative group">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2"
+                  >
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-medium">A</span>
+                    </div>
+                    <span className="hidden sm:inline">Admin</span>
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </Button>
+                  
+                  {/* Dropdown Menu */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="py-1">
+                      <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                        <div className="font-medium">Admin User</div>
+                        <div className="text-gray-500">admin@mymentor.com</div>
+                      </div>
+                      
+                      <Button
+                        onClick={() => (window.location.href = "/admin/settings")}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start px-4 py-2 text-sm"
+                      >
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </Button>
+                      
+                      <Button
+                        onClick={() => (window.location.href = "/")}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start px-4 py-2 text-sm"
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View Site
+                      </Button>
+                      
+                      <div className="border-t border-gray-100">
+                        <Button
+                          onClick={handleSignOut}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

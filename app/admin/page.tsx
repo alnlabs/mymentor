@@ -153,9 +153,9 @@ export default function AdminDashboard() {
     );
   }
 
-  return (
+    return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
+      {/* Dashboard Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -167,182 +167,11 @@ export default function AdminDashboard() {
                 Manage your technical interview platform
               </p>
             </div>
-            
-            {/* Header Menu */}
-            <div className="flex items-center space-x-6">
-              {/* Quick Access Menu */}
-              <div className="hidden md:flex items-center space-x-4">
-                <Button
-                  onClick={() => (window.location.href = "/admin/interviews")}
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Target className="w-4 h-4 mr-2" />
-                  Mock Interviews
-                </Button>
-                
-                <Button
-                  onClick={() => (window.location.href = "/admin/upload")}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  Upload
-                </Button>
-                
-                <Button
-                  onClick={() => (window.location.href = "/admin/users")}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Users
-                </Button>
-                
-                <Button
-                  onClick={() => (window.location.href = "/admin/analytics")}
-                  variant="outline"
-                  size="sm"
-                >
-                  <BarChart3 className="w-4 h-4 mr-2" />
-                  Analytics
-                </Button>
-              </div>
-              
-              {/* System Status */}
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>System Online</span>
-              </div>
-              
-              {/* User Menu */}
-              <div className="relative group">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2"
-                >
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs font-medium">S</span>
-                  </div>
-                  <span className="hidden sm:inline">SuperAdmin</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </Button>
-                
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="py-1">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                      <div className="font-medium">SuperAdmin</div>
-                      <div className="text-gray-500">superadmin@mymentor.com</div>
-                    </div>
-                    
-                    <Button
-                      onClick={() => (window.location.href = "/admin/settings")}
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-start px-4 py-2 text-sm"
-                    >
-                      <Settings className="w-4 h-4 mr-2" />
-                      Settings
-                    </Button>
-                    
-                    <Button
-                      onClick={() => (window.location.href = "/")}
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-start px-4 py-2 text-sm"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View Site
-                    </Button>
-                    
-                    <div className="border-t border-gray-100">
-                      <Button
-                        onClick={() => {
-                          localStorage.removeItem("superAdminUser");
-                          window.location.href = "/";
-                        }}
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Mobile Menu */}
-          <div className="md:hidden mt-4">
-            <div className="grid grid-cols-4 gap-2">
-              <Button
-                onClick={() => (window.location.href = "/admin/interviews")}
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
-              >
-                <Target className="w-3 h-3 mr-1" />
-                Interviews
-              </Button>
-              
-              <Button
-                onClick={() => (window.location.href = "/admin/upload")}
-                variant="outline"
-                size="sm"
-                className="text-xs"
-              >
-                <Upload className="w-3 h-3 mr-1" />
-                Upload
-              </Button>
-              
-              <Button
-                onClick={() => (window.location.href = "/admin/users")}
-                variant="outline"
-                size="sm"
-                className="text-xs"
-              >
-                <Users className="w-3 h-3 mr-1" />
-                Users
-              </Button>
-              
-              <Button
-                onClick={() => (window.location.href = "/admin/analytics")}
-                variant="outline"
-                size="sm"
-                className="text-xs"
-              >
-                <BarChart3 className="w-3 h-3 mr-1" />
-                Analytics
-              </Button>
-            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Breadcrumb Navigation */}
-        <div className="mb-6">
-          <nav className="flex items-center space-x-2 text-sm text-gray-500">
-            <Button
-              onClick={() => (window.location.href = "/")}
-              variant="ghost"
-              size="sm"
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <Home className="w-4 h-4 mr-1" />
-              Home
-            </Button>
-            <span>/</span>
-            <span className="text-gray-900 font-medium">Admin Dashboard</span>
-          </nav>
-        </div>
-
         {/* Navigation Links */}
         <div className="mb-8">
           <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -358,7 +187,9 @@ export default function AdminDashboard() {
               >
                 <Target className="w-6 h-6 text-blue-600 mb-2" />
                 <span className="text-sm font-medium">Mock Interviews</span>
-                <span className="text-xs text-gray-500 mt-1">Templates & Sessions</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  Templates & Sessions
+                </span>
               </Button>
 
               <Button
@@ -368,7 +199,9 @@ export default function AdminDashboard() {
               >
                 <Upload className="w-6 h-6 text-green-600 mb-2" />
                 <span className="text-sm font-medium">Upload Content</span>
-                <span className="text-xs text-gray-500 mt-1">Problems & MCQs</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  Problems & MCQs
+                </span>
               </Button>
 
               <Button
@@ -378,7 +211,9 @@ export default function AdminDashboard() {
               >
                 <Users className="w-6 h-6 text-purple-600 mb-2" />
                 <span className="text-sm font-medium">Manage Users</span>
-                <span className="text-xs text-gray-500 mt-1">Accounts & Roles</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  Accounts & Roles
+                </span>
               </Button>
 
               <Button
@@ -388,7 +223,9 @@ export default function AdminDashboard() {
               >
                 <BarChart3 className="w-6 h-6 text-orange-600 mb-2" />
                 <span className="text-sm font-medium">Analytics</span>
-                <span className="text-xs text-gray-500 mt-1">Performance Data</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  Performance Data
+                </span>
               </Button>
 
               <Button
@@ -398,7 +235,9 @@ export default function AdminDashboard() {
               >
                 <Settings className="w-6 h-6 text-gray-600 mb-2" />
                 <span className="text-sm font-medium">Settings</span>
-                <span className="text-xs text-gray-500 mt-1">System Config</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  System Config
+                </span>
               </Button>
 
               <Button
