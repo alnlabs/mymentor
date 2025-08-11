@@ -16,7 +16,8 @@ const navigation = [
   { name: "Manage Users", href: "/admin/users", icon: "👥" },
   { name: "Analytics", href: "/admin/analytics", icon: "📈" },
   { name: "Settings", href: "/admin/settings", icon: "⚙️" },
-  { name: "Mock Interviews", href: "/interviews", icon: "🎯" },
+  { name: "Mock Interviews", href: "/admin/interviews", icon: "🎯" },
+  { name: "Interview Sessions", href: "/admin/interviews/sessions", icon: "📋" },
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
