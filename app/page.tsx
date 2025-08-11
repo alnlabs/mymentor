@@ -26,24 +26,51 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    fetchData();
+    const timeoutId = setTimeout(() => {
+      console.log("Data fetch timeout - forcing loading to false");
+      setLoading(false);
+    }, 10000); // 10 second timeout
+
+    fetchData().finally(() => {
+      clearTimeout(timeoutId);
+    });
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const fetchData = async () => {
     try {
+      console.log("Fetching homepage data...");
+      
       const [problemsRes, mcqRes] = await Promise.all([
         fetch("/api/problems"),
         fetch("/api/mcq"),
       ]);
 
-      const problemsData = await problemsRes.json();
-      const mcqData = await mcqRes.json();
+      console.log("API responses received:", {
+        problemsStatus: problemsRes.status,
+        mcqStatus: mcqRes.status
+      });
+
+      const problemsData = problemsRes.ok ? await problemsRes.json() : { success: false, data: [] };
+      const mcqData = mcqRes.ok ? await mcqRes.json() : { success: false, data: [] };
+
+      console.log("Data parsed:", {
+        problemsSuccess: problemsData.success,
+        mcqSuccess: mcqData.success,
+        problemsCount: problemsData.data?.length || 0,
+        mcqCount: mcqData.data?.length || 0
+      });
 
       if (problemsData.success) setProblems(problemsData.data);
       if (mcqData.success) setMCQQuestions(mcqData.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      // Set empty arrays to prevent infinite loading
+      setProblems([]);
+      setMCQQuestions([]);
     } finally {
+      console.log("Setting loading to false");
       setLoading(false);
     }
   };

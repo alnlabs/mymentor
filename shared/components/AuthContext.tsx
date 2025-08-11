@@ -139,7 +139,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("Auth loading timeout - forcing loading to false");
+      setLoading(false);
+    }, 5000); // 5 second timeout
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, [checkSuperAdminSession, fetchUserRole]);
 
   const signInWithGoogle = useCallback(async () => {

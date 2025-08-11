@@ -5,7 +5,7 @@ import { ApiResponse } from "@/shared/types/common";
 export async function GET(request: NextRequest) {
   try {
     console.log("Fetching admin statistics...");
-    
+
     // Fetch comprehensive admin statistics
     const [
       totalUsers,
@@ -107,31 +107,31 @@ export async function GET(request: NextRequest) {
         take: 5,
       }),
 
-              // Recent interviews (last 7 days)
-        prisma.mockInterview.findMany({
-          where: {
-            createdAt: {
-              gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      // Recent interviews (last 7 days)
+      prisma.mockInterview.findMany({
+        where: {
+          createdAt: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
             },
           },
-          include: {
-            user: {
-              select: {
-                name: true,
-                email: true,
-              },
-            },
-            template: {
-              select: {
-                name: true,
-              },
+          template: {
+            select: {
+              name: true,
             },
           },
-          orderBy: {
-            createdAt: "desc",
-          },
-          take: 5,
-        }),
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
+      }),
 
       // User statistics by role
       prisma.user.groupBy({
@@ -236,7 +236,7 @@ export async function GET(request: NextRequest) {
       totalProblems,
       totalMCQs,
       totalSubmissions,
-      totalInterviews
+      totalInterviews,
     });
 
     const response: ApiResponse = {
@@ -250,9 +250,9 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching admin stats:", error);
     console.error("Error details:", {
       message: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     });
-    
+
     const response: ApiResponse = {
       success: false,
       error: "Failed to retrieve admin statistics",
