@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAuthContext } from "@/shared/lib/useAuth";
+import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
