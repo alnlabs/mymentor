@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
@@ -9,7 +9,6 @@ import {
   Download,
   FileText,
   Plus,
-  Edit,
   Trash2,
   X,
   Check,
@@ -43,18 +42,14 @@ interface MCQ {
   companies?: string;
 }
 
-type UploadMode = "form" | "json" | "bulk";
 type ContentType = "problems" | "mcq";
 
 export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadType, setUploadType] = useState<ContentType>("problems");
-  const [uploadMode, setUploadMode] = useState<UploadMode>("form");
-  const [jsonData, setJsonData] = useState("");
-  const [result, setResult] = useState<any>(null);
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
+  const [result, setResult] = useState<any>(null);
 
   // Form states
   const [problems, setProblems] = useState<Problem[]>([
@@ -84,63 +79,19 @@ export default function UploadPage() {
     },
   ]);
 
-  // Templates
-  const problemTemplate = `[
-  {
-    "title": "Two Sum",
-    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    "difficulty": "easy",
-    "category": "arrays",
-    "testCases": "[{\\"input\\": \\"[2,7,11,15], 9\\", \\"output\\": \\"[0,1]\\"}, {\\"input\\": \\"[3,2,4], 6\\", \\"output\\": \\"[1,2]\\"}]",
-    "solution": "Use a hash map to store complements. For each number, check if its complement exists in the map.",
-    "hints": "[\\"Try using a hash map\\", \\"Think about complement pairs\\"]",
-    "tags": "[\\"arrays\\", \\"hash-table\\"]",
-    "companies": "[\\"Google\\", \\"Amazon\\", \\"Microsoft\\"]"
-  }
-]`;
-
-  const mcqTemplate = `[
-  {
-    "question": "What is the time complexity of binary search?",
-    "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
-    "correctAnswer": 1,
-    "explanation": "Binary search divides the search space in half with each iteration, resulting in logarithmic time complexity.",
-    "category": "algorithms",
-    "difficulty": "easy",
-    "tags": "[\\"binary-search\\", \\"complexity\\"]",
-    "companies": "[\\"Google\\", \\"Amazon\\", \\"Microsoft\\"]"
-  }
-]`;
-
-  // CSV Templates
-  const problemCSVTemplate = `title,description,difficulty,category,testCases,solution,hints,tags,companies
-"Two Sum","Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.","easy","arrays","[{\\"input\\": \\"[2,7,11,15], 9\\", \\"output\\": \\"[0,1]\\"}]","Use a hash map to store complements.","Try using a hash map","arrays,hash-table","Google,Amazon,Microsoft"`;
-
-  const mcqCSVTemplate = `question,options,correctAnswer,explanation,category,difficulty,tags,companies
-"What is the time complexity of binary search?","O(n);O(log n);O(n²);O(1)",1,"Binary search divides the search space in half with each iteration.","algorithms","easy","binary-search,complexity","Google,Amazon,Microsoft"`;
-
-
-
   const handleUpload = async () => {
-    if (uploadMode === "form") {
-      await handleFormUpload();
-    } else if (uploadMode === "json") {
-      await handleJSONUpload();
-    } else if (uploadMode === "bulk") {
-      await handleBulkUpload();
+    if (uploadType === "problems") {
+      const validData = problems.filter(item => item.title && item.description);
+      await uploadProblems(validData);
+    } else {
+      const validData = mcqs.filter(item => item.question && item.options.some(opt => opt.trim()));
+      await uploadMCQs(validData);
     }
   };
 
-  const handleFormUpload = async () => {
-    const data = uploadType === "problems" ? problems : mcqs;
-    const validData = data.filter((item) =>
-      uploadType === "problems"
-        ? item.title && item.description
-        : item.question && item.options.some((opt) => opt.trim())
-    );
-
+  const uploadProblems = async (validData: Problem[]) => {
     if (validData.length === 0) {
-      alert("Please fill in at least one valid item");
+      alert("Please fill in at least one valid problem");
       return;
     }
 
@@ -154,44 +105,26 @@ export default function UploadPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: uploadType,
+          type: "problems",
           data: validData,
         }),
       });
 
       const result = await response.json();
       setResult(result);
-
+      
       if (result.success) {
-        // Reset forms on success
-        if (uploadType === "problems") {
-          setProblems([
-            {
-              title: "",
-              description: "",
-              difficulty: "easy",
-              category: "",
-              testCases: "",
-              solution: "",
-              hints: "",
-              tags: "",
-              companies: "",
-            },
-          ]);
-        } else {
-          setMcqs([
-            {
-              question: "",
-              options: ["", "", "", ""],
-              correctAnswer: 0,
-              explanation: "",
-              category: "",
-              difficulty: "easy",
-              tags: "",
-              companies: "",
-            },
-          ]);
-        }
+        setProblems([{
+          title: "",
+          description: "",
+          difficulty: "easy",
+          category: "",
+          testCases: "",
+          solution: "",
+          hints: "",
+          tags: "",
+          companies: "",
+        }]);
       }
     } catch (error: any) {
       setResult({
@@ -203,9 +136,9 @@ export default function UploadPage() {
     }
   };
 
-  const handleJSONUpload = async () => {
-    if (!jsonData.trim()) {
-      alert("Please enter JSON data");
+  const uploadMCQs = async (validData: MCQ[]) => {
+    if (validData.length === 0) {
+      alert("Please fill in at least one valid MCQ");
       return;
     }
 
@@ -219,16 +152,25 @@ export default function UploadPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: uploadType,
-          data: JSON.parse(jsonData),
+          type: "mcq",
+          data: validData,
         }),
       });
 
       const result = await response.json();
       setResult(result);
-
+      
       if (result.success) {
-        setJsonData("");
+        setMcqs([{
+          question: "",
+          options: ["", "", "", ""],
+          correctAnswer: 0,
+          explanation: "",
+          category: "",
+          difficulty: "easy",
+          tags: "",
+          companies: "",
+        }]);
       }
     } catch (error: any) {
       setResult({
@@ -240,7 +182,7 @@ export default function UploadPage() {
     }
   };
 
-  const handleBulkUpload = async () => {
+  const handleFileUpload = async () => {
     if (!selectedFile) {
       alert("Please select a file to upload");
       return;
@@ -267,7 +209,7 @@ export default function UploadPage() {
 
       const result = await response.json();
       setResult(result);
-
+      
       if (result.success) {
         setSelectedFile(null);
         setFileInputKey((prev) => prev + 1);
@@ -275,7 +217,7 @@ export default function UploadPage() {
     } catch (error: any) {
       setResult({
         success: false,
-        error: error.message || "Bulk upload failed",
+        error: error.message || "File upload failed",
       });
     } finally {
       setUploading(false);
@@ -310,20 +252,17 @@ export default function UploadPage() {
   };
 
   const addProblem = () => {
-    setProblems([
-      ...problems,
-      {
-        title: "",
-        description: "",
-        difficulty: "easy",
-        category: "",
-        testCases: "",
-        solution: "",
-        hints: "",
-        tags: "",
-        companies: "",
-      },
-    ]);
+    setProblems([...problems, {
+      title: "",
+      description: "",
+      difficulty: "easy",
+      category: "",
+      testCases: "",
+      solution: "",
+      hints: "",
+      tags: "",
+      companies: "",
+    }]);
   };
 
   const removeProblem = (index: number) => {
@@ -332,30 +271,23 @@ export default function UploadPage() {
     }
   };
 
-  const updateProblem = (
-    index: number,
-    field: keyof Problem,
-    value: string
-  ) => {
+  const updateProblem = (index: number, field: keyof Problem, value: string) => {
     const updated = [...problems];
     updated[index] = { ...updated[index], [field]: value };
     setProblems(updated);
   };
 
   const addMCQ = () => {
-    setMcqs([
-      ...mcqs,
-      {
-        question: "",
-        options: ["", "", "", ""],
-        correctAnswer: 0,
-        explanation: "",
-        category: "",
-        difficulty: "easy",
-        tags: "",
-        companies: "",
-      },
-    ]);
+    setMcqs([...mcqs, {
+      question: "",
+      options: ["", "", "", ""],
+      correctAnswer: 0,
+      explanation: "",
+      category: "",
+      difficulty: "easy",
+      tags: "",
+      companies: "",
+    }]);
   };
 
   const removeMCQ = (index: number) => {
@@ -374,11 +306,7 @@ export default function UploadPage() {
     setMcqs(updated);
   };
 
-  const updateMCQOption = (
-    mcqIndex: number,
-    optionIndex: number,
-    value: string
-  ) => {
+  const updateMCQOption = (mcqIndex: number, optionIndex: number, value: string) => {
     const updated = [...mcqs];
     updated[mcqIndex].options[optionIndex] = value;
     setMcqs(updated);
@@ -386,8 +314,33 @@ export default function UploadPage() {
 
   const downloadTemplate = (format: "json" | "csv") => {
     if (format === "json") {
-      const template =
-        uploadType === "problems" ? problemTemplate : mcqTemplate;
+      const template = uploadType === "problems" 
+        ? `[
+  {
+    "title": "Two Sum",
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "difficulty": "easy",
+    "category": "arrays",
+    "testCases": "[{\\"input\\": \\"[2,7,11,15], 9\\", \\"output\\": \\"[0,1]\\"}]",
+    "solution": "Use a hash map to store complements.",
+    "hints": "Try using a hash map",
+    "tags": "arrays,hash-table",
+    "companies": "Google,Amazon,Microsoft"
+  }
+]`
+        : `[
+  {
+    "question": "What is the time complexity of binary search?",
+    "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+    "correctAnswer": 1,
+    "explanation": "Binary search divides the search space in half with each iteration.",
+    "category": "algorithms",
+    "difficulty": "easy",
+    "tags": "binary-search,complexity",
+    "companies": "Google,Amazon,Microsoft"
+  }
+]`;
+      
       const blob = new Blob([template], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -398,7 +351,6 @@ export default function UploadPage() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } else {
-      // Download actual CSV template file
       const a = document.createElement("a");
       a.href = `/templates/${uploadType}-template.csv`;
       a.download = `${uploadType}-template.csv`;
@@ -408,66 +360,56 @@ export default function UploadPage() {
     }
   };
 
-  const loadTemplate = () => {
-    setJsonData(uploadType === "problems" ? problemTemplate : mcqTemplate);
-  };
-
-  const clearData = () => {
-    setJsonData("");
-    setResult(null);
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg p-6 text-white">
-        <h2 className="text-2xl font-bold mb-2">Content Management</h2>
-        <p className="text-green-100">
-          Upload, manage, and organize coding problems and MCQ questions with
-          advanced CRUD operations.
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+        <h2 className="text-2xl font-bold mb-2">Upload Content</h2>
+        <p className="text-blue-100">
+          Add coding problems and MCQ questions to your platform.
         </p>
       </div>
 
-      {/* Mode Selection */}
+      {/* Content Type Selection */}
       <Card>
-        <div className="flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Content Type
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">What are you uploading?</h3>
+            <div className="flex space-x-6">
+              <label className="flex items-center text-gray-900 cursor-pointer">
+                <input
+                  type="radio"
+                  value="problems"
+                  checked={uploadType === "problems"}
+                  onChange={(e) => setUploadType(e.target.value as ContentType)}
+                  className="mr-3 w-4 h-4 text-blue-600"
+                />
+                <Code className="w-5 h-5 mr-2" />
+                <span className="font-medium">Coding Problems</span>
               </label>
-              <div className="flex space-x-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    value="problems"
-                    checked={uploadType === "problems"}
-                    onChange={(e) =>
-                      setUploadType(e.target.value as ContentType)
-                    }
-                    className="mr-2"
-                  />
-                  <Code className="w-4 h-4 mr-1" />
-                  Problems
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    value="mcq"
-                    checked={uploadType === "mcq"}
-                    onChange={(e) =>
-                      setUploadType(e.target.value as ContentType)
-                    }
-                    className="mr-2"
-                  />
-                  <FileText className="w-4 h-4 mr-1" />
-                  MCQ Questions
-                </label>
-              </div>
+              <label className="flex items-center text-gray-900 cursor-pointer">
+                <input
+                  type="radio"
+                  value="mcq"
+                  checked={uploadType === "mcq"}
+                  onChange={(e) => setUploadType(e.target.value as ContentType)}
+                  className="mr-3 w-4 h-4 text-blue-600"
+                />
+                <FileText className="w-5 h-5 mr-2" />
+                <span className="font-medium">MCQ Questions</span>
+              </label>
             </div>
           </div>
-
-          <div className="flex items-center space-x-4">
+          
+          <div className="flex space-x-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => downloadTemplate("csv")}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              CSV Template
+            </Button>
             <Button
               variant="outline"
               size="sm"
@@ -476,646 +418,417 @@ export default function UploadPage() {
               <Download className="w-4 h-4 mr-2" />
               JSON Template
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => downloadTemplate("csv")}
-            >
-              <FileSpreadsheet className="w-4 h-4 mr-2" />
-              CSV Template
-            </Button>
-
           </div>
         </div>
       </Card>
 
-      <div className="space-y-6">
-        {/* Upload Section */}
-        <div className="space-y-6">
-          {/* Upload Mode Selection */}
-          <Card>
-            <div className="flex space-x-4 mb-6">
-              <Button
-                variant={uploadMode === "form" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setUploadMode("form")}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Form Input
-              </Button>
-              <Button
-                variant={uploadMode === "json" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setUploadMode("json")}
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                JSON Upload
-              </Button>
-              <Button
-                variant={uploadMode === "bulk" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setUploadMode("bulk")}
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Bulk Upload
-              </Button>
-            </div>
+      {/* Upload Methods */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Method 1: Manual Entry */}
+        <Card>
+          <div className="flex items-center mb-4">
+            <Plus className="w-6 h-6 text-blue-600 mr-3" />
+            <h3 className="text-lg font-semibold text-gray-900">Manual Entry</h3>
+          </div>
+          <p className="text-gray-600 mb-4">
+            Add content one by one using the form below.
+          </p>
 
-            {/* Form Input Mode */}
-            {uploadMode === "form" && (
-              <div className="space-y-6">
-                {uploadType === "problems" ? (
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold">Coding Problems</h3>
-                      <Button onClick={addProblem} size="sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Problem
-                      </Button>
-                    </div>
-
-                    {problems.map((problem, index) => (
-                      <Card key={index} className="mb-4">
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="font-medium">Problem {index + 1}</h4>
-                          {problems.length > 1 && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => removeProblem(index)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Title *
-                            </label>
-                            <input
-                              type="text"
-                              value={problem.title}
-                              onChange={(e) =>
-                                updateProblem(index, "title", e.target.value)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Problem title"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Category *
-                            </label>
-                            <input
-                              type="text"
-                              value={problem.category}
-                              onChange={(e) =>
-                                updateProblem(index, "category", e.target.value)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., arrays, strings, algorithms"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Difficulty *
-                            </label>
-                            <select
-                              value={problem.difficulty}
-                              onChange={(e) =>
-                                updateProblem(
-                                  index,
-                                  "difficulty",
-                                  e.target.value as any
-                                )
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="easy">Easy</option>
-                              <option value="medium">Medium</option>
-                              <option value="hard">Hard</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Tags
-                            </label>
-                            <input
-                              type="text"
-                              value={problem.tags}
-                              onChange={(e) =>
-                                updateProblem(index, "tags", e.target.value)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="comma-separated tags"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Description *
-                          </label>
-                          <textarea
-                            value={problem.description}
-                            onChange={(e) =>
-                              updateProblem(
-                                index,
-                                "description",
-                                e.target.value
-                              )
-                            }
-                            rows={5}
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Problem description"
-                          />
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Test Cases *
-                          </label>
-                          <textarea
-                            value={problem.testCases}
-                            onChange={(e) =>
-                              updateProblem(index, "testCases", e.target.value)
-                            }
-                            rows={4}
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Solution
-                            </label>
-                            <textarea
-                              value={problem.solution}
-                              onChange={(e) =>
-                                updateProblem(index, "solution", e.target.value)
-                              }
-                              rows={4}
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Solution approach"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Hints
-                            </label>
-                            <textarea
-                              value={problem.hints}
-                              onChange={(e) =>
-                                updateProblem(index, "hints", e.target.value)
-                              }
-                              rows={4}
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Helpful hints"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Companies
-                          </label>
-                          <input
-                            type="text"
-                            value={problem.companies}
-                            onChange={(e) =>
-                              updateProblem(index, "companies", e.target.value)
-                            }
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="comma-separated companies"
-                          />
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold">MCQ Questions</h3>
-                      <Button onClick={addMCQ} size="sm">
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add MCQ
-                      </Button>
-                    </div>
-
-                    {mcqs.map((mcq, index) => (
-                      <Card key={index} className="mb-4">
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="font-medium">MCQ {index + 1}</h4>
-                          {mcqs.length > 1 && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => removeMCQ(index)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Category *
-                            </label>
-                            <input
-                              type="text"
-                              value={mcq.category}
-                              onChange={(e) =>
-                                updateMCQ(index, "category", e.target.value)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., algorithms, data-structures"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Difficulty *
-                            </label>
-                            <select
-                              value={mcq.difficulty}
-                              onChange={(e) =>
-                                updateMCQ(
-                                  index,
-                                  "difficulty",
-                                  e.target.value as any
-                                )
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="easy">Easy</option>
-                              <option value="medium">Medium</option>
-                              <option value="hard">Hard</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Question *
-                          </label>
-                          <textarea
-                            value={mcq.question}
-                            onChange={(e) =>
-                              updateMCQ(index, "question", e.target.value)
-                            }
-                            rows={5}
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="MCQ question"
-                          />
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Options *
-                          </label>
-                          {mcq.options.map((option, optionIndex) => (
-                            <div
-                              key={optionIndex}
-                              className="flex items-center space-x-2 mb-2"
-                            >
-                              <input
-                                type="radio"
-                                name={`correct-${index}`}
-                                checked={mcq.correctAnswer === optionIndex}
-                                onChange={() =>
-                                  updateMCQ(index, "correctAnswer", optionIndex)
-                                }
-                                className="mr-2"
-                              />
-                              <input
-                                type="text"
-                                value={option}
-                                onChange={(e) =>
-                                  updateMCQOption(
-                                    index,
-                                    optionIndex,
-                                    e.target.value
-                                  )
-                                }
-                                className="flex-1 border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder={`Option ${optionIndex + 1}`}
-                              />
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Explanation
-                            </label>
-                            <textarea
-                              value={mcq.explanation}
-                              onChange={(e) =>
-                                updateMCQ(index, "explanation", e.target.value)
-                              }
-                              rows={4}
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Explanation for the correct answer"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Tags
-                            </label>
-                            <input
-                              type="text"
-                              value={mcq.tags}
-                              onChange={(e) =>
-                                updateMCQ(index, "tags", e.target.value)
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="comma-separated tags"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Companies
-                          </label>
-                          <input
-                            type="text"
-                            value={mcq.companies}
-                            onChange={(e) =>
-                              updateMCQ(index, "companies", e.target.value)
-                            }
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="comma-separated companies"
-                          />
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                )}
+          {uploadType === "problems" ? (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium text-gray-900">Coding Problems</h4>
+                <Button onClick={addProblem} size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Problem
+                </Button>
               </div>
-            )}
-
-            {/* JSON Upload Mode */}
-            {uploadMode === "json" && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    JSON Data
-                  </label>
-                  <textarea
-                    value={jsonData}
-                    onChange={(e) => setJsonData(e.target.value)}
-                    rows={20}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Paste your JSON data here..."
-                  />
-                </div>
-
-                <div className="flex space-x-3">
-                  <Button onClick={loadTemplate} variant="outline">
-                    Load Template
-                  </Button>
-                  <Button onClick={clearData} variant="outline">
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Bulk Upload Mode */}
-            {uploadMode === "bulk" && (
-              <div className="space-y-6">
-                <div className="text-center py-8">
-                  <Upload className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Bulk Upload{" "}
-                    {uploadType === "problems" ? "Problems" : "MCQs"}
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Upload CSV, Excel, or JSON files with multiple items at
-                    once.
-                  </p>
-
-                  {/* File Upload Area */}
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 transition-colors">
-                    <input
-                      key={fileInputKey}
-                      type="file"
-                      accept=".csv,.xlsx,.xls,.json"
-                      onChange={(e) =>
-                        setSelectedFile(e.target.files?.[0] || null)
-                      }
-                      className="hidden"
-                      id="file-upload"
-                    />
-                    <label
-                      htmlFor="file-upload"
-                      className="cursor-pointer flex flex-col items-center"
-                    >
-                      <FileSpreadsheet className="w-12 h-12 text-gray-400 mb-4" />
-                      <span className="text-lg font-medium text-gray-700 mb-2">
-                        {selectedFile ? selectedFile.name : "Choose a file"}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        {selectedFile
-                          ? `Size: ${(selectedFile.size / 1024).toFixed(1)} KB`
-                          : "CSV, Excel, or JSON files up to 10MB"}
-                      </span>
-                    </label>
+              
+              {problems.map((problem, index) => (
+                <Card key={index} className="mb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h5 className="font-medium text-gray-900">Problem {index + 1}</h5>
+                    {problems.length > 1 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => removeProblem(index)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
-
-                  {/* File Info */}
-                  {selectedFile && (
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <FileSpreadsheet className="w-5 h-5 text-blue-600" />
-                          <div>
-                            <p className="font-medium text-blue-900">
-                              {selectedFile.name}
-                            </p>
-                            <p className="text-sm text-blue-700">
-                              Type:{" "}
-                              {getFileType(selectedFile.name).toUpperCase()} •
-                              Size: {(selectedFile.size / 1024).toFixed(1)} KB
-                            </p>
-                          </div>
-                        </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedFile(null);
-                            setFileInputKey((prev) => prev + 1);
-                          }}
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Title *
+                        </label>
+                        <input
+                          type="text"
+                          value={problem.title}
+                          onChange={(e) => updateProblem(index, "title", e.target.value)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Problem title"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Category *
+                        </label>
+                        <input
+                          type="text"
+                          value={problem.category}
+                          onChange={(e) => updateProblem(index, "category", e.target.value)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="e.g., arrays, strings"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Description *
+                      </label>
+                      <textarea
+                        value={problem.description}
+                        onChange={(e) => updateProblem(index, "description", e.target.value)}
+                        rows={4}
+                        className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Problem description"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Difficulty *
+                        </label>
+                        <select
+                          value={problem.difficulty}
+                          onChange={(e) => updateProblem(index, "difficulty", e.target.value as any)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <X className="w-4 h-4" />
-                        </Button>
+                          <option value="easy">Easy</option>
+                          <option value="medium">Medium</option>
+                          <option value="hard">Hard</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Test Cases *
+                        </label>
+                        <textarea
+                          value={problem.testCases}
+                          onChange={(e) => updateProblem(index, "testCases", e.target.value)}
+                          rows={3}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
+                        />
                       </div>
                     </div>
-                  )}
-
-                  {/* Supported Formats */}
-                  <div className="mt-6">
-                    <h4 className="font-medium text-gray-900 mb-3">
-                      Supported Formats:
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                          <FileText className="w-5 h-5 text-green-600 mr-2" />
-                          <span className="font-medium">CSV</span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          Comma-separated values with headers
-                        </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Solution
+                        </label>
+                        <textarea
+                          value={problem.solution}
+                          onChange={(e) => updateProblem(index, "solution", e.target.value)}
+                          rows={3}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Solution approach"
+                        />
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                          <FileSpreadsheet className="w-5 h-5 text-blue-600 mr-2" />
-                          <span className="font-medium">Excel</span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          .xlsx or .xls files with tabular data
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <div className="flex items-center mb-2">
-                          <FileText className="w-5 h-5 text-purple-600 mr-2" />
-                          <span className="font-medium">JSON</span>
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          JSON array with structured data
-                        </p>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Tags
+                        </label>
+                        <input
+                          type="text"
+                          value={problem.tags}
+                          onChange={(e) => updateProblem(index, "tags", e.target.value)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="comma-separated tags"
+                        />
                       </div>
                     </div>
                   </div>
-
-                  {/* Template Downloads */}
-                  <div className="mt-6">
-                    <h4 className="font-medium text-gray-900 mb-3">
-                      Download Templates:
-                    </h4>
-                    <div className="flex flex-wrap gap-3 justify-center">
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium text-gray-900">MCQ Questions</h4>
+                <Button onClick={addMCQ} size="sm">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add MCQ
+                </Button>
+              </div>
+              
+              {mcqs.map((mcq, index) => (
+                <Card key={index} className="mb-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h5 className="font-medium text-gray-900">MCQ {index + 1}</h5>
+                    {mcqs.length > 1 && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => downloadTemplate("csv")}
+                        onClick={() => removeMCQ(index)}
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        CSV Template
+                        <Trash2 className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadTemplate("json")}
-                      >
-                        <Download className="w-4 h-4 mr-2" />
-                        JSON Template
-                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Question *
+                      </label>
+                      <textarea
+                        value={mcq.question}
+                        onChange={(e) => updateMCQ(index, "question", e.target.value)}
+                        rows={3}
+                        className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="MCQ question"
+                      />
                     </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Options *
+                      </label>
+                      {mcq.options.map((option, optionIndex) => (
+                        <div key={optionIndex} className="flex items-center space-x-3 mb-2">
+                          <input
+                            type="radio"
+                            name={`correct-${index}`}
+                            checked={mcq.correctAnswer === optionIndex}
+                            onChange={() => updateMCQ(index, "correctAnswer", optionIndex)}
+                            className="w-4 h-4 text-blue-600"
+                          />
+                          <input
+                            type="text"
+                            value={option}
+                            onChange={(e) => updateMCQOption(index, optionIndex, e.target.value)}
+                            className="flex-1 border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder={`Option ${optionIndex + 1}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Category *
+                        </label>
+                        <input
+                          type="text"
+                          value={mcq.category}
+                          onChange={(e) => updateMCQ(index, "category", e.target.value)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="e.g., algorithms, data-structures"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Difficulty *
+                        </label>
+                        <select
+                          value={mcq.difficulty}
+                          onChange={(e) => updateMCQ(index, "difficulty", e.target.value as any)}
+                          className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="easy">Easy</option>
+                          <option value="medium">Medium</option>
+                          <option value="hard">Hard</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Explanation
+                      </label>
+                      <textarea
+                        value={mcq.explanation}
+                        onChange={(e) => updateMCQ(index, "explanation", e.target.value)}
+                        rows={3}
+                        className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Explanation for the correct answer"
+                      />
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          <Button
+            onClick={handleUpload}
+            disabled={uploading}
+            className="w-full mt-6"
+          >
+            {uploading ? (
+              <Loading size="sm" text="Uploading..." />
+            ) : (
+              <>
+                <Upload className="w-4 h-4 mr-2" />
+                Upload {uploadType === "problems" ? "Problems" : "MCQs"}
+              </>
+            )}
+          </Button>
+        </Card>
+
+        {/* Method 2: File Upload */}
+        <Card>
+          <div className="flex items-center mb-4">
+            <FileSpreadsheet className="w-6 h-6 text-green-600 mr-3" />
+            <h3 className="text-lg font-semibold text-gray-900">Bulk Upload</h3>
+          </div>
+          <p className="text-gray-600 mb-4">
+            Upload CSV, Excel, or JSON files with multiple items.
+          </p>
+
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-green-400 transition-colors">
+            <input
+              key={fileInputKey}
+              type="file"
+              accept=".csv,.xlsx,.xls,.json"
+              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              className="hidden"
+              id="file-upload"
+            />
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer flex flex-col items-center"
+            >
+              <FileSpreadsheet className="w-12 h-12 text-gray-400 mb-4" />
+              <span className="text-lg font-medium text-gray-700 mb-2">
+                {selectedFile ? selectedFile.name : "Choose a file"}
+              </span>
+              <span className="text-sm text-gray-500">
+                {selectedFile
+                  ? `Size: ${(selectedFile.size / 1024).toFixed(1)} KB`
+                  : "CSV, Excel, or JSON files up to 10MB"}
+              </span>
+            </label>
+          </div>
+
+          {selectedFile && (
+            <div className="bg-green-50 p-4 rounded-lg mt-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <FileSpreadsheet className="w-5 h-5 text-green-600" />
+                  <div>
+                    <p className="font-medium text-green-900">{selectedFile.name}</p>
+                    <p className="text-sm text-green-700">
+                      Type: {getFileType(selectedFile.name).toUpperCase()} • 
+                      Size: {(selectedFile.size / 1024).toFixed(1)} KB
+                    </p>
                   </div>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setFileInputKey((prev) => prev + 1);
+                  }}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
+            </div>
+          )}
+
+          <Button
+            onClick={handleFileUpload}
+            disabled={uploading || !selectedFile}
+            className="w-full mt-6"
+          >
+            {uploading ? (
+              <Loading size="sm" text="Uploading..." />
+            ) : (
+              <>
+                <Upload className="w-4 h-4 mr-2" />
+                Upload File
+              </>
             )}
+          </Button>
+        </Card>
+      </div>
 
-            {/* Upload Button */}
-            <Button
-              onClick={handleUpload}
-              disabled={
-                uploading ||
-                (uploadMode === "json" && !jsonData.trim()) ||
-                (uploadMode === "bulk" && !selectedFile)
-              }
-              className="w-full"
-            >
-              {uploading ? (
-                <Loading size="sm" text="Uploading..." />
+      {/* Result Display */}
+      {result && (
+        <Card>
+          <div
+            className={`p-4 rounded-lg ${
+              result.success
+                ? "bg-green-50 border border-green-200"
+                : "bg-red-50 border border-red-200"
+            }`}
+          >
+            <div className="flex items-center">
+              {result.success ? (
+                <Check className="w-5 h-5 text-green-600 mr-2" />
               ) : (
-                <>
-                  <Upload className="w-4 h-4 mr-2" />
-                  {uploadMode === "bulk"
-                    ? `Upload ${selectedFile?.name || "File"}`
-                    : `Upload ${
-                        uploadType === "problems" ? "Problems" : "MCQs"
-                      }`}
-                </>
+                <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
               )}
-            </Button>
-
-            {/* Result Display */}
-            {result && (
-              <div
-                className={`p-4 rounded-lg ${
-                  result.success
-                    ? "bg-green-50 border border-green-200"
-                    : "bg-red-50 border border-red-200"
+              <h4
+                className={`font-semibold ${
+                  result.success ? "text-green-800" : "text-red-800"
                 }`}
               >
-                <div className="flex items-center">
-                  {result.success ? (
-                    <Check className="w-5 h-5 text-green-600 mr-2" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
+                {result.success ? "Upload Successful" : "Upload Failed"}
+              </h4>
+            </div>
+            <p className="text-sm mt-2">{result.message}</p>
+            {result.data?.imported !== undefined && (
+              <p className="text-sm">Imported: {result.data.imported}</p>
+            )}
+            {result.data?.skipped !== undefined && (
+              <p className="text-sm">
+                Skipped (Duplicates): {result.data.skipped}
+              </p>
+            )}
+            {result.data?.errors && result.data.errors.length > 0 && (
+              <div className="mt-2">
+                <p className="text-sm font-medium">Errors:</p>
+                <ul className="text-sm list-disc list-inside">
+                  {result.data.errors.map(
+                    (error: string, index: number) => (
+                      <li key={index}>{error}</li>
+                    )
                   )}
-                  <h4
-                    className={`font-semibold ${
-                      result.success ? "text-green-800" : "text-red-800"
-                    }`}
-                  >
-                    {result.success ? "Upload Successful" : "Upload Failed"}
-                  </h4>
-                </div>
-                <p className="text-sm mt-2">{result.message}</p>
-                {result.data?.imported !== undefined && (
-                  <p className="text-sm">Imported: {result.data.imported}</p>
-                )}
-                {result.data?.skipped !== undefined && (
-                  <p className="text-sm">
-                    Skipped (Duplicates): {result.data.skipped}
-                  </p>
-                )}
-                {result.data?.errors && result.data.errors.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-sm font-medium">Errors:</p>
-                    <ul className="text-sm list-disc list-inside">
-                      {result.data.errors.map(
-                        (error: string, index: number) => (
-                          <li key={index}>{error}</li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )}
-                {result.data?.duplicates &&
-                  result.data.duplicates.length > 0 && (
-                    <div className="mt-2">
-                      <p className="text-sm font-medium">Duplicates Found:</p>
-                      <ul className="text-sm list-disc list-inside">
-                        {result.data.duplicates.map(
-                          (dup: string, index: number) => (
-                            <li key={index}>{dup}</li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                </ul>
               </div>
             )}
-          </Card>
-        </div>
-      </div>
+            {result.data?.duplicates &&
+              result.data.duplicates.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-sm font-medium">Duplicates Found:</p>
+                  <ul className="text-sm list-disc list-inside">
+                    {result.data.duplicates.map(
+                      (dup: string, index: number) => (
+                        <li key={index}>{dup}</li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              )}
+          </div>
+        </Card>
+      )}
     </div>
   );
 }
