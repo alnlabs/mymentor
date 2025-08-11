@@ -62,6 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (firebaseUser: User | null) => {
       if (!firebaseUser) {
         console.log("No Firebase user, setting guest role");
+        setUser(null);
         setUserRole("guest");
         setIsAdmin(false);
         setIsSuperAdmin(false);
@@ -84,20 +85,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         const result = await response.json();
         console.log("User role API response:", result);
-        if (result.success && result.data && result.data.role) {
-          const role = result.data.role.toLowerCase();
-          console.log("Setting user role to:", role);
-          setUserRole(role);
-          setIsAdmin(role === "admin" || role === "superadmin");
-          setIsSuperAdmin(role === "superadmin");
+        if (result.success && result.data) {
+          // Use database user data instead of Firebase user
+          const dbUser = result.data;
+          setUser({
+            ...firebaseUser,
+            displayName: dbUser.name, // Use database name as displayName
+            email: dbUser.email,
+          });
+          
+          if (dbUser.role) {
+            const role = dbUser.role.toLowerCase();
+            console.log("Setting user role to:", role);
+            setUserRole(role);
+            setIsAdmin(role === "admin" || role === "superadmin");
+            setIsSuperAdmin(role === "superadmin");
+          } else {
+            console.log("No role found, setting default user role");
+            setUserRole("user");
+            setIsAdmin(false);
+            setIsSuperAdmin(false);
+          }
         } else {
-          console.log("No role found, setting default user role");
+          console.log("No user data found, using Firebase user");
+          setUser(firebaseUser);
           setUserRole("user");
           setIsAdmin(false);
           setIsSuperAdmin(false);
         }
       } catch (error) {
         console.error("Error fetching user role:", error);
+        setUser(firebaseUser);
         setUserRole("user");
         setIsAdmin(false);
         setIsSuperAdmin(false);
@@ -117,7 +135,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChange((firebaseUser) => {
       console.log("Firebase auth state changed:", firebaseUser?.email);
       console.log("Firebase user object:", firebaseUser);
-      setUser(firebaseUser);
       fetchUserRole(firebaseUser);
       setLoading(false);
     });

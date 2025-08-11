@@ -1,39 +1,44 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Card } from '@/shared/components/Card';
-import { Button } from '@/shared/components/Button';
-import { Loading } from '@/shared/components/Loading';
-import { AuthButton } from '@/shared/components/AuthButton';
-import { ApiResponse } from '@/shared/types/common';
-import { useAuthContext } from '@/shared/components/AuthContext';
+import React, { useState } from "react";
+import { Card } from "@/shared/components/Card";
+import { Button } from "@/shared/components/Button";
+import { Loading } from "@/shared/components/Loading";
+import { AuthButton } from "@/shared/components/AuthButton";
+import { ApiResponse } from "@/shared/types/common";
+import { useAuthContext } from "@/shared/components/AuthContext";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { user, isSuperAdmin, loading: authLoading, updateUserRole } = useAuthContext();
+  const [error, setError] = useState("");
+  const {
+    user,
+    isSuperAdmin,
+    loading: authLoading,
+    updateUserRole,
+  } = useAuthContext();
 
   // Redirect authenticated users to dashboard
   React.useEffect(() => {
     if (!authLoading && (user || isSuperAdmin)) {
       console.log("Login page: User authenticated, redirecting to dashboard");
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     }
   }, [user, isSuperAdmin, authLoading]);
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       // Call the SuperAdmin API route
-      const response = await fetch('/api/auth/superadmin', {
-        method: 'POST',
+      const response = await fetch("/api/auth/superadmin", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
@@ -42,21 +47,24 @@ export default function LoginPage() {
 
       if (result.success && result.data?.user) {
         // Store SuperAdmin session
-        localStorage.setItem('superAdminUser', JSON.stringify(result.data.user));
-        
+        localStorage.setItem(
+          "superAdminUser",
+          JSON.stringify(result.data.user)
+        );
+
         // Update AuthContext
-        updateUserRole('superadmin');
-        
+        updateUserRole("superadmin");
+
         // Show success message
-        alert('SuperAdmin login successful! Redirecting to admin panel...');
-        
+        alert("SuperAdmin login successful! Redirecting to admin panel...");
+
         // Redirect to admin panel
-        window.location.href = '/admin';
+        window.location.href = "/admin";
       } else {
-        setError(result.error || 'Invalid credentials');
+        setError(result.error || "Invalid credentials");
       }
     } catch (error: any) {
-      setError('Login failed. Please try again.');
+      setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -113,14 +121,19 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">or continue with email</span>
+                <span className="px-2 bg-white text-gray-500">
+                  or continue with email
+                </span>
               </div>
             </div>
 
             {/* Form Login */}
             <form onSubmit={handleFormLogin} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Email Address or Username
                 </label>
                 <input
@@ -135,7 +148,10 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Password
                 </label>
                 <input
@@ -155,12 +171,12 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? <Loading size="sm" text="Signing in..." /> : 'Sign In with Email'}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <Loading size="sm" text="Signing in..." />
+                ) : (
+                  "Sign In with Email"
+                )}
               </Button>
             </form>
           </div>
@@ -169,9 +185,9 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don't have an account?{" "}
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => (window.location.href = "/")}
               className="font-medium text-blue-600 hover:text-blue-500"
             >
               Go to Home

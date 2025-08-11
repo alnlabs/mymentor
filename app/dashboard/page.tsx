@@ -107,11 +107,11 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {isSuperAdmin ? "S" : user?.name?.charAt(0) || "U"}
+                    {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin ? "SuperAdmin" : user?.name || "User"}
+                  {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
                 </span>
               </div>
               <Button
@@ -133,7 +133,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {isSuperAdmin ? "SuperAdmin" : user?.name || "User"}!
+            Welcome back, {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}!
             👋
           </h2>
           <p className="text-gray-600">
