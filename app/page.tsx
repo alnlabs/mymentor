@@ -86,7 +86,7 @@ export default function HomePage() {
                 MyMentor
               </h1>
             </div>
-            
+
             {/* Navigation Menu */}
             {(user || isSuperAdmin) && (
               <nav className="hidden md:flex items-center space-x-8">
@@ -107,19 +107,29 @@ export default function HomePage() {
                 )}
               </nav>
             )}
-            
+
             {/* Mobile menu button */}
             {(user || isSuperAdmin) && (
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               </button>
             )}
-            
+
             <div className="flex items-center space-x-4">
               {user || isSuperAdmin ? (
                 <>
@@ -170,7 +180,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        
+
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (user || isSuperAdmin) && (
           <div className="md:hidden bg-white border-t border-gray-200">
@@ -468,7 +478,9 @@ export default function HomePage() {
                       mock interviews with questions from top tech companies.
                     </p>
                     <Button
-                      onClick={() => (window.location.href = "/admin/interviews")}
+                      onClick={() =>
+                        (window.location.href = "/admin/interviews")
+                      }
                       className="w-full"
                     >
                       Manage Mock Interviews

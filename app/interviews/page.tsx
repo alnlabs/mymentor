@@ -11,10 +11,10 @@ import { Filter, Search, Plus } from "lucide-react";
 
 export default function InterviewsPage() {
   const { user, isAdmin, isSuperAdmin } = useAuthContext();
-  
+
   // Redirect non-admin users to admin panel
   if (user && !isAdmin && !isSuperAdmin) {
-    window.location.href = '/admin/interviews';
+    window.location.href = "/admin/interviews";
     return null;
   }
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
@@ -56,7 +56,7 @@ export default function InterviewsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: user?.id || 'superadmin-user',
+          userId: user?.id || "superadmin-user",
           templateId: template.id,
         }),
       });
@@ -120,7 +120,7 @@ export default function InterviewsPage() {
                 Practice with realistic interview scenarios
               </p>
             </div>
-                          {(isAdmin || isSuperAdmin) && (
+            {(isAdmin || isSuperAdmin) && (
               <Button
                 onClick={() => setShowCreateModal(true)}
                 className="flex items-center space-x-2"
