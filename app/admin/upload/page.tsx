@@ -23,11 +23,23 @@ interface Problem {
   description: string;
   difficulty: "easy" | "medium" | "hard";
   category: string;
+  subject: string;
+  topic: string;
+  tool: string;
+  technologyStack: string;
+  domain: string;
+  skillLevel: "beginner" | "intermediate" | "advanced";
+  jobRole: string;
+  companyType: string;
+  interviewType: string;
+  timeLimit: number;
   testCases: string;
   solution?: string;
   hints?: string;
   tags?: string;
   companies?: string;
+  priority: "high" | "medium" | "low";
+  status: "draft" | "active" | "archived";
 }
 
 interface MCQ {
@@ -37,9 +49,21 @@ interface MCQ {
   correctAnswer: number;
   explanation?: string;
   category: string;
+  subject: string;
+  topic: string;
+  tool: string;
+  technologyStack: string;
+  domain: string;
+  skillLevel: "beginner" | "intermediate" | "advanced";
+  jobRole: string;
+  companyType: string;
+  interviewType: string;
+  timeLimit: number;
   difficulty: "easy" | "medium" | "hard";
   tags?: string;
   companies?: string;
+  priority: "high" | "medium" | "low";
+  status: "draft" | "active" | "archived";
 }
 
 type ContentType = "problems" | "mcq";
@@ -60,11 +84,23 @@ export default function UploadPage() {
       description: "",
       difficulty: "easy",
       category: "",
+      subject: "",
+      topic: "",
+      tool: "",
+      technologyStack: "",
+      domain: "",
+      skillLevel: "beginner",
+      jobRole: "",
+      companyType: "",
+      interviewType: "",
+      timeLimit: 30,
       testCases: "",
       solution: "",
       hints: "",
       tags: "",
       companies: "",
+      priority: "medium",
+      status: "draft",
     },
   ]);
 
@@ -75,9 +111,21 @@ export default function UploadPage() {
       correctAnswer: 0,
       explanation: "",
       category: "",
+      subject: "",
+      topic: "",
+      tool: "",
+      technologyStack: "",
+      domain: "",
+      skillLevel: "beginner",
+      jobRole: "",
+      companyType: "",
+      interviewType: "",
+      timeLimit: 30,
       difficulty: "easy",
       tags: "",
       companies: "",
+      priority: "medium",
+      status: "draft",
     },
   ]);
 
@@ -126,11 +174,23 @@ export default function UploadPage() {
             description: "",
             difficulty: "easy",
             category: "",
+            subject: "",
+            topic: "",
+            tool: "",
+            technologyStack: "",
+            domain: "",
+            skillLevel: "beginner",
+            jobRole: "",
+            companyType: "",
+            interviewType: "",
+            timeLimit: 30,
             testCases: "",
             solution: "",
             hints: "",
             tags: "",
             companies: "",
+            priority: "medium",
+            status: "draft",
           },
         ]);
       }
@@ -176,9 +236,21 @@ export default function UploadPage() {
             correctAnswer: 0,
             explanation: "",
             category: "",
+            subject: "",
+            topic: "",
+            tool: "",
+            technologyStack: "",
+            domain: "",
+            skillLevel: "beginner",
+            jobRole: "",
+            companyType: "",
+            interviewType: "",
+            timeLimit: 30,
             difficulty: "easy",
             tags: "",
             companies: "",
+            priority: "medium",
+            status: "draft",
           },
         ]);
       }
@@ -269,11 +341,23 @@ export default function UploadPage() {
         description: "",
         difficulty: "easy",
         category: "",
+        subject: "",
+        topic: "",
+        tool: "",
+        technologyStack: "",
+        domain: "",
+        skillLevel: "beginner",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        timeLimit: 30,
         testCases: "",
         solution: "",
         hints: "",
         tags: "",
         companies: "",
+        priority: "medium",
+        status: "draft",
       },
     ]);
   };
@@ -303,9 +387,21 @@ export default function UploadPage() {
         correctAnswer: 0,
         explanation: "",
         category: "",
+        subject: "",
+        topic: "",
+        tool: "",
+        technologyStack: "",
+        domain: "",
+        skillLevel: "beginner",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        timeLimit: 30,
         difficulty: "easy",
         tags: "",
         companies: "",
+        priority: "medium",
+        status: "draft",
       },
     ]);
   };
@@ -498,7 +594,9 @@ export default function UploadPage() {
               {uploadType === "problems" ? (
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-medium text-gray-900">Coding Problems</h4>
+                    <h4 className="font-medium text-gray-900">
+                      Coding Problems
+                    </h4>
                     <Button onClick={addProblem} size="sm">
                       <Plus className="w-4 h-4 mr-2" />
                       Add Problem
@@ -557,12 +655,31 @@ export default function UploadPage() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Subject *
+                          </label>
+                          <input
+                            type="text"
+                            value={problem.subject}
+                            onChange={(e) =>
+                              updateProblem(index, "subject", e.target.value)
+                            }
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="e.g., algorithms, data-structures"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
                             Description *
                           </label>
                           <textarea
                             value={problem.description}
                             onChange={(e) =>
-                              updateProblem(index, "description", e.target.value)
+                              updateProblem(
+                                index,
+                                "description",
+                                e.target.value
+                              )
                             }
                             rows={4}
                             className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -599,7 +716,11 @@ export default function UploadPage() {
                             <textarea
                               value={problem.testCases}
                               onChange={(e) =>
-                                updateProblem(index, "testCases", e.target.value)
+                                updateProblem(
+                                  index,
+                                  "testCases",
+                                  e.target.value
+                                )
                               }
                               rows={3}
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -739,24 +860,39 @@ export default function UploadPage() {
 
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Difficulty *
+                              Subject *
                             </label>
-                            <select
-                              value={mcq.difficulty}
+                            <input
+                              type="text"
+                              value={mcq.subject}
                               onChange={(e) =>
-                                updateMCQ(
-                                  index,
-                                  "difficulty",
-                                  e.target.value as any
-                                )
+                                updateMCQ(index, "subject", e.target.value)
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="easy">Easy</option>
-                              <option value="medium">Medium</option>
-                              <option value="hard">Hard</option>
-                            </select>
+                              placeholder="e.g., algorithms, data-structures"
+                            />
                           </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Difficulty *
+                          </label>
+                          <select
+                            value={mcq.difficulty}
+                            onChange={(e) =>
+                              updateMCQ(
+                                index,
+                                "difficulty",
+                                e.target.value as any
+                              )
+                            }
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                          </select>
                         </div>
 
                         <div>
