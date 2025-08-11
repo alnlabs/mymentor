@@ -4,7 +4,18 @@ import { prisma } from '@/shared/lib/database';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { uid, email, name, photoURL } = body;
+    const { 
+      uid, 
+      email, 
+      name, 
+      photoURL, 
+      firstName, 
+      lastName, 
+      emailVerified, 
+      phoneNumber, 
+      locale, 
+      timezone 
+    } = body;
 
     if (!uid || !email) {
       return NextResponse.json(
@@ -19,7 +30,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      // Create new user
+      // Create new user with enhanced profile data
       user = await prisma.user.create({
         data: {
           id: uid,
@@ -27,17 +38,42 @@ export async function POST(request: NextRequest) {
           name: name || email.split('@')[0],
           avatar: photoURL,
           provider: 'google',
-          role: 'user'
+          role: 'user',
+          // Additional profile fields
+          firstName: firstName || name?.split(' ')[0] || '',
+          lastName: lastName || name?.split(' ').slice(1).join(' ') || '',
+          emailVerified: emailVerified || false,
+          phoneNumber: phoneNumber,
+          locale: locale || 'en',
+          timezone: timezone || 'UTC',
+          // Set default preferences
+          preferences: JSON.stringify({
+            theme: 'light',
+            notifications: true,
+            language: locale || 'en'
+          }),
+          // Set profile completion status
+          profileCompleted: !!(firstName && lastName && photoURL),
         }
       });
     } else {
-      // Update existing user's info
+      // Update existing user's info with new profile data
       user = await prisma.user.update({
         where: { email },
         data: {
           name: name || user.name,
           avatar: photoURL || user.avatar,
-          isActive: true
+          firstName: firstName || user.firstName,
+          lastName: lastName || user.lastName,
+          emailVerified: emailVerified !== undefined ? emailVerified : user.emailVerified,
+          phoneNumber: phoneNumber || user.phoneNumber,
+          locale: locale || user.locale,
+          timezone: timezone || user.timezone,
+          isActive: true,
+          // Update profile completion status
+          profileCompleted: !!(firstName && lastName && photoURL),
+          // Update last login
+          lastLoginAt: new Date(),
         }
       });
     }
@@ -50,7 +86,18 @@ export async function POST(request: NextRequest) {
         name: user.name,
         avatar: user.avatar,
         role: user.role,
-        isActive: user.isActive
+        isActive: user.isActive,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailVerified: user.emailVerified,
+        phoneNumber: user.phoneNumber,
+        locale: user.locale,
+        timezone: user.timezone,
+        profileCompleted: user.profileCompleted,
+        preferences: user.preferences ? JSON.parse(user.preferences) : null,
+        lastLoginAt: user.lastLoginAt,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       }
     });
   } catch (error) {

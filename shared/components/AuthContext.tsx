@@ -129,18 +129,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const result = await firebaseSignInWithGoogle();
 
+      // Get additional profile information from Google
+      const profileData = {
+        uid: result.uid,
+        email: result.email,
+        name: result.displayName,
+        photoURL: result.photoURL,
+        // Additional profile fields
+        firstName: result.displayName?.split(' ')[0] || '',
+        lastName: result.displayName?.split(' ').slice(1).join(' ') || '',
+        emailVerified: result.emailVerified || false,
+        phoneNumber: result.phoneNumber || null,
+        // Get additional info from browser
+        locale: navigator.language || 'en',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+      };
+
       // Create or update user in database
       const response = await fetch("/api/auth/google", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          uid: result.uid,
-          email: result.email,
-          name: result.displayName,
-          photoURL: result.photoURL,
-        }),
+        body: JSON.stringify(profileData),
       });
 
       if (!response.ok) {
@@ -164,19 +175,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOutUser = useCallback(async () => {
     try {
+      console.log("Starting sign out process...");
+      
       // Clear SuperAdmin session
       localStorage.removeItem("superAdminUser");
 
       // Sign out from Firebase
       await firebaseSignOut();
-
-      // Reset state
-      setUser(null);
-      setUserRole("guest");
-      setIsAdmin(false);
-      setIsSuperAdmin(false);
+      
+      console.log("Firebase sign out completed");
+      
+      // Force page reload to ensure clean state
+      window.location.reload();
     } catch (error) {
       console.error("Sign-Out Error:", error);
+      // Even if there's an error, try to clear local state and reload
+      localStorage.removeItem("superAdminUser");
+      window.location.reload();
     }
   }, []);
 

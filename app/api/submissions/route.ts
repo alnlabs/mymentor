@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/shared/lib/database';
-import { ApiResponse } from '@/shared/types/common';
-import { executeJavaScriptCode, validateCode } from '@/shared/utils/codeExecution';
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/shared/lib/database";
+import { ApiResponse } from "@/shared/types/common";
+import {
+  executeJavaScriptCode,
+  validateCode,
+} from "@/shared/utils/codeExecution";
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,7 +26,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
@@ -34,10 +37,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching submissions:', error);
+    console.error("Error fetching submissions:", error);
     const response: ApiResponse = {
       success: false,
-      error: 'Failed to fetch submissions',
+      error: "Failed to fetch submissions",
     };
     return NextResponse.json(response, { status: 500 });
   }
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
     if (!problemId || !code || !language || !userId) {
       const response: ApiResponse = {
         success: false,
-        error: 'Missing required fields',
+        error: "Missing required fields",
       };
       return NextResponse.json(response, { status: 400 });
     }
@@ -64,7 +67,7 @@ export async function POST(request: NextRequest) {
     if (!problem) {
       const response: ApiResponse = {
         success: false,
-        error: 'Problem not found',
+        error: "Problem not found",
       };
       return NextResponse.json(response, { status: 404 });
     }
@@ -82,10 +85,10 @@ export async function POST(request: NextRequest) {
     // Execute code with test cases
     const testCases = JSON.parse(problem.testCases);
     const testResults = executeJavaScriptCode(code, testCases);
-    
-    const passedTests = testResults.filter(result => result.passed).length;
+
+    const passedTests = testResults.filter((result) => result.passed).length;
     const totalTests = testResults.length;
-    const status = passedTests === totalTests ? 'accepted' : 'wrong_answer';
+    const status = passedTests === totalTests ? "accepted" : "wrong_answer";
 
     // Create submission
     const submission = await prisma.submission.create({
@@ -105,7 +108,7 @@ export async function POST(request: NextRequest) {
       where: {
         userId,
         problemId,
-        questionType: 'coding',
+        questionType: "coding",
       },
     });
 
@@ -114,9 +117,9 @@ export async function POST(request: NextRequest) {
       await prisma.userProgress.update({
         where: { id: existingProgress.id },
         data: {
-          status: status === 'accepted' ? 'completed' : 'failed',
-          score: status === 'accepted' ? 100 : 0,
-          completedAt: status === 'accepted' ? new Date() : undefined,
+          status: status === "accepted" ? "completed" : "failed",
+          score: status === "accepted" ? 100 : 0,
+          completedAt: status === "accepted" ? new Date() : undefined,
         },
       });
     } else {
@@ -125,10 +128,10 @@ export async function POST(request: NextRequest) {
         data: {
           userId,
           problemId,
-          questionType: 'coding',
-          status: status === 'accepted' ? 'completed' : 'failed',
-          score: status === 'accepted' ? 100 : 0,
-          completedAt: status === 'accepted' ? new Date() : undefined,
+          questionType: "coding",
+          status: status === "accepted" ? "completed" : "failed",
+          score: status === "accepted" ? 100 : 0,
+          completedAt: status === "accepted" ? new Date() : undefined,
         },
       });
     }
@@ -142,15 +145,15 @@ export async function POST(request: NextRequest) {
         passedTests,
         totalTests,
       },
-      message: 'Submission processed successfully',
+      message: "Submission processed successfully",
     };
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Submission error:', error);
+    console.error("Submission error:", error);
     const response: ApiResponse = {
       success: false,
-      error: 'Failed to process submission',
+      error: "Failed to process submission",
     };
     return NextResponse.json(response, { status: 500 });
   }

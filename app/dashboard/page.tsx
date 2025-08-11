@@ -5,6 +5,7 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { SignOutTest } from "@/shared/components/SignOutTest";
 import {
   BookOpen,
   Code,

@@ -26,6 +26,18 @@ model User {
   role      UserRole @default(user)
   isActive  Boolean  @default(true)
   progress  Int      @default(0)
+  
+  // Enhanced profile fields
+  firstName String?
+  lastName  String?
+  emailVerified Boolean @default(false)
+  phoneNumber String?
+  locale    String?  @default("en")
+  timezone  String?  @default("UTC")
+  preferences String? // JSON string for user preferences
+  profileCompleted Boolean @default(false)
+  lastLoginAt DateTime?
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
