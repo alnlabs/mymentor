@@ -5,7 +5,7 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
-import { Search, Filter, BookOpen, Clock, Users, Target } from "lucide-react";
+import { Search, Filter, BookOpen, Clock, Users, Target, LogOut, Home, Code, Target as TargetIcon, BarChart3, Settings } from "lucide-react";
 
 interface MCQ {
   id: string;
@@ -20,7 +20,7 @@ interface MCQ {
 }
 
 export default function MCQPage() {
-  const { user, loading } = useAuthContext();
+  const { user, loading, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
   const [mcqs, setMcqs] = useState<MCQ[]>([]);
   const [filteredMcqs, setFilteredMcqs] = useState<MCQ[]>([]);
   const [loadingMcqs, setLoadingMcqs] = useState(true);
@@ -138,12 +138,88 @@ export default function MCQPage() {
             </div>
 
             <div className="flex items-center space-x-4">
+              {/* Navigation Links */}
+              <nav className="hidden md:flex items-center space-x-6">
+                <a
+                  href="/dashboard"
+                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                >
+                  <Home className="w-4 h-4" />
+                  <span>Dashboard</span>
+                </a>
+                <a
+                  href="/problems"
+                  className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors"
+                >
+                  <Code className="w-4 h-4" />
+                  <span>Problems</span>
+                </a>
+                <a
+                  href="/mcq"
+                  className="flex items-center space-x-2 text-purple-600 font-medium"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>MCQs</span>
+                </a>
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin/interviews"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                  >
+                    <TargetIcon className="w-4 h-4" />
+                    <span>Interviews</span>
+                  </a>
+                )}
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin/users"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-orange-600 transition-colors"
+                  >
+                    <Users className="w-4 h-4" />
+                    <span>Users</span>
+                  </a>
+                )}
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin/analytics"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-red-600 transition-colors"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    <span>Analytics</span>
+                  </a>
+                )}
+                {(isAdmin || isSuperAdmin) && (
+                  <a
+                    href="/admin/settings"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-gray-600 transition-colors"
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span>Settings</span>
+                  </a>
+                )}
+              </nav>
+
+              {/* User Profile */}
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                  </span>
+                </div>
+                <span className="text-sm text-gray-700 font-medium hidden sm:block">
+                  {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
+                </span>
+              </div>
+
+              {/* Sign Out Button */}
               <Button
                 variant="outline"
-                onClick={() => window.history.back()}
-                className="hidden sm:flex"
+                size="sm"
+                onClick={signOutUser}
+                className="flex items-center space-x-2"
               >
-                ← Back
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
               </Button>
             </div>
           </div>
