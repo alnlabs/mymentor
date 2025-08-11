@@ -13,7 +13,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { updateUserRole } = useAuthContext();
+  const { user, isSuperAdmin, loading: authLoading, updateUserRole } = useAuthContext();
+
+  // Redirect authenticated users to dashboard
+  React.useEffect(() => {
+    if (!authLoading && (user || isSuperAdmin)) {
+      console.log("Login page: User authenticated, redirecting to dashboard");
+      window.location.href = '/dashboard';
+    }
+  }, [user, isSuperAdmin, authLoading]);
 
   const handleFormLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +61,24 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Checking authentication..." />
+      </div>
+    );
+  }
+
+  // Don't render login form if user is authenticated (will redirect)
+  if (user || isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to dashboard..." />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

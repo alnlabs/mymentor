@@ -176,13 +176,6 @@ export default function HomePage() {
                 </>
               ) : (
                 <>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => (window.location.href = "/login")}
-                  >
-                    Sign In
-                  </Button>
                   <AuthButton />
                 </>
               )}
