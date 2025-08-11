@@ -20,17 +20,39 @@ export default function DashboardPage() {
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
 
-  // Redirect to homepage if not authenticated
-  if (!loading && !user && !isSuperAdmin) {
-    console.log('Dashboard: User not authenticated, redirecting to homepage');
-    window.location.href = '/';
-    return null;
-  }
+  // Debug authentication state
+  console.log('Dashboard: Auth state:', {
+    user: user ? { email: user.email, displayName: user.displayName } : null,
+    loading,
+    isAdmin,
+    isSuperAdmin
+  });
 
+  // Redirect to homepage if not authenticated (with delay to prevent immediate redirects)
+  React.useEffect(() => {
+    if (!loading && !user && !isSuperAdmin) {
+      console.log('Dashboard: User not authenticated, redirecting to homepage');
+      const timer = setTimeout(() => {
+        window.location.href = '/';
+      }, 1000); // 1 second delay
+      return () => clearTimeout(timer);
+    }
+  }, [user, loading, isSuperAdmin]);
+
+  // Show loading while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <Loading size="lg" text="Loading Dashboard..." />
+      </div>
+    );
+  }
+
+  // Show loading while redirecting
+  if (!user && !isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to homepage..." />
       </div>
     );
   }
