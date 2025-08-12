@@ -5,13 +5,13 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
-import { 
-  MessageSquare, 
-  Send, 
-  Eye, 
-  EyeOff, 
-  Star, 
-  CheckCircle, 
+import {
+  MessageSquare,
+  Send,
+  Eye,
+  EyeOff,
+  Star,
+  CheckCircle,
   AlertCircle,
   LogOut,
   Home,
@@ -19,7 +19,7 @@ import {
   BookOpen,
   Target as TargetIcon,
   BarChart3,
-  Settings
+  Settings,
 } from "lucide-react";
 
 interface FeedbackForm {
@@ -32,11 +32,12 @@ interface FeedbackForm {
 }
 
 export default function FeedbackPage() {
-  const { user, loading, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
+  const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
+    useAuthContext();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [feedback, setFeedback] = useState<FeedbackForm>({
     isAnonymous: false,
     type: "",
@@ -65,13 +66,18 @@ export default function FeedbackPage() {
   ];
 
   const updateFeedback = (field: keyof FeedbackForm, value: any) => {
-    setFeedback(prev => ({ ...prev, [field]: value }));
+    setFeedback((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!feedback.type || !feedback.category || !feedback.subject || !feedback.message) {
+
+    if (
+      !feedback.type ||
+      !feedback.category ||
+      !feedback.subject ||
+      !feedback.message
+    ) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -101,7 +107,9 @@ export default function FeedbackPage() {
           rating: null,
         });
       } else {
-        setError(result.error || "Failed to submit feedback. Please try again.");
+        setError(
+          result.error || "Failed to submit feedback. Please try again."
+        );
       }
     } catch (error) {
       setError("Network error. Please check your connection and try again.");
@@ -171,11 +179,17 @@ export default function FeedbackPage() {
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
                     <span className="text-white text-sm font-medium">
-                      {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                      {isSuperAdmin
+                        ? "S"
+                        : user?.displayName?.charAt(0) ||
+                          user?.email?.charAt(0) ||
+                          "U"}
                     </span>
                   </div>
                   <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                    {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
+                    {isSuperAdmin
+                      ? "SuperAdmin"
+                      : user?.displayName || user?.email || "User"}
                   </span>
                 </div>
 
@@ -200,15 +214,14 @@ export default function FeedbackPage() {
               <CheckCircle className="w-16 h-16 mx-auto mb-4" />
               <h3 className="text-2xl font-bold mb-4">Thank You!</h3>
               <p className="text-lg text-gray-600 mb-6">
-                Your feedback has been submitted successfully. We appreciate you taking the time to help us improve!
+                Your feedback has been submitted successfully. We appreciate you
+                taking the time to help us improve!
               </p>
               <div className="space-y-4">
                 <p className="text-sm text-gray-500">
-                  {feedback.isAnonymous ? (
-                    "Your feedback was submitted anonymously."
-                  ) : (
-                    "We'll review your feedback and get back to you if needed."
-                  )}
+                  {feedback.isAnonymous
+                    ? "Your feedback was submitted anonymously."
+                    : "We'll review your feedback and get back to you if needed."}
                 </p>
                 <Button
                   onClick={() => setSubmitted(false)}
@@ -277,11 +290,17 @@ export default function FeedbackPage() {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                    {isSuperAdmin
+                      ? "S"
+                      : user?.displayName?.charAt(0) ||
+                        user?.email?.charAt(0) ||
+                        "U"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
+                  {isSuperAdmin
+                    ? "SuperAdmin"
+                    : user?.displayName || user?.email || "User"}
                 </span>
               </div>
 
@@ -303,9 +322,12 @@ export default function FeedbackPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Share Your Feedback</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Share Your Feedback
+          </h2>
           <p className="text-gray-600 text-lg">
-            Help us improve your learning experience! Your feedback is valuable to us.
+            Help us improve your learning experience! Your feedback is valuable
+            to us.
           </p>
         </div>
 
@@ -321,12 +343,13 @@ export default function FeedbackPage() {
                   <Eye className="w-5 h-5 text-gray-500" />
                 )}
                 <div>
-                  <h3 className="font-medium text-gray-900">Submit Anonymously</h3>
+                  <h3 className="font-medium text-gray-900">
+                    Submit Anonymously
+                  </h3>
                   <p className="text-sm text-gray-500">
-                    {feedback.isAnonymous 
+                    {feedback.isAnonymous
                       ? "Your feedback will be submitted without your name (we still collect user details for internal reference)"
-                      : "Your name will be visible to administrators"
-                    }
+                      : "Your name will be visible to administrators"}
                   </p>
                 </div>
               </div>
@@ -334,7 +357,9 @@ export default function FeedbackPage() {
                 <input
                   type="checkbox"
                   checked={feedback.isAnonymous}
-                  onChange={(e) => updateFeedback("isAnonymous", e.target.checked)}
+                  onChange={(e) =>
+                    updateFeedback("isAnonymous", e.target.checked)
+                  }
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
@@ -450,7 +475,8 @@ export default function FeedbackPage() {
                 required
               />
               <p className="text-sm text-gray-500 mt-1">
-                Feel free to share any opinions, suggestions, or concerns. Your feedback helps us improve!
+                Feel free to share any opinions, suggestions, or concerns. Your
+                feedback helps us improve!
               </p>
             </div>
 
@@ -485,8 +511,9 @@ export default function FeedbackPage() {
         {/* Additional Info */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            💡 <strong>Secret:</strong> We always collect user details in the background for internal reference, 
-            even when submitted anonymously. This helps us provide better support and track feedback patterns.
+            💡 <strong>Secret:</strong> We always collect user details in the
+            background for internal reference, even when submitted anonymously.
+            This helps us provide better support and track feedback patterns.
           </p>
         </div>
       </div>

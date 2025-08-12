@@ -55,7 +55,9 @@ export default function AdminFeedbackPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
-  const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(
+    null
+  );
   const [showDetails, setShowDetails] = useState(false);
   const [updating, setUpdating] = useState(false);
 
@@ -80,20 +82,26 @@ export default function AdminFeedbackPage() {
   };
 
   const filteredFeedback = feedback.filter((item) => {
-    const matchesSearch = 
+    const matchesSearch =
       item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || item.status === statusFilter;
+
+    const matchesStatus =
+      statusFilter === "all" || item.status === statusFilter;
     const matchesType = typeFilter === "all" || item.type === typeFilter;
-    const matchesPriority = priorityFilter === "all" || item.priority === priorityFilter;
+    const matchesPriority =
+      priorityFilter === "all" || item.priority === priorityFilter;
 
     return matchesSearch && matchesStatus && matchesType && matchesPriority;
   });
 
-  const updateFeedbackStatus = async (feedbackId: string, status: string, adminNotes?: string) => {
+  const updateFeedbackStatus = async (
+    feedbackId: string,
+    status: string,
+    adminNotes?: string
+  ) => {
     setUpdating(true);
     try {
       const response = await fetch(`/api/feedback/${feedbackId}`, {
@@ -173,10 +181,10 @@ export default function AdminFeedbackPage() {
 
   const getFeedbackStats = () => {
     const total = feedback.length;
-    const pending = feedback.filter(f => f.status === "pending").length;
-    const resolved = feedback.filter(f => f.status === "resolved").length;
-    const urgent = feedback.filter(f => f.priority === "urgent").length;
-    const anonymous = feedback.filter(f => f.isAnonymous).length;
+    const pending = feedback.filter((f) => f.status === "pending").length;
+    const resolved = feedback.filter((f) => f.status === "resolved").length;
+    const urgent = feedback.filter((f) => f.priority === "urgent").length;
+    const anonymous = feedback.filter((f) => f.isAnonymous).length;
 
     return { total, pending, resolved, urgent, anonymous };
   };
@@ -203,11 +211,14 @@ export default function AdminFeedbackPage() {
               <div className="w-10 h-10 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">Feedback Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Feedback Management
+              </h1>
             </div>
           </div>
           <p className="text-gray-600">
-            Manage and respond to user feedback. All user details are collected in the background for reference.
+            Manage and respond to user feedback. All user details are collected
+            in the background for reference.
           </p>
         </div>
 
@@ -220,7 +231,9 @@ export default function AdminFeedbackPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Total Feedback</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.total}
+                </p>
               </div>
             </div>
           </Card>
@@ -231,7 +244,9 @@ export default function AdminFeedbackPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.pending}
+                </p>
               </div>
             </div>
           </Card>
@@ -242,7 +257,9 @@ export default function AdminFeedbackPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Resolved</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.resolved}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.resolved}
+                </p>
               </div>
             </div>
           </Card>
@@ -253,7 +270,9 @@ export default function AdminFeedbackPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Urgent</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.urgent}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.urgent}
+                </p>
               </div>
             </div>
           </Card>
@@ -264,7 +283,9 @@ export default function AdminFeedbackPage() {
               </div>
               <div>
                 <p className="text-sm text-gray-500">Anonymous</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.anonymous}</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {stats.anonymous}
+                </p>
               </div>
             </div>
           </Card>
@@ -329,23 +350,40 @@ export default function AdminFeedbackPage() {
           {filteredFeedback.length === 0 ? (
             <Card className="text-center py-12">
               <MessageSquare className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No feedback found</h3>
-              <p className="text-gray-500">Try adjusting your search or filters.</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No feedback found
+              </h3>
+              <p className="text-gray-500">
+                Try adjusting your search or filters.
+              </p>
             </Card>
           ) : (
             filteredFeedback.map((item) => (
-              <Card key={item.id} className="p-6 hover:shadow-md transition-shadow">
+              <Card
+                key={item.id}
+                className="p-6 hover:shadow-md transition-shadow"
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-3">
                       <span className="text-2xl">{getTypeIcon(item.type)}</span>
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">{item.subject}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {item.subject}
+                        </h3>
                         <div className="flex items-center space-x-2 mt-1">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                              item.status
+                            )}`}
+                          >
                             {item.status}
                           </span>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(item.priority)}`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                              item.priority
+                            )}`}
+                          >
                             {item.priority}
                           </span>
                           {item.isAnonymous ? (
@@ -360,9 +398,11 @@ export default function AdminFeedbackPage() {
                         </div>
                       </div>
                     </div>
-                    
-                    <p className="text-gray-600 mb-3 line-clamp-2">{item.message}</p>
-                    
+
+                    <p className="text-gray-600 mb-3 line-clamp-2">
+                      {item.message}
+                    </p>
+
                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                       <div className="flex items-center space-x-1">
                         <User className="w-4 h-4" />
@@ -376,7 +416,9 @@ export default function AdminFeedbackPage() {
                       </div>
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
-                        <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                        <span>
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                       {item.rating && (
                         <div className="flex items-center space-x-1">
@@ -386,7 +428,7 @@ export default function AdminFeedbackPage() {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 ml-4">
                     <Button
                       variant="outline"
@@ -413,7 +455,9 @@ export default function AdminFeedbackPage() {
             <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Feedback Details</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Feedback Details
+                  </h2>
                   <Button
                     variant="outline"
                     size="sm"
@@ -430,33 +474,49 @@ export default function AdminFeedbackPage() {
                   {/* Header Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Subject</h3>
-                      <p className="text-gray-600">{selectedFeedback.subject}</p>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Subject
+                      </h3>
+                      <p className="text-gray-600">
+                        {selectedFeedback.subject}
+                      </p>
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2">Type</h3>
                       <div className="flex items-center space-x-2">
-                        <span className="text-2xl">{getTypeIcon(selectedFeedback.type)}</span>
-                        <span className="capitalize">{selectedFeedback.type}</span>
+                        <span className="text-2xl">
+                          {getTypeIcon(selectedFeedback.type)}
+                        </span>
+                        <span className="capitalize">
+                          {selectedFeedback.type}
+                        </span>
                       </div>
                     </div>
                   </div>
 
                   {/* User Info */}
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="font-semibold text-gray-900 mb-3">User Information (Internal)</h3>
+                    <h3 className="font-semibold text-gray-900 mb-3">
+                      User Information (Internal)
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-gray-500">Name</p>
-                        <p className="font-medium">{selectedFeedback.user.name}</p>
+                        <p className="font-medium">
+                          {selectedFeedback.user.name}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Email</p>
-                        <p className="font-medium">{selectedFeedback.user.email}</p>
+                        <p className="font-medium">
+                          {selectedFeedback.user.email}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">User ID</p>
-                        <p className="font-medium text-sm">{selectedFeedback.user.id}</p>
+                        <p className="font-medium text-sm">
+                          {selectedFeedback.user.id}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-500">Display Mode</p>
@@ -469,35 +529,54 @@ export default function AdminFeedbackPage() {
 
                   {/* Message */}
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Message</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Message
+                    </h3>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <p className="text-gray-700 whitespace-pre-wrap">{selectedFeedback.message}</p>
+                      <p className="text-gray-700 whitespace-pre-wrap">
+                        {selectedFeedback.message}
+                      </p>
                     </div>
                   </div>
 
                   {/* Metadata */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Status</h3>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedFeedback.status)}`}>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Status
+                      </h3>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                          selectedFeedback.status
+                        )}`}
+                      >
                         {selectedFeedback.status}
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Priority</h3>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(selectedFeedback.priority)}`}>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Priority
+                      </h3>
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(
+                          selectedFeedback.priority
+                        )}`}
+                      >
                         {selectedFeedback.priority}
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Rating</h3>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Rating
+                      </h3>
                       {selectedFeedback.rating ? (
                         <div className="flex items-center space-x-1">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                               key={star}
                               className={`w-4 h-4 ${
-                                selectedFeedback.rating && selectedFeedback.rating >= star
+                                selectedFeedback.rating &&
+                                selectedFeedback.rating >= star
                                   ? "text-yellow-400 fill-current"
                                   : "text-gray-300"
                               }`}
@@ -515,10 +594,14 @@ export default function AdminFeedbackPage() {
 
                   {/* Admin Actions */}
                   <div className="border-t pt-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">Admin Actions</h3>
+                    <h3 className="font-semibold text-gray-900 mb-4">
+                      Admin Actions
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       <Button
-                        onClick={() => updateFeedbackStatus(selectedFeedback.id, "reviewed")}
+                        onClick={() =>
+                          updateFeedbackStatus(selectedFeedback.id, "reviewed")
+                        }
                         disabled={updating}
                         variant="outline"
                         size="sm"
@@ -526,7 +609,12 @@ export default function AdminFeedbackPage() {
                         Mark Reviewed
                       </Button>
                       <Button
-                        onClick={() => updateFeedbackStatus(selectedFeedback.id, "in-progress")}
+                        onClick={() =>
+                          updateFeedbackStatus(
+                            selectedFeedback.id,
+                            "in-progress"
+                          )
+                        }
                         disabled={updating}
                         variant="outline"
                         size="sm"
@@ -534,7 +622,9 @@ export default function AdminFeedbackPage() {
                         In Progress
                       </Button>
                       <Button
-                        onClick={() => updateFeedbackStatus(selectedFeedback.id, "resolved")}
+                        onClick={() =>
+                          updateFeedbackStatus(selectedFeedback.id, "resolved")
+                        }
                         disabled={updating}
                         className="bg-green-600 hover:bg-green-700"
                         size="sm"
@@ -542,7 +632,9 @@ export default function AdminFeedbackPage() {
                         Mark Resolved
                       </Button>
                       <Button
-                        onClick={() => updateFeedbackStatus(selectedFeedback.id, "closed")}
+                        onClick={() =>
+                          updateFeedbackStatus(selectedFeedback.id, "closed")
+                        }
                         disabled={updating}
                         variant="outline"
                         size="sm"
