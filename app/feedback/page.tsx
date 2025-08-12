@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
@@ -32,36 +32,12 @@ interface FeedbackForm {
 }
 
 export default function FeedbackPage() {
+  console.log("FeedbackPage component rendering");
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Handle AuthContext errors
-  if (!loading && !user && !isAdmin && !isSuperAdmin) {
-    // If not loading and no user, redirect to login
-    React.useEffect(() => {
-      window.location.href = "/login";
-    }, []);
-    return null;
-  }
-
-
-
-  // Handle AuthContext errors
-  if (!signOutUser) {
-    console.error("AuthContext not properly initialized");
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Authentication Error</h2>
-          <p className="text-gray-600">Please refresh the page or try again later.</p>
-        </div>
-      </div>
-    );
-  }
-
   const [feedback, setFeedback] = useState<FeedbackForm>({
     isAnonymous: true,
     type: "",
@@ -70,6 +46,66 @@ export default function FeedbackPage() {
     message: "",
     rating: null,
   });
+
+  // Log authentication state for debugging
+  useEffect(() => {
+    console.log("Feedback page auth check:", {
+      loading,
+      user: user ? { email: user.email, uid: user.uid } : null,
+      isAdmin,
+      isSuperAdmin,
+    });
+  }, [loading, user, isAdmin, isSuperAdmin]);
+
+  // Debug: Log when component renders
+  console.log("FeedbackPage render state:", {
+    loading,
+    user: user ? { email: user.email, uid: user.uid } : null,
+    isAdmin,
+    isSuperAdmin,
+  });
+
+  // Show loading or redirect if not authenticated
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Temporarily allow access without authentication check for debugging
+  if (!user && !loading) {
+    console.log("No user found, but allowing access for debugging");
+    // return (
+    //   <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+    //     <div className="text-center">
+    //       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+    //       <p className="text-gray-600">Checking authentication...</p>
+    //     </div>
+    //   </div>
+    // );
+  }
+
+  // Handle AuthContext errors
+  if (!signOutUser) {
+    console.error("AuthContext not properly initialized");
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Authentication Error
+          </h2>
+          <p className="text-gray-600">
+            Please refresh the page or try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const feedbackTypes = [
     { value: "general", label: "General Feedback", icon: "💬" },

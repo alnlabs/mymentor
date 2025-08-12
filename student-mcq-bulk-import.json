@@ -1,0 +1,362 @@
+[
+  {
+    "question": "What is a variable in programming?",
+    "options": [
+      "A container that stores data values",
+      "A type of function",
+      "A programming language",
+      "A computer program"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A variable is a named container that stores data values. It can hold different types of information like numbers, text, or other data.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Variables",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "variables,programming-basics,data-storage,beginner"
+  },
+  {
+    "question": "What is the purpose of comments in code?",
+    "options": [
+      "To make the code run faster",
+      "To explain what the code does",
+      "To create variables",
+      "To fix errors"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Comments are notes in the code that explain what the code does. They help other programmers (and yourself) understand the code better.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Comments",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "comments,code-documentation,programming-basics,readability"
+  },
+  {
+    "question": "What is a function in programming?",
+    "options": [
+      "A type of variable",
+      "A reusable block of code that performs a specific task",
+      "A programming language",
+      "A computer file"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A function is a reusable block of code that performs a specific task. It helps organize code and avoid repeating the same code multiple times.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Functions",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "functions,code-reusability,programming-basics,modularity"
+  },
+  {
+    "question": "What is a loop in programming?",
+    "options": [
+      "A type of variable",
+      "A way to repeat code multiple times",
+      "A programming language",
+      "A computer error"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A loop is a programming construct that allows you to repeat a block of code multiple times without writing it over and over again.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Loops",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "loops,iteration,programming-basics,repetition"
+  },
+  {
+    "question": "What is the difference between '=' and '==' in programming?",
+    "options": [
+      "'=' assigns a value, '==' compares values",
+      "'==' assigns a value, '=' compares values",
+      "Both assign values",
+      "Both compare values"
+    ],
+    "correctAnswer": 0,
+    "explanation": "'=' is the assignment operator (puts a value into a variable), while '==' is the equality operator (compares if two values are equal).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Operators",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "operators,assignment,comparison,programming-basics"
+  },
+  {
+    "question": "What is an array?",
+    "options": [
+      "A single value",
+      "A collection of values stored together",
+      "A type of function",
+      "A programming language"
+    ],
+    "correctAnswer": 1,
+    "explanation": "An array is a collection of values (like numbers or text) stored together under one name. Each value can be accessed using its position (index).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Data Structures",
+    "topic": "Arrays",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "arrays,data-structures,collections,indexing"
+  },
+  {
+    "question": "What is debugging?",
+    "options": [
+      "Creating new code",
+      "Finding and fixing errors in code",
+      "Writing comments",
+      "Running a program"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Debugging is the process of finding and fixing errors (bugs) in your code. It's an important skill that all programmers need to learn.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Debugging",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "debugging,error-fixing,programming-basics,problem-solving"
+  },
+  {
+    "question": "What is a conditional statement?",
+    "options": [
+      "A type of loop",
+      "Code that makes decisions based on conditions",
+      "A type of variable",
+      "A function"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A conditional statement (like if/else) allows the program to make decisions and execute different code based on whether conditions are true or false.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Conditionals",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "conditionals,if-else,decision-making,programming-basics"
+  },
+  {
+    "question": "What is the purpose of indentation in code?",
+    "options": [
+      "To make code look pretty",
+      "To show the structure and grouping of code",
+      "To make code run faster",
+      "To create variables"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Indentation (spaces or tabs) shows the structure of code and groups related lines together. It helps make code more readable and organized.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Code Structure",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "indentation,code-structure,readability,programming-basics"
+  },
+  {
+    "question": "What is a string in programming?",
+    "options": [
+      "A collection of numbers",
+      "A sequence of characters (text)",
+      "A type of function",
+      "A programming error"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A string is a sequence of characters (letters, numbers, symbols) that represents text. It's one of the most common data types in programming.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Data Types",
+    "topic": "Strings",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "strings,text,data-types,programming-basics"
+  },
+  {
+    "question": "What is an integer?",
+    "options": [
+      "A whole number (positive, negative, or zero)",
+      "A decimal number",
+      "A piece of text",
+      "A type of function"
+    ],
+    "correctAnswer": 0,
+    "explanation": "An integer is a whole number that can be positive, negative, or zero. Examples include 1, -5, 0, 100, etc.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Data Types",
+    "topic": "Numbers",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "integers,numbers,data-types,programming-basics"
+  },
+  {
+    "question": "What is a boolean value?",
+    "options": [
+      "A number",
+      "A true or false value",
+      "A piece of text",
+      "A function"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A boolean value can only be true or false. It's used in conditional statements to make decisions in programs.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Data Types",
+    "topic": "Booleans",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "boolean,true-false,data-types,conditionals"
+  },
+  {
+    "question": "What is the purpose of a semicolon (;) in some programming languages?",
+    "options": [
+      "To make code look pretty",
+      "To mark the end of a statement",
+      "To create a comment",
+      "To start a function"
+    ],
+    "correctAnswer": 1,
+    "explanation": "In many programming languages, a semicolon (;) marks the end of a statement. It tells the computer where one instruction ends and the next begins.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Syntax",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "semicolon,syntax,statements,programming-basics"
+  },
+  {
+    "question": "What is a parameter in a function?",
+    "options": [
+      "A type of variable",
+      "Data that is passed into a function",
+      "A programming error",
+      "A type of loop"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A parameter is data that is passed into a function when it's called. It allows the function to work with different values each time it's used.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Programming Fundamentals",
+    "topic": "Functions",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "parameters,functions,data-passing,programming-basics"
+  },
+  {
+    "question": "What is the difference between a compiler and an interpreter?",
+    "options": [
+      "A compiler translates code all at once, an interpreter translates line by line",
+      "An interpreter translates code all at once, a compiler translates line by line",
+      "Both translate code all at once",
+      "Both translate code line by line"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A compiler translates the entire program into machine code all at once, while an interpreter translates and executes the code line by line.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Programming Fundamentals",
+    "topic": "Code Execution",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "compiler,interpreter,code-execution,programming-basics"
+  },
+  {
+    "question": "What is an algorithm?",
+    "options": [
+      "A programming language",
+      "A step-by-step procedure to solve a problem",
+      "A type of computer",
+      "A programming error"
+    ],
+    "correctAnswer": 1,
+    "explanation": "An algorithm is a step-by-step procedure or set of rules to solve a problem. It's like a recipe that tells you exactly what to do to get a result.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Algorithms",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "algorithms,problem-solving,step-by-step,programming-basics"
+  },
+  {
+    "question": "What is a syntax error?",
+    "options": [
+      "A logical mistake in your code",
+      "An error in the grammar or structure of your code",
+      "A computer hardware problem",
+      "A type of function"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A syntax error occurs when the code doesn't follow the correct grammar or structure rules of the programming language (like missing semicolons or brackets).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Programming Fundamentals",
+    "topic": "Errors",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "syntax-error,grammar,programming-basics,error-handling"
+  },
+  {
+    "question": "What is the purpose of a return statement in a function?",
+    "options": [
+      "To stop the function",
+      "To send a value back from the function",
+      "To create a variable",
+      "To print something"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A return statement sends a value back from the function to wherever the function was called. It's how functions provide results.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Programming Fundamentals",
+    "topic": "Functions",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "return-statement,functions,values,programming-basics"
+  },
+  {
+    "question": "What is a variable scope?",
+    "options": [
+      "A type of variable",
+      "The area of code where a variable can be used",
+      "A programming language",
+      "A function"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Variable scope refers to where in the code a variable can be accessed and used. Some variables are only available in certain parts of the program.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Programming Fundamentals",
+    "topic": "Variables",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "variable-scope,accessibility,programming-basics,code-organization"
+  },
+  {
+    "question": "What is the purpose of a loop counter?",
+    "options": [
+      "To count the number of computers",
+      "To keep track of how many times a loop has run",
+      "To create variables",
+      "To stop the program"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A loop counter is a variable that keeps track of how many times a loop has executed. It's commonly used in for loops to control the number of iterations.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Programming Fundamentals",
+    "topic": "Loops",
+    "skillLevel": "beginner",
+    "jobRole": "student",
+    "tags": "loop-counter,iteration,programming-basics,control-flow"
+  }
+]

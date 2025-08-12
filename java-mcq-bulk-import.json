@@ -1,0 +1,365 @@
+[
+  {
+    "question": "What is the difference between == and .equals() in Java?",
+    "options": [
+      "== compares references, .equals() compares content",
+      "== compares content, .equals() compares references",
+      "Both compare references",
+      "Both compare content"
+    ],
+    "correctAnswer": 0,
+    "explanation": "== compares object references (memory addresses), while .equals() compares the actual content/values of objects.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Object Comparison",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,object-comparison,equals,references"
+  },
+  {
+    "question": "What is the output of: System.out.println(5 + 3 + \"Hello\" + 2 + 4);",
+    "options": ["8Hello24", "53Hello24", "8Hello6", "53Hello6"],
+    "correctAnswer": 0,
+    "explanation": "Java evaluates from left to right. First 5+3=8, then 8+\"Hello\"=\"8Hello\", then \"8Hello\"+2=\"8Hello2\", then \"8Hello2\"+4=\"8Hello24\".",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "String Concatenation",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,string-concatenation,operator-precedence"
+  },
+  {
+    "question": "Which of the following is NOT a valid way to create a thread in Java?",
+    "options": [
+      "Extending Thread class",
+      "Implementing Runnable interface",
+      "Using lambda expressions",
+      "Using synchronized keyword"
+    ],
+    "correctAnswer": 3,
+    "explanation": "synchronized is a keyword for thread synchronization, not for creating threads. The other three are valid ways to create threads.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Multithreading",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,multithreading,threads,runnable"
+  },
+  {
+    "question": "What is the difference between ArrayList and LinkedList?",
+    "options": [
+      "ArrayList is faster for random access, LinkedList is faster for insertions/deletions",
+      "LinkedList is faster for random access, ArrayList is faster for insertions/deletions",
+      "Both have the same performance characteristics",
+      "ArrayList can only store primitives, LinkedList can store objects"
+    ],
+    "correctAnswer": 0,
+    "explanation": "ArrayList uses dynamic array (O(1) random access, O(n) insertions), LinkedList uses doubly-linked list (O(n) random access, O(1) insertions/deletions).",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Collections",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,collections,arraylist,linkedlist,performance"
+  },
+  {
+    "question": "What is the purpose of the 'final' keyword in Java?",
+    "options": [
+      "To make a class immutable",
+      "To prevent inheritance, method overriding, or variable reassignment",
+      "To make a method static",
+      "To create a constant variable"
+    ],
+    "correctAnswer": 1,
+    "explanation": "final can be used with classes (prevent inheritance), methods (prevent overriding), and variables (prevent reassignment).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Keywords",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,final,inheritance,immutability"
+  },
+  {
+    "question": "What is the difference between checked and unchecked exceptions?",
+    "options": [
+      "Checked exceptions must be handled, unchecked exceptions don't",
+      "Unchecked exceptions must be handled, checked exceptions don't",
+      "Both must be handled",
+      "Neither needs to be handled"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Checked exceptions (IOException, SQLException) must be handled with try-catch or throws, unchecked exceptions (RuntimeException) don't require explicit handling.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Exception Handling",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,exceptions,checked,unchecked,error-handling"
+  },
+  {
+    "question": "What is the output of: String s1 = \"Hello\"; String s2 = new String(\"Hello\"); System.out.println(s1 == s2);",
+    "options": ["true", "false", "Compilation error", "Runtime error"],
+    "correctAnswer": 1,
+    "explanation": "s1 points to string pool, s2 creates new object in heap. == compares references, so false. Use .equals() for content comparison.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "String Pool",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,string-pool,heap,references"
+  },
+  {
+    "question": "Which interface should be implemented to make a class sortable?",
+    "options": ["Comparable", "Comparator", "Serializable", "Cloneable"],
+    "correctAnswer": 0,
+    "explanation": "Comparable interface provides natural ordering for a class. Comparator is used for custom sorting logic.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Sorting",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,comparable,comparator,sorting"
+  },
+  {
+    "question": "What is the purpose of the 'volatile' keyword?",
+    "options": [
+      "To make a variable thread-safe",
+      "To prevent variable caching across threads",
+      "To make a method synchronized",
+      "To create a constant variable"
+    ],
+    "correctAnswer": 1,
+    "explanation": "volatile ensures that changes to the variable are immediately visible to all threads and prevents caching.",
+    "category": "backend",
+    "difficulty": "hard",
+    "subject": "Java",
+    "topic": "Multithreading",
+    "skillLevel": "advanced",
+    "jobRole": "backend-developer",
+    "tags": "java,volatile,threading,memory-visibility"
+  },
+  {
+    "question": "What is the difference between HashMap and HashTable?",
+    "options": [
+      "HashMap is synchronized, HashTable is not",
+      "HashTable is synchronized, HashMap is not",
+      "Both are synchronized",
+      "Neither is synchronized"
+    ],
+    "correctAnswer": 1,
+    "explanation": "HashTable is thread-safe (synchronized), HashMap is not. HashMap allows null keys/values, HashTable doesn't.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Collections",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,hashmap,hashtable,synchronization,thread-safe"
+  },
+  {
+    "question": "What is the purpose of the 'transient' keyword?",
+    "options": [
+      "To make a variable static",
+      "To exclude a variable from serialization",
+      "To make a variable final",
+      "To create a temporary variable"
+    ],
+    "correctAnswer": 1,
+    "explanation": "transient keyword excludes a field from serialization process. Useful for sensitive data or calculated fields.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Serialization",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,transient,serialization,object-streaming"
+  },
+  {
+    "question": "What is the difference between StringBuilder and StringBuffer?",
+    "options": [
+      "StringBuilder is synchronized, StringBuffer is not",
+      "StringBuffer is synchronized, StringBuilder is not",
+      "Both are synchronized",
+      "Neither is synchronized"
+    ],
+    "correctAnswer": 1,
+    "explanation": "StringBuffer is thread-safe (synchronized), StringBuilder is not. StringBuilder is faster for single-threaded operations.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "String Manipulation",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,stringbuilder,stringbuffer,synchronization,performance"
+  },
+  {
+    "question": "What is the purpose of the 'default' method in interfaces?",
+    "options": [
+      "To provide default implementation",
+      "To make a method abstract",
+      "To create a static method",
+      "To define a constant"
+    ],
+    "correctAnswer": 0,
+    "explanation": "default methods in interfaces provide implementation that implementing classes can use or override. Introduced in Java 8.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Interfaces",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,interfaces,default-methods,java8"
+  },
+  {
+    "question": "What is the difference between '==' and '===' in Java?",
+    "options": [
+      "== compares values, === compares references",
+      "== compares references, === compares values",
+      "Both compare values",
+      "=== doesn't exist in Java"
+    ],
+    "correctAnswer": 3,
+    "explanation": "=== operator doesn't exist in Java. It's a JavaScript operator. Java only has == for reference comparison and .equals() for content comparison.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Operators",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,operators,comparison,javascript-difference"
+  },
+  {
+    "question": "What is the purpose of the 'super' keyword?",
+    "options": [
+      "To call parent class constructor or methods",
+      "To create a superclass",
+      "To make a method static",
+      "To access static members"
+    ],
+    "correctAnswer": 0,
+    "explanation": "super is used to call parent class constructor (super()) or access parent class methods and variables (super.methodName()).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Inheritance",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,inheritance,super,parent-class"
+  },
+  {
+    "question": "What is the difference between 'public' and 'private' access modifiers?",
+    "options": [
+      "public allows access from anywhere, private only within the class",
+      "private allows access from anywhere, public only within the class",
+      "Both allow access from anywhere",
+      "Both restrict access to the class only"
+    ],
+    "correctAnswer": 0,
+    "explanation": "public members are accessible from anywhere, private members are only accessible within the same class.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Access Modifiers",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,access-modifiers,encapsulation,visibility"
+  },
+  {
+    "question": "What is the purpose of the 'static' keyword?",
+    "options": [
+      "To make a method synchronized",
+      "To create class-level members that belong to the class, not instances",
+      "To make a variable final",
+      "To create an abstract method"
+    ],
+    "correctAnswer": 1,
+    "explanation": "static members belong to the class itself, not to instances. They can be accessed without creating an object.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Static Members",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,static,class-members,instance-members"
+  },
+  {
+    "question": "What is the difference between 'throw' and 'throws'?",
+    "options": [
+      "throw is used to declare exceptions, throws is used to throw exceptions",
+      "throws is used to declare exceptions, throw is used to throw exceptions",
+      "Both are used to throw exceptions",
+      "Both are used to declare exceptions"
+    ],
+    "correctAnswer": 1,
+    "explanation": "throws is used in method signature to declare exceptions that might be thrown, throw is used to actually throw an exception.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Exception Handling",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,exceptions,throw,throws,error-handling"
+  },
+  {
+    "question": "What is the purpose of the 'interface' keyword?",
+    "options": [
+      "To create a class",
+      "To define a contract that classes must implement",
+      "To create an abstract class",
+      "To define a package"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Interface defines a contract that implementing classes must follow. It provides abstraction and multiple inheritance capability.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Interfaces",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,interfaces,contract,abstraction,multiple-inheritance"
+  },
+  {
+    "question": "What is the difference between 'int' and 'Integer'?",
+    "options": [
+      "int is primitive, Integer is wrapper class",
+      "Integer is primitive, int is wrapper class",
+      "Both are primitives",
+      "Both are wrapper classes"
+    ],
+    "correctAnswer": 0,
+    "explanation": "int is a primitive data type, Integer is its wrapper class. Integer can be null, int cannot. Integer provides utility methods.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Java",
+    "topic": "Data Types",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "java,primitives,wrapper-classes,autoboxing"
+  },
+  {
+    "question": "What is the purpose of the 'synchronized' keyword?",
+    "options": [
+      "To make a method static",
+      "To prevent multiple threads from accessing a method/block simultaneously",
+      "To create a constant variable",
+      "To make a class immutable"
+    ],
+    "correctAnswer": 1,
+    "explanation": "synchronized ensures that only one thread can execute the method/block at a time, preventing race conditions.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Java",
+    "topic": "Multithreading",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "java,synchronized,threading,race-conditions,thread-safety"
+  }
+]
