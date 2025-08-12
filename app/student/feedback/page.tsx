@@ -211,7 +211,7 @@ export default function FeedbackPage() {
                 {/* Navigation Links */}
                 <nav className="hidden md:flex items-center space-x-6">
                   <a
-                    href="/dashboard"
+                    href="/student/dashboard"
                     className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     <Home className="w-4 h-4" />
@@ -232,7 +232,7 @@ export default function FeedbackPage() {
                     <span>MCQs</span>
                   </a>
                   <a
-                    href="/interviews"
+                    href="/student/interviews"
                     className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
                   >
                     <TargetIcon className="w-4 h-4" />
@@ -322,7 +322,7 @@ export default function FeedbackPage() {
               {/* Navigation Links */}
               <nav className="hidden md:flex items-center space-x-6">
                 <a
-                  href="/dashboard"
+                  href="/student/dashboard"
                   className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   <Home className="w-4 h-4" />
@@ -343,7 +343,7 @@ export default function FeedbackPage() {
                   <span>MCQs</span>
                 </a>
                 <a
-                  href="/interviews"
+                  href="/student/interviews"
                   className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   <TargetIcon className="w-4 h-4" />

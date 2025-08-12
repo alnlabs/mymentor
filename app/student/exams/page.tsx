@@ -36,7 +36,7 @@ interface Exam {
 }
 
 export default function ExamsPage() {
-  const { user, loading } = useAuthContext();
+  const { user, loading, isAdmin, isSuperAdmin } = useAuthContext();
   const [exams, setExams] = useState<Exam[]>([]);
   const [filteredExams, setFilteredExams] = useState<Exam[]>([]);
   const [loadingExams, setLoadingExams] = useState(true);
@@ -50,6 +50,13 @@ export default function ExamsPage() {
       window.location.href = "/";
     }
   }, [user, loading]);
+
+  // Redirect admin/superadmin to admin area
+  React.useEffect(() => {
+    if (!loading && user && (isAdmin || isSuperAdmin)) {
+      window.location.href = "/admin";
+    }
+  }, [user, loading, isAdmin, isSuperAdmin]);
 
   useEffect(() => {
     if (user) {
@@ -172,19 +179,19 @@ export default function ExamsPage() {
 
             <div className="flex items-center space-x-4">
               <a
-                href="/dashboard"
+                href="/student/dashboard"
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 Dashboard
               </a>
               <a
-                href="/interviews"
+                href="/student/interviews"
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 Interviews
               </a>
               <a
-                href="/feedback"
+                href="/student/feedback"
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
               >
                 Feedback

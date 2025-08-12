@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { useAuthContext } from "@/shared/components/AuthContext";
 import {
   Users,
   Code,
@@ -81,8 +82,22 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
+  const { user, loading: authLoading, isAdmin, isSuperAdmin } = useAuthContext();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Debug logging
+  console.log("Admin Dashboard - User:", user?.email);
+  console.log("Admin Dashboard - isAdmin:", isAdmin);
+  console.log("Admin Dashboard - isSuperAdmin:", isSuperAdmin);
+
+  // Redirect non-admin users
+  React.useEffect(() => {
+    if (!authLoading && (!user || (!isAdmin && !isSuperAdmin))) {
+      console.log("Admin Dashboard: User not authorized, redirecting to homepage");
+      window.location.href = "/";
+    }
+  }, [user, isAdmin, isSuperAdmin, authLoading]);
 
   useEffect(() => {
     fetchAdminStats();
@@ -132,6 +147,16 @@ export default function AdminDashboard() {
     }
   };
 
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <Loading size="lg" text="Checking authentication..." />
+      </div>
+    );
+  }
+
+  // Show loading while fetching data
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">

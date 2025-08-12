@@ -18,6 +18,22 @@ export default function InterviewsPage() {
   console.log("Interviews page - isSuperAdmin:", isSuperAdmin);
   console.log("Interviews page - Auth Loading:", authLoading);
 
+  // Redirect to homepage if not authenticated
+  React.useEffect(() => {
+    if (!authLoading && !user) {
+      console.log("Interviews page: Not authenticated, redirecting to homepage");
+      window.location.href = "/";
+    }
+  }, [user, authLoading]);
+
+  // Redirect admin/superadmin to admin area
+  React.useEffect(() => {
+    if (!authLoading && user && (isAdmin || isSuperAdmin)) {
+      console.log("Interviews page: Admin/SuperAdmin detected, redirecting to admin");
+      window.location.href = "/admin";
+    }
+  }, [user, authLoading, isAdmin, isSuperAdmin]);
+
   // Debug authentication state without redirecting
   React.useEffect(() => {
     console.log("Interviews page - Auth state changed:");
@@ -74,7 +90,7 @@ export default function InterviewsPage() {
 
       if (data.success) {
         // Redirect to the interview session
-        window.location.href = `/interviews/${data.data.id}`;
+        window.location.href = `/student/interviews/take/${data.data.id}`;
       } else {
         alert("Failed to start interview: " + data.error);
       }

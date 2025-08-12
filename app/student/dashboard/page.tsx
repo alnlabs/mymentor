@@ -77,6 +77,24 @@ export default function DashboardPage() {
     }
   }, [user, isSuperAdmin]);
 
+  // Redirect superadmin to admin dashboard
+  React.useEffect(() => {
+    if (!loading && isSuperAdmin) {
+      console.log("Dashboard: SuperAdmin detected, redirecting to admin dashboard");
+      window.location.href = "/admin";
+      return;
+    }
+  }, [loading, isSuperAdmin]);
+
+  // Redirect non-student users
+  React.useEffect(() => {
+    if (!loading && user && (isAdmin || isSuperAdmin)) {
+      console.log("Student Dashboard: Admin/SuperAdmin detected, redirecting to admin");
+      window.location.href = "/admin";
+      return;
+    }
+  }, [loading, user, isAdmin, isSuperAdmin]);
+
   // Redirect to homepage if not authenticated (with delay to prevent immediate redirects)
   React.useEffect(() => {
     if (!loading && !user && !isSuperAdmin) {
@@ -119,6 +137,15 @@ export default function DashboardPage() {
     );
   }
 
+  // Show loading while redirecting superadmin
+  if (isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to admin dashboard..." />
+      </div>
+    );
+  }
+
   // Show loading while redirecting
   if (!user && !isSuperAdmin) {
     return (
@@ -133,14 +160,14 @@ export default function DashboardPage() {
       title: "Interviews",
       description: "Practice with realistic interview scenarios",
       icon: Target,
-      href: "/interviews",
+      href: "/student/interviews",
       color: "bg-blue-500",
     },
     {
       title: "Exams",
       description: "Take comprehensive practice exams",
       icon: FileText,
-      href: "/exams",
+      href: "/student/exams",
       color: "bg-purple-500",
     },
     {
@@ -227,24 +254,24 @@ export default function DashboardPage() {
                 >
                   Home
                 </a>
-                <a
-                  href="/interviews"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Interviews
-                </a>
-                <a
-                  href="/exams"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Exams
-                </a>
-                <a
-                  href="/feedback"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Feedback
-                </a>
+                              <a
+                href="/student/interviews"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              >
+                Interviews
+              </a>
+              <a
+                href="/student/exams"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              >
+                Exams
+              </a>
+              <a
+                href="/student/feedback"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              >
+                Feedback
+              </a>
                 {(isAdmin || isSuperAdmin) && (
                   <a
                     href="/admin"
@@ -299,21 +326,21 @@ export default function DashboardPage() {
                 Home
               </a>
               <a
-                href="/interviews"
+                href="/student/interviews"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
               >
                 <Target className="w-4 h-4 mb-1" />
                 Interviews
               </a>
               <a
-                href="/exams"
+                href="/student/exams"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
               >
                 <FileText className="w-4 h-4 mb-1" />
                 Exams
               </a>
               <a
-                href="/feedback"
+                href="/student/feedback"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
               >
                 <MessageSquare className="w-4 h-4 mb-1" />
@@ -412,7 +439,7 @@ export default function DashboardPage() {
             <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-blue-200">
               <div
                 className="p-6 text-center"
-                onClick={() => (window.location.href = "/interviews")}
+                onClick={() => (window.location.href = "/student/interviews")}
               >
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <Target className="w-8 h-8 text-white" />
@@ -433,7 +460,7 @@ export default function DashboardPage() {
             <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-purple-200">
               <div
                 className="p-6 text-center"
-                onClick={() => (window.location.href = "/exams")}
+                onClick={() => (window.location.href = "/student/exams")}
               >
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                   <FileText className="w-8 h-8 text-white" />

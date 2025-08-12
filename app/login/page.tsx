@@ -20,11 +20,16 @@ export default function LoginPage() {
     updateUserRole,
   } = useAuthContext();
 
-  // Redirect authenticated users to dashboard
+  // Redirect authenticated users to appropriate area
   React.useEffect(() => {
     if (!authLoading && (user || isSuperAdmin)) {
-      console.log("Login page: User authenticated, redirecting to dashboard");
-      window.location.href = "/dashboard";
+      if (isSuperAdmin) {
+        console.log("Login page: SuperAdmin authenticated, redirecting to admin");
+        window.location.href = "/admin";
+      } else if (user) {
+        console.log("Login page: User authenticated, redirecting to student area");
+        window.location.href = "/student";
+      }
     }
   }, [user, isSuperAdmin, authLoading]);
 
@@ -83,7 +88,7 @@ export default function LoginPage() {
   if (user || isSuperAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Redirecting to dashboard..." />
+        <Loading size="lg" text="Redirecting..." />
       </div>
     );
   }
