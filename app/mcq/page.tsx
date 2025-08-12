@@ -235,27 +235,67 @@ export default function MCQPage() {
   };
 
   // Get all filter options dynamically from database
-  const categories = Array.from(new Set(mcqs.map((m) => m.category).filter(Boolean)));
-  const positions = Array.from(new Set(mcqs.map((m) => m.jobRole).filter(Boolean)));
-  const subjects = Array.from(new Set(mcqs.map((m) => m.subject).filter(Boolean)));
+  const categories = Array.from(
+    new Set(mcqs.map((m) => m.category).filter(Boolean))
+  );
+  const positions = Array.from(
+    new Set(mcqs.map((m) => m.jobRole).filter(Boolean))
+  );
+  const subjects = Array.from(
+    new Set(mcqs.map((m) => m.subject).filter(Boolean))
+  );
   const topics = Array.from(new Set(mcqs.map((m) => m.topic).filter(Boolean)));
-  const skillLevels = Array.from(new Set(mcqs.map((m) => m.skillLevel).filter(Boolean)));
+  const skillLevels = Array.from(
+    new Set(mcqs.map((m) => m.skillLevel).filter(Boolean))
+  );
 
   // Helper function to categorize items for better organization
   const categorizeItems = (items: string[]) => {
-    const technicalKeywords = ['programming', 'data', 'web', 'mobile', 'devops', 'ai', 'ml', 'database', 'cyber', 'system', 'frontend', 'backend', 'full stack', 'machine learning'];
-    const nonTechnicalKeywords = ['aptitude', 'logical', 'verbal', 'quantitative', 'general', 'english', 'business', 'communication', 'problem', 'critical', 'team', 'leadership', 'project', 'management'];
-    
-    const technical = items.filter(item => 
-      technicalKeywords.some(keyword => item.toLowerCase().includes(keyword))
+    const technicalKeywords = [
+      "programming",
+      "data",
+      "web",
+      "mobile",
+      "devops",
+      "ai",
+      "ml",
+      "database",
+      "cyber",
+      "system",
+      "frontend",
+      "backend",
+      "full stack",
+      "machine learning",
+    ];
+    const nonTechnicalKeywords = [
+      "aptitude",
+      "logical",
+      "verbal",
+      "quantitative",
+      "general",
+      "english",
+      "business",
+      "communication",
+      "problem",
+      "critical",
+      "team",
+      "leadership",
+      "project",
+      "management",
+    ];
+
+    const technical = items.filter((item) =>
+      technicalKeywords.some((keyword) => item.toLowerCase().includes(keyword))
     );
-    const nonTechnical = items.filter(item => 
-      nonTechnicalKeywords.some(keyword => item.toLowerCase().includes(keyword))
+    const nonTechnical = items.filter((item) =>
+      nonTechnicalKeywords.some((keyword) =>
+        item.toLowerCase().includes(keyword)
+      )
     );
-    const other = items.filter(item => 
-      !technical.includes(item) && !nonTechnical.includes(item)
+    const other = items.filter(
+      (item) => !technical.includes(item) && !nonTechnical.includes(item)
     );
-    
+
     return { technical, nonTechnical, other };
   };
 
@@ -455,40 +495,40 @@ export default function MCQPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Test Type
                 </label>
-                                  <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                  >
-                    <option value="all">All Test Types</option>
-                    {categorizedCategories.technical.length > 0 && (
-                      <optgroup label="Technical Tests">
-                        {categorizedCategories.technical.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )}
-                    {categorizedCategories.nonTechnical.length > 0 && (
-                      <optgroup label="Non-Technical Tests">
-                        {categorizedCategories.nonTechnical.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )}
-                    {categorizedCategories.other.length > 0 && (
-                      <optgroup label="Other Tests">
-                        {categorizedCategories.other.map((category) => (
-                          <option key={category} value={category}>
-                            {category}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )}
-                  </select>
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  <option value="all">All Test Types</option>
+                  {categorizedCategories.technical.length > 0 && (
+                    <optgroup label="Technical Tests">
+                      {categorizedCategories.technical.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {categorizedCategories.nonTechnical.length > 0 && (
+                    <optgroup label="Non-Technical Tests">
+                      {categorizedCategories.nonTechnical.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {categorizedCategories.other.length > 0 && (
+                    <optgroup label="Other Tests">
+                      {categorizedCategories.other.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
               </div>
 
               {/* Position Filter */}
@@ -496,22 +536,22 @@ export default function MCQPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Job Position
                 </label>
-                                  <select
-                    value={positionFilter}
-                    onChange={(e) => setPositionFilter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                  >
-                    <option value="all">All Positions</option>
-                    {positions.length > 0 && (
-                      <optgroup label="Available Positions">
-                        {positions.map((position) => (
-                          <option key={position} value={position}>
-                            {getPositionLabel(position)}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )}
-                  </select>
+                <select
+                  value={positionFilter}
+                  onChange={(e) => setPositionFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  <option value="all">All Positions</option>
+                  {positions.length > 0 && (
+                    <optgroup label="Available Positions">
+                      {positions.map((position) => (
+                        <option key={position} value={position}>
+                          {getPositionLabel(position)}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
               </div>
 
               {/* Skill Level Filter */}
@@ -555,40 +595,43 @@ export default function MCQPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Subject
                     </label>
-                                         <select
-                       value={subjectFilter}
-                       onChange={(e) => setSubjectFilter(e.target.value)}
-                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                     >
-                       <option value="all">All Subjects</option>
-                       {categorizedSubjects.technical.length > 0 && (
-                         <optgroup label="Technical Subjects">
-                           {categorizedSubjects.technical.map((subject) => (
-                             <option key={subject} value={subject}>
-                               {subject.charAt(0).toUpperCase() + subject.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                       {categorizedSubjects.nonTechnical.length > 0 && (
-                         <optgroup label="Non-Technical Subjects">
-                           {categorizedSubjects.nonTechnical.map((subject) => (
-                             <option key={subject} value={subject}>
-                               {subject.charAt(0).toUpperCase() + subject.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                       {categorizedSubjects.other.length > 0 && (
-                         <optgroup label="Other Subjects">
-                           {categorizedSubjects.other.map((subject) => (
-                             <option key={subject} value={subject}>
-                               {subject.charAt(0).toUpperCase() + subject.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                     </select>
+                    <select
+                      value={subjectFilter}
+                      onChange={(e) => setSubjectFilter(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                      <option value="all">All Subjects</option>
+                      {categorizedSubjects.technical.length > 0 && (
+                        <optgroup label="Technical Subjects">
+                          {categorizedSubjects.technical.map((subject) => (
+                            <option key={subject} value={subject}>
+                              {subject.charAt(0).toUpperCase() +
+                                subject.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {categorizedSubjects.nonTechnical.length > 0 && (
+                        <optgroup label="Non-Technical Subjects">
+                          {categorizedSubjects.nonTechnical.map((subject) => (
+                            <option key={subject} value={subject}>
+                              {subject.charAt(0).toUpperCase() +
+                                subject.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {categorizedSubjects.other.length > 0 && (
+                        <optgroup label="Other Subjects">
+                          {categorizedSubjects.other.map((subject) => (
+                            <option key={subject} value={subject}>
+                              {subject.charAt(0).toUpperCase() +
+                                subject.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
                   </div>
 
                   {/* Topic Filter */}
@@ -596,40 +639,43 @@ export default function MCQPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Topic
                     </label>
-                                         <select
-                       value={topicFilter}
-                       onChange={(e) => setTopicFilter(e.target.value)}
-                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                     >
-                       <option value="all">All Topics</option>
-                       {categorizedTopics.technical.length > 0 && (
-                         <optgroup label="Technical Topics">
-                           {categorizedTopics.technical.map((topic) => (
-                             <option key={topic} value={topic}>
-                               {topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                       {categorizedTopics.nonTechnical.length > 0 && (
-                         <optgroup label="Non-Technical Topics">
-                           {categorizedTopics.nonTechnical.map((topic) => (
-                             <option key={topic} value={topic}>
-                               {topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                       {categorizedTopics.other.length > 0 && (
-                         <optgroup label="Other Topics">
-                           {categorizedTopics.other.map((topic) => (
-                             <option key={topic} value={topic}>
-                               {topic.charAt(0).toUpperCase() + topic.slice(1).replace('-', ' ')}
-                             </option>
-                           ))}
-                         </optgroup>
-                       )}
-                     </select>
+                    <select
+                      value={topicFilter}
+                      onChange={(e) => setTopicFilter(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                      <option value="all">All Topics</option>
+                      {categorizedTopics.technical.length > 0 && (
+                        <optgroup label="Technical Topics">
+                          {categorizedTopics.technical.map((topic) => (
+                            <option key={topic} value={topic}>
+                              {topic.charAt(0).toUpperCase() +
+                                topic.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {categorizedTopics.nonTechnical.length > 0 && (
+                        <optgroup label="Non-Technical Topics">
+                          {categorizedTopics.nonTechnical.map((topic) => (
+                            <option key={topic} value={topic}>
+                              {topic.charAt(0).toUpperCase() +
+                                topic.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                      {categorizedTopics.other.length > 0 && (
+                        <optgroup label="Other Topics">
+                          {categorizedTopics.other.map((topic) => (
+                            <option key={topic} value={topic}>
+                              {topic.charAt(0).toUpperCase() +
+                                topic.slice(1).replace("-", " ")}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )}
+                    </select>
                   </div>
                 </div>
               </div>

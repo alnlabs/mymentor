@@ -31,6 +31,7 @@ import {
   Plus,
   Target as TargetIcon,
   Home,
+  MessageSquare,
 } from "lucide-react";
 
 interface UserStats {
@@ -298,6 +299,13 @@ export default function DashboardPage() {
               >
                 <BookOpen className="w-4 h-4 mb-1" />
                 MCQs
+              </a>
+              <a
+                href="/feedback"
+                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+              >
+                <MessageSquare className="w-4 h-4 mb-1" />
+                Feedback
               </a>
               {(isAdmin || isSuperAdmin) && (
                 <a

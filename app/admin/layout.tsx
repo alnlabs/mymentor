@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   Eye,
+  MessageSquare,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -66,6 +67,12 @@ const navigation = [
     href: "/admin/analytics",
     icon: BarChart3,
     description: "Performance Data",
+  },
+  {
+    name: "Feedback",
+    href: "/admin/feedback",
+    icon: MessageSquare,
+    description: "User Feedback Management",
   },
   {
     name: "Settings",
