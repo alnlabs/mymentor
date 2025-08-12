@@ -73,18 +73,40 @@ export default function AdminInterviewsPage() {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case "frontend":
-        return "🎨";
-      case "backend":
-        return "⚙️";
-      case "fullstack":
-        return "🔄";
-      case "ml":
-        return "🤖";
-      case "mobile":
-        return "📱";
-      default:
+      case "web-development":
+        return "🌐";
+      case "frontend-basics":
         return "💻";
+      case "backend-basics":
+        return "⚙️";
+      case "database-fundamentals":
+        return "🗄️";
+      case "api-development":
+        return "🔌";
+      case "version-control":
+        return "📝";
+      case "testing-basics":
+        return "✅";
+      case "deployment-basics":
+        return "🚀";
+      case "communication-skills":
+        return "💬";
+      case "teamwork":
+        return "🤝";
+      case "problem-solving":
+        return "🧩";
+      case "time-management":
+        return "⏰";
+      case "learning-ability":
+        return "📚";
+      case "adaptability":
+        return "🔄";
+      case "customer-service":
+        return "🎧";
+      case "basic-project-management":
+        return "📋";
+      default:
+        return "📝";
     }
   };
 
@@ -105,7 +127,7 @@ export default function AdminInterviewsPage() {
             Mock Interview Management
           </h1>
           <p className="text-gray-600 mt-2">
-            Create and manage interview templates for users
+            Create and manage entry-level interview templates for fresh graduates
           </p>
         </div>
         <Button

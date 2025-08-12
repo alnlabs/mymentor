@@ -47,46 +47,89 @@ export default function AddInterviewTemplatePage() {
   const [template, setTemplate] = useState<InterviewTemplate>({
     name: "",
     description: "",
-    duration: 60,
-    difficulty: "medium",
-    category: "frontend",
+    duration: 45,
+    difficulty: "easy",
+    category: "web-development",
     companies: [],
     questions: [],
   });
 
   const difficulties = ["easy", "medium", "hard"];
-  const categories = [
-    // Technical Categories
-    "frontend",
-    "backend", 
-    "fullstack",
-    "mobile",
-    "data-science",
-    "devops",
-    "system-design",
-    "algorithms",
-    // Non-Technical Categories
-    "behavioral",
-    "aptitude",
-    "communication",
-    "leadership",
-    "project-management",
-    "business-analysis",
-    "marketing",
-    "sales",
+    const categories = [
+    // Entry-Level Technical Categories
+    "web-development",
+    "frontend-basics",
+    "backend-basics",
+    "database-fundamentals",
+    "api-development",
+    "version-control",
+    "testing-basics",
+    "deployment-basics",
+    // Entry-Level Non-Technical Categories
+    "communication-skills",
+    "teamwork",
+    "problem-solving",
+    "time-management",
+    "learning-ability",
+    "adaptability",
+    "customer-service",
+    "basic-project-management",
   ];
   const questionTypes = [
     { value: "mcq", label: "Multiple Choice", icon: CheckCircle },
-    { value: "coding", label: "Coding Problem", icon: Code },
+    { value: "coding", label: "Basic Coding", icon: Code },
     { value: "behavioral", label: "Behavioral", icon: MessageSquare },
-    { value: "system_design", label: "System Design", icon: Brain },
+    { value: "practical", label: "Practical Task", icon: Brain },
   ];
 
   const popularCompanies = [
-    "Google", "Microsoft", "Amazon", "Apple", "Meta", "Netflix", "Airbnb",
-    "Uber", "LinkedIn", "Twitter", "Spotify", "Stripe", "Shopify", "Salesforce",
-    "Adobe", "Oracle", "IBM", "Intel", "Cisco", "VMware", "Slack", "Zoom",
-    "Dropbox", "Pinterest", "Reddit", "Discord", "GitHub", "Atlassian"
+    // Entry-Level & Startup Companies
+    "StartupXYZ",
+    "LocalTech",
+    "DigitalAgency",
+    "WebSolutions",
+    "AppStudio",
+    "CodeCraft",
+    "TechStart",
+    "InnovateLab",
+    "DevWorks",
+    "ByteBuild",
+    "PixelPerfect",
+    "CloudFirst",
+    "DataFlow",
+    "SmartSystems",
+    "FutureTech",
+    // Mid-Level Companies
+    "Infosys",
+    "TCS",
+    "Wipro",
+    "Cognizant",
+    "Accenture",
+    "Capgemini",
+    "Tech Mahindra",
+    "HCL",
+    "L&T Infotech",
+    "Mindtree",
+    "Mphasis",
+    "Persistent",
+    "Zensar",
+    "Hexaware",
+    // Growing Companies
+    "Razorpay",
+    "CRED",
+    "PhonePe",
+    "Swiggy",
+    "Zomato",
+    "Ola",
+    "Byju's",
+    "Unacademy",
+    "Cars24",
+    "PolicyBazaar",
+    "Nykaa",
+    "Mamaearth",
+    "Boat",
+    "Wakefit",
+    "Milkbasket",
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,7 +162,9 @@ export default function AddInterviewTemplatePage() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setTemplate((prev) => ({
@@ -135,8 +180,8 @@ export default function AddInterviewTemplatePage() {
       options: ["", "", "", ""],
       correctAnswer: "",
       explanation: "",
-      points: 10,
-      timeLimit: 120,
+      points: 8,
+      timeLimit: 150,
       order: template.questions.length,
     };
     setTemplate((prev) => ({
@@ -145,7 +190,11 @@ export default function AddInterviewTemplatePage() {
     }));
   };
 
-  const updateQuestion = (index: number, field: keyof InterviewQuestion, value: any) => {
+  const updateQuestion = (
+    index: number,
+    field: keyof InterviewQuestion,
+    value: any
+  ) => {
     setTemplate((prev) => ({
       ...prev,
       questions: prev.questions.map((q, i) =>
@@ -165,14 +214,16 @@ export default function AddInterviewTemplatePage() {
     setTemplate((prev) => ({
       ...prev,
       questions: prev.questions.map((q, i) =>
-        i === questionIndex
-          ? { ...q, options: [...(q.options || []), ""] }
-          : q
+        i === questionIndex ? { ...q, options: [...(q.options || []), ""] } : q
       ),
     }));
   };
 
-  const updateOption = (questionIndex: number, optionIndex: number, value: string) => {
+  const updateOption = (
+    questionIndex: number,
+    optionIndex: number,
+    value: string
+  ) => {
     setTemplate((prev) => ({
       ...prev,
       questions: prev.questions.map((q, i) =>
@@ -224,7 +275,7 @@ export default function AddInterviewTemplatePage() {
         return "bg-green-100 text-green-800";
       case "behavioral":
         return "bg-purple-100 text-purple-800";
-      case "system_design":
+      case "practical":
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -252,7 +303,8 @@ export default function AddInterviewTemplatePage() {
               </Button>
             </div>
             <p className="text-purple-100 text-lg">
-              Design comprehensive interview templates for fresh graduates - Technical & Non-Technical
+              Design entry-level interview templates for fresh graduates - 
+              Start with basics, build confidence, grow skills
             </p>
           </div>
         </div>
@@ -294,25 +346,25 @@ export default function AddInterviewTemplatePage() {
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <optgroup label="Technical Categories">
-                    <option value="frontend">Frontend Development</option>
-                    <option value="backend">Backend Development</option>
-                    <option value="fullstack">Full Stack Development</option>
-                    <option value="mobile">Mobile Development</option>
-                    <option value="data-science">Data Science</option>
-                    <option value="devops">DevOps</option>
-                    <option value="system-design">System Design</option>
-                    <option value="algorithms">Algorithms & Data Structures</option>
+                  <optgroup label="Entry-Level Technical">
+                    <option value="web-development">Web Development Basics</option>
+                    <option value="frontend-basics">Frontend Fundamentals</option>
+                    <option value="backend-basics">Backend Fundamentals</option>
+                    <option value="database-fundamentals">Database Basics</option>
+                    <option value="api-development">API Development</option>
+                    <option value="version-control">Version Control (Git)</option>
+                    <option value="testing-basics">Testing Fundamentals</option>
+                    <option value="deployment-basics">Deployment Basics</option>
                   </optgroup>
-                  <optgroup label="Non-Technical Categories">
-                    <option value="behavioral">Behavioral</option>
-                    <option value="aptitude">Aptitude</option>
-                    <option value="communication">Communication</option>
-                    <option value="leadership">Leadership</option>
-                    <option value="project-management">Project Management</option>
-                    <option value="business-analysis">Business Analysis</option>
-                    <option value="marketing">Marketing</option>
-                    <option value="sales">Sales</option>
+                  <optgroup label="Entry-Level Soft Skills">
+                    <option value="communication-skills">Communication Skills</option>
+                    <option value="teamwork">Teamwork & Collaboration</option>
+                    <option value="problem-solving">Problem Solving</option>
+                    <option value="time-management">Time Management</option>
+                    <option value="learning-ability">Learning Ability</option>
+                    <option value="adaptability">Adaptability</option>
+                    <option value="customer-service">Customer Service</option>
+                    <option value="basic-project-management">Basic Project Management</option>
                   </optgroup>
                 </select>
               </div>
@@ -450,7 +502,11 @@ export default function AddInterviewTemplatePage() {
                         <select
                           value={question.questionType}
                           onChange={(e) =>
-                            updateQuestion(index, "questionType", e.target.value)
+                            updateQuestion(
+                              index,
+                              "questionType",
+                              e.target.value
+                            )
                           }
                           className="px-3 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-purple-500"
                         >
@@ -465,7 +521,11 @@ export default function AddInterviewTemplatePage() {
                             question.questionType
                           )}`}
                         >
-                          {questionTypes.find((t) => t.value === question.questionType)?.label}
+                          {
+                            questionTypes.find(
+                              (t) => t.value === question.questionType
+                            )?.label
+                          }
                         </span>
                       </div>
                       <Button
@@ -515,13 +575,20 @@ export default function AddInterviewTemplatePage() {
                           </div>
                           <div className="space-y-2">
                             {question.options?.map((option, optionIndex) => (
-                              <div key={optionIndex} className="flex items-center space-x-2">
+                              <div
+                                key={optionIndex}
+                                className="flex items-center space-x-2"
+                              >
                                 <input
                                   type="radio"
                                   name={`correct-${index}`}
                                   checked={question.correctAnswer === option}
                                   onChange={() =>
-                                    updateQuestion(index, "correctAnswer", option)
+                                    updateQuestion(
+                                      index,
+                                      "correctAnswer",
+                                      option
+                                    )
                                   }
                                   className="w-4 h-4 text-purple-600"
                                 />
@@ -529,7 +596,11 @@ export default function AddInterviewTemplatePage() {
                                   type="text"
                                   value={option}
                                   onChange={(e) =>
-                                    updateOption(index, optionIndex, e.target.value)
+                                    updateOption(
+                                      index,
+                                      optionIndex,
+                                      e.target.value
+                                    )
                                   }
                                   placeholder={`Option ${optionIndex + 1}`}
                                   className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500"
@@ -537,7 +608,9 @@ export default function AddInterviewTemplatePage() {
                                 {(question.options?.length || 0) > 2 && (
                                   <Button
                                     type="button"
-                                    onClick={() => removeOption(index, optionIndex)}
+                                    onClick={() =>
+                                      removeOption(index, optionIndex)
+                                    }
                                     variant="outline"
                                     size="sm"
                                     className="text-red-600"
@@ -560,7 +633,11 @@ export default function AddInterviewTemplatePage() {
                             type="number"
                             value={question.points}
                             onChange={(e) =>
-                              updateQuestion(index, "points", parseInt(e.target.value))
+                              updateQuestion(
+                                index,
+                                "points",
+                                parseInt(e.target.value)
+                              )
                             }
                             min="1"
                             max="50"
@@ -575,7 +652,11 @@ export default function AddInterviewTemplatePage() {
                             type="number"
                             value={question.timeLimit || ""}
                             onChange={(e) =>
-                              updateQuestion(index, "timeLimit", parseInt(e.target.value) || null)
+                              updateQuestion(
+                                index,
+                                "timeLimit",
+                                parseInt(e.target.value) || null
+                              )
                             }
                             min="30"
                             max="600"
@@ -591,7 +672,11 @@ export default function AddInterviewTemplatePage() {
                             type="number"
                             value={question.order}
                             onChange={(e) =>
-                              updateQuestion(index, "order", parseInt(e.target.value))
+                              updateQuestion(
+                                index,
+                                "order",
+                                parseInt(e.target.value)
+                              )
                             }
                             min="0"
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -630,22 +715,22 @@ export default function AddInterviewTemplatePage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div className="space-y-2">
-                <p className="font-medium">🎯 Recommended Structure:</p>
+                <p className="font-medium">🎯 Entry-Level Structure:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>Start with easy questions to build confidence</li>
-                  <li>Mix technical and behavioral questions</li>
-                  <li>Include 5-15 questions for optimal duration</li>
-                  <li>Balance different question types</li>
-                  <li>Set appropriate time limits per question</li>
+                  <li>Start with basic concepts to build confidence</li>
+                  <li>Focus on fundamental skills and learning ability</li>
+                  <li>Include 8-12 questions for manageable duration</li>
+                  <li>Mix technical basics with soft skills</li>
+                  <li>Emphasize problem-solving and adaptability</li>
                 </ul>
               </div>
               <div className="space-y-2">
-                <p className="font-medium">⏱️ Timing Guidelines:</p>
+                <p className="font-medium">⏱️ Entry-Level Timing:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>MCQ: 60-120 seconds per question</li>
-                  <li>Coding: 300-600 seconds per question</li>
-                  <li>Behavioral: 180-300 seconds per question</li>
-                  <li>System Design: 600-900 seconds per question</li>
+                  <li>MCQ: 90-180 seconds per question</li>
+                  <li>Basic Coding: 300-600 seconds per question</li>
+                  <li>Behavioral: 120-240 seconds per question</li>
+                  <li>Practical Tasks: 180-300 seconds per question</li>
                 </ul>
               </div>
             </div>

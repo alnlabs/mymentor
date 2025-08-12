@@ -108,7 +108,11 @@ export default function InterviewTemplatePage({
   };
 
   const handleDeleteTemplate = async () => {
-    if (!confirm("Are you sure you want to delete this template? This action cannot be undone.")) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this template? This action cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -129,11 +133,15 @@ export default function InterviewTemplatePage({
     }
   };
 
-  const filteredQuestions = template?.questions.filter((question) => {
-    const matchesSearch = question.question.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = !questionTypeFilter || question.questionType === questionTypeFilter;
-    return matchesSearch && matchesType;
-  }) || [];
+  const filteredQuestions =
+    template?.questions.filter((question) => {
+      const matchesSearch = question.question
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesType =
+        !questionTypeFilter || question.questionType === questionTypeFilter;
+      return matchesSearch && matchesType;
+    }) || [];
 
   const getQuestionTypeColor = (type: string) => {
     switch (type) {
@@ -143,7 +151,7 @@ export default function InterviewTemplatePage({
         return "bg-green-100 text-green-800";
       case "behavioral":
         return "bg-purple-100 text-purple-800";
-      case "system_design":
+      case "practical":
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -155,11 +163,11 @@ export default function InterviewTemplatePage({
       case "mcq":
         return "Multiple Choice";
       case "coding":
-        return "Coding Problem";
+        return "Basic Coding";
       case "behavioral":
         return "Behavioral";
-      case "system_design":
-        return "System Design";
+      case "practical":
+        return "Practical Task";
       default:
         return type;
     }
@@ -246,7 +254,9 @@ export default function InterviewTemplatePage({
                 </div>
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-purple-300" />
-                  <span>{template._count?.mockInterviews || 0} interviews taken</span>
+                  <span>
+                    {template._count?.mockInterviews || 0} interviews taken
+                  </span>
                 </div>
               </div>
             </div>
@@ -302,7 +312,8 @@ export default function InterviewTemplatePage({
                   template.difficulty
                 )}`}
               >
-                {template.difficulty.charAt(0).toUpperCase() + template.difficulty.slice(1)}
+                {template.difficulty.charAt(0).toUpperCase() +
+                  template.difficulty.slice(1)}
               </span>
             </div>
             <div>
@@ -324,7 +335,8 @@ export default function InterviewTemplatePage({
                 Total Score
               </label>
               <p className="text-lg font-medium text-gray-900">
-                {template.questions.reduce((sum, q) => sum + q.points, 0)} points
+                {template.questions.reduce((sum, q) => sum + q.points, 0)}{" "}
+                points
               </p>
             </div>
           </div>
@@ -358,7 +370,9 @@ export default function InterviewTemplatePage({
               Questions ({template.questions.length})
             </h2>
             <Button
-              onClick={() => (window.location.href = `/admin/interviews/${params.id}/questions`)}
+              onClick={() =>
+                (window.location.href = `/admin/interviews/${params.id}/questions`)
+              }
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -402,7 +416,7 @@ export default function InterviewTemplatePage({
                 size="sm"
                 className="flex items-center"
               >
-                Coding Only
+                Basic Coding Only
               </Button>
               <Button
                 onClick={() => setQuestionTypeFilter("behavioral")}
@@ -411,6 +425,14 @@ export default function InterviewTemplatePage({
                 className="flex items-center"
               >
                 Behavioral Only
+              </Button>
+              <Button
+                onClick={() => setQuestionTypeFilter("practical")}
+                variant="outline"
+                size="sm"
+                className="flex items-center"
+              >
+                Practical Tasks Only
               </Button>
             </div>
           </div>
@@ -427,7 +449,9 @@ export default function InterviewTemplatePage({
                   : "This template doesn't have any questions yet."}
               </p>
               <Button
-                onClick={() => (window.location.href = `/admin/interviews/${params.id}/questions`)}
+                onClick={() =>
+                  (window.location.href = `/admin/interviews/${params.id}/questions`)
+                }
                 className="flex items-center mx-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -458,11 +482,11 @@ export default function InterviewTemplatePage({
                           {question.points} pts
                         </span>
                       </div>
-                      
+
                       <h4 className="font-medium text-gray-900 mb-2">
                         {question.question}
                       </h4>
-                      
+
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         {question.timeLimit && (
                           <span className="flex items-center">
@@ -470,11 +494,13 @@ export default function InterviewTemplatePage({
                             {formatTime(question.timeLimit)}
                           </span>
                         )}
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs ${
-                          question.isActive
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded text-xs ${
+                            question.isActive
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
                           {question.isActive ? "Active" : "Inactive"}
                         </span>
                       </div>
@@ -492,7 +518,7 @@ export default function InterviewTemplatePage({
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4">Edit Template</h3>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -501,7 +527,9 @@ export default function InterviewTemplatePage({
                 <input
                   type="text"
                   value={editData.name || ""}
-                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                 />
               </div>
@@ -512,7 +540,9 @@ export default function InterviewTemplatePage({
                 </label>
                 <textarea
                   value={editData.description || ""}
-                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, description: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                 />
@@ -526,7 +556,12 @@ export default function InterviewTemplatePage({
                   <input
                     type="number"
                     value={editData.duration || 0}
-                    onChange={(e) => setEditData({ ...editData, duration: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setEditData({
+                        ...editData,
+                        duration: parseInt(e.target.value),
+                      })
+                    }
                     min="15"
                     max="180"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
@@ -539,7 +574,12 @@ export default function InterviewTemplatePage({
                   </label>
                   <select
                     value={editData.isActive ? "true" : "false"}
-                    onChange={(e) => setEditData({ ...editData, isActive: e.target.value === "true" })}
+                    onChange={(e) =>
+                      setEditData({
+                        ...editData,
+                        isActive: e.target.value === "true",
+                      })
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                   >
                     <option value="true">Active</option>
@@ -550,16 +590,10 @@ export default function InterviewTemplatePage({
             </div>
 
             <div className="flex justify-end space-x-3 pt-4 border-t mt-6">
-              <Button
-                onClick={() => setShowEditModal(false)}
-                variant="outline"
-              >
+              <Button onClick={() => setShowEditModal(false)} variant="outline">
                 Cancel
               </Button>
-              <Button
-                onClick={handleUpdateTemplate}
-                disabled={saving}
-              >
+              <Button onClick={handleUpdateTemplate} disabled={saving}>
                 {saving ? (
                   <Loading size="sm" text="Saving..." />
                 ) : (
