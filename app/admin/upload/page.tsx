@@ -635,15 +635,39 @@ export default function UploadPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Category *
                             </label>
-                            <input
-                              type="text"
+                            <select
                               value={problem.category}
                               onChange={(e) =>
                                 updateProblem(index, "category", e.target.value)
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., arrays, strings"
-                            />
+                            >
+                              <option value="">Select Category</option>
+                              <option value="algorithms">Algorithms</option>
+                              <option value="data-structures">Data Structures</option>
+                              <option value="arrays">Arrays</option>
+                              <option value="strings">Strings</option>
+                              <option value="linked-lists">Linked Lists</option>
+                              <option value="stacks-queues">Stacks & Queues</option>
+                              <option value="trees">Trees</option>
+                              <option value="graphs">Graphs</option>
+                              <option value="dynamic-programming">Dynamic Programming</option>
+                              <option value="greedy-algorithms">Greedy Algorithms</option>
+                              <option value="backtracking">Backtracking</option>
+                              <option value="binary-search">Binary Search</option>
+                              <option value="sorting">Sorting</option>
+                              <option value="hashing">Hashing</option>
+                              <option value="recursion">Recursion</option>
+                              <option value="bit-manipulation">Bit Manipulation</option>
+                              <option value="math">Math</option>
+                              <option value="design-patterns">Design Patterns</option>
+                              <option value="system-design">System Design</option>
+                              <option value="database-design">Database Design</option>
+                              <option value="api-design">API Design</option>
+                              <option value="security">Security</option>
+                              <option value="testing">Testing</option>
+                              <option value="other">Other</option>
+                            </select>
                           </div>
                         </div>
 
@@ -696,15 +720,37 @@ export default function UploadPage() {
                               <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Topic *
                               </label>
-                              <input
-                                type="text"
+                              <select
                                 value={problem.topic}
                                 onChange={(e) =>
                                   updateProblem(index, "topic", e.target.value)
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="e.g., arrays, strings, algorithms"
-                              />
+                              >
+                                <option value="">Select Topic</option>
+                                <option value="arrays">Arrays</option>
+                                <option value="strings">Strings</option>
+                                <option value="linked-lists">Linked Lists</option>
+                                <option value="stacks-queues">Stacks & Queues</option>
+                                <option value="trees">Trees</option>
+                                <option value="graphs">Graphs</option>
+                                <option value="dynamic-programming">Dynamic Programming</option>
+                                <option value="greedy-algorithms">Greedy Algorithms</option>
+                                <option value="backtracking">Backtracking</option>
+                                <option value="binary-search">Binary Search</option>
+                                <option value="sorting">Sorting</option>
+                                <option value="hashing">Hashing</option>
+                                <option value="recursion">Recursion</option>
+                                <option value="bit-manipulation">Bit Manipulation</option>
+                                <option value="math">Math</option>
+                                <option value="design-patterns">Design Patterns</option>
+                                <option value="system-design">System Design</option>
+                                <option value="database-design">Database Design</option>
+                                <option value="api-design">API Design</option>
+                                <option value="security">Security</option>
+                                <option value="testing">Testing</option>
+                                <option value="other">Other</option>
+                              </select>
                             </div>
 
                             <div>
@@ -926,8 +972,6 @@ export default function UploadPage() {
                                 <option value="other">Other</option>
                               </select>
                             </div>
-
-
 
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1207,15 +1251,37 @@ export default function UploadPage() {
                               <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Topic *
                               </label>
-                              <input
-                                type="text"
+                              <select
                                 value={mcq.topic}
                                 onChange={(e) =>
                                   updateMCQ(index, "topic", e.target.value)
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="e.g., arrays, strings, algorithms"
-                              />
+                              >
+                                <option value="">Select Topic</option>
+                                <option value="arrays">Arrays</option>
+                                <option value="strings">Strings</option>
+                                <option value="linked-lists">Linked Lists</option>
+                                <option value="stacks-queues">Stacks & Queues</option>
+                                <option value="trees">Trees</option>
+                                <option value="graphs">Graphs</option>
+                                <option value="dynamic-programming">Dynamic Programming</option>
+                                <option value="greedy-algorithms">Greedy Algorithms</option>
+                                <option value="backtracking">Backtracking</option>
+                                <option value="binary-search">Binary Search</option>
+                                <option value="sorting">Sorting</option>
+                                <option value="hashing">Hashing</option>
+                                <option value="recursion">Recursion</option>
+                                <option value="bit-manipulation">Bit Manipulation</option>
+                                <option value="math">Math</option>
+                                <option value="design-patterns">Design Patterns</option>
+                                <option value="system-design">System Design</option>
+                                <option value="database-design">Database Design</option>
+                                <option value="api-design">API Design</option>
+                                <option value="security">Security</option>
+                                <option value="testing">Testing</option>
+                                <option value="other">Other</option>
+                              </select>
                             </div>
 
                             <div>
@@ -1434,8 +1500,6 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-
-
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Difficulty *
@@ -1485,15 +1549,39 @@ export default function UploadPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               Category *
                             </label>
-                            <input
-                              type="text"
+                            <select
                               value={mcq.category}
                               onChange={(e) =>
                                 updateMCQ(index, "category", e.target.value)
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., algorithms, data-structures"
-                            />
+                            >
+                              <option value="">Select Category</option>
+                              <option value="algorithms">Algorithms</option>
+                              <option value="data-structures">Data Structures</option>
+                              <option value="arrays">Arrays</option>
+                              <option value="strings">Strings</option>
+                              <option value="linked-lists">Linked Lists</option>
+                              <option value="stacks-queues">Stacks & Queues</option>
+                              <option value="trees">Trees</option>
+                              <option value="graphs">Graphs</option>
+                              <option value="dynamic-programming">Dynamic Programming</option>
+                              <option value="greedy-algorithms">Greedy Algorithms</option>
+                              <option value="backtracking">Backtracking</option>
+                              <option value="binary-search">Binary Search</option>
+                              <option value="sorting">Sorting</option>
+                              <option value="hashing">Hashing</option>
+                              <option value="recursion">Recursion</option>
+                              <option value="bit-manipulation">Bit Manipulation</option>
+                              <option value="math">Math</option>
+                              <option value="design-patterns">Design Patterns</option>
+                              <option value="system-design">System Design</option>
+                              <option value="database-design">Database Design</option>
+                              <option value="api-design">API Design</option>
+                              <option value="security">Security</option>
+                              <option value="testing">Testing</option>
+                              <option value="other">Other</option>
+                            </select>
                           </div>
 
                           <div>
