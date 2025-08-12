@@ -324,7 +324,7 @@ export default function HomePage() {
                 <span className="text-white text-2xl">🎯</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Mock Interviews
+                Interviews
               </h3>
               <p className="text-gray-600 leading-relaxed">
                 Practice with realistic interview scenarios. Take timed mock
@@ -416,7 +416,7 @@ export default function HomePage() {
                     : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
-                🎯 Mock Interviews
+                🎯 Interviews
               </button>
             </div>
 
@@ -445,7 +445,7 @@ export default function HomePage() {
                       <span className="text-white text-2xl">🎯</span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-4">
-                      Mock Interviews
+                      Interviews
                     </h3>
                     <p className="text-gray-600 mb-6">
                       Practice with realistic interview scenarios. Take timed
@@ -457,7 +457,7 @@ export default function HomePage() {
                       }
                       className="w-full"
                     >
-                      Manage Mock Interviews
+                      Manage Interviews
                     </Button>
                   </div>
                 </div>

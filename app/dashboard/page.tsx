@@ -123,7 +123,7 @@ export default function DashboardPage() {
 
   const dashboardItems = [
     {
-      title: "Mock Interviews",
+              title: "Interviews",
       description: "Practice with realistic interview scenarios",
       icon: Target,
       href: "/admin/interviews",
@@ -442,7 +442,7 @@ export default function DashboardPage() {
                     <Target className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Mock Interview
+                    Interview
                   </h3>
                   <p className="text-gray-600 mb-4">
                     Practice with realistic interview scenarios

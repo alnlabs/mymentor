@@ -51,9 +51,9 @@ export async function GET(request: NextRequest) {
       }))
     });
   } catch (error) {
-    console.error('Error fetching mock interviews:', error);
+    console.error('Error fetching interviews:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch mock interviews' },
+      { success: false, error: 'Failed to fetch interviews' },
       { status: 500 }
     );
   }
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     const maxScore = template.questions.reduce((sum, q) => sum + q.points, 0);
 
-    // Create mock interview
+    // Create interview
     const interview = await prisma.mockInterview.create({
       data: {
         userId,
@@ -128,9 +128,9 @@ export async function POST(request: NextRequest) {
       }
     });
   } catch (error) {
-    console.error('Error creating mock interview:', error);
+    console.error('Error creating interview:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to create mock interview' },
+      { success: false, error: 'Failed to create interview' },
       { status: 500 }
     );
   }

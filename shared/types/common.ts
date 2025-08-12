@@ -40,7 +40,7 @@ export interface MCQQuestion {
   updatedAt: string;
 }
 
-// Mock Interview Types
+// Interview Types
 export interface InterviewTemplate {
   id: string;
   name: string;

@@ -33,11 +33,11 @@ export default function AdminInterviewsPage() {
   };
 
   const handleDeleteTemplate = async (templateId: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this interview template? This action cannot be undone."
-      )
-    ) {
+          if (
+        !confirm(
+          "Are you sure you want to delete this template? This action cannot be undone."
+        )
+      ) {
       return;
     }
 
@@ -113,7 +113,7 @@ export default function AdminInterviewsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loading size="lg" text="Loading Interview Templates..." />
+        <Loading size="lg" text="Loading Templates..." />
       </div>
     );
   }
@@ -124,7 +124,7 @@ export default function AdminInterviewsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Mock Interview Management
+            Interview Management
           </h1>
           <p className="text-gray-600 mt-2">
             Create and manage entry-level interview templates for fresh graduates

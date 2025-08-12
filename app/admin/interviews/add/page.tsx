@@ -55,7 +55,7 @@ export default function AddInterviewTemplatePage() {
   });
 
   const difficulties = ["easy", "medium", "hard"];
-    const categories = [
+  const categories = [
     // Entry-Level Technical Categories
     "web-development",
     "frontend-basics",
@@ -303,8 +303,8 @@ export default function AddInterviewTemplatePage() {
               </Button>
             </div>
             <p className="text-purple-100 text-lg">
-              Design entry-level interview templates for fresh graduates - 
-              Start with basics, build confidence, grow skills
+              Design entry-level interview templates for fresh graduates - Start
+              with basics, build confidence, grow skills
             </p>
           </div>
         </div>
@@ -347,24 +347,36 @@ export default function AddInterviewTemplatePage() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <optgroup label="Entry-Level Technical">
-                    <option value="web-development">Web Development Basics</option>
-                    <option value="frontend-basics">Frontend Fundamentals</option>
+                    <option value="web-development">
+                      Web Development Basics
+                    </option>
+                    <option value="frontend-basics">
+                      Frontend Fundamentals
+                    </option>
                     <option value="backend-basics">Backend Fundamentals</option>
-                    <option value="database-fundamentals">Database Basics</option>
+                    <option value="database-fundamentals">
+                      Database Basics
+                    </option>
                     <option value="api-development">API Development</option>
-                    <option value="version-control">Version Control (Git)</option>
+                    <option value="version-control">
+                      Version Control (Git)
+                    </option>
                     <option value="testing-basics">Testing Fundamentals</option>
                     <option value="deployment-basics">Deployment Basics</option>
                   </optgroup>
                   <optgroup label="Entry-Level Soft Skills">
-                    <option value="communication-skills">Communication Skills</option>
+                    <option value="communication-skills">
+                      Communication Skills
+                    </option>
                     <option value="teamwork">Teamwork & Collaboration</option>
                     <option value="problem-solving">Problem Solving</option>
                     <option value="time-management">Time Management</option>
                     <option value="learning-ability">Learning Ability</option>
                     <option value="adaptability">Adaptability</option>
                     <option value="customer-service">Customer Service</option>
-                    <option value="basic-project-management">Basic Project Management</option>
+                    <option value="basic-project-management">
+                      Basic Project Management
+                    </option>
                   </optgroup>
                 </select>
               </div>

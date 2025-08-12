@@ -219,7 +219,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Phase 2 (Next)
 - 🔄 Real-time features
-- 🔄 Mock interviews
+- 🔄 Interviews
 - 🔄 Advanced analytics
 - 🔄 Company-specific tracks
 

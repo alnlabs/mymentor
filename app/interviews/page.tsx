@@ -101,7 +101,7 @@ export default function InterviewsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Loading Interview Templates..." />
+        <Loading size="lg" text="Loading Templates..." />
       </div>
     );
   }
@@ -114,7 +114,7 @@ export default function InterviewsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Mock Interviews
+                Interviews
               </h1>
               <p className="text-gray-600 mt-1">
                 Practice with realistic interview scenarios
@@ -233,10 +233,10 @@ export default function InterviewsPage() {
             <h3 className="text-lg font-semibold mb-4">
               Create Interview Template
             </h3>
-            <p className="text-gray-600 mb-4">
-              This feature is coming soon! You'll be able to create custom
-              interview templates.
-            </p>
+                          <p className="text-gray-600 mb-4">
+                This feature is coming soon! You'll be able to create custom
+                templates.
+              </p>
             <div className="flex space-x-3">
               <Button
                 onClick={() => setShowCreateModal(false)}
