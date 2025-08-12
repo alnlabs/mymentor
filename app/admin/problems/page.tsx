@@ -183,7 +183,7 @@ export default function AdminProblemsPage() {
               </p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/admin/upload?type=problems")}
+              onClick={() => (window.location.href = "/admin/problems/add")}
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -539,9 +539,9 @@ export default function AdminProblemsPage() {
                 : "Try adjusting your search or filter criteria."}
             </p>
             {problems.length === 0 && (
-              <Button onClick={() => (window.location.href = "/admin/upload?type=problems")}>
+              <Button onClick={() => (window.location.href = "/admin/problems/add")}>
                 <Plus className="w-4 h-4 mr-2" />
-                Upload Your First Problem
+                Add Your First Problem
               </Button>
             )}
           </div>

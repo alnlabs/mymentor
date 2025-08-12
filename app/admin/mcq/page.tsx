@@ -175,7 +175,7 @@ export default function AdminMCQPage() {
               </p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/admin/upload?type=mcq")}
+              onClick={() => (window.location.href = "/admin/mcq/add")}
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -548,9 +548,9 @@ export default function AdminMCQPage() {
                 : "Try adjusting your search or filter criteria."}
             </p>
             {mcqs.length === 0 && (
-              <Button onClick={() => (window.location.href = "/admin/upload?type=mcq")}>
+              <Button onClick={() => (window.location.href = "/admin/mcq/add")}>
                 <Plus className="w-4 h-4 mr-2" />
-                Upload Your First MCQ
+                Add Your First MCQ
               </Button>
             )}
           </div>
