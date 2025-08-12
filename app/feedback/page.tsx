@@ -325,10 +325,75 @@ export default function FeedbackPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Share Your Feedback
           </h2>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg mb-6">
             Help us improve your learning experience! Your feedback is valuable
             to us.
           </p>
+          
+          {/* Description & Explanation */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                  💡 What is Feedback?
+                </h3>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <p>
+                    <strong>Feedback</strong> is your honest opinion about our platform, content, and learning experience. It helps us understand what's working well and what needs improvement.
+                  </p>
+                  <p>
+                    Whether you love something, have suggestions, found a bug, or want to share concerns - every piece of feedback matters!
+                  </p>
+                  <p>
+                    <strong>Examples:</strong>
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>"The coding problems are too difficult for beginners"</li>
+                    <li>"I love the interview practice feature!"</li>
+                    <li>"The mobile app crashes when I submit answers"</li>
+                    <li>"Can you add more JavaScript problems?"</li>
+                    <li>"The UI is confusing to navigate"</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                  🎯 How Your Feedback Helps
+                </h3>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <p>
+                    Your feedback directly influences how we improve the platform for you and other students:
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We add new features based on popular requests</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We fix bugs and technical issues you report</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We improve content difficulty and quality</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We enhance user interface and experience</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We prioritize what matters most to students</span>
+                    </div>
+                  </div>
+                  <p className="text-blue-700 font-medium">
+                    <strong>Your voice shapes the future of our learning platform!</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Feedback Form */}
