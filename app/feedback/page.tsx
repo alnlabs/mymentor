@@ -39,7 +39,7 @@ export default function FeedbackPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [feedback, setFeedback] = useState<FeedbackForm>({
-    isAnonymous: false,
+    isAnonymous: true,
     type: "",
     category: "",
     subject: "",
@@ -417,9 +417,47 @@ export default function FeedbackPage() {
                       >
                         {feedback.isAnonymous ? "ON" : "OFF"}
                       </span>
+                                    </div>
+              </div>
+            </div>
+
+            {/* Anonymous Mode Explanation Note */}
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-purple-600 text-sm">💡</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-purple-800 mb-1">
+                    About Anonymous Mode
+                  </h4>
+                  <p className="text-xs text-purple-700 mb-2">
+                    <strong>Anonymous mode is enabled by default</strong> to encourage honest feedback. Your identity is hidden from administrators, allowing you to share freely without any concerns.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div className="bg-white p-2 rounded border border-purple-200">
+                      <span className="font-semibold text-purple-800">✅ Anonymous Benefits:</span>
+                      <ul className="mt-1 space-y-0.5 text-purple-700">
+                        <li>• Share without fear</li>
+                        <li>• Express concerns freely</li>
+                        <li>• Report issues safely</li>
+                      </ul>
+                    </div>
+                    <div className="bg-white p-2 rounded border border-blue-200">
+                      <span className="font-semibold text-blue-800">📝 Named Benefits:</span>
+                      <ul className="mt-1 space-y-0.5 text-blue-700">
+                        <li>• Get follow-up support</li>
+                        <li>• Track feedback status</li>
+                        <li>• Build relationships</li>
+                      </ul>
                     </div>
                   </div>
+                  <p className="text-xs text-purple-600 mt-2 font-medium">
+                    💡 <strong>Note:</strong> You can switch to named mode if you prefer personalized support and follow-up.
+                  </p>
                 </div>
+              </div>
+            </div>
 
             {/* Feedback Type */}
             <div>
