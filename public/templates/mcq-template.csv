@@ -1,3 +1,17 @@
+# Available options for dropdown fields:
+# subject: programming, data-science, web-development, mobile-development, devops, ai-ml, database, cybersecurity, system-design, other
+# topic: arrays, strings, linked-lists, stacks-queues, trees, graphs, dynamic-programming, greedy-algorithms, backtracking, binary-search, sorting, hashing, recursion, bit-manipulation, math, design-patterns, system-design, database-design, api-design, security, testing, other
+# tool: python, javascript, java, cpp, react, nodejs, sql, mongodb, docker, kubernetes, aws, other
+# technologyStack: frontend, backend, full-stack, mobile, data, devops, other
+# domain: web, mobile, ai-ml, data, cloud, security, gaming, fintech, healthcare, ecommerce, other
+# skillLevel: beginner, intermediate, advanced
+# jobRole: frontend-developer, backend-developer, full-stack-developer, data-scientist, data-engineer, devops-engineer, mobile-developer, software-engineer, system-architect, qa-engineer, other
+# companyType: tech, finance, healthcare, ecommerce, consulting, startup, enterprise, government, education, other
+# interviewType: technical, behavioral, system-design, coding, data-structures, algorithms, database, frontend, backend, other
+# difficulty: easy, medium, hard
+# category: algorithms, data-structures, arrays, strings, linked-lists, stacks-queues, trees, graphs, dynamic-programming, greedy-algorithms, backtracking, binary-search, sorting, hashing, recursion, bit-manipulation, math, design-patterns, system-design, database-design, api-design, security, testing, other
+# priority: low, medium, high
+# status: draft, active, archived
 question,options,correctAnswer,explanation,category,subject,topic,tool,technologyStack,domain,skillLevel,jobRole,companyType,interviewType,difficulty,tags,companies,priority,status
 "What is the time complexity of binary search?","O(n);O(log n);O(n²);O(1)",1,"Binary search divides the search space in half with each iteration.","algorithms","programming","binary-search","python","backend","web","beginner","software-engineer","tech","coding","easy","binary-search,complexity","Google,Amazon,Microsoft","medium","active"
 "What data structure is best for implementing a queue?","Array;Stack;Linked List;Tree",2,"Linked lists allow O(1) insertion and deletion at both ends.","data-structures","programming","linked-lists","java","backend","web","beginner","backend-developer","tech","coding","easy","queues,linked-lists","Facebook,Google,Amazon","medium","active"

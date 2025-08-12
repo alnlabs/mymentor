@@ -45,10 +45,20 @@ async function checkDuplicateContent(
 // Parse CSV content
 function parseCSV(csvContent: string, type: "problems" | "mcq"): any[] {
   const lines = csvContent.trim().split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim().replace(/"/g, ""));
+  
+  // Find the header line (first non-comment line)
+  let headerLineIndex = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (!lines[i].trim().startsWith("#")) {
+      headerLineIndex = i;
+      break;
+    }
+  }
+  
+  const headers = lines[headerLineIndex].split(",").map((h) => h.trim().replace(/"/g, ""));
   const data: any[] = [];
 
-  for (let i = 1; i < lines.length; i++) {
+  for (let i = headerLineIndex + 1; i < lines.length; i++) {
     const line = lines[i];
     if (!line.trim()) continue;
 
@@ -138,10 +148,20 @@ function parseExcel(excelContent: string, type: "problems" | "mcq"): any[] {
   // For now, treat Excel as CSV with tab separation
   // In a real implementation, you'd use a library like 'xlsx' or 'exceljs'
   const lines = excelContent.trim().split("\n");
-  const headers = lines[0].split("\t").map((h) => h.trim().replace(/"/g, ""));
+  
+  // Find the header line (first non-comment line)
+  let headerLineIndex = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (!lines[i].trim().startsWith("#")) {
+      headerLineIndex = i;
+      break;
+    }
+  }
+  
+  const headers = lines[headerLineIndex].split("\t").map((h) => h.trim().replace(/"/g, ""));
   const data: any[] = [];
 
-  for (let i = 1; i < lines.length; i++) {
+  for (let i = headerLineIndex + 1; i < lines.length; i++) {
     const line = lines[i];
     if (!line.trim()) continue;
 
