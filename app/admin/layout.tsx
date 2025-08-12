@@ -44,6 +44,18 @@ const navigation = [
     description: "Problems & MCQs",
   },
   {
+    name: "Coding Problems",
+    href: "/admin/problems",
+    icon: FileText,
+    description: "View & Manage Problems",
+  },
+  {
+    name: "MCQ Questions",
+    href: "/admin/mcq",
+    icon: FileText,
+    description: "View & Manage MCQs",
+  },
+  {
     name: "Manage Users",
     href: "/admin/users",
     icon: Users,
