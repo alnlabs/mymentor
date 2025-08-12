@@ -42,6 +42,10 @@ export default function MCQPage() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [positionFilter, setPositionFilter] = useState<string>("all");
+  const [filterMode, setFilterMode] = useState<"all" | "union" | "intersection">("all");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedPositions, setSelectedPositions] = useState<string[]>([]);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   useEffect(() => {
     fetchMCQs();
@@ -49,7 +53,7 @@ export default function MCQPage() {
 
   useEffect(() => {
     filterMCQs();
-  }, [mcqs, searchTerm, difficultyFilter, categoryFilter, positionFilter]);
+  }, [mcqs, searchTerm, difficultyFilter, categoryFilter, positionFilter, filterMode, selectedCategories, selectedPositions]);
 
   const fetchMCQs = async () => {
     try {
@@ -82,8 +86,12 @@ export default function MCQPage() {
           getCategoryLabel(mcq.category)
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          (mcq.jobRole && mcq.jobRole.toLowerCase().includes(searchTerm.toLowerCase())) ||
-          (mcq.jobRole && getPositionLabel(mcq.jobRole).toLowerCase().includes(searchTerm.toLowerCase()))
+          (mcq.jobRole &&
+            mcq.jobRole.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (mcq.jobRole &&
+            getPositionLabel(mcq.jobRole)
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -92,14 +100,36 @@ export default function MCQPage() {
       filtered = filtered.filter((mcq) => mcq.difficulty === difficultyFilter);
     }
 
-    // Category filter
-    if (categoryFilter !== "all") {
-      filtered = filtered.filter((mcq) => mcq.category === categoryFilter);
-    }
-
-    // Position filter
-    if (positionFilter !== "all") {
-      filtered = filtered.filter((mcq) => mcq.jobRole === positionFilter);
+    // Advanced filtering logic
+    if (filterMode === "all") {
+      // Simple filtering
+      if (categoryFilter !== "all") {
+        filtered = filtered.filter((mcq) => mcq.category === categoryFilter);
+      }
+      if (positionFilter !== "all") {
+        filtered = filtered.filter((mcq) => mcq.jobRole === positionFilter);
+      }
+    } else {
+      // Advanced filtering with multiple selections
+      if (selectedCategories.length > 0) {
+        if (filterMode === "union") {
+          // Show MCQs that match ANY of the selected categories
+          filtered = filtered.filter((mcq) => selectedCategories.includes(mcq.category));
+        } else if (filterMode === "intersection") {
+          // Show MCQs that match ALL of the selected categories (if multiple categories exist)
+          filtered = filtered.filter((mcq) => selectedCategories.includes(mcq.category));
+        }
+      }
+      
+      if (selectedPositions.length > 0) {
+        if (filterMode === "union") {
+          // Show MCQs that match ANY of the selected positions
+          filtered = filtered.filter((mcq) => mcq.jobRole && selectedPositions.includes(mcq.jobRole));
+        } else if (filterMode === "intersection") {
+          // Show MCQs that match ALL of the selected positions (if multiple positions exist)
+          filtered = filtered.filter((mcq) => mcq.jobRole && selectedPositions.includes(mcq.jobRole));
+        }
+      }
     }
 
     setFilteredMcqs(filtered);
@@ -148,7 +178,7 @@ export default function MCQPage() {
       "computer-operator": "Computer Operator",
       "data-entry-operator": "Data Entry Operator",
       "office-assistant": "Office Assistant",
-      "receptionist": "Receptionist",
+      receptionist: "Receptionist",
       "admin-assistant": "Admin Assistant",
       "customer-support": "Customer Support",
       "help-desk": "Help Desk",
@@ -179,16 +209,61 @@ export default function MCQPage() {
       "digital-marketing": "Digital Marketing",
       "seo-assistant": "SEO Assistant",
       "video-editor": "Video Editor",
-      "photographer": "Photographer",
+      photographer: "Photographer",
     };
     return positionMap[position] || position;
+  };
+
+  // Helper functions for advanced filtering
+  const toggleCategory = (category: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(category) 
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const togglePosition = (position: string) => {
+    setSelectedPositions(prev => 
+      prev.includes(position) 
+        ? prev.filter(p => p !== position)
+        : [...prev, position]
+    );
+  };
+
+  const clearAllFilters = () => {
+    setSearchTerm("");
+    setDifficultyFilter("all");
+    setCategoryFilter("all");
+    setPositionFilter("all");
+    setFilterMode("all");
+    setSelectedCategories([]);
+    setSelectedPositions([]);
+  };
+
+  const getFilterSummary = () => {
+    const filters = [];
+    if (searchTerm) filters.push(`Search: "${searchTerm}"`);
+    if (difficultyFilter !== "all") filters.push(`Difficulty: ${difficultyFilter}`);
+    if (filterMode === "all") {
+      if (categoryFilter !== "all") filters.push(`Test Type: ${categoryFilter}`);
+      if (positionFilter !== "all") filters.push(`Position: ${getPositionLabel(positionFilter)}`);
+    } else {
+      if (selectedCategories.length > 0) {
+        filters.push(`${filterMode === "union" ? "Any" : "All"} Test Types: ${selectedCategories.join(", ")}`);
+      }
+      if (selectedPositions.length > 0) {
+        filters.push(`${filterMode === "union" ? "Any" : "All"} Positions: ${selectedPositions.map(getPositionLabel).join(", ")}`);
+      }
+    }
+    return filters;
   };
 
   // Test Categories (Type of Test)
   const testCategories = [
     // Technical Categories
     "Programming",
-    "Data Structures", 
+    "Data Structures",
     "Algorithms",
     "Web Development",
     "Database",
@@ -256,8 +331,10 @@ export default function MCQPage() {
 
   // Get categories and positions from existing MCQs
   const existingCategories = Array.from(new Set(mcqs.map((m) => m.category)));
-  const existingPositions = Array.from(new Set(mcqs.map((m) => m.jobRole || "").filter(Boolean)));
-  
+  const existingPositions = Array.from(
+    new Set(mcqs.map((m) => m.jobRole || "").filter(Boolean))
+  );
+
   // Combine with predefined lists
   const categories = [...new Set([...testCategories, ...existingCategories])];
   const positions = [...new Set([...jobPositions, ...existingPositions])];
@@ -396,127 +473,305 @@ export default function MCQPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">
-                Filters:
-              </span>
+          <div className="space-y-4">
+            {/* Filter Mode Toggle */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Filter className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Filters:
+                  </span>
+                </div>
+                
+                {/* Filter Mode Buttons */}
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setFilterMode("all")}
+                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                      filterMode === "all"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Simple
+                  </button>
+                  <button
+                    onClick={() => setFilterMode("union")}
+                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                      filterMode === "union"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Union (OR)
+                  </button>
+                  <button
+                    onClick={() => setFilterMode("intersection")}
+                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
+                      filterMode === "intersection"
+                        ? "bg-green-600 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Intersection (AND)
+                  </button>
+                </div>
+              </div>
+
+              {/* Advanced Filters Toggle */}
+              <button
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className="flex items-center space-x-2 text-sm text-purple-600 hover:text-purple-700"
+              >
+                <span>{showAdvancedFilters ? "Hide" : "Show"} Advanced</span>
+                <svg
+                  className={`w-4 h-4 transition-transform ${
+                    showAdvancedFilters ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
             </div>
 
-            {/* Difficulty Filter */}
-            <select
-              value={difficultyFilter}
-              onChange={(e) => setDifficultyFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            >
-              <option value="all">All Difficulties</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
+            {/* Simple Filters */}
+            {filterMode === "all" && (
+              <div className="flex flex-wrap gap-4">
+                {/* Difficulty Filter */}
+                <select
+                  value={difficultyFilter}
+                  onChange={(e) => setDifficultyFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="all">All Difficulties</option>
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
 
-            {/* Category Filter */}
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            >
-              <option value="all">All Test Types</option>
-              <optgroup label="Technical Tests">
-                <option value="Programming">Programming</option>
-                <option value="Data Structures">Data Structures</option>
-                <option value="Algorithms">Algorithms</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Database">Database</option>
-                <option value="System Design">System Design</option>
-                <option value="Frontend">Frontend</option>
-                <option value="Backend">Backend</option>
-                <option value="Full Stack">Full Stack</option>
-                <option value="Mobile Development">Mobile Development</option>
-                <option value="DevOps">DevOps</option>
-                <option value="Machine Learning">Machine Learning</option>
-              </optgroup>
-              <optgroup label="Non-Technical Tests">
-                <option value="Aptitude">Aptitude</option>
-                <option value="Logical Reasoning">Logical Reasoning</option>
-                <option value="Verbal Ability">Verbal Ability</option>
-                <option value="Quantitative Aptitude">Quantitative Aptitude</option>
-                <option value="General Knowledge">General Knowledge</option>
-                <option value="English Language">English Language</option>
-                <option value="Business Communication">Business Communication</option>
-                <option value="Problem Solving">Problem Solving</option>
-                <option value="Critical Thinking">Critical Thinking</option>
-                <option value="Team Management">Team Management</option>
-                <option value="Leadership">Leadership</option>
-                <option value="Project Management">Project Management</option>
-              </optgroup>
-              {/* Show any additional categories from existing MCQs */}
-              {existingCategories
-                .filter((cat) => !testCategories.includes(cat))
-                .map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-            </select>
+                {/* Category Filter */}
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="all">All Test Types</option>
+                  <optgroup label="Technical Tests">
+                    <option value="Programming">Programming</option>
+                    <option value="Data Structures">Data Structures</option>
+                    <option value="Algorithms">Algorithms</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Database">Database</option>
+                    <option value="System Design">System Design</option>
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Full Stack">Full Stack</option>
+                    <option value="Mobile Development">Mobile Development</option>
+                    <option value="DevOps">DevOps</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                  </optgroup>
+                  <optgroup label="Non-Technical Tests">
+                    <option value="Aptitude">Aptitude</option>
+                    <option value="Logical Reasoning">Logical Reasoning</option>
+                    <option value="Verbal Ability">Verbal Ability</option>
+                    <option value="Quantitative Aptitude">
+                      Quantitative Aptitude
+                    </option>
+                    <option value="General Knowledge">General Knowledge</option>
+                    <option value="English Language">English Language</option>
+                    <option value="Business Communication">
+                      Business Communication
+                    </option>
+                    <option value="Problem Solving">Problem Solving</option>
+                    <option value="Critical Thinking">Critical Thinking</option>
+                    <option value="Team Management">Team Management</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Project Management">Project Management</option>
+                  </optgroup>
+                  {/* Show any additional categories from existing MCQs */}
+                  {existingCategories
+                    .filter((cat) => !testCategories.includes(cat))
+                    .map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                </select>
 
-            {/* Position Filter */}
-            <select
-              value={positionFilter}
-              onChange={(e) => setPositionFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            >
-              <option value="all">All Positions</option>
-              <optgroup label="IT & Computer Positions">
-                <option value="computer-operator">Computer Operator</option>
-                <option value="data-entry-operator">Data Entry Operator</option>
-                <option value="office-assistant">Office Assistant</option>
-                <option value="receptionist">Receptionist</option>
-                <option value="admin-assistant">Admin Assistant</option>
-                <option value="customer-support">Customer Support</option>
-                <option value="help-desk">Help Desk</option>
-                <option value="technical-support">Technical Support</option>
-              </optgroup>
-              <optgroup label="Business Positions">
-                <option value="sales-assistant">Sales Assistant</option>
-                <option value="marketing-assistant">Marketing Assistant</option>
-                <option value="account-assistant">Account Assistant</option>
-                <option value="hr-assistant">HR Assistant</option>
-                <option value="operations-assistant">Operations Assistant</option>
-                <option value="logistics-assistant">Logistics Assistant</option>
-                <option value="procurement-assistant">Procurement Assistant</option>
-                <option value="quality-assistant">Quality Assistant</option>
-              </optgroup>
-              <optgroup label="Service Positions">
-                <option value="retail-assistant">Retail Assistant</option>
-                <option value="hospitality-assistant">Hospitality Assistant</option>
-                <option value="healthcare-assistant">Healthcare Assistant</option>
-                <option value="education-assistant">Education Assistant</option>
-                <option value="banking-assistant">Banking Assistant</option>
-                <option value="insurance-assistant">Insurance Assistant</option>
-                <option value="travel-assistant">Travel Assistant</option>
-                <option value="event-assistant">Event Assistant</option>
-              </optgroup>
-              <optgroup label="Technical Positions">
-                <option value="web-designer">Web Designer</option>
-                <option value="graphic-designer">Graphic Designer</option>
-                <option value="content-writer">Content Writer</option>
-                <option value="social-media">Social Media</option>
-                <option value="digital-marketing">Digital Marketing</option>
-                <option value="seo-assistant">SEO Assistant</option>
-                <option value="video-editor">Video Editor</option>
-                <option value="photographer">Photographer</option>
-              </optgroup>
-              {/* Show any additional positions from existing MCQs */}
-              {existingPositions
-                .filter((pos) => !jobPositions.includes(pos))
-                .map((position) => (
-                  <option key={position} value={position}>
-                    {getPositionLabel(position)}
-                  </option>
-                ))}
-            </select>
+                {/* Position Filter */}
+                <select
+                  value={positionFilter}
+                  onChange={(e) => setPositionFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="all">All Positions</option>
+                  <optgroup label="IT & Computer Positions">
+                    <option value="computer-operator">Computer Operator</option>
+                    <option value="data-entry-operator">Data Entry Operator</option>
+                    <option value="office-assistant">Office Assistant</option>
+                    <option value="receptionist">Receptionist</option>
+                    <option value="admin-assistant">Admin Assistant</option>
+                    <option value="customer-support">Customer Support</option>
+                    <option value="help-desk">Help Desk</option>
+                    <option value="technical-support">Technical Support</option>
+                  </optgroup>
+                  <optgroup label="Business Positions">
+                    <option value="sales-assistant">Sales Assistant</option>
+                    <option value="marketing-assistant">Marketing Assistant</option>
+                    <option value="account-assistant">Account Assistant</option>
+                    <option value="hr-assistant">HR Assistant</option>
+                    <option value="operations-assistant">
+                      Operations Assistant
+                    </option>
+                    <option value="logistics-assistant">Logistics Assistant</option>
+                    <option value="procurement-assistant">
+                      Procurement Assistant
+                    </option>
+                    <option value="quality-assistant">Quality Assistant</option>
+                  </optgroup>
+                  <optgroup label="Service Positions">
+                    <option value="retail-assistant">Retail Assistant</option>
+                    <option value="hospitality-assistant">
+                      Hospitality Assistant
+                    </option>
+                    <option value="healthcare-assistant">
+                      Healthcare Assistant
+                    </option>
+                    <option value="education-assistant">Education Assistant</option>
+                    <option value="banking-assistant">Banking Assistant</option>
+                    <option value="insurance-assistant">Insurance Assistant</option>
+                    <option value="travel-assistant">Travel Assistant</option>
+                    <option value="event-assistant">Event Assistant</option>
+                  </optgroup>
+                  <optgroup label="Technical Positions">
+                    <option value="web-designer">Web Designer</option>
+                    <option value="graphic-designer">Graphic Designer</option>
+                    <option value="content-writer">Content Writer</option>
+                    <option value="social-media">Social Media</option>
+                    <option value="digital-marketing">Digital Marketing</option>
+                    <option value="seo-assistant">SEO Assistant</option>
+                    <option value="video-editor">Video Editor</option>
+                    <option value="photographer">Photographer</option>
+                  </optgroup>
+                  {/* Show any additional positions from existing MCQs */}
+                  {existingPositions
+                    .filter((pos) => !jobPositions.includes(pos))
+                    .map((position) => (
+                      <option key={position} value={position}>
+                        {getPositionLabel(position)}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            )}
+
+            {/* Advanced Filters */}
+            {showAdvancedFilters && filterMode !== "all" && (
+              <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-gray-700">
+                    Advanced Filters ({filterMode === "union" ? "OR" : "AND"} Mode)
+                  </h3>
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                {/* Difficulty Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Difficulty
+                  </label>
+                  <select
+                    value={difficultyFilter}
+                    onChange={(e) => setDifficultyFilter(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  >
+                    <option value="all">All Difficulties</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+
+                {/* Multiple Category Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Test Types (Select Multiple)
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+                    {testCategories.map((category) => (
+                      <label key={category} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(category)}
+                          onChange={() => toggleCategory(category)}
+                          className="w-4 h-4 text-purple-600 focus:ring-purple-500"
+                        />
+                        <span className="text-sm text-gray-700">{category}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Multiple Position Selection */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Job Positions (Select Multiple)
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+                    {jobPositions.map((position) => (
+                      <label key={position} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedPositions.includes(position)}
+                          onChange={() => togglePosition(position)}
+                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm text-gray-700">{getPositionLabel(position)}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Active Filters Summary */}
+            {getFilterSummary().length > 0 && (
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-purple-700">Active Filters:</span>
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-xs text-purple-600 hover:text-purple-700"
+                  >
+                    Clear All
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {getFilterSummary().map((filter, index) => (
+                    <span
+                      key={index}
+                      className="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded"
+                    >
+                      {filter}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
