@@ -32,7 +32,6 @@ interface Problem {
   jobRole: string;
   companyType: string;
   interviewType: string;
-  timeLimit: number;
   testCases: string;
   solution?: string;
   hints?: string;
@@ -58,7 +57,6 @@ interface MCQ {
   jobRole: string;
   companyType: string;
   interviewType: string;
-  timeLimit: number;
   difficulty: "easy" | "medium" | "hard";
   tags?: string;
   companies?: string;
@@ -93,7 +91,6 @@ export default function UploadPage() {
       jobRole: "",
       companyType: "",
       interviewType: "",
-      timeLimit: 30,
       testCases: "",
       solution: "",
       hints: "",
@@ -120,7 +117,6 @@ export default function UploadPage() {
       jobRole: "",
       companyType: "",
       interviewType: "",
-      timeLimit: 30,
       difficulty: "easy",
       tags: "",
       companies: "",
@@ -183,7 +179,6 @@ export default function UploadPage() {
             jobRole: "",
             companyType: "",
             interviewType: "",
-            timeLimit: 30,
             testCases: "",
             solution: "",
             hints: "",
@@ -245,7 +240,6 @@ export default function UploadPage() {
             jobRole: "",
             companyType: "",
             interviewType: "",
-            timeLimit: 30,
             difficulty: "easy",
             tags: "",
             companies: "",
@@ -655,7 +649,9 @@ export default function UploadPage() {
 
                         {/* Primary Categorization */}
                         <div className="bg-gray-50 p-4 rounded-lg">
-                          <h6 className="font-medium text-gray-900 mb-3">Primary Categorization</h6>
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Primary Categorization
+                          </h6>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -664,20 +660,34 @@ export default function UploadPage() {
                               <select
                                 value={problem.subject}
                                 onChange={(e) =>
-                                  updateProblem(index, "subject", e.target.value)
+                                  updateProblem(
+                                    index,
+                                    "subject",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Subject</option>
                                 <option value="programming">Programming</option>
-                                <option value="data-science">Data Science</option>
-                                <option value="web-development">Web Development</option>
-                                <option value="mobile-development">Mobile Development</option>
+                                <option value="data-science">
+                                  Data Science
+                                </option>
+                                <option value="web-development">
+                                  Web Development
+                                </option>
+                                <option value="mobile-development">
+                                  Mobile Development
+                                </option>
                                 <option value="devops">DevOps</option>
                                 <option value="ai-ml">AI/ML</option>
                                 <option value="database">Database</option>
-                                <option value="cybersecurity">Cybersecurity</option>
-                                <option value="system-design">System Design</option>
+                                <option value="cybersecurity">
+                                  Cybersecurity
+                                </option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
                                 <option value="other">Other</option>
                               </select>
                             </div>
@@ -731,7 +741,11 @@ export default function UploadPage() {
                               <select
                                 value={problem.technologyStack}
                                 onChange={(e) =>
-                                  updateProblem(index, "technologyStack", e.target.value)
+                                  updateProblem(
+                                    index,
+                                    "technologyStack",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -779,12 +793,18 @@ export default function UploadPage() {
                               <select
                                 value={problem.skillLevel}
                                 onChange={(e) =>
-                                  updateProblem(index, "skillLevel", e.target.value as any)
+                                  updateProblem(
+                                    index,
+                                    "skillLevel",
+                                    e.target.value as any
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
+                                <option value="intermediate">
+                                  Intermediate
+                                </option>
                                 <option value="advanced">Advanced</option>
                               </select>
                             </div>
@@ -793,7 +813,9 @@ export default function UploadPage() {
 
                         {/* Professional Context */}
                         <div className="bg-blue-50 p-4 rounded-lg">
-                          <h6 className="font-medium text-gray-900 mb-3">Professional Context</h6>
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Professional Context
+                          </h6>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -802,20 +824,42 @@ export default function UploadPage() {
                               <select
                                 value={problem.jobRole}
                                 onChange={(e) =>
-                                  updateProblem(index, "jobRole", e.target.value)
+                                  updateProblem(
+                                    index,
+                                    "jobRole",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Job Role</option>
-                                <option value="frontend-developer">Frontend Developer</option>
-                                <option value="backend-developer">Backend Developer</option>
-                                <option value="full-stack-developer">Full Stack Developer</option>
-                                <option value="data-scientist">Data Scientist</option>
-                                <option value="data-engineer">Data Engineer</option>
-                                <option value="devops-engineer">DevOps Engineer</option>
-                                <option value="mobile-developer">Mobile Developer</option>
-                                <option value="software-engineer">Software Engineer</option>
-                                <option value="system-architect">System Architect</option>
+                                <option value="frontend-developer">
+                                  Frontend Developer
+                                </option>
+                                <option value="backend-developer">
+                                  Backend Developer
+                                </option>
+                                <option value="full-stack-developer">
+                                  Full Stack Developer
+                                </option>
+                                <option value="data-scientist">
+                                  Data Scientist
+                                </option>
+                                <option value="data-engineer">
+                                  Data Engineer
+                                </option>
+                                <option value="devops-engineer">
+                                  DevOps Engineer
+                                </option>
+                                <option value="mobile-developer">
+                                  Mobile Developer
+                                </option>
+                                <option value="software-engineer">
+                                  Software Engineer
+                                </option>
+                                <option value="system-architect">
+                                  System Architect
+                                </option>
                                 <option value="qa-engineer">QA Engineer</option>
                                 <option value="other">Other</option>
                               </select>
@@ -828,7 +872,11 @@ export default function UploadPage() {
                               <select
                                 value={problem.companyType}
                                 onChange={(e) =>
-                                  updateProblem(index, "companyType", e.target.value)
+                                  updateProblem(
+                                    index,
+                                    "companyType",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -853,16 +901,24 @@ export default function UploadPage() {
                               <select
                                 value={problem.interviewType}
                                 onChange={(e) =>
-                                  updateProblem(index, "interviewType", e.target.value)
+                                  updateProblem(
+                                    index,
+                                    "interviewType",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Interview Type</option>
                                 <option value="technical">Technical</option>
                                 <option value="behavioral">Behavioral</option>
-                                <option value="system-design">System Design</option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
                                 <option value="coding">Coding</option>
-                                <option value="data-structures">Data Structures</option>
+                                <option value="data-structures">
+                                  Data Structures
+                                </option>
                                 <option value="algorithms">Algorithms</option>
                                 <option value="database">Database</option>
                                 <option value="frontend">Frontend</option>
@@ -871,22 +927,7 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Time Limit (minutes)
-                              </label>
-                              <input
-                                type="number"
-                                value={problem.timeLimit}
-                                onChange={(e) =>
-                                  updateProblem(index, "timeLimit", parseInt(e.target.value) || 30)
-                                }
-                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="30"
-                                min="1"
-                                max="180"
-                              />
-                            </div>
+
 
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -916,7 +957,11 @@ export default function UploadPage() {
                               <select
                                 value={problem.priority}
                                 onChange={(e) =>
-                                  updateProblem(index, "priority", e.target.value as any)
+                                  updateProblem(
+                                    index,
+                                    "priority",
+                                    e.target.value as any
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -974,7 +1019,11 @@ export default function UploadPage() {
                             <select
                               value={problem.status}
                               onChange={(e) =>
-                                updateProblem(index, "status", e.target.value as any)
+                                updateProblem(
+                                  index,
+                                  "status",
+                                  e.target.value as any
+                                )
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
@@ -1115,7 +1164,9 @@ export default function UploadPage() {
 
                         {/* Primary Categorization */}
                         <div className="bg-gray-50 p-4 rounded-lg">
-                          <h6 className="font-medium text-gray-900 mb-3">Primary Categorization</h6>
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Primary Categorization
+                          </h6>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1130,14 +1181,24 @@ export default function UploadPage() {
                               >
                                 <option value="">Select Subject</option>
                                 <option value="programming">Programming</option>
-                                <option value="data-science">Data Science</option>
-                                <option value="web-development">Web Development</option>
-                                <option value="mobile-development">Mobile Development</option>
+                                <option value="data-science">
+                                  Data Science
+                                </option>
+                                <option value="web-development">
+                                  Web Development
+                                </option>
+                                <option value="mobile-development">
+                                  Mobile Development
+                                </option>
                                 <option value="devops">DevOps</option>
                                 <option value="ai-ml">AI/ML</option>
                                 <option value="database">Database</option>
-                                <option value="cybersecurity">Cybersecurity</option>
-                                <option value="system-design">System Design</option>
+                                <option value="cybersecurity">
+                                  Cybersecurity
+                                </option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
                                 <option value="other">Other</option>
                               </select>
                             </div>
@@ -1191,7 +1252,11 @@ export default function UploadPage() {
                               <select
                                 value={mcq.technologyStack}
                                 onChange={(e) =>
-                                  updateMCQ(index, "technologyStack", e.target.value)
+                                  updateMCQ(
+                                    index,
+                                    "technologyStack",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -1239,12 +1304,18 @@ export default function UploadPage() {
                               <select
                                 value={mcq.skillLevel}
                                 onChange={(e) =>
-                                  updateMCQ(index, "skillLevel", e.target.value as any)
+                                  updateMCQ(
+                                    index,
+                                    "skillLevel",
+                                    e.target.value as any
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="beginner">Beginner</option>
-                                <option value="intermediate">Intermediate</option>
+                                <option value="intermediate">
+                                  Intermediate
+                                </option>
                                 <option value="advanced">Advanced</option>
                               </select>
                             </div>
@@ -1253,7 +1324,9 @@ export default function UploadPage() {
 
                         {/* Professional Context */}
                         <div className="bg-blue-50 p-4 rounded-lg">
-                          <h6 className="font-medium text-gray-900 mb-3">Professional Context</h6>
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Professional Context
+                          </h6>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1267,15 +1340,33 @@ export default function UploadPage() {
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Job Role</option>
-                                <option value="frontend-developer">Frontend Developer</option>
-                                <option value="backend-developer">Backend Developer</option>
-                                <option value="full-stack-developer">Full Stack Developer</option>
-                                <option value="data-scientist">Data Scientist</option>
-                                <option value="data-engineer">Data Engineer</option>
-                                <option value="devops-engineer">DevOps Engineer</option>
-                                <option value="mobile-developer">Mobile Developer</option>
-                                <option value="software-engineer">Software Engineer</option>
-                                <option value="system-architect">System Architect</option>
+                                <option value="frontend-developer">
+                                  Frontend Developer
+                                </option>
+                                <option value="backend-developer">
+                                  Backend Developer
+                                </option>
+                                <option value="full-stack-developer">
+                                  Full Stack Developer
+                                </option>
+                                <option value="data-scientist">
+                                  Data Scientist
+                                </option>
+                                <option value="data-engineer">
+                                  Data Engineer
+                                </option>
+                                <option value="devops-engineer">
+                                  DevOps Engineer
+                                </option>
+                                <option value="mobile-developer">
+                                  Mobile Developer
+                                </option>
+                                <option value="software-engineer">
+                                  Software Engineer
+                                </option>
+                                <option value="system-architect">
+                                  System Architect
+                                </option>
                                 <option value="qa-engineer">QA Engineer</option>
                                 <option value="other">Other</option>
                               </select>
@@ -1288,7 +1379,11 @@ export default function UploadPage() {
                               <select
                                 value={mcq.companyType}
                                 onChange={(e) =>
-                                  updateMCQ(index, "companyType", e.target.value)
+                                  updateMCQ(
+                                    index,
+                                    "companyType",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -1313,16 +1408,24 @@ export default function UploadPage() {
                               <select
                                 value={mcq.interviewType}
                                 onChange={(e) =>
-                                  updateMCQ(index, "interviewType", e.target.value)
+                                  updateMCQ(
+                                    index,
+                                    "interviewType",
+                                    e.target.value
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Interview Type</option>
                                 <option value="technical">Technical</option>
                                 <option value="behavioral">Behavioral</option>
-                                <option value="system-design">System Design</option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
                                 <option value="coding">Coding</option>
-                                <option value="data-structures">Data Structures</option>
+                                <option value="data-structures">
+                                  Data Structures
+                                </option>
                                 <option value="algorithms">Algorithms</option>
                                 <option value="database">Database</option>
                                 <option value="frontend">Frontend</option>
@@ -1331,22 +1434,7 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Time Limit (minutes)
-                              </label>
-                              <input
-                                type="number"
-                                value={mcq.timeLimit}
-                                onChange={(e) =>
-                                  updateMCQ(index, "timeLimit", parseInt(e.target.value) || 30)
-                                }
-                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="30"
-                                min="1"
-                                max="180"
-                              />
-                            </div>
+
 
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1376,7 +1464,11 @@ export default function UploadPage() {
                               <select
                                 value={mcq.priority}
                                 onChange={(e) =>
-                                  updateMCQ(index, "priority", e.target.value as any)
+                                  updateMCQ(
+                                    index,
+                                    "priority",
+                                    e.target.value as any
+                                  )
                                 }
                                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
@@ -1411,7 +1503,11 @@ export default function UploadPage() {
                             <select
                               value={mcq.status}
                               onChange={(e) =>
-                                updateMCQ(index, "status", e.target.value as any)
+                                updateMCQ(
+                                  index,
+                                  "status",
+                                  e.target.value as any
+                                )
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
