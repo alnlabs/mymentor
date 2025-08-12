@@ -38,6 +38,30 @@ export default function FeedbackPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Handle AuthContext errors
+  if (!loading && !user && !isAdmin && !isSuperAdmin) {
+    // If not loading and no user, redirect to login
+    React.useEffect(() => {
+      window.location.href = "/login";
+    }, []);
+    return null;
+  }
+
+
+
+  // Handle AuthContext errors
+  if (!signOutUser) {
+    console.error("AuthContext not properly initialized");
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Authentication Error</h2>
+          <p className="text-gray-600">Please refresh the page or try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
   const [feedback, setFeedback] = useState<FeedbackForm>({
     isAnonymous: true,
     type: "",
