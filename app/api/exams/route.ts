@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: any = {};
-    
+
     if (search) {
       where.OR = [
         { title: { contains: search, mode: "insensitive" } },
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: exams.map(exam => ({
+      data: exams.map((exam) => ({
         ...exam,
         totalQuestions: exam._count.examQuestions,
         totalAttempts: exam._count.examResults,
@@ -98,7 +98,14 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!title || !description || !duration || !difficulty || !category || !questionTypes) {
+    if (
+      !title ||
+      !description ||
+      !duration ||
+      !difficulty ||
+      !category ||
+      !questionTypes
+    ) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }

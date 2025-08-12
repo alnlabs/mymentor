@@ -54,7 +54,9 @@ export default function ExamsPage() {
   const [showFilters, setShowFilters] = useState(false);
 
   const difficulties = ["Easy", "Medium", "Hard"];
+  const questionTypes = ["MCQ", "Coding", "Aptitude", "Mixed"];
   const categories = [
+    // Technical Categories
     "Programming",
     "Data Structures",
     "Algorithms",
@@ -64,6 +66,22 @@ export default function ExamsPage() {
     "Frontend",
     "Backend",
     "Full Stack",
+    "Mobile Development",
+    "DevOps",
+    "Machine Learning",
+    // Non-Technical Categories
+    "Aptitude",
+    "Logical Reasoning",
+    "Verbal Ability",
+    "Quantitative Aptitude",
+    "General Knowledge",
+    "English Language",
+    "Business Communication",
+    "Problem Solving",
+    "Critical Thinking",
+    "Team Management",
+    "Leadership",
+    "Project Management",
   ];
 
   useEffect(() => {
@@ -190,22 +208,22 @@ export default function ExamsPage() {
               Exams Management
             </h1>
             <p className="text-green-100 text-lg">
-              Create and manage comprehensive exams for fresh graduates
+              Create and manage comprehensive exams for fresh graduates - Technical & Non-Technical
             </p>
-            <div className="flex items-center mt-4 space-x-4 text-sm">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-green-300" />
-                <span>MCQ & Coding Questions</span>
+                          <div className="flex items-center mt-4 space-x-4 text-sm">
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2 text-green-300" />
+                  <span>Technical & Aptitude</span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-2 text-green-300" />
+                  <span>Timed Assessments</span>
+                </div>
+                <div className="flex items-center">
+                  <BarChart3 className="w-4 h-4 mr-2 text-green-300" />
+                  <span>Performance Analytics</span>
+                </div>
               </div>
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-2 text-green-300" />
-                <span>Timed Assessments</span>
-              </div>
-              <div className="flex items-center">
-                <BarChart3 className="w-4 h-4 mr-2 text-green-300" />
-                <span>Performance Analytics</span>
-              </div>
-            </div>
           </div>
           <div className="hidden lg:block">
             <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
@@ -290,6 +308,14 @@ export default function ExamsPage() {
             >
               <Plus className="w-4 h-4 mr-2" />
               Create New Exam
+            </Button>
+            <Button
+              onClick={() => (window.location.href = "/admin/exams/templates")}
+              variant="outline"
+              className="flex items-center"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Templates
             </Button>
             <Button
               onClick={() => (window.location.href = "/admin/exams/upload")}

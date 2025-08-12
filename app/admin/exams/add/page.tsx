@@ -33,6 +33,7 @@ export default function AddExamPage() {
 
   const difficulties = ["Easy", "Medium", "Hard"];
   const categories = [
+    // Technical Categories
     "Programming",
     "Data Structures",
     "Algorithms",
@@ -42,8 +43,25 @@ export default function AddExamPage() {
     "Frontend",
     "Backend",
     "Full Stack",
+    "Mobile Development",
+    "DevOps",
+    "Machine Learning",
+    // Non-Technical Categories
+    "Aptitude",
+    "Logical Reasoning",
+    "Verbal Ability",
+    "Quantitative Aptitude",
+    "General Knowledge",
+    "English Language",
+    "Business Communication",
+    "Problem Solving",
+    "Critical Thinking",
+    "Team Management",
+    "Leadership",
+    "Project Management",
   ];
   const targetRoles = [
+    // Technical Roles
     "Frontend Developer",
     "Backend Developer",
     "Full Stack Developer",
@@ -52,8 +70,23 @@ export default function AddExamPage() {
     "DevOps Engineer",
     "QA Engineer",
     "UI/UX Designer",
+    "Software Engineer",
+    "System Administrator",
+    // Non-Technical Roles
+    "Business Analyst",
+    "Project Manager",
+    "Product Manager",
+    "Marketing Executive",
+    "Sales Executive",
+    "HR Executive",
+    "Finance Executive",
+    "Operations Manager",
+    "Customer Success",
+    "Content Writer",
+    "Digital Marketing",
+    "Business Development",
   ];
-  const questionTypes = ["MCQ", "Coding", "Mixed"];
+  const questionTypes = ["MCQ", "Coding", "Aptitude", "Mixed"];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +148,7 @@ export default function AddExamPage() {
               </Button>
             </div>
             <p className="text-green-100 text-lg">
-              Create a comprehensive exam for fresh graduates with MCQ and coding questions
+              Create a comprehensive exam for fresh graduates with technical and aptitude questions
             </p>
             <div className="flex items-center mt-4 space-x-4 text-sm">
               <div className="flex items-center">
@@ -352,34 +385,67 @@ export default function AddExamPage() {
             </div>
           </div>
 
-          {/* Fresh Graduate Focus Tips */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <AlertCircle className="w-6 h-6 mr-3 text-yellow-600" />
-              Fresh Graduate Focus Tips
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-              <div className="space-y-2">
-                <p className="font-medium">🎯 Recommended Settings:</p>
-                <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>Duration: 30-60 minutes for focused assessment</li>
-                  <li>Difficulty: Start with Easy/Medium for confidence building</li>
-                  <li>Questions: 10-20 questions for manageable completion</li>
-                  <li>Passing Score: 60-70% for reasonable standards</li>
-                </ul>
-              </div>
-              <div className="space-y-2">
-                <p className="font-medium">📚 Popular Categories:</p>
-                <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>Programming Fundamentals</li>
-                  <li>Basic Data Structures</li>
-                  <li>Web Development Basics</li>
-                  <li>JavaScript/React Essentials</li>
-                  <li>Database Fundamentals</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+                     {/* Fresh Graduate Focus Tips */}
+           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200">
+             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+               <AlertCircle className="w-6 h-6 mr-3 text-yellow-600" />
+               Fresh Graduate Focus Tips
+             </h3>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+               <div className="space-y-2">
+                 <p className="font-medium">🎯 Recommended Settings:</p>
+                 <ul className="list-disc list-inside space-y-1 ml-4">
+                   <li>Duration: 30-60 minutes for focused assessment</li>
+                   <li>Difficulty: Start with Easy/Medium for confidence building</li>
+                   <li>Questions: 10-20 questions for manageable completion</li>
+                   <li>Passing Score: 60-70% for reasonable standards</li>
+                 </ul>
+               </div>
+               <div className="space-y-2">
+                 <p className="font-medium">📚 Popular Categories:</p>
+                 <ul className="list-disc list-inside space-y-1 ml-4">
+                   <li>Programming Fundamentals</li>
+                   <li>Basic Data Structures</li>
+                   <li>Web Development Basics</li>
+                   <li>JavaScript/React Essentials</li>
+                   <li>Database Fundamentals</li>
+                   <li>Aptitude & Reasoning</li>
+                   <li>Verbal & Communication</li>
+                   <li>Business Fundamentals</li>
+                 </ul>
+               </div>
+             </div>
+           </div>
+
+           {/* Category Guidance */}
+           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-200">
+             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+               <BookOpen className="w-6 h-6 mr-3 text-indigo-600" />
+               Category Guidance
+             </h3>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div className="space-y-3">
+                 <h4 className="font-semibold text-indigo-800">💻 Technical Categories:</h4>
+                 <ul className="text-sm text-gray-700 space-y-1">
+                   <li><strong>Programming:</strong> Basic coding concepts, syntax, logic</li>
+                   <li><strong>Web Development:</strong> HTML, CSS, JavaScript, frameworks</li>
+                   <li><strong>Data Structures:</strong> Arrays, linked lists, trees, graphs</li>
+                   <li><strong>Algorithms:</strong> Sorting, searching, optimization</li>
+                   <li><strong>Database:</strong> SQL, NoSQL, data modeling</li>
+                 </ul>
+               </div>
+               <div className="space-y-3">
+                 <h4 className="font-semibold text-purple-800">🧠 Non-Technical Categories:</h4>
+                 <ul className="text-sm text-gray-700 space-y-1">
+                   <li><strong>Aptitude:</strong> Numerical, verbal, logical reasoning</li>
+                   <li><strong>Communication:</strong> English, business writing, presentation</li>
+                   <li><strong>Problem Solving:</strong> Analytical thinking, decision making</li>
+                   <li><strong>Leadership:</strong> Team management, project coordination</li>
+                   <li><strong>Business:</strong> Market knowledge, industry awareness</li>
+                 </ul>
+               </div>
+             </div>
+           </div>
 
           {/* Submit Buttons */}
           <div className="flex items-center justify-between pt-6 border-t border-gray-200">
