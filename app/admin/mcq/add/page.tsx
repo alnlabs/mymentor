@@ -300,32 +300,36 @@ export default function AddMCQPage() {
                   className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Category</option>
-                  <option value="algorithms">Algorithms</option>
-                  <option value="data-structures">Data Structures</option>
-                  <option value="arrays">Arrays</option>
-                  <option value="strings">Strings</option>
-                  <option value="linked-lists">Linked Lists</option>
-                  <option value="stacks-queues">Stacks & Queues</option>
-                  <option value="trees">Trees</option>
-                  <option value="graphs">Graphs</option>
-                  <option value="dynamic-programming">
-                    Dynamic Programming
-                  </option>
-                  <option value="greedy-algorithms">Greedy Algorithms</option>
-                  <option value="backtracking">Backtracking</option>
-                  <option value="binary-search">Binary Search</option>
-                  <option value="sorting">Sorting</option>
-                  <option value="hashing">Hashing</option>
-                  <option value="recursion">Recursion</option>
-                  <option value="bit-manipulation">Bit Manipulation</option>
-                  <option value="math">Math</option>
-                  <option value="design-patterns">Design Patterns</option>
-                  <option value="system-design">System Design</option>
-                  <option value="database-design">Database Design</option>
-                  <option value="api-design">API Design</option>
-                  <option value="security">Security</option>
-                  <option value="testing">Testing</option>
-                  <option value="other">Other</option>
+                  {/* Technical Categories */}
+                  <optgroup label="Technical Categories">
+                    <option value="Programming">Programming</option>
+                    <option value="Data Structures">Data Structures</option>
+                    <option value="Algorithms">Algorithms</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Database">Database</option>
+                    <option value="System Design">System Design</option>
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Full Stack">Full Stack</option>
+                    <option value="Mobile Development">Mobile Development</option>
+                    <option value="DevOps">DevOps</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                  </optgroup>
+                  {/* Non-Technical Categories */}
+                  <optgroup label="Non-Technical Categories">
+                    <option value="Aptitude">Aptitude</option>
+                    <option value="Logical Reasoning">Logical Reasoning</option>
+                    <option value="Verbal Ability">Verbal Ability</option>
+                    <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                    <option value="General Knowledge">General Knowledge</option>
+                    <option value="English Language">English Language</option>
+                    <option value="Business Communication">Business Communication</option>
+                    <option value="Problem Solving">Problem Solving</option>
+                    <option value="Critical Thinking">Critical Thinking</option>
+                    <option value="Team Management">Team Management</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="Project Management">Project Management</option>
+                  </optgroup>
                 </select>
               </div>
             </div>
@@ -346,18 +350,33 @@ export default function AddMCQPage() {
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Subject</option>
-                    <option value="programming">Programming</option>
-                    <option value="data-science">Data Science</option>
-                    <option value="web-development">Web Development</option>
-                    <option value="mobile-development">
-                      Mobile Development
-                    </option>
-                    <option value="devops">DevOps</option>
-                    <option value="ai-ml">AI/ML</option>
-                    <option value="database">Database</option>
-                    <option value="cybersecurity">Cybersecurity</option>
-                    <option value="system-design">System Design</option>
-                    <option value="other">Other</option>
+                    {/* Technical Subjects */}
+                    <optgroup label="Technical Subjects">
+                      <option value="programming">Programming</option>
+                      <option value="data-science">Data Science</option>
+                      <option value="web-development">Web Development</option>
+                      <option value="mobile-development">Mobile Development</option>
+                      <option value="devops">DevOps</option>
+                      <option value="ai-ml">AI/ML</option>
+                      <option value="database">Database</option>
+                      <option value="cybersecurity">Cybersecurity</option>
+                      <option value="system-design">System Design</option>
+                    </optgroup>
+                    {/* Non-Technical Subjects */}
+                    <optgroup label="Non-Technical Subjects">
+                      <option value="aptitude">Aptitude</option>
+                      <option value="reasoning">Logical Reasoning</option>
+                      <option value="verbal">Verbal Ability</option>
+                      <option value="quantitative">Quantitative Aptitude</option>
+                      <option value="general-knowledge">General Knowledge</option>
+                      <option value="english">English Language</option>
+                      <option value="communication">Business Communication</option>
+                      <option value="problem-solving">Problem Solving</option>
+                      <option value="critical-thinking">Critical Thinking</option>
+                      <option value="leadership">Leadership</option>
+                      <option value="management">Management</option>
+                      <option value="business">Business</option>
+                    </optgroup>
                   </select>
                 </div>
 
@@ -510,21 +529,34 @@ export default function AddMCQPage() {
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Job Role</option>
-                    <option value="frontend-developer">
-                      Frontend Developer
-                    </option>
-                    <option value="backend-developer">Backend Developer</option>
-                    <option value="full-stack-developer">
-                      Full Stack Developer
-                    </option>
-                    <option value="data-scientist">Data Scientist</option>
-                    <option value="data-engineer">Data Engineer</option>
-                    <option value="devops-engineer">DevOps Engineer</option>
-                    <option value="mobile-developer">Mobile Developer</option>
-                    <option value="software-engineer">Software Engineer</option>
-                    <option value="system-architect">System Architect</option>
-                    <option value="qa-engineer">QA Engineer</option>
-                    <option value="other">Other</option>
+                    {/* Technical Roles */}
+                    <optgroup label="Technical Roles">
+                      <option value="frontend-developer">Frontend Developer</option>
+                      <option value="backend-developer">Backend Developer</option>
+                      <option value="full-stack-developer">Full Stack Developer</option>
+                      <option value="data-scientist">Data Scientist</option>
+                      <option value="data-engineer">Data Engineer</option>
+                      <option value="devops-engineer">DevOps Engineer</option>
+                      <option value="mobile-developer">Mobile Developer</option>
+                      <option value="software-engineer">Software Engineer</option>
+                      <option value="system-architect">System Architect</option>
+                      <option value="qa-engineer">QA Engineer</option>
+                    </optgroup>
+                    {/* Non-Technical Roles */}
+                    <optgroup label="Non-Technical Roles">
+                      <option value="business-analyst">Business Analyst</option>
+                      <option value="project-manager">Project Manager</option>
+                      <option value="product-manager">Product Manager</option>
+                      <option value="marketing-executive">Marketing Executive</option>
+                      <option value="sales-executive">Sales Executive</option>
+                      <option value="hr-executive">HR Executive</option>
+                      <option value="finance-executive">Finance Executive</option>
+                      <option value="operations-manager">Operations Manager</option>
+                      <option value="customer-success">Customer Success</option>
+                      <option value="content-writer">Content Writer</option>
+                      <option value="digital-marketing">Digital Marketing</option>
+                      <option value="business-development">Business Development</option>
+                    </optgroup>
                   </select>
                 </div>
 
@@ -561,16 +593,27 @@ export default function AddMCQPage() {
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Interview Type</option>
-                    <option value="technical">Technical</option>
-                    <option value="behavioral">Behavioral</option>
-                    <option value="system-design">System Design</option>
-                    <option value="coding">Coding</option>
-                    <option value="data-structures">Data Structures</option>
-                    <option value="algorithms">Algorithms</option>
-                    <option value="database">Database</option>
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="other">Other</option>
+                    {/* Technical Interview Types */}
+                    <optgroup label="Technical Interview Types">
+                      <option value="technical">Technical</option>
+                      <option value="system-design">System Design</option>
+                      <option value="coding">Coding</option>
+                      <option value="data-structures">Data Structures</option>
+                      <option value="algorithms">Algorithms</option>
+                      <option value="database">Database</option>
+                      <option value="frontend">Frontend</option>
+                      <option value="backend">Backend</option>
+                    </optgroup>
+                    {/* Non-Technical Interview Types */}
+                    <optgroup label="Non-Technical Interview Types">
+                      <option value="behavioral">Behavioral</option>
+                      <option value="aptitude">Aptitude</option>
+                      <option value="case-study">Case Study</option>
+                      <option value="group-discussion">Group Discussion</option>
+                      <option value="presentation">Presentation</option>
+                      <option value="assessment">Assessment</option>
+                      <option value="screening">Screening</option>
+                    </optgroup>
                   </select>
                 </div>
               </div>

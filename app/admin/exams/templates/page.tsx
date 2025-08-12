@@ -37,14 +37,17 @@ interface ExamTemplate {
 
 export default function ExamTemplatesPage() {
   const [loading, setLoading] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<ExamTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<ExamTemplate | null>(
+    null
+  );
 
   const examTemplates: ExamTemplate[] = [
     // Technical Templates
     {
       id: "js-fundamentals",
       title: "JavaScript Fundamentals",
-      description: "Basic JavaScript concepts, syntax, and programming logic for fresh graduates",
+      description:
+        "Basic JavaScript concepts, syntax, and programming logic for fresh graduates",
       category: "Programming",
       difficulty: "Easy",
       duration: 45,
@@ -59,7 +62,8 @@ export default function ExamTemplatesPage() {
     {
       id: "web-basics",
       title: "Web Development Basics",
-      description: "HTML, CSS, and basic web concepts for entry-level developers",
+      description:
+        "HTML, CSS, and basic web concepts for entry-level developers",
       category: "Web Development",
       difficulty: "Easy",
       duration: 60,
@@ -74,7 +78,8 @@ export default function ExamTemplatesPage() {
     {
       id: "data-structures",
       title: "Data Structures & Algorithms",
-      description: "Fundamental data structures and basic algorithms for technical interviews",
+      description:
+        "Fundamental data structures and basic algorithms for technical interviews",
       category: "Data Structures",
       difficulty: "Medium",
       duration: 90,
@@ -101,12 +106,13 @@ export default function ExamTemplatesPage() {
       icon: "🗄️",
       color: "from-orange-500 to-red-500",
     },
-    
+
     // Non-Technical Templates
     {
       id: "aptitude-basic",
       title: "Basic Aptitude Test",
-      description: "Numerical, verbal, and logical reasoning for general aptitude assessment",
+      description:
+        "Numerical, verbal, and logical reasoning for general aptitude assessment",
       category: "Aptitude",
       difficulty: "Easy",
       duration: 60,
@@ -121,7 +127,8 @@ export default function ExamTemplatesPage() {
     {
       id: "communication",
       title: "Business Communication",
-      description: "English language skills, business writing, and professional communication",
+      description:
+        "English language skills, business writing, and professional communication",
       category: "Business Communication",
       difficulty: "Medium",
       duration: 45,
@@ -136,7 +143,8 @@ export default function ExamTemplatesPage() {
     {
       id: "problem-solving",
       title: "Problem Solving & Critical Thinking",
-      description: "Analytical thinking, decision making, and problem-solving scenarios",
+      description:
+        "Analytical thinking, decision making, and problem-solving scenarios",
       category: "Problem Solving",
       difficulty: "Medium",
       duration: 75,
@@ -151,7 +159,8 @@ export default function ExamTemplatesPage() {
     {
       id: "leadership",
       title: "Leadership & Team Management",
-      description: "Leadership skills, team dynamics, and project management concepts",
+      description:
+        "Leadership skills, team dynamics, and project management concepts",
       category: "Leadership",
       difficulty: "Medium",
       duration: 60,
@@ -206,14 +215,14 @@ export default function ExamTemplatesPage() {
 
   const getCategoryColor = (category: string) => {
     const colors: { [key: string]: string } = {
-      "Programming": "bg-blue-100 text-blue-800",
+      Programming: "bg-blue-100 text-blue-800",
       "Web Development": "bg-green-100 text-green-800",
       "Data Structures": "bg-purple-100 text-purple-800",
-      "Database": "bg-orange-100 text-orange-800",
-      "Aptitude": "bg-indigo-100 text-indigo-800",
+      Database: "bg-orange-100 text-orange-800",
+      Aptitude: "bg-indigo-100 text-indigo-800",
       "Business Communication": "bg-teal-100 text-teal-800",
       "Problem Solving": "bg-yellow-100 text-yellow-800",
-      "Leadership": "bg-rose-100 text-rose-800",
+      Leadership: "bg-rose-100 text-rose-800",
     };
     return colors[category] || "bg-gray-100 text-gray-800";
   };
@@ -252,7 +261,8 @@ export default function ExamTemplatesPage() {
               </Button>
             </div>
             <p className="text-indigo-100 text-lg">
-              Pre-configured exam templates for quick setup - Technical & Non-Technical
+              Pre-configured exam templates for quick setup - Technical &
+              Non-Technical
             </p>
             <div className="flex items-center mt-4 space-x-4 text-sm">
               <div className="flex items-center">
@@ -290,12 +300,18 @@ export default function ExamTemplatesPage() {
               Technical Templates
             </h3>
             <p className="text-gray-700 mb-6">
-              Programming, web development, data structures, and technical skills assessment
+              Programming, web development, data structures, and technical
+              skills assessment
             </p>
             <div className="space-y-4">
               {examTemplates
-                .filter((template) => 
-                  ["Programming", "Web Development", "Data Structures", "Database"].includes(template.category)
+                .filter((template) =>
+                  [
+                    "Programming",
+                    "Web Development",
+                    "Data Structures",
+                    "Database",
+                  ].includes(template.category)
                 )
                 .map((template) => (
                   <div
@@ -306,14 +322,26 @@ export default function ExamTemplatesPage() {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <span className="text-2xl">{template.icon}</span>
-                          <h4 className="font-semibold text-gray-900">{template.title}</h4>
+                          <h4 className="font-semibold text-gray-900">
+                            {template.title}
+                          </h4>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                        <p className="text-sm text-gray-600 mb-3">
+                          {template.description}
+                        </p>
                         <div className="flex flex-wrap gap-2 mb-3">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(template.category)}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(
+                              template.category
+                            )}`}
+                          >
                             {template.category}
                           </span>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(template.difficulty)}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(
+                              template.difficulty
+                            )}`}
+                          >
                             {template.difficulty}
                           </span>
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -356,12 +384,18 @@ export default function ExamTemplatesPage() {
               Non-Technical Templates
             </h3>
             <p className="text-gray-700 mb-6">
-              Aptitude, communication, problem-solving, and soft skills assessment
+              Aptitude, communication, problem-solving, and soft skills
+              assessment
             </p>
             <div className="space-y-4">
               {examTemplates
-                .filter((template) => 
-                  ["Aptitude", "Business Communication", "Problem Solving", "Leadership"].includes(template.category)
+                .filter((template) =>
+                  [
+                    "Aptitude",
+                    "Business Communication",
+                    "Problem Solving",
+                    "Leadership",
+                  ].includes(template.category)
                 )
                 .map((template) => (
                   <div
@@ -372,14 +406,26 @@ export default function ExamTemplatesPage() {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <span className="text-2xl">{template.icon}</span>
-                          <h4 className="font-semibold text-gray-900">{template.title}</h4>
+                          <h4 className="font-semibold text-gray-900">
+                            {template.title}
+                          </h4>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                        <p className="text-sm text-gray-600 mb-3">
+                          {template.description}
+                        </p>
                         <div className="flex flex-wrap gap-2 mb-3">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(template.category)}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(
+                              template.category
+                            )}`}
+                          >
                             {template.category}
                           </span>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(template.difficulty)}`}>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getDifficultyColor(
+                              template.difficulty
+                            )}`}
+                          >
                             {template.difficulty}
                           </span>
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -436,7 +482,9 @@ export default function ExamTemplatesPage() {
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Target className="w-6 h-6 text-blue-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Proven Structure</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Proven Structure
+              </h4>
               <p className="text-sm text-gray-600">
                 Tested exam formats with appropriate difficulty levels
               </p>
@@ -445,7 +493,9 @@ export default function ExamTemplatesPage() {
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Users className="w-6 h-6 text-purple-600" />
               </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Fresh Graduate Focus</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Fresh Graduate Focus
+              </h4>
               <p className="text-sm text-gray-600">
                 Designed specifically for entry-level candidates
               </p>

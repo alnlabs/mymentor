@@ -338,30 +338,36 @@ export default function AdminMCQPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">All Categories</option>
-                <option value="algorithms">Algorithms</option>
-                <option value="data-structures">Data Structures</option>
-                <option value="arrays">Arrays</option>
-                <option value="strings">Strings</option>
-                <option value="linked-lists">Linked Lists</option>
-                <option value="stacks-queues">Stacks & Queues</option>
-                <option value="trees">Trees</option>
-                <option value="graphs">Graphs</option>
-                <option value="dynamic-programming">Dynamic Programming</option>
-                <option value="greedy-algorithms">Greedy Algorithms</option>
-                <option value="backtracking">Backtracking</option>
-                <option value="binary-search">Binary Search</option>
-                <option value="sorting">Sorting</option>
-                <option value="hashing">Hashing</option>
-                <option value="recursion">Recursion</option>
-                <option value="bit-manipulation">Bit Manipulation</option>
-                <option value="math">Math</option>
-                <option value="design-patterns">Design Patterns</option>
-                <option value="system-design">System Design</option>
-                <option value="database-design">Database Design</option>
-                <option value="api-design">API Design</option>
-                <option value="security">Security</option>
-                <option value="testing">Testing</option>
-                <option value="other">Other</option>
+                {/* Technical Categories */}
+                <optgroup label="Technical Categories">
+                  <option value="Programming">Programming</option>
+                  <option value="Data Structures">Data Structures</option>
+                  <option value="Algorithms">Algorithms</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Database">Database</option>
+                  <option value="System Design">System Design</option>
+                  <option value="Frontend">Frontend</option>
+                  <option value="Backend">Backend</option>
+                  <option value="Full Stack">Full Stack</option>
+                  <option value="Mobile Development">Mobile Development</option>
+                  <option value="DevOps">DevOps</option>
+                  <option value="Machine Learning">Machine Learning</option>
+                </optgroup>
+                {/* Non-Technical Categories */}
+                <optgroup label="Non-Technical Categories">
+                  <option value="Aptitude">Aptitude</option>
+                  <option value="Logical Reasoning">Logical Reasoning</option>
+                  <option value="Verbal Ability">Verbal Ability</option>
+                  <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                  <option value="General Knowledge">General Knowledge</option>
+                  <option value="English Language">English Language</option>
+                  <option value="Business Communication">Business Communication</option>
+                  <option value="Problem Solving">Problem Solving</option>
+                  <option value="Critical Thinking">Critical Thinking</option>
+                  <option value="Team Management">Team Management</option>
+                  <option value="Leadership">Leadership</option>
+                  <option value="Project Management">Project Management</option>
+                </optgroup>
               </select>
             </div>
 
@@ -391,16 +397,33 @@ export default function AdminMCQPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">All Subjects</option>
-                <option value="programming">Programming</option>
-                <option value="data-science">Data Science</option>
-                <option value="web-development">Web Development</option>
-                <option value="mobile-development">Mobile Development</option>
-                <option value="devops">DevOps</option>
-                <option value="ai-ml">AI/ML</option>
-                <option value="database">Database</option>
-                <option value="cybersecurity">Cybersecurity</option>
-                <option value="system-design">System Design</option>
-                <option value="other">Other</option>
+                {/* Technical Subjects */}
+                <optgroup label="Technical Subjects">
+                  <option value="programming">Programming</option>
+                  <option value="data-science">Data Science</option>
+                  <option value="web-development">Web Development</option>
+                  <option value="mobile-development">Mobile Development</option>
+                  <option value="devops">DevOps</option>
+                  <option value="ai-ml">AI/ML</option>
+                  <option value="database">Database</option>
+                  <option value="cybersecurity">Cybersecurity</option>
+                  <option value="system-design">System Design</option>
+                </optgroup>
+                {/* Non-Technical Subjects */}
+                <optgroup label="Non-Technical Subjects">
+                  <option value="aptitude">Aptitude</option>
+                  <option value="reasoning">Logical Reasoning</option>
+                  <option value="verbal">Verbal Ability</option>
+                  <option value="quantitative">Quantitative Aptitude</option>
+                  <option value="general-knowledge">General Knowledge</option>
+                  <option value="english">English Language</option>
+                  <option value="communication">Business Communication</option>
+                  <option value="problem-solving">Problem Solving</option>
+                  <option value="critical-thinking">Critical Thinking</option>
+                  <option value="leadership">Leadership</option>
+                  <option value="management">Management</option>
+                  <option value="business">Business</option>
+                </optgroup>
               </select>
             </div>
           </div>
