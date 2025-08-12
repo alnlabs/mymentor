@@ -186,7 +186,7 @@ export default function AdminDashboard() {
                 className="flex flex-col items-center p-4 h-auto hover:bg-blue-50 hover:border-blue-300"
               >
                 <Target className="w-6 h-6 text-blue-600 mb-2" />
-                <span className="text-sm font-medium">Mock Interviews</span>
+                <span className="text-sm font-medium">Interviews</span>
                 <span className="text-xs text-gray-500 mt-1">
                   Templates & Sessions
                 </span>
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
               >
                 <Target className="w-5 h-5 mr-3" />
                 <div>
-                  <div className="font-medium">Mock Interviews</div>
+                  <div className="font-medium">Interviews</div>
                   <div className="text-sm text-blue-100">
                     Manage interview templates and sessions
                   </div>

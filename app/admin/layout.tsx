@@ -38,7 +38,7 @@ const navigation = [
     description: "Create & Manage Exams",
   },
   {
-    name: "Mock Interviews",
+    name: "Interviews",
     href: "/admin/interviews",
     icon: Target,
     description: "Templates & Sessions",

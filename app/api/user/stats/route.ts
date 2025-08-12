@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
         },
       }),
 
-      // Mock interviews taken
+      // Interviews taken
       prisma.mockInterview.count({
         where: {
           userId: userId,

@@ -10,7 +10,6 @@ import { Plus, Edit, Trash2, Eye, Users, Clock, Target } from "lucide-react";
 export default function AdminInterviewsPage() {
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingTemplate, setEditingTemplate] =
     useState<InterviewTemplate | null>(null);
 
@@ -34,11 +33,11 @@ export default function AdminInterviewsPage() {
   };
 
   const handleDeleteTemplate = async (templateId: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this interview template? This action cannot be undone."
-      )
-    ) {
+          if (
+        !confirm(
+          "Are you sure you want to delete this template? This action cannot be undone."
+        )
+      ) {
       return;
     }
 
@@ -74,25 +73,83 @@ export default function AdminInterviewsPage() {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case "frontend":
-        return "🎨";
-      case "backend":
-        return "⚙️";
-      case "fullstack":
-        return "🔄";
-      case "ml":
-        return "🤖";
-      case "mobile":
-        return "📱";
-      default:
+      // IT & Computer Positions
+      case "computer-operator":
         return "💻";
+      case "data-entry-operator":
+        return "⌨️";
+      case "office-assistant":
+        return "📋";
+      case "receptionist":
+        return "📞";
+      case "admin-assistant":
+        return "👔";
+      case "customer-support":
+        return "🎧";
+      case "help-desk":
+        return "🛠️";
+      case "technical-support":
+        return "🔧";
+      // Business Positions
+      case "sales-assistant":
+        return "💰";
+      case "marketing-assistant":
+        return "📢";
+      case "account-assistant":
+        return "📊";
+      case "hr-assistant":
+        return "👥";
+      case "operations-assistant":
+        return "⚙️";
+      case "logistics-assistant":
+        return "📦";
+      case "procurement-assistant":
+        return "🛒";
+      case "quality-assistant":
+        return "✅";
+      // Service Positions
+      case "retail-assistant":
+        return "🛍️";
+      case "hospitality-assistant":
+        return "🏨";
+      case "healthcare-assistant":
+        return "🏥";
+      case "education-assistant":
+        return "📚";
+      case "banking-assistant":
+        return "🏦";
+      case "insurance-assistant":
+        return "🛡️";
+      case "travel-assistant":
+        return "✈️";
+      case "event-assistant":
+        return "🎉";
+      // Technical Positions
+      case "web-designer":
+        return "🎨";
+      case "graphic-designer":
+        return "🖼️";
+      case "content-writer":
+        return "✍️";
+      case "social-media":
+        return "📱";
+      case "digital-marketing":
+        return "📈";
+      case "seo-assistant":
+        return "🔍";
+      case "video-editor":
+        return "🎬";
+      case "photographer":
+        return "📸";
+      default:
+        return "💼";
     }
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loading size="lg" text="Loading Interview Templates..." />
+        <Loading size="lg" text="Loading Templates..." />
       </div>
     );
   }
@@ -103,14 +160,14 @@ export default function AdminInterviewsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Mock Interview Management
+            Interview Management
           </h1>
           <p className="text-gray-600 mt-2">
-            Create and manage interview templates for users
+            Create and manage position-based interview templates for fresh graduates
           </p>
         </div>
         <Button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => (window.location.href = "/admin/interviews/add")}
           className="flex items-center space-x-2"
         >
           <Plus className="w-4 h-4" />
@@ -268,11 +325,11 @@ export default function AdminInterviewsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setEditingTemplate(template)}
+                onClick={() => (window.location.href = `/admin/interviews/${template.id}`)}
                 className="flex-1"
               >
                 <Edit className="w-4 h-4 mr-1" />
-                Edit
+                Manage
               </Button>
               <Button
                 variant="outline"
@@ -296,29 +353,7 @@ export default function AdminInterviewsPage() {
         ))}
       </div>
 
-      {/* Create Template Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">
-              Create Interview Template
-            </h3>
-            <p className="text-gray-600 mb-4">
-              This feature is coming soon! You'll be able to create custom
-              interview templates with questions, time limits, and scoring.
-            </p>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowCreateModal(false)}
-                variant="outline"
-                className="flex-1"
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Edit Template Modal */}
       {editingTemplate && (
