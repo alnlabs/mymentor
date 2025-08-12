@@ -179,7 +179,7 @@ export default function AdminDashboard() {
               <Globe className="w-5 h-5 mr-2 text-blue-600" />
               Platform Navigation
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               <Button
                 onClick={() => (window.location.href = "/admin/interviews")}
                 variant="outline"
@@ -192,17 +192,7 @@ export default function AdminDashboard() {
                 </span>
               </Button>
 
-              <Button
-                onClick={() => (window.location.href = "/admin/upload")}
-                variant="outline"
-                className="flex flex-col items-center p-4 h-auto hover:bg-green-50 hover:border-green-300"
-              >
-                <Upload className="w-6 h-6 text-green-600 mb-2" />
-                <span className="text-sm font-medium">Upload Content</span>
-                <span className="text-xs text-gray-500 mt-1">
-                  Problems & MCQs
-                </span>
-              </Button>
+
 
               <Button
                 onClick={() => (window.location.href = "/admin/problems")}

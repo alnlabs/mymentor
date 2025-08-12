@@ -71,6 +71,19 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadType, setUploadType] = useState<ContentType>("problems");
   const [uploadMethod, setUploadMethod] = useState<UploadMethod>("manual");
+  
+  // Check URL parameters for pre-selecting content type
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const type = urlParams.get('type');
+      if (type === 'mcq') {
+        setUploadType('mcq');
+      } else if (type === 'problems') {
+        setUploadType('problems');
+      }
+    }
+  }, []);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [result, setResult] = useState<any>(null);
@@ -439,10 +452,30 @@ export default function UploadPage() {
       <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-xl p-8 text-white shadow-lg">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold mb-3 flex items-center">
-              <Upload className="w-8 h-8 mr-3" />
-              Content Upload Center
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-3xl font-bold flex items-center">
+                <Upload className="w-8 h-8 mr-3" />
+                Content Upload Center
+              </h2>
+              <div className="flex space-x-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.href = '/admin/problems'}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to Problems
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.href = '/admin/mcq'}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to MCQs
+                </Button>
+              </div>
+            </div>
             <p className="text-blue-100 text-lg">
               Add coding problems and MCQ questions to your platform with comprehensive categorization.
             </p>

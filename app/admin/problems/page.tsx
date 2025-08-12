@@ -67,11 +67,17 @@ export default function AdminProblemsPage() {
     try {
       const response = await fetch("/api/problems");
       if (response.ok) {
-        const data = await response.json();
-        setProblems(data);
+        const result = await response.json();
+        if (result.success && Array.isArray(result.data)) {
+          setProblems(result.data);
+        } else {
+          console.error("Invalid response format:", result);
+          setProblems([]);
+        }
       }
     } catch (error) {
       console.error("Error fetching problems:", error);
+      setProblems([]);
     } finally {
       setLoading(false);
     }
@@ -177,7 +183,7 @@ export default function AdminProblemsPage() {
               </p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/admin/upload")}
+              onClick={() => (window.location.href = "/admin/upload?type=problems")}
               className="flex items-center"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -533,7 +539,7 @@ export default function AdminProblemsPage() {
                 : "Try adjusting your search or filter criteria."}
             </p>
             {problems.length === 0 && (
-              <Button onClick={() => (window.location.href = "/admin/upload")}>
+              <Button onClick={() => (window.location.href = "/admin/upload?type=problems")}>
                 <Plus className="w-4 h-4 mr-2" />
                 Upload Your First Problem
               </Button>

@@ -38,12 +38,6 @@ const navigation = [
     description: "Templates & Sessions",
   },
   {
-    name: "Upload Content",
-    href: "/admin/upload",
-    icon: Upload,
-    description: "Problems & MCQs",
-  },
-  {
     name: "Coding Problems",
     href: "/admin/problems",
     icon: FileText,
