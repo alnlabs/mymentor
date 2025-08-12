@@ -252,6 +252,7 @@ model ExamQuestion {
   questionType String   // MCQ or Problem
   order        Int      @default(0)
   points       Int      @default(10)
+  timeLimit    Int?     // Time limit in seconds for this specific question
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -271,7 +272,7 @@ model ExamResult {
   startedAt    DateTime @default(now())
   completedAt  DateTime?
   timeSpent    Int?     // Time spent in minutes
-  answers      String?  // JSON string of answers
+  answers      String?  // JSON string of answers with individual question timing
   feedback     String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

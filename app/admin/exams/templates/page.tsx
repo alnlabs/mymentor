@@ -29,6 +29,7 @@ interface ExamTemplate {
   questionTypes: string;
   totalQuestions: number;
   passingScore: number;
+  defaultQuestionTime: number;
   targetRole: string;
   tags: string[];
   icon: string;
@@ -54,6 +55,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "Mixed",
       totalQuestions: 15,
       passingScore: 65,
+      defaultQuestionTime: 120,
       targetRole: "Frontend Developer",
       tags: ["JavaScript", "ES6", "DOM", "Functions", "Arrays"],
       icon: "💻",
@@ -70,6 +72,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "Mixed",
       totalQuestions: 20,
       passingScore: 60,
+      defaultQuestionTime: 180,
       targetRole: "Frontend Developer",
       tags: ["HTML", "CSS", "Responsive Design", "Web Standards"],
       icon: "🌐",
@@ -86,6 +89,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "Mixed",
       totalQuestions: 25,
       passingScore: 70,
+      defaultQuestionTime: 240,
       targetRole: "Software Engineer",
       tags: ["Arrays", "Linked Lists", "Trees", "Sorting", "Searching"],
       icon: "🔗",
@@ -101,6 +105,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "MCQ",
       totalQuestions: 15,
       passingScore: 65,
+      defaultQuestionTime: 120,
       targetRole: "Backend Developer",
       tags: ["SQL", "MySQL", "Database Design", "Queries"],
       icon: "🗄️",
@@ -119,6 +124,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "MCQ",
       totalQuestions: 30,
       passingScore: 60,
+      defaultQuestionTime: 90,
       targetRole: "Business Analyst",
       tags: ["Numerical", "Verbal", "Logical", "Reasoning"],
       icon: "🧠",
@@ -135,6 +141,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "MCQ",
       totalQuestions: 20,
       passingScore: 70,
+      defaultQuestionTime: 120,
       targetRole: "Marketing Executive",
       tags: ["English", "Writing", "Communication", "Business"],
       icon: "💬",
@@ -151,6 +158,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "Mixed",
       totalQuestions: 25,
       passingScore: 65,
+      defaultQuestionTime: 180,
       targetRole: "Project Manager",
       tags: ["Analytical", "Decision Making", "Critical Thinking"],
       icon: "🎯",
@@ -167,6 +175,7 @@ export default function ExamTemplatesPage() {
       questionTypes: "MCQ",
       totalQuestions: 20,
       passingScore: 70,
+      defaultQuestionTime: 150,
       targetRole: "Project Manager",
       tags: ["Leadership", "Team Management", "Project Management"],
       icon: "👥",
@@ -192,6 +201,7 @@ export default function ExamTemplatesPage() {
           questionTypes: template.questionTypes,
           totalQuestions: template.totalQuestions,
           passingScore: template.passingScore,
+          defaultQuestionTime: template.defaultQuestionTime || 120,
           isActive: true,
           isPublic: true,
         }),

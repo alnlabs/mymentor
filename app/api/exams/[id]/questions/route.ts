@@ -64,7 +64,7 @@ export async function POST(
 ) {
   try {
     const body = await request.json();
-    const { questionId, questionType, order, points } = body;
+    const { questionId, questionType, order, points, timeLimit } = body;
 
     // Validate required fields
     if (!questionId || !questionType) {
@@ -143,6 +143,7 @@ export async function POST(
         questionType,
         order: questionOrder,
         points: points || 10,
+        timeLimit: timeLimit || null, // Time limit in seconds
       },
     });
 

@@ -27,6 +27,7 @@ export default function AddExamPage() {
     questionTypes: "Mixed",
     totalQuestions: 0,
     passingScore: 60,
+    defaultQuestionTime: 120, // Default time per question in seconds
     isActive: true,
     isPublic: true,
   });
@@ -347,6 +348,24 @@ export default function AddExamPage() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Default Question Time (seconds)
+                </label>
+                <input
+                  type="number"
+                  name="defaultQuestionTime"
+                  value={formData.defaultQuestionTime}
+                  onChange={handleInputChange}
+                  min="30"
+                  max="600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Default time limit per question (30-600 seconds)
+                </p>
+              </div>
             </div>
           </div>
 
@@ -393,13 +412,14 @@ export default function AddExamPage() {
              </h3>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
                <div className="space-y-2">
-                 <p className="font-medium">🎯 Recommended Settings:</p>
-                 <ul className="list-disc list-inside space-y-1 ml-4">
-                   <li>Duration: 30-60 minutes for focused assessment</li>
-                   <li>Difficulty: Start with Easy/Medium for confidence building</li>
-                   <li>Questions: 10-20 questions for manageable completion</li>
-                   <li>Passing Score: 60-70% for reasonable standards</li>
-                 </ul>
+                                 <p className="font-medium">🎯 Recommended Settings:</p>
+                <ul className="list-disc list-inside space-y-1 ml-4">
+                  <li>Duration: 30-60 minutes for focused assessment</li>
+                  <li>Difficulty: Start with Easy/Medium for confidence building</li>
+                  <li>Questions: 10-20 questions for manageable completion</li>
+                  <li>Passing Score: 60-70% for reasonable standards</li>
+                  <li>Question Time: 60-180 seconds per question</li>
+                </ul>
                </div>
                <div className="space-y-2">
                  <p className="font-medium">📚 Popular Categories:</p>
