@@ -43,7 +43,11 @@ interface Exam {
   defaultQuestionTime?: number;
 }
 
-export default function ExamQuestionsPage({ params }: { params: { id: string } }) {
+export default function ExamQuestionsPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const [exam, setExam] = useState<Exam | null>(null);
   const [examQuestions, setExamQuestions] = useState<ExamQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,8 +90,14 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
     }
   };
 
-  const handleRemoveQuestion = async (questionId: string, questionType: string) => {
-    if (!confirm("Are you sure you want to remove this question from the exam?")) return;
+  const handleRemoveQuestion = async (
+    questionId: string,
+    questionType: string
+  ) => {
+    if (
+      !confirm("Are you sure you want to remove this question from the exam?")
+    )
+      return;
 
     try {
       const response = await fetch(
@@ -103,14 +113,20 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
     }
   };
 
-  const handleUpdateQuestionTimer = async (questionId: string, timeLimit: number) => {
+  const handleUpdateQuestionTimer = async (
+    questionId: string,
+    timeLimit: number
+  ) => {
     try {
       setSaving(true);
-      const response = await fetch(`/api/exams/${params.id}/questions/${questionId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ timeLimit }),
-      });
+      const response = await fetch(
+        `/api/exams/${params.id}/questions/${questionId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ timeLimit }),
+        }
+      );
       const result = await response.json();
       if (result.success) {
         fetchExamQuestions();
@@ -131,7 +147,7 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
     try {
       setSaving(true);
       const promises = selectedQuestions.map(async (questionId) => {
-        const question = availableQuestions.find(q => q.id === questionId);
+        const question = availableQuestions.find((q) => q.id === questionId);
         const response = await fetch(`/api/exams/${params.id}/questions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -158,7 +174,9 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
 
   const fetchAvailableQuestions = async (type: string) => {
     try {
-      const response = await fetch(`/api/${type === "MCQ" ? "mcq" : "problems"}`);
+      const response = await fetch(
+        `/api/${type === "MCQ" ? "mcq" : "problems"}`
+      );
       const result = await response.json();
       if (result.success) {
         setAvailableQuestions(result.data.map((q: any) => ({ ...q, type })));
@@ -169,16 +187,22 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
   };
 
   const filteredQuestions = examQuestions.filter((question) => {
-    const matchesSearch = question.questionData?.question?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         question.questionData?.title?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = !questionTypeFilter || question.questionType === questionTypeFilter;
+    const matchesSearch =
+      question.questionData?.question
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      question.questionData?.title
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    const matchesType =
+      !questionTypeFilter || question.questionType === questionTypeFilter;
     return matchesSearch && matchesType;
   });
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getQuestionTypeColor = (type: string) => {
@@ -227,7 +251,9 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
                   </div>
                   <div className="flex items-center">
                     <Timer className="w-4 h-4 mr-2 text-blue-300" />
-                    <span>{exam.defaultQuestionTime || 120}s default per question</span>
+                    <span>
+                      {exam.defaultQuestionTime || 120}s default per question
+                    </span>
                   </div>
                 </div>
               </div>
@@ -342,11 +368,13 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
                         {question.points} pts
                       </span>
                     </div>
-                    
+
                     <h4 className="font-medium text-gray-900 mb-2">
-                      {question.questionData?.question || question.questionData?.title || "Question"}
+                      {question.questionData?.question ||
+                        question.questionData?.title ||
+                        "Question"}
                     </h4>
-                    
+
                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                       <span>ID: {question.questionId.substring(0, 8)}...</span>
                       {question.timeLimit && (
@@ -377,7 +405,12 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
                     </div>
 
                     <Button
-                      onClick={() => handleRemoveQuestion(question.questionId, question.questionType)}
+                      onClick={() =>
+                        handleRemoveQuestion(
+                          question.questionId,
+                          question.questionType
+                        )
+                      }
                       variant="outline"
                       size="sm"
                       className="text-red-600 hover:text-red-700"
@@ -441,9 +474,16 @@ export default function ExamQuestionsPage({ params }: { params: { id: string } }
                           checked={selectedQuestions.includes(question.id)}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setSelectedQuestions([...selectedQuestions, question.id]);
+                              setSelectedQuestions([
+                                ...selectedQuestions,
+                                question.id,
+                              ]);
                             } else {
-                              setSelectedQuestions(selectedQuestions.filter(id => id !== question.id));
+                              setSelectedQuestions(
+                                selectedQuestions.filter(
+                                  (id) => id !== question.id
+                                )
+                              );
                             }
                           }}
                           className="w-4 h-4 text-blue-600"
