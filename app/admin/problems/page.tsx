@@ -182,13 +182,23 @@ export default function AdminProblemsPage() {
                 Manage and view all uploaded coding problems
               </p>
             </div>
-            <Button
-              onClick={() => (window.location.href = "/admin/problems/add")}
-              className="flex items-center"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Problem
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => (window.location.href = "/admin/problems/add")}
+                className="flex items-center"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Problem
+              </Button>
+              <Button
+                onClick={() => (window.location.href = "/admin/upload?type=problems")}
+                variant="outline"
+                className="flex items-center"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Bulk Upload
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -539,10 +549,19 @@ export default function AdminProblemsPage() {
                 : "Try adjusting your search or filter criteria."}
             </p>
             {problems.length === 0 && (
-              <Button onClick={() => (window.location.href = "/admin/problems/add")}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Your First Problem
-              </Button>
+              <div className="flex space-x-3">
+                <Button onClick={() => (window.location.href = "/admin/problems/add")}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First Problem
+                </Button>
+                <Button 
+                  onClick={() => (window.location.href = "/admin/upload?type=problems")}
+                  variant="outline"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Bulk Upload Problems
+                </Button>
+              </div>
             )}
           </div>
         )}

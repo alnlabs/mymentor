@@ -62,35 +62,42 @@ export default function AddMCQPage() {
   });
 
   const updateMCQ = (field: keyof MCQ, value: any) => {
-    setMCQ(prev => ({ ...prev, [field]: value }));
+    setMCQ((prev) => ({ ...prev, [field]: value }));
   };
 
   const updateOption = (index: number, value: string) => {
     const newOptions = [...mcq.options];
     newOptions[index] = value;
-    setMCQ(prev => ({ ...prev, options: newOptions }));
+    setMCQ((prev) => ({ ...prev, options: newOptions }));
   };
 
   const addOption = () => {
     if (mcq.options.length < 6) {
-      setMCQ(prev => ({ ...prev, options: [...prev.options, ""] }));
+      setMCQ((prev) => ({ ...prev, options: [...prev.options, ""] }));
     }
   };
 
   const removeOption = (index: number) => {
     if (mcq.options.length > 2) {
       const newOptions = mcq.options.filter((_, i) => i !== index);
-      const newCorrectAnswer = mcq.correctAnswer >= index ? Math.max(0, mcq.correctAnswer - 1) : mcq.correctAnswer;
-      setMCQ(prev => ({ 
-        ...prev, 
+      const newCorrectAnswer =
+        mcq.correctAnswer >= index
+          ? Math.max(0, mcq.correctAnswer - 1)
+          : mcq.correctAnswer;
+      setMCQ((prev) => ({
+        ...prev,
         options: newOptions,
-        correctAnswer: newCorrectAnswer
+        correctAnswer: newCorrectAnswer,
       }));
     }
   };
 
   const handleSave = async () => {
-    if (!mcq.question || mcq.options.some(opt => !opt.trim()) || mcq.options.length < 2) {
+    if (
+      !mcq.question ||
+      mcq.options.some((opt) => !opt.trim()) ||
+      mcq.options.length < 2
+    ) {
       alert("Please fill in the question and at least 2 options");
       return;
     }
@@ -157,7 +164,7 @@ export default function AddMCQPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/admin/mcq'}
+                onClick={() => (window.location.href = "/admin/mcq")}
                 className="mr-4"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -184,15 +191,18 @@ export default function AddMCQPage() {
             </Button>
           </div>
           <p className="text-gray-600">
-            Create a new MCQ question with comprehensive categorization and details.
+            Create a new MCQ question with comprehensive categorization and
+            details.
           </p>
         </div>
 
         {/* Form */}
         <Card className="mb-6">
           <div className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">MCQ Details</h2>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              MCQ Details
+            </h2>
+
             {/* Question */}
             <div className="mb-8">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -225,7 +235,7 @@ export default function AddMCQPage() {
                   Add Option
                 </Button>
               </div>
-              
+
               <div className="space-y-3">
                 {mcq.options.map((option, index) => (
                   <div key={index} className="flex items-center space-x-3">
@@ -258,7 +268,8 @@ export default function AddMCQPage() {
                 ))}
               </div>
               <p className="text-sm text-gray-500 mt-2">
-                Select the correct answer by clicking the radio button next to the option
+                Select the correct answer by clicking the radio button next to
+                the option
               </p>
             </div>
 
@@ -297,7 +308,9 @@ export default function AddMCQPage() {
                   <option value="stacks-queues">Stacks & Queues</option>
                   <option value="trees">Trees</option>
                   <option value="graphs">Graphs</option>
-                  <option value="dynamic-programming">Dynamic Programming</option>
+                  <option value="dynamic-programming">
+                    Dynamic Programming
+                  </option>
                   <option value="greedy-algorithms">Greedy Algorithms</option>
                   <option value="backtracking">Backtracking</option>
                   <option value="binary-search">Binary Search</option>
@@ -319,7 +332,9 @@ export default function AddMCQPage() {
 
             {/* Categorization */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Categorization</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Categorization
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -334,7 +349,9 @@ export default function AddMCQPage() {
                     <option value="programming">Programming</option>
                     <option value="data-science">Data Science</option>
                     <option value="web-development">Web Development</option>
-                    <option value="mobile-development">Mobile Development</option>
+                    <option value="mobile-development">
+                      Mobile Development
+                    </option>
                     <option value="devops">DevOps</option>
                     <option value="ai-ml">AI/ML</option>
                     <option value="database">Database</option>
@@ -360,7 +377,9 @@ export default function AddMCQPage() {
                     <option value="stacks-queues">Stacks & Queues</option>
                     <option value="trees">Trees</option>
                     <option value="graphs">Graphs</option>
-                    <option value="dynamic-programming">Dynamic Programming</option>
+                    <option value="dynamic-programming">
+                      Dynamic Programming
+                    </option>
                     <option value="greedy-algorithms">Greedy Algorithms</option>
                     <option value="backtracking">Backtracking</option>
                     <option value="binary-search">Binary Search</option>
@@ -408,7 +427,9 @@ export default function AddMCQPage() {
 
             {/* Technical Details */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Technical Details</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Technical Details
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -416,7 +437,9 @@ export default function AddMCQPage() {
                   </label>
                   <select
                     value={mcq.technologyStack}
-                    onChange={(e) => updateMCQ("technologyStack", e.target.value)}
+                    onChange={(e) =>
+                      updateMCQ("technologyStack", e.target.value)
+                    }
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Stack</option>
@@ -473,7 +496,9 @@ export default function AddMCQPage() {
 
             {/* Professional Context */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Professional Context</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Professional Context
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -485,9 +510,13 @@ export default function AddMCQPage() {
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Job Role</option>
-                    <option value="frontend-developer">Frontend Developer</option>
+                    <option value="frontend-developer">
+                      Frontend Developer
+                    </option>
                     <option value="backend-developer">Backend Developer</option>
-                    <option value="full-stack-developer">Full Stack Developer</option>
+                    <option value="full-stack-developer">
+                      Full Stack Developer
+                    </option>
                     <option value="data-scientist">Data Scientist</option>
                     <option value="data-engineer">Data Engineer</option>
                     <option value="devops-engineer">DevOps Engineer</option>
@@ -574,7 +603,9 @@ export default function AddMCQPage() {
                   className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="algorithms, complexity, binary-search"
                 />
-                <p className="text-sm text-gray-500 mt-1">Comma-separated tags</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Comma-separated tags
+                </p>
               </div>
 
               <div>
@@ -588,7 +619,9 @@ export default function AddMCQPage() {
                   className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Google, Amazon, Microsoft"
                 />
-                <p className="text-sm text-gray-500 mt-1">Companies that ask this type of question</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Companies that ask this type of question
+                </p>
               </div>
             </div>
 
@@ -629,12 +662,20 @@ export default function AddMCQPage() {
 
         {/* Result */}
         {result && (
-          <Card className={`border-2 ${result.success ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+          <Card
+            className={`border-2 ${
+              result.success
+                ? "border-green-200 bg-green-50"
+                : "border-red-200 bg-red-50"
+            }`}
+          >
             <div className="p-6">
               <div className="flex items-start">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
-                  result.success ? "bg-green-100" : "bg-red-100"
-                }`}>
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
+                    result.success ? "bg-green-100" : "bg-red-100"
+                  }`}
+                >
                   {result.success ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
@@ -642,20 +683,26 @@ export default function AddMCQPage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h4 className={`text-lg font-semibold mb-2 ${
-                    result.success ? "text-green-800" : "text-red-800"
-                  }`}>
-                    {result.success ? "🎉 MCQ Saved Successfully!" : "❌ Failed to Save MCQ"}
+                  <h4
+                    className={`text-lg font-semibold mb-2 ${
+                      result.success ? "text-green-800" : "text-red-800"
+                    }`}
+                  >
+                    {result.success
+                      ? "🎉 MCQ Saved Successfully!"
+                      : "❌ Failed to Save MCQ"}
                   </h4>
-                  <p className={`text-base ${
-                    result.success ? "text-green-700" : "text-red-700"
-                  }`}>
+                  <p
+                    className={`text-base ${
+                      result.success ? "text-green-700" : "text-red-700"
+                    }`}
+                  >
                     {result.message || result.error}
                   </p>
                   {result.success && (
                     <div className="mt-4">
                       <Button
-                        onClick={() => window.location.href = '/admin/mcq'}
+                        onClick={() => (window.location.href = "/admin/mcq")}
                         variant="outline"
                         className="mr-3"
                       >

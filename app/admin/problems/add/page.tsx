@@ -64,12 +64,14 @@ export default function AddProblemPage() {
   });
 
   const updateProblem = (field: keyof Problem, value: string) => {
-    setProblem(prev => ({ ...prev, [field]: value }));
+    setProblem((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSave = async () => {
     if (!problem.title || !problem.description || !problem.testCases) {
-      alert("Please fill in all required fields (Title, Description, Test Cases)");
+      alert(
+        "Please fill in all required fields (Title, Description, Test Cases)"
+      );
       return;
     }
 
@@ -136,7 +138,7 @@ export default function AddProblemPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.location.href = '/admin/problems'}
+                onClick={() => (window.location.href = "/admin/problems")}
                 className="mr-4"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -163,15 +165,18 @@ export default function AddProblemPage() {
             </Button>
           </div>
           <p className="text-gray-600">
-            Create a new coding problem with comprehensive categorization and details.
+            Create a new coding problem with comprehensive categorization and
+            details.
           </p>
         </div>
 
         {/* Form */}
         <Card className="mb-6">
           <div className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Problem Details</h2>
-            
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Problem Details
+            </h2>
+
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div>
@@ -219,7 +224,9 @@ export default function AddProblemPage() {
 
             {/* Categorization */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Categorization</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Categorization
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -239,7 +246,9 @@ export default function AddProblemPage() {
                     <option value="stacks-queues">Stacks & Queues</option>
                     <option value="trees">Trees</option>
                     <option value="graphs">Graphs</option>
-                    <option value="dynamic-programming">Dynamic Programming</option>
+                    <option value="dynamic-programming">
+                      Dynamic Programming
+                    </option>
                     <option value="greedy-algorithms">Greedy Algorithms</option>
                     <option value="backtracking">Backtracking</option>
                     <option value="binary-search">Binary Search</option>
@@ -271,7 +280,9 @@ export default function AddProblemPage() {
                     <option value="programming">Programming</option>
                     <option value="data-science">Data Science</option>
                     <option value="web-development">Web Development</option>
-                    <option value="mobile-development">Mobile Development</option>
+                    <option value="mobile-development">
+                      Mobile Development
+                    </option>
                     <option value="devops">DevOps</option>
                     <option value="ai-ml">AI/ML</option>
                     <option value="database">Database</option>
@@ -297,7 +308,9 @@ export default function AddProblemPage() {
                     <option value="stacks-queues">Stacks & Queues</option>
                     <option value="trees">Trees</option>
                     <option value="graphs">Graphs</option>
-                    <option value="dynamic-programming">Dynamic Programming</option>
+                    <option value="dynamic-programming">
+                      Dynamic Programming
+                    </option>
                     <option value="greedy-algorithms">Greedy Algorithms</option>
                     <option value="backtracking">Backtracking</option>
                     <option value="binary-search">Binary Search</option>
@@ -320,7 +333,9 @@ export default function AddProblemPage() {
 
             {/* Technical Details */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Technical Details</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Technical Details
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -353,7 +368,9 @@ export default function AddProblemPage() {
                   </label>
                   <select
                     value={problem.technologyStack}
-                    onChange={(e) => updateProblem("technologyStack", e.target.value)}
+                    onChange={(e) =>
+                      updateProblem("technologyStack", e.target.value)
+                    }
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Stack</option>
@@ -395,7 +412,9 @@ export default function AddProblemPage() {
 
             {/* Professional Context */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Professional Context</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Professional Context
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -403,7 +422,9 @@ export default function AddProblemPage() {
                   </label>
                   <select
                     value={problem.skillLevel}
-                    onChange={(e) => updateProblem("skillLevel", e.target.value)}
+                    onChange={(e) =>
+                      updateProblem("skillLevel", e.target.value)
+                    }
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="beginner">Beginner</option>
@@ -422,9 +443,13 @@ export default function AddProblemPage() {
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Job Role</option>
-                    <option value="frontend-developer">Frontend Developer</option>
+                    <option value="frontend-developer">
+                      Frontend Developer
+                    </option>
                     <option value="backend-developer">Backend Developer</option>
-                    <option value="full-stack-developer">Full Stack Developer</option>
+                    <option value="full-stack-developer">
+                      Full Stack Developer
+                    </option>
                     <option value="data-scientist">Data Scientist</option>
                     <option value="data-engineer">Data Engineer</option>
                     <option value="devops-engineer">DevOps Engineer</option>
@@ -442,7 +467,9 @@ export default function AddProblemPage() {
                   </label>
                   <select
                     value={problem.companyType}
-                    onChange={(e) => updateProblem("companyType", e.target.value)}
+                    onChange={(e) =>
+                      updateProblem("companyType", e.target.value)
+                    }
                     className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Company Type</option>
@@ -473,7 +500,9 @@ export default function AddProblemPage() {
                 className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
               />
-              <p className="text-sm text-gray-500 mt-1">Use JSON format with input and output pairs</p>
+              <p className="text-sm text-gray-500 mt-1">
+                Use JSON format with input and output pairs
+              </p>
             </div>
 
             {/* Solution and Hints */}
@@ -518,7 +547,9 @@ export default function AddProblemPage() {
                   className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="arrays, hash-table, two-pointers"
                 />
-                <p className="text-sm text-gray-500 mt-1">Comma-separated tags</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Comma-separated tags
+                </p>
               </div>
 
               <div>
@@ -532,7 +563,9 @@ export default function AddProblemPage() {
                   className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Google, Amazon, Microsoft"
                 />
-                <p className="text-sm text-gray-500 mt-1">Companies that ask this type of question</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Companies that ask this type of question
+                </p>
               </div>
             </div>
 
@@ -573,12 +606,20 @@ export default function AddProblemPage() {
 
         {/* Result */}
         {result && (
-          <Card className={`border-2 ${result.success ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+          <Card
+            className={`border-2 ${
+              result.success
+                ? "border-green-200 bg-green-50"
+                : "border-red-200 bg-red-50"
+            }`}
+          >
             <div className="p-6">
               <div className="flex items-start">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
-                  result.success ? "bg-green-100" : "bg-red-100"
-                }`}>
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
+                    result.success ? "bg-green-100" : "bg-red-100"
+                  }`}
+                >
                   {result.success ? (
                     <CheckCircle className="w-6 h-6 text-green-600" />
                   ) : (
@@ -586,20 +627,28 @@ export default function AddProblemPage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h4 className={`text-lg font-semibold mb-2 ${
-                    result.success ? "text-green-800" : "text-red-800"
-                  }`}>
-                    {result.success ? "🎉 Problem Saved Successfully!" : "❌ Failed to Save Problem"}
+                  <h4
+                    className={`text-lg font-semibold mb-2 ${
+                      result.success ? "text-green-800" : "text-red-800"
+                    }`}
+                  >
+                    {result.success
+                      ? "🎉 Problem Saved Successfully!"
+                      : "❌ Failed to Save Problem"}
                   </h4>
-                  <p className={`text-base ${
-                    result.success ? "text-green-700" : "text-red-700"
-                  }`}>
+                  <p
+                    className={`text-base ${
+                      result.success ? "text-green-700" : "text-red-700"
+                    }`}
+                  >
                     {result.message || result.error}
                   </p>
                   {result.success && (
                     <div className="mt-4">
                       <Button
-                        onClick={() => window.location.href = '/admin/problems'}
+                        onClick={() =>
+                          (window.location.href = "/admin/problems")
+                        }
                         variant="outline"
                         className="mr-3"
                       >

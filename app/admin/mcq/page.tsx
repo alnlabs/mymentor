@@ -174,13 +174,23 @@ export default function AdminMCQPage() {
                 Manage and view all uploaded MCQ questions
               </p>
             </div>
-            <Button
-              onClick={() => (window.location.href = "/admin/mcq/add")}
-              className="flex items-center"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New MCQ
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => (window.location.href = "/admin/mcq/add")}
+                className="flex items-center"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add MCQ
+              </Button>
+              <Button
+                onClick={() => (window.location.href = "/admin/upload?type=mcq")}
+                variant="outline"
+                className="flex items-center"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Bulk Upload
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -548,10 +558,19 @@ export default function AdminMCQPage() {
                 : "Try adjusting your search or filter criteria."}
             </p>
             {mcqs.length === 0 && (
-              <Button onClick={() => (window.location.href = "/admin/mcq/add")}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Your First MCQ
-              </Button>
+              <div className="flex space-x-3">
+                <Button onClick={() => (window.location.href = "/admin/mcq/add")}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First MCQ
+                </Button>
+                <Button 
+                  onClick={() => (window.location.href = "/admin/upload?type=mcq")}
+                  variant="outline"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Bulk Upload MCQs
+                </Button>
+              </div>
             )}
           </div>
         )}
