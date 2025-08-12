@@ -427,52 +427,12 @@ export default function UploadPage() {
   };
 
   const downloadTemplate = (format: "json" | "csv") => {
-    if (format === "json") {
-      const template =
-        uploadType === "problems"
-          ? `[
-  {
-    "title": "Two Sum",
-    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    "difficulty": "easy",
-    "category": "arrays",
-    "testCases": "[{\\"input\\": \\"[2,7,11,15], 9\\", \\"output\\": \\"[0,1]\\"}]",
-    "solution": "Use a hash map to store complements.",
-    "hints": "Try using a hash map",
-    "tags": "arrays,hash-table",
-    "companies": "Google,Amazon,Microsoft"
-  }
-]`
-          : `[
-  {
-    "question": "What is the time complexity of binary search?",
-    "options": ["O(n)", "O(log n)", "O(n²)", "O(1)"],
-    "correctAnswer": 1,
-    "explanation": "Binary search divides the search space in half with each iteration.",
-    "category": "algorithms",
-    "difficulty": "easy",
-    "tags": "binary-search,complexity",
-    "companies": "Google,Amazon,Microsoft"
-  }
-]`;
-
-      const blob = new Blob([template], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${uploadType}-template.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } else {
-      const a = document.createElement("a");
-      a.href = `/templates/${uploadType}-template.csv`;
-      a.download = `${uploadType}-template.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    const a = document.createElement("a");
+    a.href = `/templates/${uploadType}-template.${format}`;
+    a.download = `${uploadType}-template.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   return (
