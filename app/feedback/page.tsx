@@ -319,19 +319,19 @@ export default function FeedbackPage() {
         </div>
       </header>
 
-              <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Share Your Feedback
           </h2>
-                    <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-lg">
             Help us improve your learning experience! Your feedback is valuable
             to us.
           </p>
         </div>
 
-                {/* Main Content Grid */}
+        {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Feedback Form - Left Side */}
           <div className="lg:col-span-3">
@@ -379,17 +379,17 @@ export default function FeedbackPage() {
                             </span>
                           )}
                         </div>
-                         <p
-                           className={`text-sm font-medium ${
-                             feedback.isAnonymous
-                               ? "text-purple-700"
-                               : "text-blue-700"
-                           }`}
-                         >
-                           {feedback.isAnonymous
-                             ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
-                             : "📝 Your name will be visible to administrators for better support"}
-                         </p>
+                        <p
+                          className={`text-sm font-medium ${
+                            feedback.isAnonymous
+                              ? "text-purple-700"
+                              : "text-blue-700"
+                          }`}
+                        >
+                          {feedback.isAnonymous
+                            ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
+                            : "📝 Your name will be visible to administrators for better support"}
+                        </p>
                       </div>
                     </div>
                     <div className="flex flex-col items-center space-y-2">
@@ -412,194 +412,208 @@ export default function FeedbackPage() {
                       </label>
                       <span
                         className={`text-xs font-bold ${
-                          feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
+                          feedback.isAnonymous
+                            ? "text-purple-600"
+                            : "text-blue-600"
                         }`}
                       >
                         {feedback.isAnonymous ? "ON" : "OFF"}
                       </span>
-                                    </div>
-              </div>
-            </div>
-
-            {/* Anonymous Mode Explanation Note */}
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-purple-600 text-sm">💡</span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-sm font-semibold text-purple-800 mb-1">
-                    About Anonymous Mode
-                  </h4>
-                  <p className="text-xs text-purple-700 mb-2">
-                    <strong>Anonymous mode is enabled by default</strong> to encourage honest feedback. Your identity is hidden from administrators, allowing you to share freely without any concerns.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div className="bg-white p-2 rounded border border-purple-200">
-                      <span className="font-semibold text-purple-800">✅ Anonymous Benefits:</span>
-                      <ul className="mt-1 space-y-0.5 text-purple-700">
-                        <li>• Share without fear</li>
-                        <li>• Express concerns freely</li>
-                        <li>• Report issues safely</li>
-                      </ul>
-                    </div>
-                    <div className="bg-white p-2 rounded border border-blue-200">
-                      <span className="font-semibold text-blue-800">📝 Named Benefits:</span>
-                      <ul className="mt-1 space-y-0.5 text-blue-700">
-                        <li>• Get follow-up support</li>
-                        <li>• Track feedback status</li>
-                        <li>• Build relationships</li>
-                      </ul>
                     </div>
                   </div>
-                  <p className="text-xs text-purple-600 mt-2 font-medium">
-                    💡 <strong>Note:</strong> You can switch to named mode if you prefer personalized support and follow-up.
+                </div>
+
+                {/* Anonymous Mode Explanation Note */}
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-purple-600 text-sm">💡</span>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-purple-800 mb-1">
+                        About Anonymous Mode
+                      </h4>
+                      <p className="text-xs text-purple-700 mb-2">
+                        <strong>Anonymous mode is enabled by default</strong> to
+                        encourage honest feedback. Your identity is hidden from
+                        administrators, allowing you to share freely without any
+                        concerns.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="bg-white p-2 rounded border border-purple-200">
+                          <span className="font-semibold text-purple-800">
+                            ✅ Anonymous Benefits:
+                          </span>
+                          <ul className="mt-1 space-y-0.5 text-purple-700">
+                            <li>• Share without fear</li>
+                            <li>• Express concerns freely</li>
+                            <li>• Report issues safely</li>
+                          </ul>
+                        </div>
+                        <div className="bg-white p-2 rounded border border-blue-200">
+                          <span className="font-semibold text-blue-800">
+                            📝 Named Benefits:
+                          </span>
+                          <ul className="mt-1 space-y-0.5 text-blue-700">
+                            <li>• Get follow-up support</li>
+                            <li>• Track feedback status</li>
+                            <li>• Build relationships</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <p className="text-xs text-purple-600 mt-2 font-medium">
+                        💡 <strong>Note:</strong> You can switch to named mode
+                        if you prefer personalized support and follow-up.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feedback Type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Feedback Type *
+                  </label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {feedbackTypes.map((type) => (
+                      <label
+                        key={type.value}
+                        className={`relative flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                          feedback.type === type.value
+                            ? "border-green-500 bg-green-50"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="type"
+                          value={type.value}
+                          checked={feedback.type === type.value}
+                          onChange={(e) =>
+                            updateFeedback("type", e.target.value)
+                          }
+                          className="sr-only"
+                        />
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg">{type.icon}</span>
+                          <span className="text-sm font-medium">
+                            {type.label}
+                          </span>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Feedback Category */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category *
+                  </label>
+                  <select
+                    value={feedback.category}
+                    onChange={(e) => updateFeedback("category", e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    {feedbackCategories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Subject */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    value={feedback.subject}
+                    onChange={(e) => updateFeedback("subject", e.target.value)}
+                    placeholder="Brief description of your feedback"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                {/* Rating */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Overall Rating (Optional)
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => updateFeedback("rating", star)}
+                        className={`p-1 rounded transition-colors ${
+                          feedback.rating && feedback.rating >= star
+                            ? "text-yellow-400"
+                            : "text-gray-300 hover:text-yellow-400"
+                        }`}
+                      >
+                        <Star className="w-6 h-6 fill-current" />
+                      </button>
+                    ))}
+                    {feedback.rating && (
+                      <span className="text-sm text-gray-500 ml-2">
+                        {feedback.rating} out of 5
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Detailed Message *
+                  </label>
+                  <textarea
+                    value={feedback.message}
+                    onChange={(e) => updateFeedback("message", e.target.value)}
+                    rows={6}
+                    placeholder="Please share your detailed feedback, suggestions, or concerns. Be as specific as possible to help us understand and address your needs."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                    required
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Feel free to share any opinions, suggestions, or concerns.
+                    Your feedback helps us improve!
                   </p>
                 </div>
-              </div>
-            </div>
 
-            {/* Feedback Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Feedback Type *
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {feedbackTypes.map((type) => (
-                  <label
-                    key={type.value}
-                    className={`relative flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                      feedback.type === type.value
-                        ? "border-green-500 bg-green-50"
-                        : "border-gray-300 hover:border-gray-400"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="type"
-                      value={type.value}
-                      checked={feedback.type === type.value}
-                      onChange={(e) => updateFeedback("type", e.target.value)}
-                      className="sr-only"
-                    />
-                    <div className="flex items-center space-x-2">
-                      <span className="text-lg">{type.icon}</span>
-                      <span className="text-sm font-medium">{type.label}</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Feedback Category */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category *
-              </label>
-              <select
-                value={feedback.category}
-                onChange={(e) => updateFeedback("category", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                required
-              >
-                <option value="">Select a category</option>
-                {feedbackCategories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Subject */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Subject *
-              </label>
-              <input
-                type="text"
-                value={feedback.subject}
-                onChange={(e) => updateFeedback("subject", e.target.value)}
-                placeholder="Brief description of your feedback"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                required
-              />
-            </div>
-
-            {/* Rating */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Overall Rating (Optional)
-              </label>
-              <div className="flex items-center space-x-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => updateFeedback("rating", star)}
-                    className={`p-1 rounded transition-colors ${
-                      feedback.rating && feedback.rating >= star
-                        ? "text-yellow-400"
-                        : "text-gray-300 hover:text-yellow-400"
-                    }`}
-                  >
-                    <Star className="w-6 h-6 fill-current" />
-                  </button>
-                ))}
-                {feedback.rating && (
-                  <span className="text-sm text-gray-500 ml-2">
-                    {feedback.rating} out of 5
-                  </span>
+                {/* Error Message */}
+                {error && (
+                  <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-red-500" />
+                    <span className="text-red-700">{error}</span>
+                  </div>
                 )}
-              </div>
-            </div>
 
-            {/* Message */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Detailed Message *
-              </label>
-              <textarea
-                value={feedback.message}
-                onChange={(e) => updateFeedback("message", e.target.value)}
-                rows={6}
-                placeholder="Please share your detailed feedback, suggestions, or concerns. Be as specific as possible to help us understand and address your needs."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                required
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                Feel free to share any opinions, suggestions, or concerns. Your
-                feedback helps us improve!
-              </p>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-              <div className="flex items-center space-x-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-red-500" />
-                <span className="text-red-700">{error}</span>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                disabled={submitting}
-                className="flex items-center space-x-2"
-              >
-                {submitting ? (
-                  <Loading size="sm" text="Submitting..." />
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Submit Feedback</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </Card>
+                {/* Submit Button */}
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex items-center space-x-2"
+                  >
+                    {submitting ? (
+                      <Loading size="sm" text="Submitting..." />
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Feedback</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Card>
           </div>
 
           {/* Right Sidebar - Compact Info */}
@@ -612,9 +626,12 @@ export default function FeedbackPage() {
                 </h3>
                 <div className="space-y-2 text-xs text-gray-700">
                   <p>
-                    Your honest opinion about our platform, content, and learning experience.
+                    Your honest opinion about our platform, content, and
+                    learning experience.
                   </p>
-                  <p><strong>Examples:</strong></p>
+                  <p>
+                    <strong>Examples:</strong>
+                  </p>
                   <ul className="list-disc list-inside space-y-0.5 ml-2 text-xs">
                     <li>"Problems too difficult"</li>
                     <li>"Love interview practice!"</li>
@@ -632,19 +649,27 @@ export default function FeedbackPage() {
                 <div className="space-y-2 text-xs text-gray-700">
                   <div className="space-y-1">
                     <div className="flex items-start space-x-1">
-                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span className="text-green-600 font-bold text-xs">
+                        ✓
+                      </span>
                       <span>Add new features</span>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span className="text-green-600 font-bold text-xs">
+                        ✓
+                      </span>
                       <span>Fix bugs & issues</span>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span className="text-green-600 font-bold text-xs">
+                        ✓
+                      </span>
                       <span>Improve content</span>
                     </div>
                     <div className="flex items-start space-x-1">
-                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span className="text-green-600 font-bold text-xs">
+                        ✓
+                      </span>
                       <span>Enhance UI/UX</span>
                     </div>
                   </div>
@@ -660,11 +685,11 @@ export default function FeedbackPage() {
                   🔒 Anonymous Mode
                 </h3>
                 <div className="space-y-2 text-xs text-gray-700">
-                  <p>
-                    Share feedback without revealing your identity.
-                  </p>
+                  <p>Share feedback without revealing your identity.</p>
                   <div className="bg-white p-2 rounded border border-purple-200">
-                    <h4 className="font-semibold text-purple-800 text-xs mb-1">✅ Anonymous Benefits:</h4>
+                    <h4 className="font-semibold text-purple-800 text-xs mb-1">
+                      ✅ Anonymous Benefits:
+                    </h4>
                     <ul className="space-y-0.5 text-xs">
                       <li>• Share without fear</li>
                       <li>• Express concerns freely</li>
@@ -672,7 +697,9 @@ export default function FeedbackPage() {
                     </ul>
                   </div>
                   <div className="bg-white p-2 rounded border border-blue-200">
-                    <h4 className="font-semibold text-blue-800 text-xs mb-1">📝 Named Benefits:</h4>
+                    <h4 className="font-semibold text-blue-800 text-xs mb-1">
+                      📝 Named Benefits:
+                    </h4>
                     <ul className="space-y-0.5 text-xs">
                       <li>• Get follow-up support</li>
                       <li>• Track feedback status</li>

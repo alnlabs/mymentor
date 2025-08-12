@@ -8,13 +8,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { isAnonymous, type, category, subject, message, rating } = body;
 
-    // For now, using a placeholder user ID - in real app, get from auth context
-    const userId = "user-123"; // This would come from authentication
+    // Get or create a default user for feedback
+    let user = await prisma.user.findFirst({
+      where: { email: "feedback@mymentor.com" }
+    });
+
+    if (!user) {
+      // Create a default user for feedback submissions
+      user = await prisma.user.create({
+        data: {
+          email: "feedback@mymentor.com",
+          name: "Feedback User",
+          provider: "email",
+          role: "user",
+        }
+      });
+    }
 
     // Always store user details in background (secret)
     const feedback = await prisma.feedback.create({
       data: {
-        userId, // Always stored for admin reference
+        userId: user.id, // Use the actual user ID
         isAnonymous, // User's choice for display
         type,
         category,
