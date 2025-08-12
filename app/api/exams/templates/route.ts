@@ -9,31 +9,37 @@ export async function GET() {
     const [exams, problems, mcqs] = await Promise.all([
       prisma.exam.findMany({
         include: {
-          questions: true
-        }
+          questions: true,
+        },
       }),
       prisma.problem.findMany({
         select: {
           category: true,
-          difficulty: true
-        }
+          difficulty: true,
+        },
       }),
       prisma.mCQQuestion.findMany({
         select: {
           category: true,
-          difficulty: true
-        }
-      })
+          difficulty: true,
+        },
+      }),
     ]);
 
     // Analyze existing data to create relevant templates
-    const categoryStats = new Map<string, { count: number; difficulties: Set<string> }>();
-    
+    const categoryStats = new Map<
+      string,
+      { count: number; difficulties: Set<string> }
+    >();
+
     // Analyze problems
-    problems.forEach(problem => {
+    problems.forEach((problem) => {
       if (problem.category) {
         if (!categoryStats.has(problem.category)) {
-          categoryStats.set(problem.category, { count: 0, difficulties: new Set() });
+          categoryStats.set(problem.category, {
+            count: 0,
+            difficulties: new Set(),
+          });
         }
         const stats = categoryStats.get(problem.category)!;
         stats.count++;
@@ -42,10 +48,13 @@ export async function GET() {
     });
 
     // Analyze MCQs
-    mcqs.forEach(mcq => {
+    mcqs.forEach((mcq) => {
       if (mcq.category) {
         if (!categoryStats.has(mcq.category)) {
-          categoryStats.set(mcq.category, { count: 0, difficulties: new Set() });
+          categoryStats.set(mcq.category, {
+            count: 0,
+            difficulties: new Set(),
+          });
         }
         const stats = categoryStats.get(mcq.category)!;
         stats.count++;
@@ -61,12 +70,17 @@ export async function GET() {
       templates.push({
         id: "js-fundamentals",
         title: "JavaScript Fundamentals",
-        description: "Basic JavaScript concepts, syntax, and programming logic for fresh graduates",
+        description:
+          "Basic JavaScript concepts, syntax, and programming logic for fresh graduates",
         category: "Programming",
         difficulty: "Easy",
         duration: 45,
         questionTypes: "Mixed",
-        totalQuestions: Math.min(15, (categoryStats.get("Programming")?.count || 0) + (categoryStats.get("JavaScript")?.count || 0)),
+        totalQuestions: Math.min(
+          15,
+          (categoryStats.get("Programming")?.count || 0) +
+            (categoryStats.get("JavaScript")?.count || 0)
+        ),
         passingScore: 65,
         defaultQuestionTime: 120,
         targetRole: "Frontend Developer",
@@ -76,16 +90,26 @@ export async function GET() {
       });
     }
 
-    if (categoryStats.has("Web Development") || categoryStats.has("HTML") || categoryStats.has("CSS")) {
+    if (
+      categoryStats.has("Web Development") ||
+      categoryStats.has("HTML") ||
+      categoryStats.has("CSS")
+    ) {
       templates.push({
         id: "web-basics",
         title: "Web Development Basics",
-        description: "HTML, CSS, and basic web concepts for entry-level developers",
+        description:
+          "HTML, CSS, and basic web concepts for entry-level developers",
         category: "Web Development",
         difficulty: "Easy",
         duration: 60,
         questionTypes: "Mixed",
-        totalQuestions: Math.min(20, (categoryStats.get("Web Development")?.count || 0) + (categoryStats.get("HTML")?.count || 0) + (categoryStats.get("CSS")?.count || 0)),
+        totalQuestions: Math.min(
+          20,
+          (categoryStats.get("Web Development")?.count || 0) +
+            (categoryStats.get("HTML")?.count || 0) +
+            (categoryStats.get("CSS")?.count || 0)
+        ),
         passingScore: 60,
         defaultQuestionTime: 180,
         targetRole: "Frontend Developer",
@@ -95,16 +119,24 @@ export async function GET() {
       });
     }
 
-    if (categoryStats.has("Data Structures") || categoryStats.has("Algorithms")) {
+    if (
+      categoryStats.has("Data Structures") ||
+      categoryStats.has("Algorithms")
+    ) {
       templates.push({
         id: "data-structures",
         title: "Data Structures & Algorithms",
-        description: "Fundamental data structures and basic algorithms for technical interviews",
+        description:
+          "Fundamental data structures and basic algorithms for technical interviews",
         category: "Data Structures",
         difficulty: "Medium",
         duration: 90,
         questionTypes: "Mixed",
-        totalQuestions: Math.min(25, (categoryStats.get("Data Structures")?.count || 0) + (categoryStats.get("Algorithms")?.count || 0)),
+        totalQuestions: Math.min(
+          25,
+          (categoryStats.get("Data Structures")?.count || 0) +
+            (categoryStats.get("Algorithms")?.count || 0)
+        ),
         passingScore: 70,
         defaultQuestionTime: 240,
         targetRole: "Software Engineer",
@@ -123,7 +155,11 @@ export async function GET() {
         difficulty: "Easy",
         duration: 45,
         questionTypes: "MCQ",
-        totalQuestions: Math.min(15, (categoryStats.get("Database")?.count || 0) + (categoryStats.get("SQL")?.count || 0)),
+        totalQuestions: Math.min(
+          15,
+          (categoryStats.get("Database")?.count || 0) +
+            (categoryStats.get("SQL")?.count || 0)
+        ),
         passingScore: 65,
         defaultQuestionTime: 120,
         targetRole: "Backend Developer",
@@ -134,16 +170,26 @@ export async function GET() {
     }
 
     // Non-Technical Templates
-    if (categoryStats.has("Aptitude") || categoryStats.has("Numerical") || categoryStats.has("Verbal")) {
+    if (
+      categoryStats.has("Aptitude") ||
+      categoryStats.has("Numerical") ||
+      categoryStats.has("Verbal")
+    ) {
       templates.push({
         id: "aptitude-basic",
         title: "Basic Aptitude Test",
-        description: "Numerical, verbal, and logical reasoning for general aptitude assessment",
+        description:
+          "Numerical, verbal, and logical reasoning for general aptitude assessment",
         category: "Aptitude",
         difficulty: "Easy",
         duration: 60,
         questionTypes: "MCQ",
-        totalQuestions: Math.min(30, (categoryStats.get("Aptitude")?.count || 0) + (categoryStats.get("Numerical")?.count || 0) + (categoryStats.get("Verbal")?.count || 0)),
+        totalQuestions: Math.min(
+          30,
+          (categoryStats.get("Aptitude")?.count || 0) +
+            (categoryStats.get("Numerical")?.count || 0) +
+            (categoryStats.get("Verbal")?.count || 0)
+        ),
         passingScore: 60,
         defaultQuestionTime: 90,
         targetRole: "Business Analyst",
@@ -157,12 +203,17 @@ export async function GET() {
       templates.push({
         id: "communication",
         title: "Business Communication",
-        description: "English language skills, business writing, and professional communication",
+        description:
+          "English language skills, business writing, and professional communication",
         category: "Business Communication",
         difficulty: "Medium",
         duration: 45,
         questionTypes: "MCQ",
-        totalQuestions: Math.min(20, (categoryStats.get("Communication")?.count || 0) + (categoryStats.get("English")?.count || 0)),
+        totalQuestions: Math.min(
+          20,
+          (categoryStats.get("Communication")?.count || 0) +
+            (categoryStats.get("English")?.count || 0)
+        ),
         passingScore: 70,
         defaultQuestionTime: 120,
         targetRole: "Marketing Executive",
@@ -176,12 +227,17 @@ export async function GET() {
       templates.push({
         id: "problem-solving",
         title: "Problem Solving & Critical Thinking",
-        description: "Analytical thinking, decision making, and problem-solving scenarios",
+        description:
+          "Analytical thinking, decision making, and problem-solving scenarios",
         category: "Problem Solving",
         difficulty: "Medium",
         duration: 75,
         questionTypes: "Mixed",
-        totalQuestions: Math.min(25, (categoryStats.get("Problem Solving")?.count || 0) + (categoryStats.get("Logic")?.count || 0)),
+        totalQuestions: Math.min(
+          25,
+          (categoryStats.get("Problem Solving")?.count || 0) +
+            (categoryStats.get("Logic")?.count || 0)
+        ),
         passingScore: 65,
         defaultQuestionTime: 180,
         targetRole: "Project Manager",
@@ -195,12 +251,17 @@ export async function GET() {
       templates.push({
         id: "leadership",
         title: "Leadership & Team Management",
-        description: "Leadership skills, team dynamics, and project management concepts",
+        description:
+          "Leadership skills, team dynamics, and project management concepts",
         category: "Leadership",
         difficulty: "Medium",
         duration: 60,
         questionTypes: "MCQ",
-        totalQuestions: Math.min(20, (categoryStats.get("Leadership")?.count || 0) + (categoryStats.get("Management")?.count || 0)),
+        totalQuestions: Math.min(
+          20,
+          (categoryStats.get("Leadership")?.count || 0) +
+            (categoryStats.get("Management")?.count || 0)
+        ),
         passingScore: 70,
         defaultQuestionTime: 150,
         targetRole: "Project Manager",
@@ -250,7 +311,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      data: templates
+      data: templates,
     });
   } catch (error: any) {
     console.error("Error fetching exam templates:", error);

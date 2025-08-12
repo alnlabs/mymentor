@@ -52,7 +52,7 @@ export default function ExamTemplatesPage() {
     try {
       const response = await fetch("/api/exams/templates");
       const result = await response.json();
-      
+
       if (result.success) {
         setExamTemplates(result.data);
       } else {

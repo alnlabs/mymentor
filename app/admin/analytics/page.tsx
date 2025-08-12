@@ -43,32 +43,50 @@ export default function AnalyticsPage() {
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch real analytics data
-      const [userStats, problemStats, mcqStats, submissionStats, categoryStats, activityStats] = await Promise.all([
-        fetch("/api/user/stats").then(res => res.json()),
-        fetch("/api/problems").then(res => res.json()),
-        fetch("/api/mcq").then(res => res.json()),
-        fetch("/api/submissions").then(res => res.json()),
-        fetch("/api/analytics/categories").then(res => res.json()),
-        fetch("/api/analytics/activity").then(res => res.json())
+      const [
+        userStats,
+        problemStats,
+        mcqStats,
+        submissionStats,
+        categoryStats,
+        activityStats,
+      ] = await Promise.all([
+        fetch("/api/user/stats").then((res) => res.json()),
+        fetch("/api/problems").then((res) => res.json()),
+        fetch("/api/mcq").then((res) => res.json()),
+        fetch("/api/submissions").then((res) => res.json()),
+        fetch("/api/analytics/categories").then((res) => res.json()),
+        fetch("/api/analytics/activity").then((res) => res.json()),
       ]);
 
       const totalUsers = userStats.success ? userStats.data.totalUsers : 0;
       const totalProblems = problemStats.success ? problemStats.data.length : 0;
       const totalMCQs = mcqStats.success ? mcqStats.data.length : 0;
-      const totalSubmissions = submissionStats.success ? submissionStats.data.length : 0;
-      
-      // Calculate active users (users with submissions in last 7 days)
-      const activeUsers = userStats.success ? userStats.data.activeUsers || 0 : 0;
-      
-      // Calculate completion rate based on actual data
-      const completionRate = totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
-      
-      // Calculate average score from actual submissions
-      const averageScore = submissionStats.success && submissionStats.data.length > 0 
-        ? Math.round(submissionStats.data.reduce((sum: number, sub: any) => sum + (sub.score || 0), 0) / submissionStats.data.length)
+      const totalSubmissions = submissionStats.success
+        ? submissionStats.data.length
         : 0;
+
+      // Calculate active users (users with submissions in last 7 days)
+      const activeUsers = userStats.success
+        ? userStats.data.activeUsers || 0
+        : 0;
+
+      // Calculate completion rate based on actual data
+      const completionRate =
+        totalUsers > 0 ? Math.round((activeUsers / totalUsers) * 100) : 0;
+
+      // Calculate average score from actual submissions
+      const averageScore =
+        submissionStats.success && submissionStats.data.length > 0
+          ? Math.round(
+              submissionStats.data.reduce(
+                (sum: number, sub: any) => sum + (sub.score || 0),
+                0
+              ) / submissionStats.data.length
+            )
+          : 0;
 
       // Get real top categories
       const topCategories = categoryStats.success ? categoryStats.data : [];
@@ -153,7 +171,9 @@ export default function AnalyticsPage() {
                   <Users className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Total Users</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Users
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {analytics.totalUsers.toLocaleString()}
                   </p>
@@ -181,7 +201,9 @@ export default function AnalyticsPage() {
                   <BookOpen className="w-6 h-6 text-purple-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">MCQ Questions</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    MCQ Questions
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {analytics.totalMCQs.toLocaleString()}
                   </p>
@@ -195,7 +217,9 @@ export default function AnalyticsPage() {
                   <Target className="w-6 h-6 text-orange-600" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Submissions</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Submissions
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {analytics.totalSubmissions.toLocaleString()}
                   </p>
@@ -209,7 +233,9 @@ export default function AnalyticsPage() {
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Active Users</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Active Users
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {analytics.activeUsers}
                   </p>
@@ -223,7 +249,9 @@ export default function AnalyticsPage() {
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Completion Rate</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Completion Rate
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {analytics.completionRate}%
                   </p>
