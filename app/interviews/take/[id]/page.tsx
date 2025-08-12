@@ -219,11 +219,14 @@ export default function TakeInterviewPage() {
 
     try {
       setSaving(true);
-      const response = await fetch(`/api/interviews/sessions/${session.id}/complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers }),
-      });
+      const response = await fetch(
+        `/api/interviews/sessions/${session.id}/complete`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answers }),
+        }
+      );
 
       const result = await response.json();
       if (result.success) {
@@ -285,16 +288,23 @@ export default function TakeInterviewPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <Card className="p-8 text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Interview Not Found</h2>
-          <p className="text-gray-600 mb-4">The interview template you're looking for doesn't exist.</p>
-          <Button onClick={() => router.push("/interviews")}>Back to Interviews</Button>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Interview Not Found
+          </h2>
+          <p className="text-gray-600 mb-4">
+            The interview template you're looking for doesn't exist.
+          </p>
+          <Button onClick={() => router.push("/interviews")}>
+            Back to Interviews
+          </Button>
         </Card>
       </div>
     );
   }
 
   const currentQuestion = template.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / template.questions.length) * 100;
+  const progress =
+    ((currentQuestionIndex + 1) / template.questions.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -313,7 +323,9 @@ export default function TakeInterviewPage() {
                 Exit Interview
               </Button>
               <div className="hidden md:block">
-                <h1 className="text-lg font-semibold text-gray-900">{template.name}</h1>
+                <h1 className="text-lg font-semibold text-gray-900">
+                  {template.name}
+                </h1>
                 <p className="text-sm text-gray-600">{template.category}</p>
               </div>
             </div>
@@ -342,7 +354,11 @@ export default function TakeInterviewPage() {
                 onClick={handlePauseResume}
                 className="flex items-center"
               >
-                {isPaused ? <Play className="w-4 h-4 mr-2" /> : <Pause className="w-4 h-4 mr-2" />}
+                {isPaused ? (
+                  <Play className="w-4 h-4 mr-2" />
+                ) : (
+                  <Pause className="w-4 h-4 mr-2" />
+                )}
                 {isPaused ? "Resume" : "Pause"}
               </Button>
 
@@ -370,21 +386,33 @@ export default function TakeInterviewPage() {
               {/* Question Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
-                  <span className="text-2xl">{currentQuestion.type === "mcq" ? "❓" : 
-                    currentQuestion.type === "basic-coding" ? "💻" :
-                    currentQuestion.type === "behavioral" ? "💬" : "🎯"}</span>
+                  <span className="text-2xl">
+                    {currentQuestion.type === "mcq"
+                      ? "❓"
+                      : currentQuestion.type === "basic-coding"
+                      ? "💻"
+                      : currentQuestion.type === "behavioral"
+                      ? "💬"
+                      : "🎯"}
+                  </span>
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
                       Question {currentQuestionIndex + 1}
                     </h2>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeColor(currentQuestion.type)}`}>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeColor(
+                        currentQuestion.type
+                      )}`}
+                    >
                       {getQuestionTypeLabel(currentQuestion.type)}
                     </span>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-sm text-gray-600">Points</div>
-                  <div className="text-lg font-bold text-blue-600">{currentQuestion.points}</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    {currentQuestion.points}
+                  </div>
                 </div>
               </div>
 
@@ -406,8 +434,15 @@ export default function TakeInterviewPage() {
                           type="radio"
                           name={`question-${currentQuestion.id}`}
                           value={option}
-                          checked={answers[currentQuestion.id]?.answer === option}
-                          onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                          checked={
+                            answers[currentQuestion.id]?.answer === option
+                          }
+                          onChange={(e) =>
+                            handleAnswerChange(
+                              currentQuestion.id,
+                              e.target.value
+                            )
+                          }
                           className="sr-only"
                         />
                         <div className="flex items-center">
@@ -427,26 +462,37 @@ export default function TakeInterviewPage() {
                   <div className="space-y-4">
                     <textarea
                       value={answers[currentQuestion.id]?.answer || ""}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                      onChange={(e) =>
+                        handleAnswerChange(currentQuestion.id, e.target.value)
+                      }
                       placeholder="Write your code here..."
                       className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
                     />
                     <div className="text-sm text-gray-600">
-                      <p>💡 <strong>Tip:</strong> Write simple, readable code. Focus on basic concepts and clear logic.</p>
+                      <p>
+                        💡 <strong>Tip:</strong> Write simple, readable code.
+                        Focus on basic concepts and clear logic.
+                      </p>
                     </div>
                   </div>
                 )}
 
-                {(currentQuestion.type === "behavioral" || currentQuestion.type === "scenario") && (
+                {(currentQuestion.type === "behavioral" ||
+                  currentQuestion.type === "scenario") && (
                   <div className="space-y-4">
                     <textarea
                       value={answers[currentQuestion.id]?.answer || ""}
-                      onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                      onChange={(e) =>
+                        handleAnswerChange(currentQuestion.id, e.target.value)
+                      }
                       placeholder="Write your response here..."
                       className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <div className="text-sm text-gray-600">
-                      <p>💡 <strong>Tip:</strong> Be specific and provide real examples. Show your problem-solving approach.</p>
+                      <p>
+                        💡 <strong>Tip:</strong> Be specific and provide real
+                        examples. Show your problem-solving approach.
+                      </p>
                     </div>
                   </div>
                 )}
@@ -496,7 +542,9 @@ export default function TakeInterviewPage() {
             <div className="space-y-6">
               {/* Progress Card */}
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Progress
+                </h3>
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-gray-600 mb-2">
                     <span>Questions Completed</span>
@@ -510,14 +558,20 @@ export default function TakeInterviewPage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{currentQuestionIndex + 1}</div>
-                  <div className="text-sm text-gray-600">of {template.questions.length} questions</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {currentQuestionIndex + 1}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    of {template.questions.length} questions
+                  </div>
                 </div>
               </Card>
 
               {/* Question Navigator */}
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Questions</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Questions
+                </h3>
                 <div className="grid grid-cols-5 gap-2">
                   {template.questions.map((question, index) => (
                     <button
@@ -539,7 +593,9 @@ export default function TakeInterviewPage() {
 
               {/* Interview Info */}
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Interview Info</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Interview Info
+                </h3>
                 <div className="space-y-3 text-sm">
                   <div>
                     <span className="text-gray-600">Category:</span>
@@ -547,11 +603,15 @@ export default function TakeInterviewPage() {
                   </div>
                   <div>
                     <span className="text-gray-600">Difficulty:</span>
-                    <div className="font-medium capitalize">{template.difficulty}</div>
+                    <div className="font-medium capitalize">
+                      {template.difficulty}
+                    </div>
                   </div>
                   <div>
                     <span className="text-gray-600">Duration:</span>
-                    <div className="font-medium">{template.duration} minutes</div>
+                    <div className="font-medium">
+                      {template.duration} minutes
+                    </div>
                   </div>
                   <div>
                     <span className="text-gray-600">Total Points:</span>
@@ -570,9 +630,12 @@ export default function TakeInterviewPage() {
       {showConfirmExit && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Card className="p-6 max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Exit Interview?</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Exit Interview?
+            </h3>
             <p className="text-gray-600 mb-6">
-              Your progress will be saved automatically. You can resume this interview later.
+              Your progress will be saved automatically. You can resume this
+              interview later.
             </p>
             <div className="flex space-x-3">
               <Button
