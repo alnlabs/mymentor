@@ -444,8 +444,7 @@ export default function UploadPage() {
               Content Upload Center
             </h2>
             <p className="text-blue-100 text-lg">
-              Add coding problems and MCQ questions to your platform with
-              comprehensive categorization.
+              Add coding problems and MCQ questions to your platform with comprehensive categorization.
             </p>
             <div className="flex items-center mt-4 space-x-4 text-sm">
               <div className="flex items-center">
@@ -482,13 +481,11 @@ export default function UploadPage() {
               Select Content Type
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label
-                className={`relative cursor-pointer group transition-all duration-200 ${
-                  uploadType === "problems"
-                    ? "ring-2 ring-blue-500 ring-offset-2"
-                    : "hover:ring-2 hover:ring-gray-300 ring-offset-2"
-                }`}
-              >
+              <label className={`relative cursor-pointer group transition-all duration-200 ${
+                uploadType === "problems" 
+                  ? "ring-2 ring-blue-500 ring-offset-2" 
+                  : "hover:ring-2 hover:ring-gray-300 ring-offset-2"
+              }`}>
                 <input
                   type="radio"
                   value="problems"
@@ -496,62 +493,43 @@ export default function UploadPage() {
                   onChange={(e) => setUploadType(e.target.value as ContentType)}
                   className="sr-only"
                 />
-                <div
-                  className={`p-6 rounded-xl border-2 transition-all duration-200 ${
-                    uploadType === "problems"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
+                <div className={`p-6 rounded-xl border-2 transition-all duration-200 ${
+                  uploadType === "problems"
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                }`}>
                   <div className="flex items-center mb-3">
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 mr-3 ${
-                        uploadType === "problems"
-                          ? "border-blue-500 bg-blue-500"
-                          : "border-gray-300"
-                      }`}
-                    >
+                    <div className={`w-4 h-4 rounded-full border-2 mr-3 ${
+                      uploadType === "problems"
+                        ? "border-blue-500 bg-blue-500"
+                        : "border-gray-300"
+                    }`}>
                       {uploadType === "problems" && (
                         <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
                       )}
                     </div>
-                    <Code
-                      className={`w-6 h-6 mr-3 ${
-                        uploadType === "problems"
-                          ? "text-blue-600"
-                          : "text-gray-400"
-                      }`}
-                    />
-                    <span
-                      className={`font-semibold text-lg ${
-                        uploadType === "problems"
-                          ? "text-blue-900"
-                          : "text-gray-700"
-                      }`}
-                    >
+                    <Code className={`w-6 h-6 mr-3 ${
+                      uploadType === "problems" ? "text-blue-600" : "text-gray-400"
+                    }`} />
+                    <span className={`font-semibold text-lg ${
+                      uploadType === "problems" ? "text-blue-900" : "text-gray-700"
+                    }`}>
                       Coding Problems
                     </span>
                   </div>
-                  <p
-                    className={`text-sm ml-7 ${
-                      uploadType === "problems"
-                        ? "text-blue-700"
-                        : "text-gray-600"
-                    }`}
-                  >
-                    Algorithm challenges, data structure problems, and coding
-                    exercises
+                  <p className={`text-sm ml-7 ${
+                    uploadType === "problems" ? "text-blue-700" : "text-gray-600"
+                  }`}>
+                    Algorithm challenges, data structure problems, and coding exercises
                   </p>
                 </div>
               </label>
 
-              <label
-                className={`relative cursor-pointer group transition-all duration-200 ${
-                  uploadType === "mcq"
-                    ? "ring-2 ring-blue-500 ring-offset-2"
-                    : "hover:ring-2 hover:ring-gray-300 ring-offset-2"
-                }`}
-              >
+              <label className={`relative cursor-pointer group transition-all duration-200 ${
+                uploadType === "mcq" 
+                  ? "ring-2 ring-blue-500 ring-offset-2" 
+                  : "hover:ring-2 hover:ring-gray-300 ring-offset-2"
+              }`}>
                 <input
                   type="radio"
                   value="mcq"
@@ -559,43 +537,33 @@ export default function UploadPage() {
                   onChange={(e) => setUploadType(e.target.value as ContentType)}
                   className="sr-only"
                 />
-                <div
-                  className={`p-6 rounded-xl border-2 transition-all duration-200 ${
-                    uploadType === "mcq"
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
+                <div className={`p-6 rounded-xl border-2 transition-all duration-200 ${
+                  uploadType === "mcq"
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                }`}>
                   <div className="flex items-center mb-3">
-                    <div
-                      className={`w-4 h-4 rounded-full border-2 mr-3 ${
-                        uploadType === "mcq"
-                          ? "border-blue-500 bg-blue-500"
-                          : "border-gray-300"
-                      }`}
-                    >
+                    <div className={`w-4 h-4 rounded-full border-2 mr-3 ${
+                      uploadType === "mcq"
+                        ? "border-blue-500 bg-blue-500"
+                        : "border-gray-300"
+                    }`}>
                       {uploadType === "mcq" && (
                         <div className="w-2 h-2 bg-white rounded-full m-0.5"></div>
                       )}
                     </div>
-                    <FileText
-                      className={`w-6 h-6 mr-3 ${
-                        uploadType === "mcq" ? "text-blue-600" : "text-gray-400"
-                      }`}
-                    />
-                    <span
-                      className={`font-semibold text-lg ${
-                        uploadType === "mcq" ? "text-blue-900" : "text-gray-700"
-                      }`}
-                    >
+                    <FileText className={`w-6 h-6 mr-3 ${
+                      uploadType === "mcq" ? "text-blue-600" : "text-gray-400"
+                    }`} />
+                    <span className={`font-semibold text-lg ${
+                      uploadType === "mcq" ? "text-blue-900" : "text-gray-700"
+                    }`}>
                       MCQ Questions
                     </span>
                   </div>
-                  <p
-                    className={`text-sm ml-7 ${
-                      uploadType === "mcq" ? "text-blue-700" : "text-gray-600"
-                    }`}
-                  >
+                  <p className={`text-sm ml-7 ${
+                    uploadType === "mcq" ? "text-blue-700" : "text-gray-600"
+                  }`}>
                     Multiple choice questions for knowledge assessment
                   </p>
                 </div>
@@ -681,19 +649,12 @@ export default function UploadPage() {
                     Manual Entry
                   </h3>
                   <p className="text-gray-700 mb-4">
-                    Add content one by one using our comprehensive form with
-                    smart categorization.
+                    Add content one by one using our comprehensive form with smart categorization.
                   </p>
                   <div className="flex flex-wrap gap-2 text-sm">
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
-                      ✓ Smart Forms
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                      ✓ Auto-save
-                    </span>
-                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
-                      ✓ Validation
-                    </span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">✓ Smart Forms</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">✓ Auto-save</span>
+                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">✓ Validation</span>
                   </div>
                 </div>
               </div>
@@ -707,25 +668,17 @@ export default function UploadPage() {
                         Coding Problems
                       </h4>
                       <span className="ml-3 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {problems.length}{" "}
-                        {problems.length === 1 ? "problem" : "problems"}
+                        {problems.length} {problems.length === 1 ? 'problem' : 'problems'}
                       </span>
                     </div>
-                    <Button
-                      onClick={addProblem}
-                      size="lg"
-                      className="shadow-md"
-                    >
+                    <Button onClick={addProblem} size="lg" className="shadow-md">
                       <Plus className="w-5 h-5 mr-2" />
                       Add Problem
                     </Button>
                   </div>
 
                   {problems.map((problem, index) => (
-                    <Card
-                      key={index}
-                      className="mb-6 border-2 border-gray-100 shadow-sm hover:shadow-md transition-shadow"
-                    >
+                    <Card key={index} className="mb-6 border-2 border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-t-xl border-b border-blue-200">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
@@ -779,11 +732,7 @@ export default function UploadPage() {
                               <select
                                 value={problem.category}
                                 onChange={(e) =>
-                                  updateProblem(
-                                    index,
-                                    "category",
-                                    e.target.value
-                                  )
+                                  updateProblem(index, "category", e.target.value)
                                 }
                                 className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                               >
@@ -794,9 +743,7 @@ export default function UploadPage() {
                                 </option>
                                 <option value="arrays">Arrays</option>
                                 <option value="strings">Strings</option>
-                                <option value="linked-lists">
-                                  Linked Lists
-                                </option>
+                                <option value="linked-lists">Linked Lists</option>
                                 <option value="stacks-queues">
                                   Stacks & Queues
                                 </option>
@@ -808,9 +755,7 @@ export default function UploadPage() {
                                 <option value="greedy-algorithms">
                                   Greedy Algorithms
                                 </option>
-                                <option value="backtracking">
-                                  Backtracking
-                                </option>
+                                <option value="backtracking">Backtracking</option>
                                 <option value="binary-search">
                                   Binary Search
                                 </option>
@@ -838,23 +783,15 @@ export default function UploadPage() {
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                        {/* Enhanced Primary Categorization */}
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
-                          <div className="flex items-center mb-4">
-                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                              <span className="text-white text-sm font-bold">1</span>
-                            </div>
+                        {/* Primary Categorization */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Primary Categorization
+                          </h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
-                              <h6 className="font-semibold text-gray-900">Primary Categorization</h6>
-                              <p className="text-sm text-gray-600">Define the core classification of your content</p>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Subject *
                               </label>
                               <select
@@ -866,7 +803,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Subject</option>
                                 <option value="programming">Programming</option>
@@ -892,9 +829,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Topic *
                               </label>
                               <select
@@ -902,7 +838,7 @@ export default function UploadPage() {
                                 onChange={(e) =>
                                   updateProblem(index, "topic", e.target.value)
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Topic</option>
                                 <option value="arrays">Arrays</option>
@@ -950,9 +886,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Tool/Technology *
                               </label>
                               <select
@@ -960,7 +895,7 @@ export default function UploadPage() {
                                 onChange={(e) =>
                                   updateProblem(index, "tool", e.target.value)
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Tool</option>
                                 <option value="python">Python</option>
@@ -978,9 +913,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Technology Stack
                               </label>
                               <select
@@ -992,7 +926,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Stack</option>
                                 <option value="frontend">Frontend</option>
@@ -1005,9 +939,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Domain
                               </label>
                               <select
@@ -1015,7 +948,7 @@ export default function UploadPage() {
                                 onChange={(e) =>
                                   updateProblem(index, "domain", e.target.value)
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Domain</option>
                                 <option value="web">Web</option>
@@ -1032,9 +965,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-blue-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Skill Level *
                               </label>
                               <select
@@ -1046,7 +978,7 @@ export default function UploadPage() {
                                     e.target.value as any
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="beginner">Beginner</option>
                                 <option value="intermediate">
@@ -1058,21 +990,14 @@ export default function UploadPage() {
                           </div>
                         </div>
 
-                        {/* Enhanced Professional Context */}
-                        <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-xl border border-green-200">
-                          <div className="flex items-center mb-4">
-                            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                              <span className="text-white text-sm font-bold">2</span>
-                            </div>
+                        {/* Professional Context */}
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">
+                            Professional Context
+                          </h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
-                              <h6 className="font-semibold text-gray-900">Professional Context</h6>
-                              <p className="text-sm text-gray-600">Define the professional context and target audience</p>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Job Role
                               </label>
                               <select
@@ -1084,7 +1009,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Job Role</option>
                                 <option value="frontend-developer">
@@ -1119,9 +1044,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Company Type
                               </label>
                               <select
@@ -1133,7 +1057,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Company Type</option>
                                 <option value="tech">Tech</option>
@@ -1149,9 +1073,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Interview Type
                               </label>
                               <select
@@ -1163,7 +1086,7 @@ export default function UploadPage() {
                                     e.target.value
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select Interview Type</option>
                                 <option value="technical">Technical</option>
@@ -1183,9 +1106,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Difficulty *
                               </label>
                               <select
@@ -1197,7 +1119,7 @@ export default function UploadPage() {
                                     e.target.value as any
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="easy">Easy</option>
                                 <option value="medium">Medium</option>
@@ -1205,9 +1127,8 @@ export default function UploadPage() {
                               </select>
                             </div>
 
-                            <div className="bg-white p-4 rounded-lg border border-green-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Priority
                               </label>
                               <select
@@ -1219,7 +1140,7 @@ export default function UploadPage() {
                                     e.target.value as any
                                   )
                                 }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
@@ -1229,76 +1150,60 @@ export default function UploadPage() {
                           </div>
                         </div>
 
-                        {/* Enhanced Content Section */}
-                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200">
-                          <div className="flex items-center mb-4">
-                            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
-                              <span className="text-white text-sm font-bold">3</span>
-                            </div>
-                            <div>
-                              <h6 className="font-semibold text-gray-900">Content Details</h6>
-                              <p className="text-sm text-gray-600">Define the problem content and requirements</p>
-                            </div>
-                          </div>
-                          
-                          <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm mb-6">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                              <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                              Description *
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Description *
+                          </label>
+                          <textarea
+                            value={problem.description}
+                            onChange={(e) =>
+                              updateProblem(
+                                index,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            rows={4}
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Problem description"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Test Cases *
                             </label>
                             <textarea
-                              value={problem.description}
+                              value={problem.testCases}
                               onChange={(e) =>
                                 updateProblem(
                                   index,
-                                  "description",
+                                  "testCases",
                                   e.target.value
                                 )
                               }
-                              rows={5}
-                              className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                              placeholder="Describe the problem in detail. Include any constraints, requirements, and expected behavior..."
+                              rows={3}
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
                             />
                           </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                                Test Cases *
-                              </label>
-                              <textarea
-                                value={problem.testCases}
-                                onChange={(e) =>
-                                  updateProblem(
-                                    index,
-                                    "testCases",
-                                    e.target.value
-                                  )
-                                }
-                                rows={4}
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
-                              />
-                              <p className="text-xs text-gray-500 mt-1">Use JSON format with input and output pairs</p>
-                            </div>
-
-                            <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                                Status
-                              </label>
-                              <select
-                                value={problem.status}
-                                onChange={(e) =>
-                                  updateProblem(
-                                    index,
-                                    "status",
-                                    e.target.value as any
-                                  )
-                                }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                              >
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Status
+                            </label>
+                            <select
+                              value={problem.status}
+                              onChange={(e) =>
+                                updateProblem(
+                                  index,
+                                  "status",
+                                  e.target.value as any
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
                               <option value="draft">Draft</option>
                               <option value="active">Active</option>
                               <option value="archived">Archived</option>
@@ -1306,58 +1211,51 @@ export default function UploadPage() {
                           </div>
                         </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                                Solution
-                              </label>
-                              <textarea
-                                value={problem.solution}
-                                onChange={(e) =>
-                                  updateProblem(index, "solution", e.target.value)
-                                }
-                                rows={4}
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                placeholder="Describe the solution approach, algorithm, or methodology..."
-                              />
-                              <p className="text-xs text-gray-500 mt-1">Optional: Provide solution hints or approach</p>
-                            </div>
-
-                            <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm">
-                              <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                                Tags
-                              </label>
-                              <input
-                                type="text"
-                                value={problem.tags}
-                                onChange={(e) =>
-                                  updateProblem(index, "tags", e.target.value)
-                                }
-                                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                                placeholder="arrays, hash-table, two-pointers"
-                              />
-                              <p className="text-xs text-gray-500 mt-1">Comma-separated tags for easy searching</p>
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Solution
+                            </label>
+                            <textarea
+                              value={problem.solution}
+                              onChange={(e) =>
+                                updateProblem(index, "solution", e.target.value)
+                              }
+                              rows={3}
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="Solution approach"
+                            />
                           </div>
 
-                          <div className="bg-white p-4 rounded-lg border border-purple-100 shadow-sm">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                              Companies
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Tags
                             </label>
                             <input
                               type="text"
-                              value={problem.companies}
+                              value={problem.tags}
                               onChange={(e) =>
-                                updateProblem(index, "companies", e.target.value)
+                                updateProblem(index, "tags", e.target.value)
                               }
-                              className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
-                              placeholder="Google, Amazon, Microsoft"
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="comma-separated tags"
                             />
-                            <p className="text-xs text-gray-500 mt-1">Companies that commonly ask this type of question</p>
                           </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Companies
+                          </label>
+                          <input
+                            type="text"
+                            value={problem.companies}
+                            onChange={(e) =>
+                              updateProblem(index, "companies", e.target.value)
+                            }
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="comma-separated companies"
+                          />
                         </div>
                       </div>
                     </Card>
@@ -1964,19 +1862,12 @@ export default function UploadPage() {
                     Bulk Upload
                   </h3>
                   <p className="text-gray-700 mb-4">
-                    Upload CSV, Excel, or JSON files with multiple items for
-                    efficient content management.
+                    Upload CSV, Excel, or JSON files with multiple items for efficient content management.
                   </p>
                   <div className="flex flex-wrap gap-2 text-sm">
-                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
-                      📁 Multiple Formats
-                    </span>
-                    <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">
-                      ⚡ Fast Processing
-                    </span>
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                      ✅ Validation
-                    </span>
+                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">📁 Multiple Formats</span>
+                    <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">⚡ Fast Processing</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">✅ Validation</span>
                   </div>
                 </div>
               </div>
@@ -1998,9 +1889,7 @@ export default function UploadPage() {
                     <FileSpreadsheet className="w-10 h-10 text-purple-600" />
                   </div>
                   <span className="text-xl font-semibold text-gray-800 mb-3">
-                    {selectedFile
-                      ? selectedFile.name
-                      : "Choose a file to upload"}
+                    {selectedFile ? selectedFile.name : "Choose a file to upload"}
                   </span>
                   <span className="text-gray-600 text-center max-w-md">
                     {selectedFile
@@ -2085,11 +1974,9 @@ export default function UploadPage() {
             }`}
           >
             <div className="flex items-start">
-              <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
-                  result.success ? "bg-green-100" : "bg-red-100"
-                }`}
-              >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
+                result.success ? "bg-green-100" : "bg-red-100"
+              }`}>
                 {result.success ? (
                   <Check className="w-6 h-6 text-green-600" />
                 ) : (
@@ -2102,76 +1989,57 @@ export default function UploadPage() {
                     result.success ? "text-green-800" : "text-red-800"
                   }`}
                 >
-                  {result.success
-                    ? "🎉 Upload Successful!"
-                    : "❌ Upload Failed"}
+                  {result.success ? "🎉 Upload Successful!" : "❌ Upload Failed"}
                 </h4>
-                <p
-                  className={`text-base mb-4 ${
-                    result.success ? "text-green-700" : "text-red-700"
-                  }`}
-                >
+                <p className={`text-base mb-4 ${
+                  result.success ? "text-green-700" : "text-red-700"
+                }`}>
                   {result.message}
                 </p>
-
+                
                 {result.data?.imported !== undefined && (
                   <div className="bg-white/50 p-3 rounded-lg mb-3">
                     <p className="text-sm font-semibold text-gray-800">
-                      ✅ Successfully imported:{" "}
-                      <span className="text-green-600 font-bold">
-                        {result.data.imported}
-                      </span>{" "}
-                      items
+                      ✅ Successfully imported: <span className="text-green-600 font-bold">{result.data.imported}</span> items
                     </p>
                   </div>
                 )}
-
+                
                 {result.data?.skipped !== undefined && (
                   <div className="bg-yellow-50 p-3 rounded-lg mb-3 border border-yellow-200">
                     <p className="text-sm font-semibold text-yellow-800">
-                      ⚠️ Skipped (Duplicates):{" "}
-                      <span className="font-bold">{result.data.skipped}</span>{" "}
-                      items
+                      ⚠️ Skipped (Duplicates): <span className="font-bold">{result.data.skipped}</span> items
                     </p>
                   </div>
                 )}
-
+                
                 {result.data?.errors && result.data.errors.length > 0 && (
                   <div className="bg-red-50 p-4 rounded-lg mb-3 border border-red-200">
-                    <p className="text-sm font-semibold text-red-800 mb-2">
-                      ❌ Errors Found:
-                    </p>
+                    <p className="text-sm font-semibold text-red-800 mb-2">❌ Errors Found:</p>
                     <ul className="text-sm text-red-700 space-y-1">
-                      {result.data.errors.map(
-                        (error: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-red-500 mr-2">•</span>
-                            {error}
-                          </li>
-                        )
-                      )}
+                      {result.data.errors.map((error: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-red-500 mr-2">•</span>
+                          {error}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 )}
-
-                {result.data?.duplicates &&
-                  result.data.duplicates.length > 0 && (
-                    <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                      <p className="text-sm font-semibold text-orange-800 mb-2">
-                        🔄 Duplicates Found:
-                      </p>
-                      <ul className="text-sm text-orange-700 space-y-1">
-                        {result.data.duplicates.map(
-                          (dup: string, index: number) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-orange-500 mr-2">•</span>
-                              {dup}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  )}
+                
+                {result.data?.duplicates && result.data.duplicates.length > 0 && (
+                  <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <p className="text-sm font-semibold text-orange-800 mb-2">🔄 Duplicates Found:</p>
+                    <ul className="text-sm text-orange-700 space-y-1">
+                      {result.data.duplicates.map((dup: string, index: number) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-orange-500 mr-2">•</span>
+                          {dup}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>
