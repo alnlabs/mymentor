@@ -325,163 +325,101 @@ export default function FeedbackPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Share Your Feedback
           </h2>
-          <p className="text-gray-600 text-lg mb-6">
+                    <p className="text-gray-600 text-lg">
             Help us improve your learning experience! Your feedback is valuable
             to us.
           </p>
-          
-          {/* Description & Explanation */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                  💡 What is Feedback?
-                </h3>
-                <div className="space-y-3 text-sm text-gray-700">
-                  <p>
-                    <strong>Feedback</strong> is your honest opinion about our platform, content, and learning experience. It helps us understand what's working well and what needs improvement.
-                  </p>
-                  <p>
-                    Whether you love something, have suggestions, found a bug, or want to share concerns - every piece of feedback matters!
-                  </p>
-                  <p>
-                    <strong>Examples:</strong>
-                  </p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>"The coding problems are too difficult for beginners"</li>
-                    <li>"I love the interview practice feature!"</li>
-                    <li>"The mobile app crashes when I submit answers"</li>
-                    <li>"Can you add more JavaScript problems?"</li>
-                    <li>"The UI is confusing to navigate"</li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                  🎯 How Your Feedback Helps
-                </h3>
-                <div className="space-y-3 text-sm text-gray-700">
-                  <p>
-                    Your feedback directly influences how we improve the platform for you and other students:
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We add new features based on popular requests</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We fix bugs and technical issues you report</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We improve content difficulty and quality</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We enhance user interface and experience</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We prioritize what matters most to students</span>
-                    </div>
-                  </div>
-                  <p className="text-blue-700 font-medium">
-                    <strong>Your voice shapes the future of our learning platform!</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Feedback Form */}
-        <Card className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Anonymous Toggle - HIGHLIGHTED */}
-            <div
-              className={`p-6 rounded-xl border-2 transition-all duration-300 ${
-                feedback.isAnonymous
-                  ? "bg-purple-50 border-purple-200 shadow-lg"
-                  : "bg-blue-50 border-blue-200 shadow-md"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                      feedback.isAnonymous
-                        ? "bg-purple-100 text-purple-600"
-                        : "bg-blue-100 text-blue-600"
-                    }`}
-                  >
-                    {feedback.isAnonymous ? (
-                      <EyeOff className="w-6 h-6" />
-                    ) : (
-                      <Eye className="w-6 h-6" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <h3
-                        className={`text-lg font-bold ${
+                {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Feedback Form - Left Side */}
+          <div className="lg:col-span-2">
+            <Card className="p-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Anonymous Toggle - HIGHLIGHTED */}
+                <div
+                  className={`p-6 rounded-xl border-2 transition-all duration-300 ${
+                    feedback.isAnonymous
+                      ? "bg-purple-50 border-purple-200 shadow-lg"
+                      : "bg-blue-50 border-blue-200 shadow-md"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div
+                        className={`w-12 h-12 rounded-full flex items-center justify-center ${
                           feedback.isAnonymous
-                            ? "text-purple-800"
-                            : "text-blue-800"
+                            ? "bg-purple-100 text-purple-600"
+                            : "bg-blue-100 text-blue-600"
                         }`}
                       >
-                        {feedback.isAnonymous
-                          ? "🔒 ANONYMOUS MODE"
-                          : "👤 NAMED MODE"}
-                      </h3>
-                      {feedback.isAnonymous && (
-                        <span className="px-2 py-1 bg-purple-200 text-purple-800 text-xs font-bold rounded-full">
-                          PRIVATE
-                        </span>
-                      )}
+                        {feedback.isAnonymous ? (
+                          <EyeOff className="w-6 h-6" />
+                        ) : (
+                          <Eye className="w-6 h-6" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h3
+                            className={`text-lg font-bold ${
+                              feedback.isAnonymous
+                                ? "text-purple-800"
+                                : "text-blue-800"
+                            }`}
+                          >
+                            {feedback.isAnonymous
+                              ? "🔒 ANONYMOUS MODE"
+                              : "👤 NAMED MODE"}
+                          </h3>
+                          {feedback.isAnonymous && (
+                            <span className="px-2 py-1 bg-purple-200 text-purple-800 text-xs font-bold rounded-full">
+                              PRIVATE
+                            </span>
+                          )}
+                        </div>
+                         <p
+                           className={`text-sm font-medium ${
+                             feedback.isAnonymous
+                               ? "text-purple-700"
+                               : "text-blue-700"
+                           }`}
+                         >
+                           {feedback.isAnonymous
+                             ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
+                             : "📝 Your name will be visible to administrators for better support"}
+                         </p>
+                      </div>
                     </div>
-                                         <p
-                       className={`text-sm font-medium ${
-                         feedback.isAnonymous
-                           ? "text-purple-700"
-                           : "text-blue-700"
-                       }`}
-                     >
-                       {feedback.isAnonymous
-                         ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
-                         : "📝 Your name will be visible to administrators for better support"}
-                     </p>
+                    <div className="flex flex-col items-center space-y-2">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={feedback.isAnonymous}
+                          onChange={(e) =>
+                            updateFeedback("isAnonymous", e.target.checked)
+                          }
+                          className="sr-only peer"
+                        />
+                        <div
+                          className={`w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all ${
+                            feedback.isAnonymous
+                              ? "peer-checked:bg-purple-600"
+                              : "peer-checked:bg-blue-600"
+                          }`}
+                        ></div>
+                      </label>
+                      <span
+                        className={`text-xs font-bold ${
+                          feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
+                        }`}
+                      >
+                        {feedback.isAnonymous ? "ON" : "OFF"}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-center space-y-2">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={feedback.isAnonymous}
-                      onChange={(e) =>
-                        updateFeedback("isAnonymous", e.target.checked)
-                      }
-                      className="sr-only peer"
-                    />
-                    <div
-                      className={`w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all ${
-                        feedback.isAnonymous
-                          ? "peer-checked:bg-purple-600"
-                          : "peer-checked:bg-blue-600"
-                      }`}
-                    ></div>
-                  </label>
-                  <span
-                    className={`text-xs font-bold ${
-                      feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
-                    }`}
-                  >
-                    {feedback.isAnonymous ? "ON" : "OFF"}
-                  </span>
-                </div>
-              </div>
-            </div>
 
             {/* Feedback Type */}
             <div>
@@ -624,11 +562,124 @@ export default function FeedbackPage() {
             </div>
           </form>
         </Card>
+          </div>
+
+          {/* Right Sidebar - Description & Explanation */}
+          <div className="lg:col-span-1">
+            <div className="space-y-6">
+              {/* What is Feedback */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                  💡 What is Feedback?
+                </h3>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <p>
+                    <strong>Feedback</strong> is your honest opinion about our
+                    platform, content, and learning experience. It helps us
+                    understand what's working well and what needs improvement.
+                  </p>
+                  <p>
+                    Whether you love something, have suggestions, found a bug,
+                    or want to share concerns - every piece of feedback matters!
+                  </p>
+                  <p>
+                    <strong>Examples:</strong>
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 ml-4">
+                    <li>
+                      "The coding problems are too difficult for beginners"
+                    </li>
+                    <li>"I love the interview practice feature!"</li>
+                    <li>"The mobile app crashes when I submit answers"</li>
+                    <li>"Can you add more JavaScript problems?"</li>
+                    <li>"The UI is confusing to navigate"</li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* How Your Feedback Helps */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                  🎯 How Your Feedback Helps
+                </h3>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <p>
+                    Your feedback directly influences how we improve the
+                    platform for you and other students:
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We add new features based on popular requests</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We fix bugs and technical issues you report</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We improve content difficulty and quality</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We enhance user interface and experience</span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span>We prioritize what matters most to students</span>
+                    </div>
+                  </div>
+                  <p className="text-blue-700 font-medium">
+                    <strong>
+                      Your voice shapes the future of our learning platform!
+                    </strong>
+                  </p>
+                </div>
+              </Card>
+
+              {/* Anonymous Mode Explanation */}
+              <Card className="p-6 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                  🔒 About Anonymous Mode
+                </h3>
+                <div className="space-y-3 text-sm text-gray-700">
+                  <p>
+                    <strong>Anonymous mode</strong> allows you to share feedback without revealing your identity to administrators.
+                  </p>
+                  <div className="bg-white p-3 rounded-lg border border-purple-200">
+                    <h4 className="font-semibold text-purple-800 mb-2">✅ Benefits of Anonymous Mode:</h4>
+                    <ul className="space-y-1 text-sm">
+                      <li>• Share honest feedback without fear</li>
+                      <li>• Express concerns freely</li>
+                      <li>• Report issues without worry</li>
+                      <li>• Give honest criticism</li>
+                      <li>• Share personal experiences</li>
+                    </ul>
+                  </div>
+                  <div className="bg-white p-3 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">📝 Named Mode Benefits:</h4>
+                    <ul className="space-y-1 text-sm">
+                      <li>• Get personalized follow-up</li>
+                      <li>• Receive direct support</li>
+                      <li>• Track your feedback status</li>
+                      <li>• Build relationship with team</li>
+                    </ul>
+                  </div>
+                  <p className="text-purple-700 font-medium">
+                    <strong>Choose what makes you most comfortable!</strong>
+                  </p>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
 
         {/* Additional Info */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            💡 <strong>Share Freely:</strong> Your honest feedback helps us improve. Choose anonymous mode to share without any concerns about privacy.
+            💡 <strong>Share Freely:</strong> Your honest feedback helps us
+            improve. Choose anonymous mode to share without any concerns about
+            privacy.
           </p>
         </div>
       </div>
