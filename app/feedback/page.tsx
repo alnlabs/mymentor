@@ -335,18 +335,22 @@ export default function FeedbackPage() {
         <Card className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Anonymous Toggle - HIGHLIGHTED */}
-            <div className={`p-6 rounded-xl border-2 transition-all duration-300 ${
-              feedback.isAnonymous 
-                ? "bg-purple-50 border-purple-200 shadow-lg" 
-                : "bg-blue-50 border-blue-200 shadow-md"
-            }`}>
+            <div
+              className={`p-6 rounded-xl border-2 transition-all duration-300 ${
+                feedback.isAnonymous
+                  ? "bg-purple-50 border-purple-200 shadow-lg"
+                  : "bg-blue-50 border-blue-200 shadow-md"
+              }`}
+            >
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    feedback.isAnonymous 
-                      ? "bg-purple-100 text-purple-600" 
-                      : "bg-blue-100 text-blue-600"
-                  }`}>
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                      feedback.isAnonymous
+                        ? "bg-purple-100 text-purple-600"
+                        : "bg-blue-100 text-blue-600"
+                    }`}
+                  >
                     {feedback.isAnonymous ? (
                       <EyeOff className="w-6 h-6" />
                     ) : (
@@ -355,10 +359,16 @@ export default function FeedbackPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-2">
-                      <h3 className={`text-lg font-bold ${
-                        feedback.isAnonymous ? "text-purple-800" : "text-blue-800"
-                      }`}>
-                        {feedback.isAnonymous ? "🔒 ANONYMOUS MODE" : "👤 NAMED MODE"}
+                      <h3
+                        className={`text-lg font-bold ${
+                          feedback.isAnonymous
+                            ? "text-purple-800"
+                            : "text-blue-800"
+                        }`}
+                      >
+                        {feedback.isAnonymous
+                          ? "🔒 ANONYMOUS MODE"
+                          : "👤 NAMED MODE"}
                       </h3>
                       {feedback.isAnonymous && (
                         <span className="px-2 py-1 bg-purple-200 text-purple-800 text-xs font-bold rounded-full">
@@ -366,17 +376,17 @@ export default function FeedbackPage() {
                         </span>
                       )}
                     </div>
-                    <p className={`text-sm font-medium ${
-                      feedback.isAnonymous ? "text-purple-700" : "text-blue-700"
-                    }`}>
-                      {feedback.isAnonymous 
-                        ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
-                        : "📝 Your name will be visible to administrators for better support"
-                      }
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                      💡 <strong>Note:</strong> We always collect user details in background for internal reference
-                    </p>
+                                         <p
+                       className={`text-sm font-medium ${
+                         feedback.isAnonymous
+                           ? "text-purple-700"
+                           : "text-blue-700"
+                       }`}
+                     >
+                       {feedback.isAnonymous
+                         ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
+                         : "📝 Your name will be visible to administrators for better support"}
+                     </p>
                   </div>
                 </div>
                 <div className="flex flex-col items-center space-y-2">
@@ -389,13 +399,19 @@ export default function FeedbackPage() {
                       }
                       className="sr-only peer"
                     />
-                    <div className={`w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all ${
-                      feedback.isAnonymous ? "peer-checked:bg-purple-600" : "peer-checked:bg-blue-600"
-                    }`}></div>
+                    <div
+                      className={`w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all ${
+                        feedback.isAnonymous
+                          ? "peer-checked:bg-purple-600"
+                          : "peer-checked:bg-blue-600"
+                      }`}
+                    ></div>
                   </label>
-                  <span className={`text-xs font-bold ${
-                    feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
-                  }`}>
+                  <span
+                    className={`text-xs font-bold ${
+                      feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
+                    }`}
+                  >
                     {feedback.isAnonymous ? "ON" : "OFF"}
                   </span>
                 </div>
@@ -547,7 +563,7 @@ export default function FeedbackPage() {
         {/* Additional Info */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            💡 <strong>Privacy First:</strong> Your feedback is valuable to us. Choose anonymous mode if you prefer to share freely without revealing your identity.
+            💡 <strong>Share Freely:</strong> Your honest feedback helps us improve. Choose anonymous mode to share without any concerns about privacy.
           </p>
         </div>
       </div>
