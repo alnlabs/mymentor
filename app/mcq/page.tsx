@@ -63,7 +63,8 @@ export default function MCQPage() {
         (mcq) =>
           mcq.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           mcq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          mcq.category.toLowerCase().includes(searchTerm.toLowerCase())
+          mcq.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          getCategoryLabel(mcq.category).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -112,7 +113,91 @@ export default function MCQPage() {
     return "text-red-600";
   };
 
-  const categories = Array.from(new Set(mcqs.map((m) => m.category)));
+  const getCategoryLabel = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      // IT & Computer Positions
+      "computer-operator": "Computer Operator",
+      "data-entry-operator": "Data Entry Operator",
+      "office-assistant": "Office Assistant",
+      "receptionist": "Receptionist",
+      "admin-assistant": "Admin Assistant",
+      "customer-support": "Customer Support",
+      "help-desk": "Help Desk",
+      "technical-support": "Technical Support",
+      // Business Positions
+      "sales-assistant": "Sales Assistant",
+      "marketing-assistant": "Marketing Assistant",
+      "account-assistant": "Account Assistant",
+      "hr-assistant": "HR Assistant",
+      "operations-assistant": "Operations Assistant",
+      "logistics-assistant": "Logistics Assistant",
+      "procurement-assistant": "Procurement Assistant",
+      "quality-assistant": "Quality Assistant",
+      // Service Positions
+      "retail-assistant": "Retail Assistant",
+      "hospitality-assistant": "Hospitality Assistant",
+      "healthcare-assistant": "Healthcare Assistant",
+      "education-assistant": "Education Assistant",
+      "banking-assistant": "Banking Assistant",
+      "insurance-assistant": "Insurance Assistant",
+      "travel-assistant": "Travel Assistant",
+      "event-assistant": "Event Assistant",
+      // Technical Positions
+      "web-designer": "Web Designer",
+      "graphic-designer": "Graphic Designer",
+      "content-writer": "Content Writer",
+      "social-media": "Social Media",
+      "digital-marketing": "Digital Marketing",
+      "seo-assistant": "SEO Assistant",
+      "video-editor": "Video Editor",
+      "photographer": "Photographer",
+    };
+    return categoryMap[category] || category;
+  };
+
+  // All position-based categories for fresh graduates
+  const allCategories = [
+    // IT & Computer Positions
+    "computer-operator",
+    "data-entry-operator", 
+    "office-assistant",
+    "receptionist",
+    "admin-assistant",
+    "customer-support",
+    "help-desk",
+    "technical-support",
+    // Business Positions
+    "sales-assistant",
+    "marketing-assistant",
+    "account-assistant", 
+    "hr-assistant",
+    "operations-assistant",
+    "logistics-assistant",
+    "procurement-assistant",
+    "quality-assistant",
+    // Service Positions
+    "retail-assistant",
+    "hospitality-assistant",
+    "healthcare-assistant",
+    "education-assistant",
+    "banking-assistant",
+    "insurance-assistant",
+    "travel-assistant",
+    "event-assistant",
+    // Technical Positions
+    "web-designer",
+    "graphic-designer",
+    "content-writer",
+    "social-media",
+    "digital-marketing",
+    "seo-assistant",
+    "video-editor",
+    "photographer",
+  ];
+
+  // Get categories from existing MCQs and combine with all categories
+  const existingCategories = Array.from(new Set(mcqs.map((m) => m.category)));
+  const categories = [...new Set([...allCategories, ...existingCategories])];
 
   if (loading || loadingMcqs) {
     return (
@@ -267,7 +352,48 @@ export default function MCQPage() {
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               <option value="all">All Categories</option>
-              {categories.map((category) => (
+              <optgroup label="IT & Computer Positions">
+                <option value="computer-operator">Computer Operator</option>
+                <option value="data-entry-operator">Data Entry Operator</option>
+                <option value="office-assistant">Office Assistant</option>
+                <option value="receptionist">Receptionist</option>
+                <option value="admin-assistant">Admin Assistant</option>
+                <option value="customer-support">Customer Support</option>
+                <option value="help-desk">Help Desk</option>
+                <option value="technical-support">Technical Support</option>
+              </optgroup>
+              <optgroup label="Business Positions">
+                <option value="sales-assistant">Sales Assistant</option>
+                <option value="marketing-assistant">Marketing Assistant</option>
+                <option value="account-assistant">Account Assistant</option>
+                <option value="hr-assistant">HR Assistant</option>
+                <option value="operations-assistant">Operations Assistant</option>
+                <option value="logistics-assistant">Logistics Assistant</option>
+                <option value="procurement-assistant">Procurement Assistant</option>
+                <option value="quality-assistant">Quality Assistant</option>
+              </optgroup>
+              <optgroup label="Service Positions">
+                <option value="retail-assistant">Retail Assistant</option>
+                <option value="hospitality-assistant">Hospitality Assistant</option>
+                <option value="healthcare-assistant">Healthcare Assistant</option>
+                <option value="education-assistant">Education Assistant</option>
+                <option value="banking-assistant">Banking Assistant</option>
+                <option value="insurance-assistant">Insurance Assistant</option>
+                <option value="travel-assistant">Travel Assistant</option>
+                <option value="event-assistant">Event Assistant</option>
+              </optgroup>
+              <optgroup label="Technical Positions">
+                <option value="web-designer">Web Designer</option>
+                <option value="graphic-designer">Graphic Designer</option>
+                <option value="content-writer">Content Writer</option>
+                <option value="social-media">Social Media</option>
+                <option value="digital-marketing">Digital Marketing</option>
+                <option value="seo-assistant">SEO Assistant</option>
+                <option value="video-editor">Video Editor</option>
+                <option value="photographer">Photographer</option>
+              </optgroup>
+              {/* Show any additional categories from existing MCQs */}
+              {existingCategories.filter(cat => !allCategories.includes(cat)).map((category) => (
                 <option key={category} value={category}>
                   {category}
                 </option>
@@ -323,7 +449,7 @@ export default function MCQPage() {
                   {/* Category */}
                   <div className="mb-4">
                     <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
-                      {mcq.category}
+                      {getCategoryLabel(mcq.category)}
                     </span>
                   </div>
 
