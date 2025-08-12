@@ -42,10 +42,10 @@ export default function MCQPage() {
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [positionFilter, setPositionFilter] = useState<string>("all");
-  const [filterMode, setFilterMode] = useState<"all" | "union" | "intersection">("all");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedPositions, setSelectedPositions] = useState<string[]>([]);
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [subjectFilter, setSubjectFilter] = useState<string>("all");
+  const [topicFilter, setTopicFilter] = useState<string>("all");
+  const [skillLevelFilter, setSkillLevelFilter] = useState<string>("all");
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
 
   useEffect(() => {
     fetchMCQs();
@@ -53,7 +53,16 @@ export default function MCQPage() {
 
   useEffect(() => {
     filterMCQs();
-  }, [mcqs, searchTerm, difficultyFilter, categoryFilter, positionFilter, filterMode, selectedCategories, selectedPositions]);
+  }, [
+    mcqs,
+    searchTerm,
+    difficultyFilter,
+    categoryFilter,
+    positionFilter,
+    subjectFilter,
+    topicFilter,
+    skillLevelFilter,
+  ]);
 
   const fetchMCQs = async () => {
     try {
@@ -100,36 +109,21 @@ export default function MCQPage() {
       filtered = filtered.filter((mcq) => mcq.difficulty === difficultyFilter);
     }
 
-    // Advanced filtering logic
-    if (filterMode === "all") {
-      // Simple filtering
-      if (categoryFilter !== "all") {
-        filtered = filtered.filter((mcq) => mcq.category === categoryFilter);
-      }
-      if (positionFilter !== "all") {
-        filtered = filtered.filter((mcq) => mcq.jobRole === positionFilter);
-      }
-    } else {
-      // Advanced filtering with multiple selections
-      if (selectedCategories.length > 0) {
-        if (filterMode === "union") {
-          // Show MCQs that match ANY of the selected categories
-          filtered = filtered.filter((mcq) => selectedCategories.includes(mcq.category));
-        } else if (filterMode === "intersection") {
-          // Show MCQs that match ALL of the selected categories (if multiple categories exist)
-          filtered = filtered.filter((mcq) => selectedCategories.includes(mcq.category));
-        }
-      }
-      
-      if (selectedPositions.length > 0) {
-        if (filterMode === "union") {
-          // Show MCQs that match ANY of the selected positions
-          filtered = filtered.filter((mcq) => mcq.jobRole && selectedPositions.includes(mcq.jobRole));
-        } else if (filterMode === "intersection") {
-          // Show MCQs that match ALL of the selected positions (if multiple positions exist)
-          filtered = filtered.filter((mcq) => mcq.jobRole && selectedPositions.includes(mcq.jobRole));
-        }
-      }
+    // Enhanced filtering logic
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.category === categoryFilter);
+    }
+    if (positionFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.jobRole === positionFilter);
+    }
+    if (subjectFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.subject === subjectFilter);
+    }
+    if (topicFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.topic === topicFilter);
+    }
+    if (skillLevelFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.skillLevel === skillLevelFilter);
     }
 
     setFilteredMcqs(filtered);
@@ -214,48 +208,26 @@ export default function MCQPage() {
     return positionMap[position] || position;
   };
 
-  // Helper functions for advanced filtering
-  const toggleCategory = (category: string) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
-  };
-
-  const togglePosition = (position: string) => {
-    setSelectedPositions(prev => 
-      prev.includes(position) 
-        ? prev.filter(p => p !== position)
-        : [...prev, position]
-    );
-  };
-
+  // Helper functions for enhanced filtering
   const clearAllFilters = () => {
     setSearchTerm("");
     setDifficultyFilter("all");
     setCategoryFilter("all");
     setPositionFilter("all");
-    setFilterMode("all");
-    setSelectedCategories([]);
-    setSelectedPositions([]);
+    setSubjectFilter("all");
+    setTopicFilter("all");
+    setSkillLevelFilter("all");
   };
 
   const getFilterSummary = () => {
     const filters = [];
     if (searchTerm) filters.push(`Search: "${searchTerm}"`);
     if (difficultyFilter !== "all") filters.push(`Difficulty: ${difficultyFilter}`);
-    if (filterMode === "all") {
-      if (categoryFilter !== "all") filters.push(`Test Type: ${categoryFilter}`);
-      if (positionFilter !== "all") filters.push(`Position: ${getPositionLabel(positionFilter)}`);
-    } else {
-      if (selectedCategories.length > 0) {
-        filters.push(`${filterMode === "union" ? "Any" : "All"} Test Types: ${selectedCategories.join(", ")}`);
-      }
-      if (selectedPositions.length > 0) {
-        filters.push(`${filterMode === "union" ? "Any" : "All"} Positions: ${selectedPositions.map(getPositionLabel).join(", ")}`);
-      }
-    }
+    if (categoryFilter !== "all") filters.push(`Test Type: ${categoryFilter}`);
+    if (positionFilter !== "all") filters.push(`Position: ${getPositionLabel(positionFilter)}`);
+    if (subjectFilter !== "all") filters.push(`Subject: ${subjectFilter}`);
+    if (topicFilter !== "all") filters.push(`Topic: ${topicFilter}`);
+    if (skillLevelFilter !== "all") filters.push(`Skill Level: ${skillLevelFilter}`);
     return filters;
   };
 
@@ -329,15 +301,41 @@ export default function MCQPage() {
     "photographer",
   ];
 
+  // Subjects and Topics for enhanced filtering
+  const subjects = [
+    // Technical Subjects
+    "programming", "data-science", "web-development", "mobile-development", 
+    "devops", "ai-ml", "database", "cybersecurity", "system-design",
+    // Non-Technical Subjects
+    "aptitude", "reasoning", "verbal", "quantitative", "general-knowledge", 
+    "english", "communication", "problem-solving", "critical-thinking", 
+    "leadership", "management", "business"
+  ];
+
+  const topics = [
+    // Programming Topics
+    "arrays", "strings", "linked-lists", "stacks-queues", "trees", "graphs", 
+    "dynamic-programming", "sorting", "searching", "recursion", "object-oriented",
+    // Web Development Topics
+    "html-css", "javascript", "react", "nodejs", "python", "java", "sql", "apis",
+    // Aptitude Topics
+    "number-series", "verbal-reasoning", "logical-reasoning", "data-interpretation",
+    "general-awareness", "current-affairs", "business-ethics", "team-work"
+  ];
+
   // Get categories and positions from existing MCQs
   const existingCategories = Array.from(new Set(mcqs.map((m) => m.category)));
   const existingPositions = Array.from(
     new Set(mcqs.map((m) => m.jobRole || "").filter(Boolean))
   );
+  const existingSubjects = Array.from(new Set(mcqs.map((m) => m.subject || "").filter(Boolean)));
+  const existingTopics = Array.from(new Set(mcqs.map((m) => m.topic || "").filter(Boolean)));
 
   // Combine with predefined lists
   const categories = [...new Set([...testCategories, ...existingCategories])];
   const positions = [...new Set([...jobPositions, ...existingPositions])];
+  const allSubjects = [...new Set([...subjects, ...existingSubjects])];
+  const allTopics = [...new Set([...topics, ...existingTopics])];
 
   if (loading || loadingMcqs) {
     return (
@@ -472,62 +470,24 @@ export default function MCQPage() {
             />
           </div>
 
-          {/* Filters */}
+                    {/* Enhanced Filters */}
           <div className="space-y-4">
-            {/* Filter Mode Toggle */}
+            {/* Filter Header */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Filter className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">
-                    Filters:
-                  </span>
-                </div>
-                
-                {/* Filter Mode Buttons */}
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setFilterMode("all")}
-                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                      filterMode === "all"
-                        ? "bg-purple-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
-                  >
-                    Simple
-                  </button>
-                  <button
-                    onClick={() => setFilterMode("union")}
-                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                      filterMode === "union"
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
-                  >
-                    Union (OR)
-                  </button>
-                  <button
-                    onClick={() => setFilterMode("intersection")}
-                    className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                      filterMode === "intersection"
-                        ? "bg-green-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    }`}
-                  >
-                    Intersection (AND)
-                  </button>
-                </div>
+              <div className="flex items-center space-x-2">
+                <Filter className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Filters</span>
               </div>
-
-              {/* Advanced Filters Toggle */}
+              
+              {/* More Filters Toggle */}
               <button
-                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                onClick={() => setShowMoreFilters(!showMoreFilters)}
                 className="flex items-center space-x-2 text-sm text-purple-600 hover:text-purple-700"
               >
-                <span>{showAdvancedFilters ? "Hide" : "Show"} Advanced</span>
+                <span>{showMoreFilters ? "Hide" : "Show"} More Filters</span>
                 <svg
                   className={`w-4 h-4 transition-transform ${
-                    showAdvancedFilters ? "rotate-180" : ""
+                    showMoreFilters ? "rotate-180" : ""
                   }`}
                   fill="none"
                   stroke="currentColor"
@@ -543,26 +503,34 @@ export default function MCQPage() {
               </button>
             </div>
 
-            {/* Simple Filters */}
-            {filterMode === "all" && (
-              <div className="flex flex-wrap gap-4">
-                {/* Difficulty Filter */}
+            {/* Basic Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Difficulty Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Difficulty
+                </label>
                 <select
                   value={difficultyFilter}
                   onChange={(e) => setDifficultyFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                 >
                   <option value="all">All Difficulties</option>
                   <option value="easy">Easy</option>
                   <option value="medium">Medium</option>
                   <option value="hard">Hard</option>
                 </select>
+              </div>
 
-                {/* Category Filter */}
+              {/* Category Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Test Type
+                </label>
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                 >
                   <option value="all">All Test Types</option>
                   <optgroup label="Technical Tests">
@@ -583,38 +551,31 @@ export default function MCQPage() {
                     <option value="Aptitude">Aptitude</option>
                     <option value="Logical Reasoning">Logical Reasoning</option>
                     <option value="Verbal Ability">Verbal Ability</option>
-                    <option value="Quantitative Aptitude">
-                      Quantitative Aptitude
-                    </option>
+                    <option value="Quantitative Aptitude">Quantitative Aptitude</option>
                     <option value="General Knowledge">General Knowledge</option>
                     <option value="English Language">English Language</option>
-                    <option value="Business Communication">
-                      Business Communication
-                    </option>
+                    <option value="Business Communication">Business Communication</option>
                     <option value="Problem Solving">Problem Solving</option>
                     <option value="Critical Thinking">Critical Thinking</option>
                     <option value="Team Management">Team Management</option>
                     <option value="Leadership">Leadership</option>
                     <option value="Project Management">Project Management</option>
                   </optgroup>
-                  {/* Show any additional categories from existing MCQs */}
-                  {existingCategories
-                    .filter((cat) => !testCategories.includes(cat))
-                    .map((category) => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
-                    ))}
                 </select>
+              </div>
 
-                {/* Position Filter */}
+              {/* Position Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Position
+                </label>
                 <select
                   value={positionFilter}
                   onChange={(e) => setPositionFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
                 >
                   <option value="all">All Positions</option>
-                  <optgroup label="IT & Computer Positions">
+                  <optgroup label="IT & Computer">
                     <option value="computer-operator">Computer Operator</option>
                     <option value="data-entry-operator">Data Entry Operator</option>
                     <option value="office-assistant">Office Assistant</option>
@@ -624,35 +585,27 @@ export default function MCQPage() {
                     <option value="help-desk">Help Desk</option>
                     <option value="technical-support">Technical Support</option>
                   </optgroup>
-                  <optgroup label="Business Positions">
+                  <optgroup label="Business">
                     <option value="sales-assistant">Sales Assistant</option>
                     <option value="marketing-assistant">Marketing Assistant</option>
                     <option value="account-assistant">Account Assistant</option>
                     <option value="hr-assistant">HR Assistant</option>
-                    <option value="operations-assistant">
-                      Operations Assistant
-                    </option>
+                    <option value="operations-assistant">Operations Assistant</option>
                     <option value="logistics-assistant">Logistics Assistant</option>
-                    <option value="procurement-assistant">
-                      Procurement Assistant
-                    </option>
+                    <option value="procurement-assistant">Procurement Assistant</option>
                     <option value="quality-assistant">Quality Assistant</option>
                   </optgroup>
-                  <optgroup label="Service Positions">
+                  <optgroup label="Service">
                     <option value="retail-assistant">Retail Assistant</option>
-                    <option value="hospitality-assistant">
-                      Hospitality Assistant
-                    </option>
-                    <option value="healthcare-assistant">
-                      Healthcare Assistant
-                    </option>
+                    <option value="hospitality-assistant">Hospitality Assistant</option>
+                    <option value="healthcare-assistant">Healthcare Assistant</option>
                     <option value="education-assistant">Education Assistant</option>
                     <option value="banking-assistant">Banking Assistant</option>
                     <option value="insurance-assistant">Insurance Assistant</option>
                     <option value="travel-assistant">Travel Assistant</option>
                     <option value="event-assistant">Event Assistant</option>
                   </optgroup>
-                  <optgroup label="Technical Positions">
+                  <optgroup label="Technical">
                     <option value="web-designer">Web Designer</option>
                     <option value="graphic-designer">Graphic Designer</option>
                     <option value="content-writer">Content Writer</option>
@@ -662,25 +615,32 @@ export default function MCQPage() {
                     <option value="video-editor">Video Editor</option>
                     <option value="photographer">Photographer</option>
                   </optgroup>
-                  {/* Show any additional positions from existing MCQs */}
-                  {existingPositions
-                    .filter((pos) => !jobPositions.includes(pos))
-                    .map((position) => (
-                      <option key={position} value={position}>
-                        {getPositionLabel(position)}
-                      </option>
-                    ))}
                 </select>
               </div>
-            )}
 
-            {/* Advanced Filters */}
-            {showAdvancedFilters && filterMode !== "all" && (
+              {/* Skill Level Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Skill Level
+                </label>
+                <select
+                  value={skillLevelFilter}
+                  onChange={(e) => setSkillLevelFilter(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                >
+                  <option value="all">All Levels</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Additional Filters */}
+            {showMoreFilters && (
               <div className="bg-gray-50 p-4 rounded-lg space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-700">
-                    Advanced Filters ({filterMode === "union" ? "OR" : "AND"} Mode)
-                  </h3>
+                  <h3 className="text-sm font-medium text-gray-700">Additional Filters</h3>
                   <button
                     onClick={clearAllFilters}
                     className="text-sm text-red-600 hover:text-red-700"
@@ -689,60 +649,91 @@ export default function MCQPage() {
                   </button>
                 </div>
 
-                {/* Difficulty Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Difficulty
-                  </label>
-                  <select
-                    value={difficultyFilter}
-                    onChange={(e) => setDifficultyFilter(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  >
-                    <option value="all">All Difficulties</option>
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                  </select>
-                </div>
-
-                {/* Multiple Category Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Test Types (Select Multiple)
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
-                    {testCategories.map((category) => (
-                      <label key={category} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category)}
-                          onChange={() => toggleCategory(category)}
-                          className="w-4 h-4 text-purple-600 focus:ring-purple-500"
-                        />
-                        <span className="text-sm text-gray-700">{category}</span>
-                      </label>
-                    ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Subject Filter */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject
+                    </label>
+                    <select
+                      value={subjectFilter}
+                      onChange={(e) => setSubjectFilter(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                      <option value="all">All Subjects</option>
+                      <optgroup label="Technical Subjects">
+                        <option value="programming">Programming</option>
+                        <option value="data-science">Data Science</option>
+                        <option value="web-development">Web Development</option>
+                        <option value="mobile-development">Mobile Development</option>
+                        <option value="devops">DevOps</option>
+                        <option value="ai-ml">AI/ML</option>
+                        <option value="database">Database</option>
+                        <option value="cybersecurity">Cybersecurity</option>
+                        <option value="system-design">System Design</option>
+                      </optgroup>
+                      <optgroup label="Non-Technical Subjects">
+                        <option value="aptitude">Aptitude</option>
+                        <option value="reasoning">Logical Reasoning</option>
+                        <option value="verbal">Verbal Ability</option>
+                        <option value="quantitative">Quantitative Aptitude</option>
+                        <option value="general-knowledge">General Knowledge</option>
+                        <option value="english">English Language</option>
+                        <option value="communication">Business Communication</option>
+                        <option value="problem-solving">Problem Solving</option>
+                        <option value="critical-thinking">Critical Thinking</option>
+                        <option value="leadership">Leadership</option>
+                        <option value="management">Management</option>
+                        <option value="business">Business</option>
+                      </optgroup>
+                    </select>
                   </div>
-                </div>
 
-                {/* Multiple Position Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Job Positions (Select Multiple)
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto">
-                    {jobPositions.map((position) => (
-                      <label key={position} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedPositions.includes(position)}
-                          onChange={() => togglePosition(position)}
-                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-gray-700">{getPositionLabel(position)}</span>
-                      </label>
-                    ))}
+                  {/* Topic Filter */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Topic
+                    </label>
+                    <select
+                      value={topicFilter}
+                      onChange={(e) => setTopicFilter(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                      <option value="all">All Topics</option>
+                      <optgroup label="Programming Topics">
+                        <option value="arrays">Arrays</option>
+                        <option value="strings">Strings</option>
+                        <option value="linked-lists">Linked Lists</option>
+                        <option value="stacks-queues">Stacks & Queues</option>
+                        <option value="trees">Trees</option>
+                        <option value="graphs">Graphs</option>
+                        <option value="dynamic-programming">Dynamic Programming</option>
+                        <option value="sorting">Sorting</option>
+                        <option value="searching">Searching</option>
+                        <option value="recursion">Recursion</option>
+                        <option value="object-oriented">Object Oriented</option>
+                      </optgroup>
+                      <optgroup label="Web Development Topics">
+                        <option value="html-css">HTML/CSS</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="react">React</option>
+                        <option value="nodejs">Node.js</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="sql">SQL</option>
+                        <option value="apis">APIs</option>
+                      </optgroup>
+                      <optgroup label="Aptitude Topics">
+                        <option value="number-series">Number Series</option>
+                        <option value="verbal-reasoning">Verbal Reasoning</option>
+                        <option value="logical-reasoning">Logical Reasoning</option>
+                        <option value="data-interpretation">Data Interpretation</option>
+                        <option value="general-awareness">General Awareness</option>
+                        <option value="current-affairs">Current Affairs</option>
+                        <option value="business-ethics">Business Ethics</option>
+                        <option value="team-work">Team Work</option>
+                      </optgroup>
+                    </select>
                   </div>
                 </div>
               </div>
