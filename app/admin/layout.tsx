@@ -32,6 +32,12 @@ const navigation = [
     description: "Overview & Statistics",
   },
   {
+    name: "Exams",
+    href: "/admin/exams",
+    icon: FileText,
+    description: "Create & Manage Exams",
+  },
+  {
     name: "Mock Interviews",
     href: "/admin/interviews",
     icon: Target,

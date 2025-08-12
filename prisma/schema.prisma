@@ -31,6 +31,7 @@ model User {
   mockInterviews   MockInterview[]
   submissions      Submission[]
   userProgress     UserProgress[]
+  examResults      ExamResult[]
 
   @@map("users")
 }
@@ -221,6 +222,63 @@ model InterviewFeedback {
   interview           MockInterview @relation(fields: [interviewId], references: [id])
 
   @@map("interview_feedback")
+}
+
+model Exam {
+  id              String       @id @default(cuid())
+  title           String       @unique
+  description     String
+  duration        Int          // Duration in minutes
+  difficulty      String       // Easy, Medium, Hard
+  category        String       // Programming, Data Structures, etc.
+  targetRole      String?      // Frontend, Backend, Full Stack, etc.
+  questionTypes   String       // MCQ, Coding, Mixed
+  totalQuestions  Int          @default(0)
+  passingScore    Int          @default(60) // Percentage
+  isActive        Boolean      @default(true)
+  isPublic        Boolean      @default(true) // Public or private exam
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  examQuestions   ExamQuestion[]
+  examResults     ExamResult[]
+
+  @@map("exams")
+}
+
+model ExamQuestion {
+  id           String   @id @default(cuid())
+  examId       String
+  questionId   String
+  questionType String   // MCQ or Problem
+  order        Int      @default(0)
+  points       Int      @default(10)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  exam         Exam     @relation(fields: [examId], references: [id])
+
+  @@map("exam_questions")
+}
+
+model ExamResult {
+  id           String   @id @default(cuid())
+  examId       String
+  userId       String
+  score        Int      @default(0)
+  maxScore     Int      @default(0)
+  percentage   Float    @default(0)
+  passed       Boolean  @default(false)
+  startedAt    DateTime @default(now())
+  completedAt  DateTime?
+  timeSpent    Int?     // Time spent in minutes
+  answers      String?  // JSON string of answers
+  feedback     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  exam         Exam     @relation(fields: [examId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@map("exam_results")
 }
 
 enum UserRole {
