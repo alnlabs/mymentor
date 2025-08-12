@@ -156,7 +156,7 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <Button variant="outline" size="sm" onClick={() => window.location.href = '/login'}>
                     Sign Out
                   </Button>
                   {isAdmin && (

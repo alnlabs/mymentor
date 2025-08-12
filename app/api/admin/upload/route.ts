@@ -25,7 +25,6 @@ async function checkDuplicateContent(
       where: {
         title: {
           equals: content,
-          mode: "insensitive", // Case-insensitive comparison
         },
       },
     });
@@ -35,7 +34,6 @@ async function checkDuplicateContent(
       where: {
         question: {
           equals: content,
-          mode: "insensitive", // Case-insensitive comparison
         },
       },
     });
