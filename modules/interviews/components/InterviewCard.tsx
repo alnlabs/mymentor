@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 import { InterviewTemplate } from '@/shared/types/common';
@@ -13,6 +14,7 @@ interface InterviewCardProps {
 }
 
 export function InterviewCard({ template, onSelect, isAdmin = false }: InterviewCardProps) {
+  const router = useRouter();
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case 'easy': return 'text-green-600 bg-green-100';
@@ -91,13 +93,23 @@ export function InterviewCard({ template, onSelect, isAdmin = false }: Interview
       )}
 
       <div className="flex space-x-3">
-        <Button
-          onClick={() => onSelect(template)}
-          className="flex-1"
-          variant="primary"
-        >
-          {isAdmin ? 'Edit Template' : 'Start Interview'}
-        </Button>
+        {isAdmin ? (
+          <Button
+            onClick={() => onSelect(template)}
+            className="flex-1"
+            variant="primary"
+          >
+            Edit Template
+          </Button>
+        ) : (
+          <Button
+            onClick={() => router.push(`/interviews/take/${template.id}`)}
+            className="flex-1"
+            variant="primary"
+          >
+            Take Interview
+          </Button>
+        )}
         {!isAdmin && (
           <Button
             variant="outline"
