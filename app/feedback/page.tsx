@@ -334,36 +334,72 @@ export default function FeedbackPage() {
         {/* Feedback Form */}
         <Card className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Anonymous Toggle */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-3">
-                {feedback.isAnonymous ? (
-                  <EyeOff className="w-5 h-5 text-gray-500" />
-                ) : (
-                  <Eye className="w-5 h-5 text-gray-500" />
-                )}
-                <div>
-                  <h3 className="font-medium text-gray-900">
-                    Submit Anonymously
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {feedback.isAnonymous
-                      ? "Your feedback will be submitted without your name (we still collect user details for internal reference)"
-                      : "Your name will be visible to administrators"}
-                  </p>
+            {/* Anonymous Toggle - HIGHLIGHTED */}
+            <div className={`p-6 rounded-xl border-2 transition-all duration-300 ${
+              feedback.isAnonymous 
+                ? "bg-purple-50 border-purple-200 shadow-lg" 
+                : "bg-blue-50 border-blue-200 shadow-md"
+            }`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                    feedback.isAnonymous 
+                      ? "bg-purple-100 text-purple-600" 
+                      : "bg-blue-100 text-blue-600"
+                  }`}>
+                    {feedback.isAnonymous ? (
+                      <EyeOff className="w-6 h-6" />
+                    ) : (
+                      <Eye className="w-6 h-6" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <h3 className={`text-lg font-bold ${
+                        feedback.isAnonymous ? "text-purple-800" : "text-blue-800"
+                      }`}>
+                        {feedback.isAnonymous ? "🔒 ANONYMOUS MODE" : "👤 NAMED MODE"}
+                      </h3>
+                      {feedback.isAnonymous && (
+                        <span className="px-2 py-1 bg-purple-200 text-purple-800 text-xs font-bold rounded-full">
+                          PRIVATE
+                        </span>
+                      )}
+                    </div>
+                    <p className={`text-sm font-medium ${
+                      feedback.isAnonymous ? "text-purple-700" : "text-blue-700"
+                    }`}>
+                      {feedback.isAnonymous 
+                        ? "✅ Your feedback will be submitted WITHOUT your name - completely anonymous!"
+                        : "📝 Your name will be visible to administrators for better support"
+                      }
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      💡 <strong>Note:</strong> We always collect user details in background for internal reference
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center space-y-2">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={feedback.isAnonymous}
+                      onChange={(e) =>
+                        updateFeedback("isAnonymous", e.target.checked)
+                      }
+                      className="sr-only peer"
+                    />
+                    <div className={`w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 after:transition-all ${
+                      feedback.isAnonymous ? "peer-checked:bg-purple-600" : "peer-checked:bg-blue-600"
+                    }`}></div>
+                  </label>
+                  <span className={`text-xs font-bold ${
+                    feedback.isAnonymous ? "text-purple-600" : "text-blue-600"
+                  }`}>
+                    {feedback.isAnonymous ? "ON" : "OFF"}
+                  </span>
                 </div>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={feedback.isAnonymous}
-                  onChange={(e) =>
-                    updateFeedback("isAnonymous", e.target.checked)
-                  }
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-              </label>
             </div>
 
             {/* Feedback Type */}
@@ -511,9 +547,7 @@ export default function FeedbackPage() {
         {/* Additional Info */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
-            💡 <strong>Secret:</strong> We always collect user details in the
-            background for internal reference, even when submitted anonymously.
-            This helps us provide better support and track feedback patterns.
+            💡 <strong>Privacy First:</strong> Your feedback is valuable to us. Choose anonymous mode if you prefer to share freely without revealing your identity.
           </p>
         </div>
       </div>
