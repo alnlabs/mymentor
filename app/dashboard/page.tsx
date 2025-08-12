@@ -32,6 +32,7 @@ import {
   Target as TargetIcon,
   Home,
   MessageSquare,
+  FileText,
 } from "lucide-react";
 
 interface UserStats {
@@ -124,26 +125,26 @@ export default function DashboardPage() {
 
   const dashboardItems = [
     {
-              title: "Interviews",
+      title: "Interviews",
       description: "Practice with realistic interview scenarios",
+      icon: Target,
+      href: "/interviews",
+      color: "bg-blue-500",
+    },
+    {
+      title: "Exams",
+      description: "Take comprehensive practice exams",
+      icon: FileText,
+      href: "/exams",
+      color: "bg-purple-500",
+    },
+    {
+      title: "Admin Interviews",
+      description: "Manage interview templates (Admin Only)",
       icon: Target,
       href: "/admin/interviews",
       color: "bg-blue-500",
       adminOnly: true,
-    },
-    {
-      title: "Coding Problems",
-      description: "Solve algorithmic and coding challenges",
-      icon: Code,
-      href: "/problems",
-      color: "bg-green-500",
-    },
-    {
-      title: "MCQ Questions",
-      description: "Test your knowledge with multiple choice questions",
-      icon: BookOpen,
-      href: "/mcq",
-      color: "bg-purple-500",
     },
     {
       title: "User Management",
@@ -222,16 +223,16 @@ export default function DashboardPage() {
                   Home
                 </a>
                 <a
-                  href="/problems"
+                  href="/interviews"
                   className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 >
-                  Problems
+                  Interviews
                 </a>
                 <a
-                  href="/mcq"
+                  href="/exams"
                   className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 >
-                  MCQs
+                  Exams
                 </a>
                 <a
                   href="/feedback"
@@ -293,18 +294,18 @@ export default function DashboardPage() {
                 Home
               </a>
               <a
-                href="/problems"
+                href="/interviews"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
               >
-                <Code className="w-4 h-4 mb-1" />
-                Problems
+                <Target className="w-4 h-4 mb-1" />
+                Interviews
               </a>
               <a
-                href="/mcq"
+                href="/exams"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
               >
-                <BookOpen className="w-4 h-4 mb-1" />
-                MCQs
+                <FileText className="w-4 h-4 mb-1" />
+                Exams
               </a>
               <a
                 href="/feedback"
@@ -402,25 +403,24 @@ export default function DashboardPage() {
             <Zap className="w-5 h-5 mr-2 text-blue-600" />
             Quick Start
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-green-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-blue-200">
               <div
                 className="p-6 text-center"
-                onClick={() => (window.location.href = "/problems")}
+                onClick={() => (window.location.href = "/interviews")}
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Code className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Target className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Start Coding
+                  Start Interview
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Solve algorithmic challenges and improve your problem-solving
-                  skills
+                  Practice with realistic interview scenarios and improve your skills
                 </p>
-                <Button className="w-full group-hover:bg-green-600 transition-colors">
+                <Button className="w-full group-hover:bg-blue-600 transition-colors">
                   <Play className="w-4 h-4 mr-2" />
-                  Begin Practice
+                  Begin Interview
                 </Button>
               </div>
             </Card>
@@ -428,46 +428,23 @@ export default function DashboardPage() {
             <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-purple-200">
               <div
                 className="p-6 text-center"
-                onClick={() => (window.location.href = "/mcq")}
+                onClick={() => (window.location.href = "/exams")}
               >
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <BookOpen className="w-8 h-8 text-white" />
+                  <FileText className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Take MCQ Test
+                  Take Exam
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Test your knowledge with multiple choice questions
+                  Test your knowledge with comprehensive practice exams
                 </p>
                 <Button className="w-full group-hover:bg-purple-600 transition-colors">
                   <Bookmark className="w-4 h-4 mr-2" />
-                  Start Quiz
+                  Start Exam
                 </Button>
               </div>
             </Card>
-
-            {(isAdmin || isSuperAdmin) && (
-              <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-blue-200">
-                <div
-                  className="p-6 text-center"
-                  onClick={() => (window.location.href = "/admin/interviews")}
-                >
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                    <Target className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Interview
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Practice with realistic interview scenarios
-                  </p>
-                  <Button className="w-full group-hover:bg-blue-600 transition-colors">
-                    <Eye className="w-4 h-4 mr-2" />
-                    Start Interview
-                  </Button>
-                </div>
-              </Card>
-            )}
           </div>
         </div>
 
