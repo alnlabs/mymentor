@@ -5,7 +5,20 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
-import { Search, Filter, BookOpen, Clock, Users, Target, LogOut, Home, Code, Target as TargetIcon, BarChart3, Settings } from "lucide-react";
+import {
+  Search,
+  Filter,
+  BookOpen,
+  Clock,
+  Users,
+  Target,
+  LogOut,
+  Home,
+  Code,
+  Target as TargetIcon,
+  BarChart3,
+  Settings,
+} from "lucide-react";
 
 interface MCQ {
   id: string;
@@ -20,13 +33,15 @@ interface MCQ {
 }
 
 export default function MCQPage() {
-  const { user, loading, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
+  const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
+    useAuthContext();
   const [mcqs, setMcqs] = useState<MCQ[]>([]);
   const [filteredMcqs, setFilteredMcqs] = useState<MCQ[]>([]);
   const [loadingMcqs, setLoadingMcqs] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [positionFilter, setPositionFilter] = useState<string>("all");
 
   useEffect(() => {
     fetchMCQs();
@@ -34,7 +49,7 @@ export default function MCQPage() {
 
   useEffect(() => {
     filterMCQs();
-  }, [mcqs, searchTerm, difficultyFilter, categoryFilter]);
+  }, [mcqs, searchTerm, difficultyFilter, categoryFilter, positionFilter]);
 
   const fetchMCQs = async () => {
     try {
@@ -64,7 +79,11 @@ export default function MCQPage() {
           mcq.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           mcq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
           mcq.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          getCategoryLabel(mcq.category).toLowerCase().includes(searchTerm.toLowerCase())
+          getCategoryLabel(mcq.category)
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          (mcq.jobRole && mcq.jobRole.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (mcq.jobRole && getPositionLabel(mcq.jobRole).toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -76,6 +95,11 @@ export default function MCQPage() {
     // Category filter
     if (categoryFilter !== "all") {
       filtered = filtered.filter((mcq) => mcq.category === categoryFilter);
+    }
+
+    // Position filter
+    if (positionFilter !== "all") {
+      filtered = filtered.filter((mcq) => mcq.jobRole === positionFilter);
     }
 
     setFilteredMcqs(filtered);
@@ -114,7 +138,12 @@ export default function MCQPage() {
   };
 
   const getCategoryLabel = (category: string) => {
-    const categoryMap: { [key: string]: string } = {
+    // Test categories are already properly formatted
+    return category;
+  };
+
+  const getPositionLabel = (position: string) => {
+    const positionMap: { [key: string]: string } = {
       // IT & Computer Positions
       "computer-operator": "Computer Operator",
       "data-entry-operator": "Data Entry Operator",
@@ -152,14 +181,44 @@ export default function MCQPage() {
       "video-editor": "Video Editor",
       "photographer": "Photographer",
     };
-    return categoryMap[category] || category;
+    return positionMap[position] || position;
   };
 
-  // All position-based categories for fresh graduates
-  const allCategories = [
+  // Test Categories (Type of Test)
+  const testCategories = [
+    // Technical Categories
+    "Programming",
+    "Data Structures", 
+    "Algorithms",
+    "Web Development",
+    "Database",
+    "System Design",
+    "Frontend",
+    "Backend",
+    "Full Stack",
+    "Mobile Development",
+    "DevOps",
+    "Machine Learning",
+    // Non-Technical Categories
+    "Aptitude",
+    "Logical Reasoning",
+    "Verbal Ability",
+    "Quantitative Aptitude",
+    "General Knowledge",
+    "English Language",
+    "Business Communication",
+    "Problem Solving",
+    "Critical Thinking",
+    "Team Management",
+    "Leadership",
+    "Project Management",
+  ];
+
+  // Job Positions for Fresh Graduates
+  const jobPositions = [
     // IT & Computer Positions
     "computer-operator",
-    "data-entry-operator", 
+    "data-entry-operator",
     "office-assistant",
     "receptionist",
     "admin-assistant",
@@ -169,7 +228,7 @@ export default function MCQPage() {
     // Business Positions
     "sales-assistant",
     "marketing-assistant",
-    "account-assistant", 
+    "account-assistant",
     "hr-assistant",
     "operations-assistant",
     "logistics-assistant",
@@ -195,9 +254,13 @@ export default function MCQPage() {
     "photographer",
   ];
 
-  // Get categories from existing MCQs and combine with all categories
+  // Get categories and positions from existing MCQs
   const existingCategories = Array.from(new Set(mcqs.map((m) => m.category)));
-  const categories = [...new Set([...allCategories, ...existingCategories])];
+  const existingPositions = Array.from(new Set(mcqs.map((m) => m.jobRole || "").filter(Boolean)));
+  
+  // Combine with predefined lists
+  const categories = [...new Set([...testCategories, ...existingCategories])];
+  const positions = [...new Set([...jobPositions, ...existingPositions])];
 
   if (loading || loadingMcqs) {
     return (
@@ -288,11 +351,17 @@ export default function MCQPage() {
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">
-                    {isSuperAdmin ? "S" : user?.displayName?.charAt(0) || user?.email?.charAt(0) || "U"}
+                    {isSuperAdmin
+                      ? "S"
+                      : user?.displayName?.charAt(0) ||
+                        user?.email?.charAt(0) ||
+                        "U"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin ? "SuperAdmin" : user?.displayName || user?.email || "User"}
+                  {isSuperAdmin
+                    ? "SuperAdmin"
+                    : user?.displayName || user?.email || "User"}
                 </span>
               </div>
 
@@ -330,7 +399,9 @@ export default function MCQPage() {
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center space-x-2">
               <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Filters:</span>
+              <span className="text-sm font-medium text-gray-700">
+                Filters:
+              </span>
             </div>
 
             {/* Difficulty Filter */}
@@ -351,7 +422,52 @@ export default function MCQPage() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
-              <option value="all">All Categories</option>
+              <option value="all">All Test Types</option>
+              <optgroup label="Technical Tests">
+                <option value="Programming">Programming</option>
+                <option value="Data Structures">Data Structures</option>
+                <option value="Algorithms">Algorithms</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Database">Database</option>
+                <option value="System Design">System Design</option>
+                <option value="Frontend">Frontend</option>
+                <option value="Backend">Backend</option>
+                <option value="Full Stack">Full Stack</option>
+                <option value="Mobile Development">Mobile Development</option>
+                <option value="DevOps">DevOps</option>
+                <option value="Machine Learning">Machine Learning</option>
+              </optgroup>
+              <optgroup label="Non-Technical Tests">
+                <option value="Aptitude">Aptitude</option>
+                <option value="Logical Reasoning">Logical Reasoning</option>
+                <option value="Verbal Ability">Verbal Ability</option>
+                <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                <option value="General Knowledge">General Knowledge</option>
+                <option value="English Language">English Language</option>
+                <option value="Business Communication">Business Communication</option>
+                <option value="Problem Solving">Problem Solving</option>
+                <option value="Critical Thinking">Critical Thinking</option>
+                <option value="Team Management">Team Management</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Project Management">Project Management</option>
+              </optgroup>
+              {/* Show any additional categories from existing MCQs */}
+              {existingCategories
+                .filter((cat) => !testCategories.includes(cat))
+                .map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+            </select>
+
+            {/* Position Filter */}
+            <select
+              value={positionFilter}
+              onChange={(e) => setPositionFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              <option value="all">All Positions</option>
               <optgroup label="IT & Computer Positions">
                 <option value="computer-operator">Computer Operator</option>
                 <option value="data-entry-operator">Data Entry Operator</option>
@@ -392,12 +508,14 @@ export default function MCQPage() {
                 <option value="video-editor">Video Editor</option>
                 <option value="photographer">Photographer</option>
               </optgroup>
-              {/* Show any additional categories from existing MCQs */}
-              {existingCategories.filter(cat => !allCategories.includes(cat)).map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
+              {/* Show any additional positions from existing MCQs */}
+              {existingPositions
+                .filter((pos) => !jobPositions.includes(pos))
+                .map((position) => (
+                  <option key={position} value={position}>
+                    {getPositionLabel(position)}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -424,7 +542,7 @@ export default function MCQPage() {
               <Card
                 key={mcq.id}
                 className="hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
-                onClick={() => window.location.href = `/mcq/${mcq.id}`}
+                onClick={() => (window.location.href = `/mcq/${mcq.id}`)}
               >
                 <div className="p-6">
                   {/* Header */}
@@ -446,11 +564,16 @@ export default function MCQPage() {
                     {mcq.description}
                   </p>
 
-                  {/* Category */}
-                  <div className="mb-4">
+                  {/* Category and Position */}
+                  <div className="mb-4 flex flex-wrap gap-2">
                     <span className="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
                       {getCategoryLabel(mcq.category)}
                     </span>
+                    {mcq.jobRole && (
+                      <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                        {getPositionLabel(mcq.jobRole)}
+                      </span>
+                    )}
                   </div>
 
                   {/* Stats */}
@@ -471,7 +594,11 @@ export default function MCQPage() {
                         <span>{mcq.participants}</span>
                       </div>
                       <div className="flex items-center space-x-1">
-                        <Target className={`w-4 h-4 ${getScoreColor(mcq.averageScore)}`} />
+                        <Target
+                          className={`w-4 h-4 ${getScoreColor(
+                            mcq.averageScore
+                          )}`}
+                        />
                         <span className={getScoreColor(mcq.averageScore)}>
                           {mcq.averageScore}%
                         </span>
