@@ -363,20 +363,20 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-white mb-2">500+</div>
+              <div className="text-4xl font-bold text-white mb-2">{problems.length}+</div>
               <div className="text-blue-100">Coding Problems</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-white mb-2">1000+</div>
+              <div className="text-4xl font-bold text-white mb-2">{mcqQuestions.length}+</div>
               <div className="text-blue-100">MCQ Questions</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-white mb-2">50+</div>
-              <div className="text-blue-100">Companies</div>
+              <div className="text-4xl font-bold text-white mb-2">32</div>
+              <div className="text-blue-100">Position Types</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-white mb-2">95%</div>
-              <div className="text-blue-100">Success Rate</div>
+              <div className="text-4xl font-bold text-white mb-2">100%</div>
+              <div className="text-blue-100">Real Data</div>
             </div>
           </div>
         </div>

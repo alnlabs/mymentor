@@ -305,7 +305,7 @@ export default function AddInterviewTemplatePage() {
               </Button>
             </div>
             <p className="text-purple-100 text-lg">
-              Design position-based interview templates for fresh graduates - 
+              Design position-based interview templates for fresh graduates -
               Target specific careers, build relevant skills, get hired
             </p>
           </div>
@@ -350,7 +350,9 @@ export default function AddInterviewTemplatePage() {
                 >
                   <optgroup label="IT & Computer Positions">
                     <option value="computer-operator">Computer Operator</option>
-                    <option value="data-entry-operator">Data Entry Operator</option>
+                    <option value="data-entry-operator">
+                      Data Entry Operator
+                    </option>
                     <option value="office-assistant">Office Assistant</option>
                     <option value="receptionist">Receptionist</option>
                     <option value="admin-assistant">Admin Assistant</option>
@@ -360,21 +362,37 @@ export default function AddInterviewTemplatePage() {
                   </optgroup>
                   <optgroup label="Business Positions">
                     <option value="sales-assistant">Sales Assistant</option>
-                    <option value="marketing-assistant">Marketing Assistant</option>
+                    <option value="marketing-assistant">
+                      Marketing Assistant
+                    </option>
                     <option value="account-assistant">Account Assistant</option>
                     <option value="hr-assistant">HR Assistant</option>
-                    <option value="operations-assistant">Operations Assistant</option>
-                    <option value="logistics-assistant">Logistics Assistant</option>
-                    <option value="procurement-assistant">Procurement Assistant</option>
+                    <option value="operations-assistant">
+                      Operations Assistant
+                    </option>
+                    <option value="logistics-assistant">
+                      Logistics Assistant
+                    </option>
+                    <option value="procurement-assistant">
+                      Procurement Assistant
+                    </option>
                     <option value="quality-assistant">Quality Assistant</option>
                   </optgroup>
                   <optgroup label="Service Positions">
                     <option value="retail-assistant">Retail Assistant</option>
-                    <option value="hospitality-assistant">Hospitality Assistant</option>
-                    <option value="healthcare-assistant">Healthcare Assistant</option>
-                    <option value="education-assistant">Education Assistant</option>
+                    <option value="hospitality-assistant">
+                      Hospitality Assistant
+                    </option>
+                    <option value="healthcare-assistant">
+                      Healthcare Assistant
+                    </option>
+                    <option value="education-assistant">
+                      Education Assistant
+                    </option>
                     <option value="banking-assistant">Banking Assistant</option>
-                    <option value="insurance-assistant">Insurance Assistant</option>
+                    <option value="insurance-assistant">
+                      Insurance Assistant
+                    </option>
                     <option value="travel-assistant">Travel Assistant</option>
                     <option value="event-assistant">Event Assistant</option>
                   </optgroup>
