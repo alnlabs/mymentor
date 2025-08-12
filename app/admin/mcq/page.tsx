@@ -19,6 +19,7 @@ import {
   AlertCircle,
   Brain,
   BookOpen,
+  Upload,
 } from "lucide-react";
 
 interface MCQQuestion {
@@ -183,7 +184,9 @@ export default function AdminMCQPage() {
                 Add MCQ
               </Button>
               <Button
-                onClick={() => (window.location.href = "/admin/upload?type=mcq")}
+                onClick={() =>
+                  (window.location.href = "/admin/upload?type=mcq")
+                }
                 variant="outline"
                 className="flex items-center"
               >
@@ -559,12 +562,16 @@ export default function AdminMCQPage() {
             </p>
             {mcqs.length === 0 && (
               <div className="flex space-x-3">
-                <Button onClick={() => (window.location.href = "/admin/mcq/add")}>
+                <Button
+                  onClick={() => (window.location.href = "/admin/mcq/add")}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First MCQ
                 </Button>
-                <Button 
-                  onClick={() => (window.location.href = "/admin/upload?type=mcq")}
+                <Button
+                  onClick={() =>
+                    (window.location.href = "/admin/upload?type=mcq")
+                  }
                   variant="outline"
                 >
                   <Upload className="w-4 h-4 mr-2" />

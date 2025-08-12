@@ -146,7 +146,8 @@ export default function UploadPage() {
               </div>
             </div>
             <p className="text-blue-100 text-lg">
-              Upload multiple {uploadType} at once using CSV, Excel, or JSON files.
+              Upload multiple {uploadType} at once using CSV, Excel, or JSON
+              files.
             </p>
             <div className="flex items-center mt-4 space-x-4 text-sm">
               <div className="flex items-center">
@@ -346,7 +347,8 @@ export default function UploadPage() {
             Bulk Upload {uploadType === "problems" ? "Problems" : "MCQs"}
           </h3>
           <p className="text-gray-700">
-            Upload CSV, Excel, or JSON files with multiple items for efficient content management.
+            Upload CSV, Excel, or JSON files with multiple items for efficient
+            content management.
           </p>
           <div className="flex flex-wrap gap-2 text-sm mt-3">
             <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">
@@ -379,9 +381,7 @@ export default function UploadPage() {
                 <FileSpreadsheet className="w-10 h-10 text-purple-600" />
               </div>
               <span className="text-xl font-semibold text-gray-800 mb-3">
-                {selectedFile
-                  ? selectedFile.name
-                  : "Choose a file to upload"}
+                {selectedFile ? selectedFile.name : "Choose a file to upload"}
               </span>
               <span className="text-gray-600 text-center max-w-md">
                 {selectedFile
@@ -556,16 +556,27 @@ export default function UploadPage() {
                 {result.success && (
                   <div className="mt-4 flex space-x-3">
                     <Button
-                      onClick={() => window.location.href = uploadType === "problems" ? "/admin/problems" : "/admin/mcq"}
+                      onClick={() =>
+                        (window.location.href =
+                          uploadType === "problems"
+                            ? "/admin/problems"
+                            : "/admin/mcq")
+                      }
                       variant="outline"
                     >
                       View All {uploadType === "problems" ? "Problems" : "MCQs"}
                     </Button>
                     <Button
-                      onClick={() => window.location.href = uploadType === "problems" ? "/admin/problems/add" : "/admin/mcq/add"}
+                      onClick={() =>
+                        (window.location.href =
+                          uploadType === "problems"
+                            ? "/admin/problems/add"
+                            : "/admin/mcq/add")
+                      }
                       variant="outline"
                     >
-                      Add Individual {uploadType === "problems" ? "Problem" : "MCQ"}
+                      Add Individual{" "}
+                      {uploadType === "problems" ? "Problem" : "MCQ"}
                     </Button>
                   </div>
                 )}

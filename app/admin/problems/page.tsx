@@ -18,6 +18,7 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
+  Upload,
 } from "lucide-react";
 
 interface Problem {
@@ -191,7 +192,9 @@ export default function AdminProblemsPage() {
                 Add Problem
               </Button>
               <Button
-                onClick={() => (window.location.href = "/admin/upload?type=problems")}
+                onClick={() =>
+                  (window.location.href = "/admin/upload?type=problems")
+                }
                 variant="outline"
                 className="flex items-center"
               >
@@ -550,12 +553,16 @@ export default function AdminProblemsPage() {
             </p>
             {problems.length === 0 && (
               <div className="flex space-x-3">
-                <Button onClick={() => (window.location.href = "/admin/problems/add")}>
+                <Button
+                  onClick={() => (window.location.href = "/admin/problems/add")}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Your First Problem
                 </Button>
-                <Button 
-                  onClick={() => (window.location.href = "/admin/upload?type=problems")}
+                <Button
+                  onClick={() =>
+                    (window.location.href = "/admin/upload?type=problems")
+                  }
                   variant="outline"
                 >
                   <Upload className="w-4 h-4 mr-2" />
