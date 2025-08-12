@@ -644,25 +644,43 @@ export default function UploadPage() {
                             >
                               <option value="">Select Category</option>
                               <option value="algorithms">Algorithms</option>
-                              <option value="data-structures">Data Structures</option>
+                              <option value="data-structures">
+                                Data Structures
+                              </option>
                               <option value="arrays">Arrays</option>
                               <option value="strings">Strings</option>
                               <option value="linked-lists">Linked Lists</option>
-                              <option value="stacks-queues">Stacks & Queues</option>
+                              <option value="stacks-queues">
+                                Stacks & Queues
+                              </option>
                               <option value="trees">Trees</option>
                               <option value="graphs">Graphs</option>
-                              <option value="dynamic-programming">Dynamic Programming</option>
-                              <option value="greedy-algorithms">Greedy Algorithms</option>
+                              <option value="dynamic-programming">
+                                Dynamic Programming
+                              </option>
+                              <option value="greedy-algorithms">
+                                Greedy Algorithms
+                              </option>
                               <option value="backtracking">Backtracking</option>
-                              <option value="binary-search">Binary Search</option>
+                              <option value="binary-search">
+                                Binary Search
+                              </option>
                               <option value="sorting">Sorting</option>
                               <option value="hashing">Hashing</option>
                               <option value="recursion">Recursion</option>
-                              <option value="bit-manipulation">Bit Manipulation</option>
+                              <option value="bit-manipulation">
+                                Bit Manipulation
+                              </option>
                               <option value="math">Math</option>
-                              <option value="design-patterns">Design Patterns</option>
-                              <option value="system-design">System Design</option>
-                              <option value="database-design">Database Design</option>
+                              <option value="design-patterns">
+                                Design Patterns
+                              </option>
+                              <option value="system-design">
+                                System Design
+                              </option>
+                              <option value="database-design">
+                                Database Design
+                              </option>
                               <option value="api-design">API Design</option>
                               <option value="security">Security</option>
                               <option value="testing">Testing</option>
@@ -730,22 +748,42 @@ export default function UploadPage() {
                                 <option value="">Select Topic</option>
                                 <option value="arrays">Arrays</option>
                                 <option value="strings">Strings</option>
-                                <option value="linked-lists">Linked Lists</option>
-                                <option value="stacks-queues">Stacks & Queues</option>
+                                <option value="linked-lists">
+                                  Linked Lists
+                                </option>
+                                <option value="stacks-queues">
+                                  Stacks & Queues
+                                </option>
                                 <option value="trees">Trees</option>
                                 <option value="graphs">Graphs</option>
-                                <option value="dynamic-programming">Dynamic Programming</option>
-                                <option value="greedy-algorithms">Greedy Algorithms</option>
-                                <option value="backtracking">Backtracking</option>
-                                <option value="binary-search">Binary Search</option>
+                                <option value="dynamic-programming">
+                                  Dynamic Programming
+                                </option>
+                                <option value="greedy-algorithms">
+                                  Greedy Algorithms
+                                </option>
+                                <option value="backtracking">
+                                  Backtracking
+                                </option>
+                                <option value="binary-search">
+                                  Binary Search
+                                </option>
                                 <option value="sorting">Sorting</option>
                                 <option value="hashing">Hashing</option>
                                 <option value="recursion">Recursion</option>
-                                <option value="bit-manipulation">Bit Manipulation</option>
+                                <option value="bit-manipulation">
+                                  Bit Manipulation
+                                </option>
                                 <option value="math">Math</option>
-                                <option value="design-patterns">Design Patterns</option>
-                                <option value="system-design">System Design</option>
-                                <option value="database-design">Database Design</option>
+                                <option value="design-patterns">
+                                  Design Patterns
+                                </option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
+                                <option value="database-design">
+                                  Database Design
+                                </option>
                                 <option value="api-design">API Design</option>
                                 <option value="security">Security</option>
                                 <option value="testing">Testing</option>
@@ -1261,22 +1299,42 @@ export default function UploadPage() {
                                 <option value="">Select Topic</option>
                                 <option value="arrays">Arrays</option>
                                 <option value="strings">Strings</option>
-                                <option value="linked-lists">Linked Lists</option>
-                                <option value="stacks-queues">Stacks & Queues</option>
+                                <option value="linked-lists">
+                                  Linked Lists
+                                </option>
+                                <option value="stacks-queues">
+                                  Stacks & Queues
+                                </option>
                                 <option value="trees">Trees</option>
                                 <option value="graphs">Graphs</option>
-                                <option value="dynamic-programming">Dynamic Programming</option>
-                                <option value="greedy-algorithms">Greedy Algorithms</option>
-                                <option value="backtracking">Backtracking</option>
-                                <option value="binary-search">Binary Search</option>
+                                <option value="dynamic-programming">
+                                  Dynamic Programming
+                                </option>
+                                <option value="greedy-algorithms">
+                                  Greedy Algorithms
+                                </option>
+                                <option value="backtracking">
+                                  Backtracking
+                                </option>
+                                <option value="binary-search">
+                                  Binary Search
+                                </option>
                                 <option value="sorting">Sorting</option>
                                 <option value="hashing">Hashing</option>
                                 <option value="recursion">Recursion</option>
-                                <option value="bit-manipulation">Bit Manipulation</option>
+                                <option value="bit-manipulation">
+                                  Bit Manipulation
+                                </option>
                                 <option value="math">Math</option>
-                                <option value="design-patterns">Design Patterns</option>
-                                <option value="system-design">System Design</option>
-                                <option value="database-design">Database Design</option>
+                                <option value="design-patterns">
+                                  Design Patterns
+                                </option>
+                                <option value="system-design">
+                                  System Design
+                                </option>
+                                <option value="database-design">
+                                  Database Design
+                                </option>
                                 <option value="api-design">API Design</option>
                                 <option value="security">Security</option>
                                 <option value="testing">Testing</option>
@@ -1558,25 +1616,43 @@ export default function UploadPage() {
                             >
                               <option value="">Select Category</option>
                               <option value="algorithms">Algorithms</option>
-                              <option value="data-structures">Data Structures</option>
+                              <option value="data-structures">
+                                Data Structures
+                              </option>
                               <option value="arrays">Arrays</option>
                               <option value="strings">Strings</option>
                               <option value="linked-lists">Linked Lists</option>
-                              <option value="stacks-queues">Stacks & Queues</option>
+                              <option value="stacks-queues">
+                                Stacks & Queues
+                              </option>
                               <option value="trees">Trees</option>
                               <option value="graphs">Graphs</option>
-                              <option value="dynamic-programming">Dynamic Programming</option>
-                              <option value="greedy-algorithms">Greedy Algorithms</option>
+                              <option value="dynamic-programming">
+                                Dynamic Programming
+                              </option>
+                              <option value="greedy-algorithms">
+                                Greedy Algorithms
+                              </option>
                               <option value="backtracking">Backtracking</option>
-                              <option value="binary-search">Binary Search</option>
+                              <option value="binary-search">
+                                Binary Search
+                              </option>
                               <option value="sorting">Sorting</option>
                               <option value="hashing">Hashing</option>
                               <option value="recursion">Recursion</option>
-                              <option value="bit-manipulation">Bit Manipulation</option>
+                              <option value="bit-manipulation">
+                                Bit Manipulation
+                              </option>
                               <option value="math">Math</option>
-                              <option value="design-patterns">Design Patterns</option>
-                              <option value="system-design">System Design</option>
-                              <option value="database-design">Database Design</option>
+                              <option value="design-patterns">
+                                Design Patterns
+                              </option>
+                              <option value="system-design">
+                                System Design
+                              </option>
+                              <option value="database-design">
+                                Database Design
+                              </option>
                               <option value="api-design">API Design</option>
                               <option value="security">Security</option>
                               <option value="testing">Testing</option>

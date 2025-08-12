@@ -36,39 +36,61 @@ model User {
 }
 
 model Problem {
-  id           String         @id @default(cuid())
-  title        String         @unique
-  description  String
-  difficulty   String
-  category     String
-  testCases    String
-  solution     String?
-  hints        String?
-  tags         String?
-  companies    String?
-  isActive     Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  submissions  Submission[]
-  userProgress UserProgress[]
+  id               String         @id @default(cuid())
+  title            String         @unique
+  description      String
+  difficulty       String
+  category         String
+  subject          String?
+  topic            String?
+  tool             String?
+  technologyStack  String?
+  domain           String?
+  skillLevel       String?
+  jobRole          String?
+  companyType      String?
+  interviewType    String?
+  testCases        String
+  solution         String?
+  hints            String?
+  tags             String?
+  companies        String?
+  priority         String?
+  status           String?
+  isActive         Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  submissions      Submission[]
+  userProgress     UserProgress[]
 
   @@map("problems")
 }
 
 model MCQQuestion {
-  id            String         @id @default(cuid())
-  question      String         @unique
-  options       String
-  correctAnswer Int
-  explanation   String?
-  category      String
-  difficulty    String
-  tags          String?
-  companies     String?
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  userProgress  UserProgress[]
+  id               String         @id @default(cuid())
+  question         String         @unique
+  options          String
+  correctAnswer    Int
+  explanation      String?
+  category         String
+  subject          String?
+  topic            String?
+  tool             String?
+  technologyStack  String?
+  domain           String?
+  skillLevel       String?
+  jobRole          String?
+  companyType      String?
+  interviewType    String?
+  difficulty       String
+  tags             String?
+  companies        String?
+  priority         String?
+  status           String?
+  isActive         Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  userProgress     UserProgress[]
 
   @@map("mcq_questions")
 }
