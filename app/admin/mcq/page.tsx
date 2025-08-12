@@ -201,7 +201,7 @@ export default function AdminMCQPage() {
               </Button>
               <Button
                 onClick={() =>
-                  (window.location.href = "/admin/upload?type=mcq")
+                  (window.location.href = "/admin/mcq/upload")
                 }
                 variant="outline"
                 className="flex items-center"
@@ -592,7 +592,7 @@ export default function AdminMCQPage() {
                 </Button>
                 <Button
                   onClick={() =>
-                    (window.location.href = "/admin/upload?type=mcq")
+                    (window.location.href = "/admin/mcq/upload")
                   }
                   variant="outline"
                 >

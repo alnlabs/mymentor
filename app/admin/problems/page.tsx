@@ -193,7 +193,7 @@ export default function AdminProblemsPage() {
               </Button>
               <Button
                 onClick={() =>
-                  (window.location.href = "/admin/upload?type=problems")
+                  (window.location.href = "/admin/problems/upload")
                 }
                 variant="outline"
                 className="flex items-center"
@@ -561,7 +561,7 @@ export default function AdminProblemsPage() {
                 </Button>
                 <Button
                   onClick={() =>
-                    (window.location.href = "/admin/upload?type=problems")
+                    (window.location.href = "/admin/problems/upload")
                   }
                   variant="outline"
                 >
