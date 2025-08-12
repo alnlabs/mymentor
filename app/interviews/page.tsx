@@ -10,19 +10,22 @@ import { InterviewTemplate } from "@/shared/types/common";
 import { Filter, Search, Plus } from "lucide-react";
 
 export default function InterviewsPage() {
-  const { user, isAdmin, isSuperAdmin } = useAuthContext();
+  const { user, loading: authLoading, isAdmin, isSuperAdmin } = useAuthContext();
 
   // Debug logging
   console.log("Interviews page - User:", user?.email);
   console.log("Interviews page - isAdmin:", isAdmin);
   console.log("Interviews page - isSuperAdmin:", isSuperAdmin);
+  console.log("Interviews page - Auth Loading:", authLoading);
 
-  // Redirect to homepage if not authenticated
+  // Debug authentication state without redirecting
   React.useEffect(() => {
-    if (!user && !isSuperAdmin) {
-      window.location.href = "/";
-    }
-  }, [user, isSuperAdmin]);
+    console.log("Interviews page - Auth state changed:");
+    console.log("  - authLoading:", authLoading);
+    console.log("  - user:", user?.email);
+    console.log("  - isSuperAdmin:", isSuperAdmin);
+    console.log("  - isAdmin:", isAdmin);
+  }, [user, isSuperAdmin, authLoading, isAdmin]);
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -104,6 +107,12 @@ export default function InterviewsPage() {
     "mobile",
   ];
 
+  // Show loading while authentication is being checked (but allow rendering)
+  if (authLoading) {
+    console.log("Interviews page - Auth still loading, but allowing render");
+  }
+
+  // Show loading while fetching templates
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
