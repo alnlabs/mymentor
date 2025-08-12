@@ -10,7 +10,6 @@ import { Plus, Edit, Trash2, Eye, Users, Clock, Target } from "lucide-react";
 export default function AdminInterviewsPage() {
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingTemplate, setEditingTemplate] =
     useState<InterviewTemplate | null>(null);
 
@@ -110,7 +109,7 @@ export default function AdminInterviewsPage() {
           </p>
         </div>
         <Button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => (window.location.href = "/admin/interviews/add")}
           className="flex items-center space-x-2"
         >
           <Plus className="w-4 h-4" />
@@ -268,11 +267,11 @@ export default function AdminInterviewsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setEditingTemplate(template)}
+                onClick={() => (window.location.href = `/admin/interviews/${template.id}`)}
                 className="flex-1"
               >
                 <Edit className="w-4 h-4 mr-1" />
-                Edit
+                Manage
               </Button>
               <Button
                 variant="outline"
@@ -296,29 +295,7 @@ export default function AdminInterviewsPage() {
         ))}
       </div>
 
-      {/* Create Template Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">
-              Create Interview Template
-            </h3>
-            <p className="text-gray-600 mb-4">
-              This feature is coming soon! You'll be able to create custom
-              interview templates with questions, time limits, and scoring.
-            </p>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowCreateModal(false)}
-                variant="outline"
-                className="flex-1"
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Edit Template Modal */}
       {editingTemplate && (
