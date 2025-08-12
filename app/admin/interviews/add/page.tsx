@@ -47,89 +47,91 @@ export default function AddInterviewTemplatePage() {
   const [template, setTemplate] = useState<InterviewTemplate>({
     name: "",
     description: "",
-    duration: 45,
+    duration: 30,
     difficulty: "easy",
-    category: "web-development",
+    category: "office-assistant",
     companies: [],
     questions: [],
   });
 
   const difficulties = ["easy", "medium", "hard"];
   const categories = [
-    // Entry-Level Technical Categories
-    "web-development",
-    "frontend-basics",
-    "backend-basics",
-    "database-fundamentals",
-    "api-development",
-    "version-control",
-    "testing-basics",
-    "deployment-basics",
-    // Entry-Level Non-Technical Categories
-    "communication-skills",
-    "teamwork",
-    "problem-solving",
-    "time-management",
-    "learning-ability",
-    "adaptability",
-    "customer-service",
-    "basic-project-management",
+    // IT & Computer Positions
+    "computer-operator",
+    "data-entry-operator",
+    "office-assistant",
+    "receptionist",
+    "admin-assistant",
+    "customer-support",
+    "help-desk",
+    "technical-support",
+    // Business Positions
+    "sales-assistant",
+    "marketing-assistant",
+    "account-assistant",
+    "hr-assistant",
+    "operations-assistant",
+    "logistics-assistant",
+    "procurement-assistant",
+    "quality-assistant",
+    // Service Positions
+    "retail-assistant",
+    "hospitality-assistant",
+    "healthcare-assistant",
+    "education-assistant",
+    "banking-assistant",
+    "insurance-assistant",
+    "travel-assistant",
+    "event-assistant",
+    // Technical Positions
+    "web-designer",
+    "graphic-designer",
+    "content-writer",
+    "social-media",
+    "digital-marketing",
+    "seo-assistant",
+    "video-editor",
+    "photographer",
   ];
   const questionTypes = [
     { value: "mcq", label: "Multiple Choice", icon: CheckCircle },
-    { value: "coding", label: "Basic Coding", icon: Code },
+    { value: "basic-coding", label: "Simple Code", icon: Code },
     { value: "behavioral", label: "Behavioral", icon: MessageSquare },
-    { value: "practical", label: "Practical Task", icon: Brain },
+    { value: "scenario", label: "Real Scenario", icon: Brain },
   ];
 
   const popularCompanies = [
-    // Entry-Level & Startup Companies
-    "StartupXYZ",
-    "LocalTech",
-    "DigitalAgency",
-    "WebSolutions",
-    "AppStudio",
-    "CodeCraft",
-    "TechStart",
-    "InnovateLab",
-    "DevWorks",
-    "ByteBuild",
-    "PixelPerfect",
-    "CloudFirst",
-    "DataFlow",
-    "SmartSystems",
-    "FutureTech",
-    // Mid-Level Companies
-    "Infosys",
-    "TCS",
-    "Wipro",
-    "Cognizant",
-    "Accenture",
-    "Capgemini",
-    "Tech Mahindra",
-    "HCL",
-    "L&T Infotech",
-    "Mindtree",
-    "Mphasis",
-    "Persistent",
-    "Zensar",
-    "Hexaware",
-    // Growing Companies
-    "Razorpay",
-    "CRED",
-    "PhonePe",
-    "Swiggy",
-    "Zomato",
-    "Ola",
-    "Byju's",
-    "Unacademy",
-    "Cars24",
-    "PolicyBazaar",
-    "Nykaa",
-    "Mamaearth",
-    "Boat",
-    "Wakefit",
-    "Milkbasket",
+    // Local Small Companies
+    "LocalShop",
+    "SmallOffice",
+    "DigitalPrint",
+    "WebDesign",
+    "ComputerShop",
+    "InternetCafe",
+    "SoftwareStore",
+    "OfficeSupply",
+    "TechSupport",
+    "DataEntry",
+    "CallCenter",
+    "CustomerService",
+    "AdminWork",
+    "Receptionist",
+    "Assistant",
+    // Small Businesses
+    "Restaurant",
+    "RetailStore",
+    "Bakery",
+    "Salon",
+    "Gym",
+    "School",
+    "Hospital",
+    "Bank",
+    "Insurance",
+    "RealEstate",
+    "TravelAgency",
+    "EventPlanning",
+    "CleaningService",
+    "SecurityService",
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,8 +182,8 @@ export default function AddInterviewTemplatePage() {
       options: ["", "", "", ""],
       correctAnswer: "",
       explanation: "",
-      points: 8,
-      timeLimit: 150,
+      points: 5,
+      timeLimit: 120,
       order: template.questions.length,
     };
     setTemplate((prev) => ({
@@ -271,11 +273,11 @@ export default function AddInterviewTemplatePage() {
     switch (type) {
       case "mcq":
         return "bg-blue-100 text-blue-800";
-      case "coding":
+      case "basic-coding":
         return "bg-green-100 text-green-800";
       case "behavioral":
         return "bg-purple-100 text-purple-800";
-      case "practical":
+      case "scenario":
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -303,8 +305,8 @@ export default function AddInterviewTemplatePage() {
               </Button>
             </div>
             <p className="text-purple-100 text-lg">
-              Design entry-level interview templates for fresh graduates - Start
-              with basics, build confidence, grow skills
+              Design position-based interview templates for fresh graduates - 
+              Target specific careers, build relevant skills, get hired
             </p>
           </div>
         </div>
@@ -346,37 +348,45 @@ export default function AddInterviewTemplatePage() {
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <optgroup label="Entry-Level Technical">
-                    <option value="web-development">
-                      Web Development Basics
-                    </option>
-                    <option value="frontend-basics">
-                      Frontend Fundamentals
-                    </option>
-                    <option value="backend-basics">Backend Fundamentals</option>
-                    <option value="database-fundamentals">
-                      Database Basics
-                    </option>
-                    <option value="api-development">API Development</option>
-                    <option value="version-control">
-                      Version Control (Git)
-                    </option>
-                    <option value="testing-basics">Testing Fundamentals</option>
-                    <option value="deployment-basics">Deployment Basics</option>
+                  <optgroup label="IT & Computer Positions">
+                    <option value="computer-operator">Computer Operator</option>
+                    <option value="data-entry-operator">Data Entry Operator</option>
+                    <option value="office-assistant">Office Assistant</option>
+                    <option value="receptionist">Receptionist</option>
+                    <option value="admin-assistant">Admin Assistant</option>
+                    <option value="customer-support">Customer Support</option>
+                    <option value="help-desk">Help Desk</option>
+                    <option value="technical-support">Technical Support</option>
                   </optgroup>
-                  <optgroup label="Entry-Level Soft Skills">
-                    <option value="communication-skills">
-                      Communication Skills
-                    </option>
-                    <option value="teamwork">Teamwork & Collaboration</option>
-                    <option value="problem-solving">Problem Solving</option>
-                    <option value="time-management">Time Management</option>
-                    <option value="learning-ability">Learning Ability</option>
-                    <option value="adaptability">Adaptability</option>
-                    <option value="customer-service">Customer Service</option>
-                    <option value="basic-project-management">
-                      Basic Project Management
-                    </option>
+                  <optgroup label="Business Positions">
+                    <option value="sales-assistant">Sales Assistant</option>
+                    <option value="marketing-assistant">Marketing Assistant</option>
+                    <option value="account-assistant">Account Assistant</option>
+                    <option value="hr-assistant">HR Assistant</option>
+                    <option value="operations-assistant">Operations Assistant</option>
+                    <option value="logistics-assistant">Logistics Assistant</option>
+                    <option value="procurement-assistant">Procurement Assistant</option>
+                    <option value="quality-assistant">Quality Assistant</option>
+                  </optgroup>
+                  <optgroup label="Service Positions">
+                    <option value="retail-assistant">Retail Assistant</option>
+                    <option value="hospitality-assistant">Hospitality Assistant</option>
+                    <option value="healthcare-assistant">Healthcare Assistant</option>
+                    <option value="education-assistant">Education Assistant</option>
+                    <option value="banking-assistant">Banking Assistant</option>
+                    <option value="insurance-assistant">Insurance Assistant</option>
+                    <option value="travel-assistant">Travel Assistant</option>
+                    <option value="event-assistant">Event Assistant</option>
+                  </optgroup>
+                  <optgroup label="Technical Positions">
+                    <option value="web-designer">Web Designer</option>
+                    <option value="graphic-designer">Graphic Designer</option>
+                    <option value="content-writer">Content Writer</option>
+                    <option value="social-media">Social Media</option>
+                    <option value="digital-marketing">Digital Marketing</option>
+                    <option value="seo-assistant">SEO Assistant</option>
+                    <option value="video-editor">Video Editor</option>
+                    <option value="photographer">Photographer</option>
                   </optgroup>
                 </select>
               </div>
@@ -727,22 +737,22 @@ export default function AddInterviewTemplatePage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
               <div className="space-y-2">
-                <p className="font-medium">🎯 Entry-Level Structure:</p>
+                <p className="font-medium">🎯 Position-Based Structure:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>Start with basic concepts to build confidence</li>
-                  <li>Focus on fundamental skills and learning ability</li>
-                  <li>Include 8-12 questions for manageable duration</li>
-                  <li>Mix technical basics with soft skills</li>
-                  <li>Emphasize problem-solving and adaptability</li>
+                  <li>Focus on specific job requirements</li>
+                  <li>Include position-relevant skills assessment</li>
+                  <li>Include 6-10 questions for quick assessment</li>
+                  <li>Mix job-specific and general skills</li>
+                  <li>Emphasize practical work scenarios</li>
                 </ul>
               </div>
               <div className="space-y-2">
-                <p className="font-medium">⏱️ Entry-Level Timing:</p>
+                <p className="font-medium">⏱️ Position-Based Timing:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
-                  <li>MCQ: 90-180 seconds per question</li>
-                  <li>Basic Coding: 300-600 seconds per question</li>
-                  <li>Behavioral: 120-240 seconds per question</li>
-                  <li>Practical Tasks: 180-300 seconds per question</li>
+                  <li>MCQ: 60-120 seconds per question</li>
+                  <li>Simple Code: 180-300 seconds per question</li>
+                  <li>Behavioral: 90-180 seconds per question</li>
+                  <li>Real Scenarios: 120-240 seconds per question</li>
                 </ul>
               </div>
             </div>

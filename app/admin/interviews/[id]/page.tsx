@@ -147,11 +147,11 @@ export default function InterviewTemplatePage({
     switch (type) {
       case "mcq":
         return "bg-blue-100 text-blue-800";
-      case "coding":
+      case "basic-coding":
         return "bg-green-100 text-green-800";
       case "behavioral":
         return "bg-purple-100 text-purple-800";
-      case "practical":
+      case "scenario":
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -162,12 +162,12 @@ export default function InterviewTemplatePage({
     switch (type) {
       case "mcq":
         return "Multiple Choice";
-      case "coding":
-        return "Basic Coding";
+      case "basic-coding":
+        return "Simple Code";
       case "behavioral":
         return "Behavioral";
-      case "practical":
-        return "Practical Task";
+      case "scenario":
+        return "Real Scenario";
       default:
         return type;
     }
@@ -411,12 +411,12 @@ export default function InterviewTemplatePage({
                 MCQ Only
               </Button>
               <Button
-                onClick={() => setQuestionTypeFilter("coding")}
+                onClick={() => setQuestionTypeFilter("basic-coding")}
                 variant="outline"
                 size="sm"
                 className="flex items-center"
               >
-                Basic Coding Only
+                Simple Code Only
               </Button>
               <Button
                 onClick={() => setQuestionTypeFilter("behavioral")}
@@ -427,12 +427,12 @@ export default function InterviewTemplatePage({
                 Behavioral Only
               </Button>
               <Button
-                onClick={() => setQuestionTypeFilter("practical")}
+                onClick={() => setQuestionTypeFilter("scenario")}
                 variant="outline"
                 size="sm"
                 className="flex items-center"
               >
-                Practical Tasks Only
+                Real Scenarios Only
               </Button>
             </div>
           </div>

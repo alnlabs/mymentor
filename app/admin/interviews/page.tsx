@@ -73,40 +73,76 @@ export default function AdminInterviewsPage() {
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case "web-development":
-        return "🌐";
-      case "frontend-basics":
+      // IT & Computer Positions
+      case "computer-operator":
         return "💻";
-      case "backend-basics":
-        return "⚙️";
-      case "database-fundamentals":
-        return "🗄️";
-      case "api-development":
-        return "🔌";
-      case "version-control":
-        return "📝";
-      case "testing-basics":
-        return "✅";
-      case "deployment-basics":
-        return "🚀";
-      case "communication-skills":
-        return "💬";
-      case "teamwork":
-        return "🤝";
-      case "problem-solving":
-        return "🧩";
-      case "time-management":
-        return "⏰";
-      case "learning-ability":
-        return "📚";
-      case "adaptability":
-        return "🔄";
-      case "customer-service":
-        return "🎧";
-      case "basic-project-management":
+      case "data-entry-operator":
+        return "⌨️";
+      case "office-assistant":
         return "📋";
+      case "receptionist":
+        return "📞";
+      case "admin-assistant":
+        return "👔";
+      case "customer-support":
+        return "🎧";
+      case "help-desk":
+        return "🛠️";
+      case "technical-support":
+        return "🔧";
+      // Business Positions
+      case "sales-assistant":
+        return "💰";
+      case "marketing-assistant":
+        return "📢";
+      case "account-assistant":
+        return "📊";
+      case "hr-assistant":
+        return "👥";
+      case "operations-assistant":
+        return "⚙️";
+      case "logistics-assistant":
+        return "📦";
+      case "procurement-assistant":
+        return "🛒";
+      case "quality-assistant":
+        return "✅";
+      // Service Positions
+      case "retail-assistant":
+        return "🛍️";
+      case "hospitality-assistant":
+        return "🏨";
+      case "healthcare-assistant":
+        return "🏥";
+      case "education-assistant":
+        return "📚";
+      case "banking-assistant":
+        return "🏦";
+      case "insurance-assistant":
+        return "🛡️";
+      case "travel-assistant":
+        return "✈️";
+      case "event-assistant":
+        return "🎉";
+      // Technical Positions
+      case "web-designer":
+        return "🎨";
+      case "graphic-designer":
+        return "🖼️";
+      case "content-writer":
+        return "✍️";
+      case "social-media":
+        return "📱";
+      case "digital-marketing":
+        return "📈";
+      case "seo-assistant":
+        return "🔍";
+      case "video-editor":
+        return "🎬";
+      case "photographer":
+        return "📸";
       default:
-        return "📝";
+        return "💼";
     }
   };
 
@@ -127,7 +163,7 @@ export default function AdminInterviewsPage() {
             Interview Management
           </h1>
           <p className="text-gray-600 mt-2">
-            Create and manage entry-level interview templates for fresh graduates
+            Create and manage position-based interview templates for fresh graduates
           </p>
         </div>
         <Button
