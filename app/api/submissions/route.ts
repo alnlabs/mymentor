@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
         problemId,
         code,
         language,
-        executionTime: 0, // Will be implemented with proper timing
+
         testResults: JSON.stringify(testResults),
         status,
       },

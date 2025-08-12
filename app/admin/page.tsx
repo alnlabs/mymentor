@@ -179,7 +179,7 @@ export default function AdminDashboard() {
               <Globe className="w-5 h-5 mr-2 text-blue-600" />
               Platform Navigation
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
               <Button
                 onClick={() => (window.location.href = "/admin/interviews")}
                 variant="outline"
@@ -192,15 +192,29 @@ export default function AdminDashboard() {
                 </span>
               </Button>
 
+
+
               <Button
-                onClick={() => (window.location.href = "/admin/upload")}
+                onClick={() => (window.location.href = "/admin/problems")}
                 variant="outline"
-                className="flex flex-col items-center p-4 h-auto hover:bg-green-50 hover:border-green-300"
+                className="flex flex-col items-center p-4 h-auto hover:bg-indigo-50 hover:border-indigo-300"
               >
-                <Upload className="w-6 h-6 text-green-600 mb-2" />
-                <span className="text-sm font-medium">Upload Content</span>
+                <FileText className="w-6 h-6 text-indigo-600 mb-2" />
+                <span className="text-sm font-medium">Coding Problems</span>
                 <span className="text-xs text-gray-500 mt-1">
-                  Problems & MCQs
+                  View & Manage
+                </span>
+              </Button>
+
+              <Button
+                onClick={() => (window.location.href = "/admin/mcq")}
+                variant="outline"
+                className="flex flex-col items-center p-4 h-auto hover:bg-purple-50 hover:border-purple-300"
+              >
+                <FileText className="w-6 h-6 text-purple-600 mb-2" />
+                <span className="text-sm font-medium">MCQ Questions</span>
+                <span className="text-xs text-gray-500 mt-1">
+                  View & Manage
                 </span>
               </Button>
 

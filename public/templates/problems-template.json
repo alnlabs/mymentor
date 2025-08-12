@@ -1,0 +1,63 @@
+/*
+Available options for dropdown fields:
+
+subject: programming, data-science, web-development, mobile-development, devops, ai-ml, database, cybersecurity, system-design, other
+topic: arrays, strings, linked-lists, stacks-queues, trees, graphs, dynamic-programming, greedy-algorithms, backtracking, binary-search, sorting, hashing, recursion, bit-manipulation, math, design-patterns, system-design, database-design, api-design, security, testing, other
+tool: python, javascript, java, cpp, react, nodejs, sql, mongodb, docker, kubernetes, aws, other
+technologyStack: frontend, backend, full-stack, mobile, data, devops, other
+domain: web, mobile, ai-ml, data, cloud, security, gaming, fintech, healthcare, ecommerce, other
+skillLevel: beginner, intermediate, advanced
+jobRole: frontend-developer, backend-developer, full-stack-developer, data-scientist, data-engineer, devops-engineer, mobile-developer, software-engineer, system-architect, qa-engineer, other
+companyType: tech, finance, healthcare, ecommerce, consulting, startup, enterprise, government, education, other
+interviewType: technical, behavioral, system-design, coding, data-structures, algorithms, database, frontend, backend, other
+difficulty: easy, medium, hard
+category: algorithms, data-structures, arrays, strings, linked-lists, stacks-queues, trees, graphs, dynamic-programming, greedy-algorithms, backtracking, binary-search, sorting, hashing, recursion, bit-manipulation, math, design-patterns, system-design, database-design, api-design, security, testing, other
+priority: low, medium, high
+status: draft, active, archived
+*/
+[
+  {
+    "title": "Two Sum",
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "difficulty": "easy",
+    "category": "arrays",
+    "subject": "programming",
+    "topic": "arrays",
+    "tool": "python",
+    "technologyStack": "backend",
+    "domain": "web",
+    "skillLevel": "beginner",
+    "jobRole": "software-engineer",
+    "companyType": "tech",
+    "interviewType": "coding",
+    "testCases": "[{\"input\": \"[2,7,11,15], 9\", \"output\": \"[0,1]\"}]",
+    "solution": "Use a hash map to store complements.",
+    "hints": "Try using a hash map",
+    "tags": "arrays,hash-table",
+    "companies": "Google,Amazon,Microsoft",
+    "priority": "medium",
+    "status": "active"
+  },
+  {
+    "title": "Valid Parentheses",
+    "description": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
+    "difficulty": "easy",
+    "category": "stacks",
+    "subject": "programming",
+    "topic": "stacks-queues",
+    "tool": "javascript",
+    "technologyStack": "frontend",
+    "domain": "web",
+    "skillLevel": "beginner",
+    "jobRole": "frontend-developer",
+    "companyType": "tech",
+    "interviewType": "coding",
+    "testCases": "[{\"input\": \"()\", \"output\": \"true\"}]",
+    "solution": "Use a stack to keep track of opening brackets.",
+    "hints": "Think about the order of brackets",
+    "tags": "stacks,strings",
+    "companies": "Facebook,Google,Amazon",
+    "priority": "medium",
+    "status": "active"
+  }
+]

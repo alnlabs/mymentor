@@ -14,13 +14,7 @@ export async function GET(request: NextRequest) {
 
     const problems = await prisma.problem.findMany({
       where,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        difficulty: true,
-        category: true,
-        createdAt: true,
+      include: {
         _count: {
           select: {
             submissions: true,
@@ -35,12 +29,28 @@ export async function GET(request: NextRequest) {
       id: problem.id,
       title: problem.title,
       description: problem.description,
-      difficulty: problem.difficulty as "easy" | "medium" | "hard",
+      difficulty: problem.difficulty,
       category: problem.category,
-      timeLimit: 30, // Default time limit
-      memoryLimit: 256, // Default memory limit in MB
-      submissions: problem._count.submissions,
-      successRate: problem._count.submissions > 0 ? Math.floor(Math.random() * 40) + 60 : 0, // Mock success rate for now
+      subject: problem.subject,
+      topic: problem.topic,
+      tool: problem.tool,
+      technologyStack: problem.technologyStack,
+      domain: problem.domain,
+      skillLevel: problem.skillLevel,
+      jobRole: problem.jobRole,
+      companyType: problem.companyType,
+      interviewType: problem.interviewType,
+      testCases: problem.testCases,
+      solution: problem.solution,
+      hints: problem.hints,
+      tags: problem.tags,
+      companies: problem.companies,
+      priority: problem.priority,
+      status: problem.status,
+      isActive: problem.isActive,
+      createdAt: problem.createdAt.toISOString(),
+      updatedAt: problem.updatedAt.toISOString(),
+      _count: problem._count,
     }));
 
     const response: ApiResponse = {

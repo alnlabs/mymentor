@@ -14,12 +14,7 @@ export async function GET(request: NextRequest) {
 
     const questions = await prisma.mCQQuestion.findMany({
       where,
-      select: {
-        id: true,
-        question: true,
-        difficulty: true,
-        category: true,
-        createdAt: true,
+      include: {
         _count: {
           select: {
             userProgress: true,
@@ -29,45 +24,38 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: "asc" },
     });
 
-    // Group questions by category and create MCQ sets
-    const questionsByCategory = questions.reduce((acc, question) => {
-      if (!acc[question.category]) {
-        acc[question.category] = [];
-      }
-      acc[question.category].push(question);
-      return acc;
-    }, {} as Record<string, typeof questions>);
-
-    // Create MCQ sets from grouped questions
-    const mcqSets = Object.entries(questionsByCategory).map(
-      ([category, categoryQuestions]) => {
-        const difficulties = categoryQuestions.map((q) => q.difficulty);
-        const avgDifficulty = difficulties.includes("hard")
-          ? "hard"
-          : difficulties.includes("medium")
-          ? "medium"
-          : "easy";
-
-        return {
-          id: `mcq-set-${category}`,
-          title: `${
-            category.charAt(0).toUpperCase() + category.slice(1)
-          } Practice Set`,
-          description: `Test your knowledge in ${category} with ${categoryQuestions.length} carefully selected questions.`,
-          category: category,
-          difficulty: avgDifficulty as "easy" | "medium" | "hard",
-                  timeLimit: Math.ceil(categoryQuestions.length * 1.5), // 1.5 minutes per question
-        questionCount: categoryQuestions.length,
-        participants: categoryQuestions.length > 0 ? Math.floor(Math.random() * 50) + 5 : 0, // Mock participants
-        averageScore: categoryQuestions.length > 0 ? Math.floor(Math.random() * 30) + 60 : 0, // Mock average score
-        };
-      }
-    );
+    // Transform the data to match frontend expectations
+    const transformedQuestions = questions.map((question) => ({
+      id: question.id,
+      question: question.question,
+      options: question.options ? JSON.parse(question.options) : [],
+      correctAnswer: question.correctAnswer,
+      explanation: question.explanation,
+      category: question.category,
+      subject: question.subject,
+      topic: question.topic,
+      tool: question.tool,
+      technologyStack: question.technologyStack,
+      domain: question.domain,
+      skillLevel: question.skillLevel,
+      jobRole: question.jobRole,
+      companyType: question.companyType,
+      interviewType: question.interviewType,
+      difficulty: question.difficulty,
+      tags: question.tags,
+      companies: question.companies,
+      priority: question.priority,
+      status: question.status,
+      isActive: question.isActive,
+      createdAt: question.createdAt.toISOString(),
+      updatedAt: question.updatedAt.toISOString(),
+      _count: question._count,
+    }));
 
     const response: ApiResponse = {
       success: true,
-      data: mcqSets,
-      message: "MCQ sets retrieved successfully",
+      data: transformedQuestions,
+      message: "MCQ questions retrieved successfully",
     };
 
     return NextResponse.json(response);
