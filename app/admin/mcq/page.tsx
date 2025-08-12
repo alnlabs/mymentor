@@ -25,7 +25,7 @@ import {
 interface MCQQuestion {
   id: string;
   question: string;
-  options: string[];
+  options: string[] | string; // Can be array or JSON string
   correctAnswer: number;
   explanation?: string;
   category: string;
@@ -65,15 +65,31 @@ export default function AdminMCQPage() {
     try {
       const response = await fetch("/api/mcq");
       if (response.ok) {
-        const data = await response.json();
-        // Flatten the MCQ sets to get individual questions
-        const allMCQs = data.flatMap((set: any) => set.questions || []);
-        setMcqs(allMCQs);
+        const result = await response.json();
+        if (result.success && Array.isArray(result.data)) {
+          setMcqs(result.data);
+        } else {
+          console.error("Invalid response format:", result);
+          setMcqs([]);
+        }
       }
     } catch (error) {
       console.error("Error fetching MCQs:", error);
+      setMcqs([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Helper function to safely parse options
+  const parseOptions = (options: string[] | string): string[] => {
+    if (Array.isArray(options)) {
+      return options;
+    }
+    try {
+      return JSON.parse(options);
+    } catch {
+      return [];
     }
   };
 
@@ -446,29 +462,35 @@ export default function AdminMCQPage() {
                     Options:
                   </h4>
                   <div className="space-y-1">
-                    {mcq.options.slice(0, 2).map((option, index) => (
-                      <div key={index} className="flex items-center text-sm">
-                        <span
-                          className={`w-4 h-4 rounded-full mr-2 flex items-center justify-center ${
-                            index === mcq.correctAnswer
-                              ? "bg-green-100 text-green-600"
-                              : "bg-gray-100 text-gray-400"
-                          }`}
-                        >
-                          {index === mcq.correctAnswer
-                            ? "✓"
-                            : String.fromCharCode(65 + index)}
-                        </span>
-                        <span className="text-gray-600 line-clamp-1">
-                          {option}
-                        </span>
-                      </div>
-                    ))}
-                    {mcq.options.length > 2 && (
-                      <div className="text-xs text-gray-500">
-                        +{mcq.options.length - 2} more options
-                      </div>
-                    )}
+                    {(() => {
+                      const options = parseOptions(mcq.options);
+                      return options.slice(0, 2).map((option: string, index: number) => (
+                        <div key={index} className="flex items-center text-sm">
+                          <span
+                            className={`w-4 h-4 rounded-full mr-2 flex items-center justify-center ${
+                              index === mcq.correctAnswer
+                                ? "bg-green-100 text-green-600"
+                                : "bg-gray-100 text-gray-400"
+                            }`}
+                          >
+                            {index === mcq.correctAnswer
+                              ? "✓"
+                              : String.fromCharCode(65 + index)}
+                          </span>
+                          <span className="text-gray-600 line-clamp-1">
+                            {option}
+                          </span>
+                        </div>
+                      ));
+                    })()}
+                    {(() => {
+                      const options = parseOptions(mcq.options);
+                      return options.length > 2 && (
+                        <div className="text-xs text-gray-500">
+                          +{options.length - 2} more options
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
