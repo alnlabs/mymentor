@@ -371,7 +371,7 @@ export default function UploadPage() {
   const updateProblem = (
     index: number,
     field: keyof Problem,
-    value: string
+    value: string | number
   ) => {
     const updated = [...problems];
     updated[index] = { ...updated[index], [field]: value };
@@ -653,19 +653,279 @@ export default function UploadPage() {
                           </div>
                         </div>
 
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Subject *
-                          </label>
-                          <input
-                            type="text"
-                            value={problem.subject}
-                            onChange={(e) =>
-                              updateProblem(index, "subject", e.target.value)
-                            }
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="e.g., algorithms, data-structures"
-                          />
+                        {/* Primary Categorization */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">Primary Categorization</h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Subject *
+                              </label>
+                              <select
+                                value={problem.subject}
+                                onChange={(e) =>
+                                  updateProblem(index, "subject", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Subject</option>
+                                <option value="programming">Programming</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="mobile-development">Mobile Development</option>
+                                <option value="devops">DevOps</option>
+                                <option value="ai-ml">AI/ML</option>
+                                <option value="database">Database</option>
+                                <option value="cybersecurity">Cybersecurity</option>
+                                <option value="system-design">System Design</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Topic *
+                              </label>
+                              <input
+                                type="text"
+                                value={problem.topic}
+                                onChange={(e) =>
+                                  updateProblem(index, "topic", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="e.g., arrays, strings, algorithms"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Tool/Technology *
+                              </label>
+                              <select
+                                value={problem.tool}
+                                onChange={(e) =>
+                                  updateProblem(index, "tool", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Tool</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="react">React</option>
+                                <option value="nodejs">Node.js</option>
+                                <option value="sql">SQL</option>
+                                <option value="mongodb">MongoDB</option>
+                                <option value="docker">Docker</option>
+                                <option value="kubernetes">Kubernetes</option>
+                                <option value="aws">AWS</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Technology Stack
+                              </label>
+                              <select
+                                value={problem.technologyStack}
+                                onChange={(e) =>
+                                  updateProblem(index, "technologyStack", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Stack</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="full-stack">Full Stack</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="data">Data</option>
+                                <option value="devops">DevOps</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Domain
+                              </label>
+                              <select
+                                value={problem.domain}
+                                onChange={(e) =>
+                                  updateProblem(index, "domain", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Domain</option>
+                                <option value="web">Web</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="ai-ml">AI/ML</option>
+                                <option value="data">Data</option>
+                                <option value="cloud">Cloud</option>
+                                <option value="security">Security</option>
+                                <option value="gaming">Gaming</option>
+                                <option value="fintech">FinTech</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Skill Level *
+                              </label>
+                              <select
+                                value={problem.skillLevel}
+                                onChange={(e) =>
+                                  updateProblem(index, "skillLevel", e.target.value as any)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Professional Context */}
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">Professional Context</h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Job Role
+                              </label>
+                              <select
+                                value={problem.jobRole}
+                                onChange={(e) =>
+                                  updateProblem(index, "jobRole", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Job Role</option>
+                                <option value="frontend-developer">Frontend Developer</option>
+                                <option value="backend-developer">Backend Developer</option>
+                                <option value="full-stack-developer">Full Stack Developer</option>
+                                <option value="data-scientist">Data Scientist</option>
+                                <option value="data-engineer">Data Engineer</option>
+                                <option value="devops-engineer">DevOps Engineer</option>
+                                <option value="mobile-developer">Mobile Developer</option>
+                                <option value="software-engineer">Software Engineer</option>
+                                <option value="system-architect">System Architect</option>
+                                <option value="qa-engineer">QA Engineer</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Company Type
+                              </label>
+                              <select
+                                value={problem.companyType}
+                                onChange={(e) =>
+                                  updateProblem(index, "companyType", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Company Type</option>
+                                <option value="tech">Tech</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="startup">Startup</option>
+                                <option value="enterprise">Enterprise</option>
+                                <option value="government">Government</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Interview Type
+                              </label>
+                              <select
+                                value={problem.interviewType}
+                                onChange={(e) =>
+                                  updateProblem(index, "interviewType", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Interview Type</option>
+                                <option value="technical">Technical</option>
+                                <option value="behavioral">Behavioral</option>
+                                <option value="system-design">System Design</option>
+                                <option value="coding">Coding</option>
+                                <option value="data-structures">Data Structures</option>
+                                <option value="algorithms">Algorithms</option>
+                                <option value="database">Database</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Time Limit (minutes)
+                              </label>
+                              <input
+                                type="number"
+                                value={problem.timeLimit}
+                                onChange={(e) =>
+                                  updateProblem(index, "timeLimit", parseInt(e.target.value) || 30)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="30"
+                                min="1"
+                                max="180"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Difficulty *
+                              </label>
+                              <select
+                                value={problem.difficulty}
+                                onChange={(e) =>
+                                  updateProblem(
+                                    index,
+                                    "difficulty",
+                                    e.target.value as any
+                                  )
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Priority
+                              </label>
+                              <select
+                                value={problem.priority}
+                                onChange={(e) =>
+                                  updateProblem(index, "priority", e.target.value as any)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
 
                         <div>
@@ -690,27 +950,6 @@ export default function UploadPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Difficulty *
-                            </label>
-                            <select
-                              value={problem.difficulty}
-                              onChange={(e) =>
-                                updateProblem(
-                                  index,
-                                  "difficulty",
-                                  e.target.value as any
-                                )
-                              }
-                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="easy">Easy</option>
-                              <option value="medium">Medium</option>
-                              <option value="hard">Hard</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
                               Test Cases *
                             </label>
                             <textarea
@@ -726,6 +965,23 @@ export default function UploadPage() {
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                               placeholder='[{"input": "[2,7,11,15], 9", "output": "[0,1]"}]'
                             />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Status
+                            </label>
+                            <select
+                              value={problem.status}
+                              onChange={(e) =>
+                                updateProblem(index, "status", e.target.value as any)
+                              }
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="draft">Draft</option>
+                              <option value="active">Active</option>
+                              <option value="archived">Archived</option>
+                            </select>
                           </div>
                         </div>
 
@@ -759,6 +1015,21 @@ export default function UploadPage() {
                               placeholder="comma-separated tags"
                             />
                           </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Companies
+                          </label>
+                          <input
+                            type="text"
+                            value={problem.companies}
+                            onChange={(e) =>
+                              updateProblem(index, "companies", e.target.value)
+                            }
+                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="comma-separated companies"
+                          />
                         </div>
                       </div>
                     </Card>
@@ -842,6 +1113,281 @@ export default function UploadPage() {
                           ))}
                         </div>
 
+                        {/* Primary Categorization */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">Primary Categorization</h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Subject *
+                              </label>
+                              <select
+                                value={mcq.subject}
+                                onChange={(e) =>
+                                  updateMCQ(index, "subject", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Subject</option>
+                                <option value="programming">Programming</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="mobile-development">Mobile Development</option>
+                                <option value="devops">DevOps</option>
+                                <option value="ai-ml">AI/ML</option>
+                                <option value="database">Database</option>
+                                <option value="cybersecurity">Cybersecurity</option>
+                                <option value="system-design">System Design</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Topic *
+                              </label>
+                              <input
+                                type="text"
+                                value={mcq.topic}
+                                onChange={(e) =>
+                                  updateMCQ(index, "topic", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="e.g., arrays, strings, algorithms"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Tool/Technology *
+                              </label>
+                              <select
+                                value={mcq.tool}
+                                onChange={(e) =>
+                                  updateMCQ(index, "tool", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Tool</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="react">React</option>
+                                <option value="nodejs">Node.js</option>
+                                <option value="sql">SQL</option>
+                                <option value="mongodb">MongoDB</option>
+                                <option value="docker">Docker</option>
+                                <option value="kubernetes">Kubernetes</option>
+                                <option value="aws">AWS</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Technology Stack
+                              </label>
+                              <select
+                                value={mcq.technologyStack}
+                                onChange={(e) =>
+                                  updateMCQ(index, "technologyStack", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Stack</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="full-stack">Full Stack</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="data">Data</option>
+                                <option value="devops">DevOps</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Domain
+                              </label>
+                              <select
+                                value={mcq.domain}
+                                onChange={(e) =>
+                                  updateMCQ(index, "domain", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Domain</option>
+                                <option value="web">Web</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="ai-ml">AI/ML</option>
+                                <option value="data">Data</option>
+                                <option value="cloud">Cloud</option>
+                                <option value="security">Security</option>
+                                <option value="gaming">Gaming</option>
+                                <option value="fintech">FinTech</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Skill Level *
+                              </label>
+                              <select
+                                value={mcq.skillLevel}
+                                onChange={(e) =>
+                                  updateMCQ(index, "skillLevel", e.target.value as any)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Professional Context */}
+                        <div className="bg-blue-50 p-4 rounded-lg">
+                          <h6 className="font-medium text-gray-900 mb-3">Professional Context</h6>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Job Role
+                              </label>
+                              <select
+                                value={mcq.jobRole}
+                                onChange={(e) =>
+                                  updateMCQ(index, "jobRole", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Job Role</option>
+                                <option value="frontend-developer">Frontend Developer</option>
+                                <option value="backend-developer">Backend Developer</option>
+                                <option value="full-stack-developer">Full Stack Developer</option>
+                                <option value="data-scientist">Data Scientist</option>
+                                <option value="data-engineer">Data Engineer</option>
+                                <option value="devops-engineer">DevOps Engineer</option>
+                                <option value="mobile-developer">Mobile Developer</option>
+                                <option value="software-engineer">Software Engineer</option>
+                                <option value="system-architect">System Architect</option>
+                                <option value="qa-engineer">QA Engineer</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Company Type
+                              </label>
+                              <select
+                                value={mcq.companyType}
+                                onChange={(e) =>
+                                  updateMCQ(index, "companyType", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Company Type</option>
+                                <option value="tech">Tech</option>
+                                <option value="finance">Finance</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="startup">Startup</option>
+                                <option value="enterprise">Enterprise</option>
+                                <option value="government">Government</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Interview Type
+                              </label>
+                              <select
+                                value={mcq.interviewType}
+                                onChange={(e) =>
+                                  updateMCQ(index, "interviewType", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="">Select Interview Type</option>
+                                <option value="technical">Technical</option>
+                                <option value="behavioral">Behavioral</option>
+                                <option value="system-design">System Design</option>
+                                <option value="coding">Coding</option>
+                                <option value="data-structures">Data Structures</option>
+                                <option value="algorithms">Algorithms</option>
+                                <option value="database">Database</option>
+                                <option value="frontend">Frontend</option>
+                                <option value="backend">Backend</option>
+                                <option value="other">Other</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Time Limit (minutes)
+                              </label>
+                              <input
+                                type="number"
+                                value={mcq.timeLimit}
+                                onChange={(e) =>
+                                  updateMCQ(index, "timeLimit", parseInt(e.target.value) || 30)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="30"
+                                min="1"
+                                max="180"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Difficulty *
+                              </label>
+                              <select
+                                value={mcq.difficulty}
+                                onChange={(e) =>
+                                  updateMCQ(
+                                    index,
+                                    "difficulty",
+                                    e.target.value as any
+                                  )
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Priority
+                              </label>
+                              <select
+                                value={mcq.priority}
+                                onChange={(e) =>
+                                  updateMCQ(index, "priority", e.target.value as any)
+                                }
+                                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -860,39 +1406,20 @@ export default function UploadPage() {
 
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Subject *
+                              Status
                             </label>
-                            <input
-                              type="text"
-                              value={mcq.subject}
+                            <select
+                              value={mcq.status}
                               onChange={(e) =>
-                                updateMCQ(index, "subject", e.target.value)
+                                updateMCQ(index, "status", e.target.value as any)
                               }
                               className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="e.g., algorithms, data-structures"
-                            />
+                            >
+                              <option value="draft">Draft</option>
+                              <option value="active">Active</option>
+                              <option value="archived">Archived</option>
+                            </select>
                           </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Difficulty *
-                          </label>
-                          <select
-                            value={mcq.difficulty}
-                            onChange={(e) =>
-                              updateMCQ(
-                                index,
-                                "difficulty",
-                                e.target.value as any
-                              )
-                            }
-                            className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                          </select>
                         </div>
 
                         <div>
@@ -908,6 +1435,38 @@ export default function UploadPage() {
                             className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Explanation for the correct answer"
                           />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Tags
+                            </label>
+                            <input
+                              type="text"
+                              value={mcq.tags}
+                              onChange={(e) =>
+                                updateMCQ(index, "tags", e.target.value)
+                              }
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="comma-separated tags"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Companies
+                            </label>
+                            <input
+                              type="text"
+                              value={mcq.companies}
+                              onChange={(e) =>
+                                updateMCQ(index, "companies", e.target.value)
+                              }
+                              className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="comma-separated companies"
+                            />
+                          </div>
                         </div>
                       </div>
                     </Card>
