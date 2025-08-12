@@ -319,9 +319,9 @@ export default function FeedbackPage() {
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Share Your Feedback
           </h2>
@@ -332,9 +332,9 @@ export default function FeedbackPage() {
         </div>
 
                 {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Feedback Form - Left Side */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <Card className="p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Anonymous Toggle - HIGHLIGHTED */}
@@ -564,109 +564,85 @@ export default function FeedbackPage() {
         </Card>
           </div>
 
-          {/* Right Sidebar - Description & Explanation */}
+          {/* Right Sidebar - Compact Info */}
           <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {/* What is Feedback */}
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            <div className="space-y-4">
+              {/* What is Feedback - Compact */}
+              <Card className="p-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-2 flex items-center">
                   💡 What is Feedback?
                 </h3>
-                <div className="space-y-3 text-sm text-gray-700">
+                <div className="space-y-2 text-xs text-gray-700">
                   <p>
-                    <strong>Feedback</strong> is your honest opinion about our
-                    platform, content, and learning experience. It helps us
-                    understand what's working well and what needs improvement.
+                    Your honest opinion about our platform, content, and learning experience.
                   </p>
-                  <p>
-                    Whether you love something, have suggestions, found a bug,
-                    or want to share concerns - every piece of feedback matters!
-                  </p>
-                  <p>
-                    <strong>Examples:</strong>
-                  </p>
-                  <ul className="list-disc list-inside space-y-1 ml-4">
-                    <li>
-                      "The coding problems are too difficult for beginners"
-                    </li>
-                    <li>"I love the interview practice feature!"</li>
-                    <li>"The mobile app crashes when I submit answers"</li>
-                    <li>"Can you add more JavaScript problems?"</li>
-                    <li>"The UI is confusing to navigate"</li>
+                  <p><strong>Examples:</strong></p>
+                  <ul className="list-disc list-inside space-y-0.5 ml-2 text-xs">
+                    <li>"Problems too difficult"</li>
+                    <li>"Love interview practice!"</li>
+                    <li>"App crashes on mobile"</li>
+                    <li>"Need more JavaScript"</li>
                   </ul>
                 </div>
               </Card>
 
-              {/* How Your Feedback Helps */}
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  🎯 How Your Feedback Helps
+              {/* How Your Feedback Helps - Compact */}
+              <Card className="p-4">
+                <h3 className="text-sm font-bold text-gray-900 mb-2 flex items-center">
+                  🎯 How It Helps
                 </h3>
-                <div className="space-y-3 text-sm text-gray-700">
-                  <p>
-                    Your feedback directly influences how we improve the
-                    platform for you and other students:
-                  </p>
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We add new features based on popular requests</span>
+                <div className="space-y-2 text-xs text-gray-700">
+                  <div className="space-y-1">
+                    <div className="flex items-start space-x-1">
+                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span>Add new features</span>
                     </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We fix bugs and technical issues you report</span>
+                    <div className="flex items-start space-x-1">
+                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span>Fix bugs & issues</span>
                     </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We improve content difficulty and quality</span>
+                    <div className="flex items-start space-x-1">
+                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span>Improve content</span>
                     </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We enhance user interface and experience</span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-600 font-bold">✓</span>
-                      <span>We prioritize what matters most to students</span>
+                    <div className="flex items-start space-x-1">
+                      <span className="text-green-600 font-bold text-xs">✓</span>
+                      <span>Enhance UI/UX</span>
                     </div>
                   </div>
-                  <p className="text-blue-700 font-medium">
-                    <strong>
-                      Your voice shapes the future of our learning platform!
-                    </strong>
+                  <p className="text-blue-700 font-medium text-xs">
+                    <strong>Your voice shapes the platform!</strong>
                   </p>
                 </div>
               </Card>
 
-              {/* Anonymous Mode Explanation */}
-              <Card className="p-6 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  🔒 About Anonymous Mode
+              {/* Anonymous Mode - Compact */}
+              <Card className="p-4 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+                <h3 className="text-sm font-bold text-gray-900 mb-2 flex items-center">
+                  🔒 Anonymous Mode
                 </h3>
-                <div className="space-y-3 text-sm text-gray-700">
+                <div className="space-y-2 text-xs text-gray-700">
                   <p>
-                    <strong>Anonymous mode</strong> allows you to share feedback without revealing your identity to administrators.
+                    Share feedback without revealing your identity.
                   </p>
-                  <div className="bg-white p-3 rounded-lg border border-purple-200">
-                    <h4 className="font-semibold text-purple-800 mb-2">✅ Benefits of Anonymous Mode:</h4>
-                    <ul className="space-y-1 text-sm">
-                      <li>• Share honest feedback without fear</li>
+                  <div className="bg-white p-2 rounded border border-purple-200">
+                    <h4 className="font-semibold text-purple-800 text-xs mb-1">✅ Anonymous Benefits:</h4>
+                    <ul className="space-y-0.5 text-xs">
+                      <li>• Share without fear</li>
                       <li>• Express concerns freely</li>
-                      <li>• Report issues without worry</li>
-                      <li>• Give honest criticism</li>
-                      <li>• Share personal experiences</li>
+                      <li>• Report issues safely</li>
                     </ul>
                   </div>
-                  <div className="bg-white p-3 rounded-lg border border-blue-200">
-                    <h4 className="font-semibold text-blue-800 mb-2">📝 Named Mode Benefits:</h4>
-                    <ul className="space-y-1 text-sm">
-                      <li>• Get personalized follow-up</li>
-                      <li>• Receive direct support</li>
-                      <li>• Track your feedback status</li>
-                      <li>• Build relationship with team</li>
+                  <div className="bg-white p-2 rounded border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 text-xs mb-1">📝 Named Benefits:</h4>
+                    <ul className="space-y-0.5 text-xs">
+                      <li>• Get follow-up support</li>
+                      <li>• Track feedback status</li>
+                      <li>• Build relationships</li>
                     </ul>
                   </div>
-                  <p className="text-purple-700 font-medium">
-                    <strong>Choose what makes you most comfortable!</strong>
+                  <p className="text-purple-700 font-medium text-xs">
+                    <strong>Choose what's comfortable!</strong>
                   </p>
                 </div>
               </Card>
