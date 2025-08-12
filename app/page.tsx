@@ -20,7 +20,7 @@ export default function HomePage() {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [mcqQuestions, setMCQQuestions] = useState<MCQQuestion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showSuperAdminLogin, setShowSuperAdminLogin] = useState(false);
+
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -84,16 +84,7 @@ export default function HomePage() {
     window.location.href = `/mcq/${question.id}`;
   };
 
-  const handleSuperAdminSuccess = (superAdminUser: any) => {
-    localStorage.setItem("superAdminUser", JSON.stringify(superAdminUser));
-    setShowSuperAdminLogin(false);
-    window.location.reload();
-  };
 
-  const handleSignOut = () => {
-    localStorage.removeItem("superAdminUser");
-    window.location.reload();
-  };
 
   if (loading) {
     return (
@@ -622,13 +613,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* SuperAdmin Login Modal */}
-      {showSuperAdminLogin && (
-        <SuperAdminLogin
-          onSuccess={handleSuperAdminSuccess}
-          onCancel={() => setShowSuperAdminLogin(false)}
-        />
-      )}
+
     </div>
   );
 }

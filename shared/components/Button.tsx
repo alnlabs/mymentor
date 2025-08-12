@@ -5,7 +5,7 @@ interface ButtonProps {
   onClick?: (e?: React.MouseEvent) => void;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'primary' | 'outline' | 'danger';
+  variant?: 'primary' | 'outline' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -24,7 +24,8 @@ export function Button({
   const variantClasses = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
     outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
+    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
+    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500'
   };
   
   const sizeClasses = {
