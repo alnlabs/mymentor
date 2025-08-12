@@ -1,0 +1,350 @@
+[
+  {
+    "question": "What is the difference between let, const, and var in JavaScript?",
+    "options": [
+      "let and const are block-scoped, var is function-scoped",
+      "All three are function-scoped",
+      "const is block-scoped, let and var are function-scoped",
+      "All three are block-scoped"
+    ],
+    "correctAnswer": 0,
+    "explanation": "let and const are block-scoped (ES6), while var is function-scoped (ES5). const also prevents reassignment.",
+    "category": "frontend",
+    "difficulty": "easy",
+    "subject": "JavaScript",
+    "topic": "Variables and Scope",
+    "skillLevel": "beginner",
+    "jobRole": "frontend-developer",
+    "tags": "javascript,es6,variables,scope"
+  },
+  {
+    "question": "What does the useState hook return?",
+    "options": [
+      "An object with state and setter function",
+      "An array with state and setter function",
+      "Just the state value",
+      "A function to update state"
+    ],
+    "correctAnswer": 1,
+    "explanation": "useState returns an array where the first element is the current state and the second is a function to update it.",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "React",
+    "topic": "Hooks",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "react,hooks,usestate,state-management"
+  },
+  {
+    "question": "Which CSS property is used to control the direction of flex items?",
+    "options": ["flex-direction", "flex-flow", "flex-wrap", "flex-basis"],
+    "correctAnswer": 0,
+    "explanation": "flex-direction controls whether flex items are laid out horizontally (row) or vertically (column).",
+    "category": "frontend",
+    "difficulty": "easy",
+    "subject": "CSS",
+    "topic": "Flexbox",
+    "skillLevel": "beginner",
+    "jobRole": "frontend-developer",
+    "tags": "css,flexbox,layout,responsive"
+  },
+  {
+    "question": "What is the correct order of execution in Node.js event loop phases?",
+    "options": [
+      "Timers → Pending callbacks → Idle → Poll → Check → Close callbacks",
+      "Poll → Timers → Check → Pending callbacks → Close callbacks → Idle",
+      "Timers → Poll → Check → Pending callbacks → Close callbacks → Idle",
+      "Check → Timers → Poll → Pending callbacks → Idle → Close callbacks"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The event loop processes phases in this specific order: timers, pending callbacks, idle, poll, check, and close callbacks.",
+    "category": "backend",
+    "difficulty": "hard",
+    "subject": "Node.js",
+    "topic": "Event Loop",
+    "skillLevel": "advanced",
+    "jobRole": "backend-developer",
+    "tags": "nodejs,event-loop,asynchronous,performance"
+  },
+  {
+    "question": "Which JOIN type returns all records from both tables, with NULL values where there's no match?",
+    "options": ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN"],
+    "correctAnswer": 3,
+    "explanation": "FULL OUTER JOIN returns all records from both tables, filling with NULL where there's no match in either table.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "SQL",
+    "topic": "JOINs",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "sql,database,joins,queries"
+  },
+  {
+    "question": "What is the output of: [x**2 for x in range(5) if x % 2 == 0]?",
+    "options": ["[0, 4, 16]", "[1, 9]", "[0, 1, 4, 9, 16]", "[0, 2, 4]"],
+    "correctAnswer": 0,
+    "explanation": "This creates squares of even numbers from 0 to 4: 0²=0, 2²=4, 4²=16.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "List Comprehensions",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,list-comprehension,functional-programming"
+  },
+  {
+    "question": "What is the difference between 'git merge' and 'git rebase'?",
+    "options": [
+      "Merge creates a new commit, rebase moves commits",
+      "Rebase creates a new commit, merge moves commits",
+      "Both create new commits",
+      "Both move existing commits"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Merge creates a merge commit combining two branches, while rebase moves commits from one branch to another.",
+    "category": "devops",
+    "difficulty": "medium",
+    "subject": "Git",
+    "topic": "Branching",
+    "skillLevel": "intermediate",
+    "jobRole": "fullstack-developer",
+    "tags": "git,version-control,branching,merging"
+  },
+  {
+    "question": "Which Docker command stops a running container but preserves its data?",
+    "options": ["docker kill", "docker stop", "docker rm", "docker pause"],
+    "correctAnswer": 1,
+    "explanation": "docker stop gracefully stops a container and preserves its data, while docker kill forces termination.",
+    "category": "devops",
+    "difficulty": "easy",
+    "subject": "Docker",
+    "topic": "Container Management",
+    "skillLevel": "beginner",
+    "jobRole": "devops-engineer",
+    "tags": "docker,containers,devops,deployment"
+  },
+  {
+    "question": "What HTTP status code should be returned when a resource is successfully created?",
+    "options": ["200 OK", "201 Created", "202 Accepted", "204 No Content"],
+    "correctAnswer": 1,
+    "explanation": "HTTP 201 Created is the appropriate status code when a new resource is successfully created via POST request.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "API Design",
+    "topic": "REST",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "rest,api,http,status-codes"
+  },
+  {
+    "question": "What is the main advantage of async/await over Promises?",
+    "options": [
+      "Better performance",
+      "More readable synchronous-looking code",
+      "Smaller bundle size",
+      "Better error handling"
+    ],
+    "correctAnswer": 1,
+    "explanation": "async/await makes asynchronous code look and behave more like synchronous code, improving readability.",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "JavaScript",
+    "topic": "Asynchronous Programming",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "javascript,async,promises,es7"
+  },
+  {
+    "question": "Which CSS property defines the size of grid columns?",
+    "options": [
+      "grid-template-columns",
+      "grid-columns",
+      "grid-size",
+      "grid-width"
+    ],
+    "correctAnswer": 0,
+    "explanation": "grid-template-columns defines the number and size of columns in a CSS Grid layout.",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "CSS",
+    "topic": "Grid",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "css,grid,layout,responsive"
+  },
+  {
+    "question": "What is the primary purpose of database indexing?",
+    "options": [
+      "To reduce storage space",
+      "To improve query performance",
+      "To ensure data integrity",
+      "To backup data"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Indexes improve query performance by providing faster data access paths, though they do use additional storage space.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Database",
+    "topic": "Indexing",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "database,indexing,performance,optimization"
+  },
+  {
+    "question": "Which lifecycle method is called after a component is mounted?",
+    "options": [
+      "componentWillMount",
+      "componentDidMount",
+      "componentWillUpdate",
+      "componentDidUpdate"
+    ],
+    "correctAnswer": 1,
+    "explanation": "componentDidMount is called after a component is mounted to the DOM, making it ideal for API calls and subscriptions.",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "React",
+    "topic": "Lifecycle",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "react,lifecycle,components,hooks"
+  },
+  {
+    "question": "What is the main benefit of microservices architecture?",
+    "options": [
+      "Reduced complexity",
+      "Independent deployment and scaling",
+      "Lower development cost",
+      "Faster initial development"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Microservices allow each service to be deployed and scaled independently, improving flexibility and maintainability.",
+    "category": "backend",
+    "difficulty": "hard",
+    "subject": "Architecture",
+    "topic": "Microservices",
+    "skillLevel": "advanced",
+    "jobRole": "backend-developer",
+    "tags": "microservices,architecture,scalability,deployment"
+  },
+  {
+    "question": "What is a closure in JavaScript?",
+    "options": [
+      "A function that has access to variables in its outer scope",
+      "A way to close browser windows",
+      "A method to end loops",
+      "A type of object"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A closure is a function that retains access to variables from its outer scope even after the outer function has returned.",
+    "category": "frontend",
+    "difficulty": "hard",
+    "subject": "JavaScript",
+    "topic": "Closures",
+    "skillLevel": "advanced",
+    "jobRole": "frontend-developer",
+    "tags": "javascript,closures,scope,functions"
+  },
+  {
+    "question": "Which authentication method is stateless and commonly used in REST APIs?",
+    "options": [
+      "Session-based authentication",
+      "JWT (JSON Web Tokens)",
+      "Basic authentication",
+      "OAuth 1.0"
+    ],
+    "correctAnswer": 1,
+    "explanation": "JWT is stateless and contains all necessary information in the token itself, making it ideal for REST APIs.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Security",
+    "topic": "Authentication",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "authentication,jwt,security,api"
+  },
+  {
+    "question": "Which selector has the highest specificity?",
+    "options": [
+      ".class-name",
+      "#id-name",
+      "element-name",
+      "element-name.class-name"
+    ],
+    "correctAnswer": 1,
+    "explanation": "ID selectors have the highest specificity (100), followed by class selectors (10), and element selectors (1).",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "CSS",
+    "topic": "Specificity",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "css,specificity,selectors,cascading"
+  },
+  {
+    "question": "What is the main goal of database normalization?",
+    "options": [
+      "To reduce data redundancy",
+      "To increase storage space",
+      "To improve query performance",
+      "To simplify database design"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Normalization reduces data redundancy and improves data integrity by organizing data into related tables.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Database",
+    "topic": "Normalization",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "database,normalization,design,integrity"
+  },
+  {
+    "question": "Which React hook is used to prevent unnecessary re-renders?",
+    "options": ["useMemo", "useCallback", "useEffect", "useState"],
+    "correctAnswer": 0,
+    "explanation": "useMemo memoizes expensive calculations and prevents re-computation on every render when dependencies haven't changed.",
+    "category": "frontend",
+    "difficulty": "hard",
+    "subject": "React",
+    "topic": "Performance",
+    "skillLevel": "advanced",
+    "jobRole": "frontend-developer",
+    "tags": "react,performance,optimization,hooks"
+  },
+  {
+    "question": "Which load balancing strategy distributes requests evenly across all servers?",
+    "options": [
+      "Round Robin",
+      "Least Connections",
+      "IP Hash",
+      "Weighted Round Robin"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Round Robin distributes requests sequentially to each server in rotation, ensuring even distribution.",
+    "category": "devops",
+    "difficulty": "medium",
+    "subject": "Infrastructure",
+    "topic": "Load Balancing",
+    "skillLevel": "intermediate",
+    "jobRole": "devops-engineer",
+    "tags": "load-balancing,infrastructure,scalability,devops"
+  },
+  {
+    "question": "What is event bubbling in JavaScript?",
+    "options": [
+      "Events trigger from the target element up to the root",
+      "Events trigger from the root down to the target",
+      "Events only trigger on the target element",
+      "Events trigger randomly"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Event bubbling means events propagate from the innermost element (target) up through its parent elements to the root.",
+    "category": "frontend",
+    "difficulty": "medium",
+    "subject": "JavaScript",
+    "topic": "Events",
+    "skillLevel": "intermediate",
+    "jobRole": "frontend-developer",
+    "tags": "javascript,events,dom,bubbling"
+  }
+]

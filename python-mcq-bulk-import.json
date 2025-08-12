@@ -1,0 +1,380 @@
+[
+  {
+    "question": "What is the difference between a list and a tuple in Python?",
+    "options": [
+      "Lists are mutable, tuples are immutable",
+      "Tuples are mutable, lists are immutable",
+      "Both are mutable",
+      "Both are immutable"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Lists are mutable (can be modified after creation), tuples are immutable (cannot be modified after creation).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Data Structures",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,lists,tuples,mutable,immutable"
+  },
+  {
+    "question": "What is the output of: print(type([]))?",
+    "options": [
+      "<class 'list'>",
+      "<class 'array'>",
+      "<class 'tuple'>",
+      "<class 'sequence'>"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The type() function returns the class of an object. An empty list [] is of type 'list'.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Built-in Functions",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,type,built-in-functions,lists"
+  },
+  {
+    "question": "What is a lambda function in Python?",
+    "options": [
+      "A function that can only be called once",
+      "An anonymous function defined with lambda keyword",
+      "A function that returns itself",
+      "A function that takes no arguments"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Lambda functions are anonymous functions defined using the lambda keyword. They can take any number of arguments but can only have one expression.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Functions",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,lambda,anonymous-functions,functional-programming"
+  },
+  {
+    "question": "What is the difference between 'is' and '==' in Python?",
+    "options": [
+      "'is' compares identity, '==' compares values",
+      "'==' compares identity, 'is' compares values",
+      "Both compare identity",
+      "Both compare values"
+    ],
+    "correctAnswer": 0,
+    "explanation": "'is' checks if two variables point to the same object (identity), while '==' checks if two variables have the same value.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Object Comparison",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,identity,equality,object-comparison"
+  },
+  {
+    "question": "What is a generator in Python?",
+    "options": [
+      "A function that generates random numbers",
+      "A function that yields values one at a time",
+      "A function that creates objects",
+      "A function that returns multiple values"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A generator is a function that uses the 'yield' keyword to return values one at a time, allowing for memory-efficient iteration.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Generators",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,generators,yield,memory-efficiency"
+  },
+  {
+    "question": "What is the purpose of the 'self' parameter in Python class methods?",
+    "options": [
+      "To make the method static",
+      "To reference the instance of the class",
+      "To create a new instance",
+      "To define the return type"
+    ],
+    "correctAnswer": 1,
+    "explanation": "'self' is a convention that refers to the instance of the class. It allows methods to access and modify the instance's attributes.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Object-Oriented Programming",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,oop,self,instance-methods"
+  },
+  {
+    "question": "What is the output of: print([1, 2, 3] * 3)?",
+    "options": [
+      "[1, 2, 3, 1, 2, 3, 1, 2, 3]",
+      "[3, 6, 9]",
+      "[1, 2, 3, 3]",
+      "Error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The * operator with a list repeats the list elements. [1, 2, 3] * 3 creates a new list with the original elements repeated 3 times.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "List Operations",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,lists,operators,repetition"
+  },
+  {
+    "question": "What is a decorator in Python?",
+    "options": [
+      "A function that modifies another function",
+      "A type of variable",
+      "A built-in data structure",
+      "A class attribute"
+    ],
+    "correctAnswer": 0,
+    "explanation": "A decorator is a function that takes another function as input and returns a modified version of that function, often adding functionality.",
+    "category": "backend",
+    "difficulty": "hard",
+    "subject": "Python",
+    "topic": "Decorators",
+    "skillLevel": "advanced",
+    "jobRole": "backend-developer",
+    "tags": "python,decorators,function-modification,metaprogramming"
+  },
+  {
+    "question": "What is the difference between 'append' and 'extend' in Python lists?",
+    "options": [
+      "append adds one element, extend adds elements from an iterable",
+      "extend adds one element, append adds elements from an iterable",
+      "Both add one element",
+      "Both add elements from an iterable"
+    ],
+    "correctAnswer": 0,
+    "explanation": "append() adds a single element to the end of the list, while extend() adds all elements from an iterable to the end of the list.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "List Methods",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,lists,append,extend,methods"
+  },
+  {
+    "question": "What is the purpose of the 'with' statement in Python?",
+    "options": [
+      "To create a loop",
+      "To handle context management and automatic cleanup",
+      "To define a function",
+      "To create a class"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The 'with' statement is used for context management, ensuring proper setup and cleanup of resources (like file handling).",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Context Management",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,with,context-manager,resource-management"
+  },
+  {
+    "question": "What is the output of: print(3 / 2)?",
+    "options": [
+      "1",
+      "1.5",
+      "2",
+      "Error"
+    ],
+    "correctAnswer": 1,
+    "explanation": "In Python 3, the / operator performs true division and returns a float. 3 / 2 = 1.5.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Arithmetic Operators",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,division,operators,floating-point"
+  },
+  {
+    "question": "What is a set in Python?",
+    "options": [
+      "An ordered collection of unique elements",
+      "An unordered collection of unique elements",
+      "An ordered collection that can have duplicates",
+      "An unordered collection that can have duplicates"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A set is an unordered collection of unique elements. It cannot contain duplicates and is mutable.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Data Structures",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,sets,unique-elements,unordered"
+  },
+  {
+    "question": "What is the purpose of the 'global' keyword in Python?",
+    "options": [
+      "To create a global variable",
+      "To indicate that a variable refers to the global scope",
+      "To make a function global",
+      "To import a module globally"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The 'global' keyword is used inside a function to indicate that a variable refers to the global scope, allowing modification of global variables.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Variable Scope",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,global,scope,variables"
+  },
+  {
+    "question": "What is the difference between 'range' and 'xrange' in Python?",
+    "options": [
+      "range returns a list, xrange returns an iterator",
+      "xrange returns a list, range returns an iterator",
+      "Both return lists",
+      "Both return iterators"
+    ],
+    "correctAnswer": 0,
+    "explanation": "In Python 2, range() returns a list while xrange() returns an iterator. In Python 3, range() behaves like xrange() and returns an iterator.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Built-in Functions",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,range,xrange,iterators,memory-efficiency"
+  },
+  {
+    "question": "What is the purpose of the 'pass' statement in Python?",
+    "options": [
+      "To skip the current iteration",
+      "To do nothing (null operation)",
+      "To break out of a loop",
+      "To continue to the next iteration"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The 'pass' statement is a null operation - it does nothing. It's used as a placeholder when syntax requires a statement but no action is needed.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Control Flow",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,pass,null-operation,placeholder"
+  },
+  {
+    "question": "What is the output of: print('Hello' + 'World')?",
+    "options": [
+      "HelloWorld",
+      "Hello World",
+      "Hello+World",
+      "Error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The + operator concatenates strings. 'Hello' + 'World' results in 'HelloWorld' (no space between the strings).",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "String Operations",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,strings,concatenation,operators"
+  },
+  {
+    "question": "What is a dictionary comprehension in Python?",
+    "options": [
+      "A way to create dictionaries using a compact syntax",
+      "A method to read dictionary keys",
+      "A function to sort dictionaries",
+      "A way to merge dictionaries"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Dictionary comprehension is a concise way to create dictionaries using a compact syntax similar to list comprehensions.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Dictionary Operations",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,dictionaries,comprehension,compact-syntax"
+  },
+  {
+    "question": "What is the purpose of the 'try-except' block in Python?",
+    "options": [
+      "To create a loop",
+      "To handle exceptions and errors gracefully",
+      "To define a function",
+      "To create a class"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The try-except block is used for exception handling, allowing the program to catch and handle errors gracefully instead of crashing.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Exception Handling",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,try-except,exception-handling,error-handling"
+  },
+  {
+    "question": "What is the difference between 'shallow copy' and 'deep copy' in Python?",
+    "options": [
+      "Shallow copy creates a new object with references to nested objects, deep copy creates completely independent copies",
+      "Deep copy creates a new object with references to nested objects, shallow copy creates completely independent copies",
+      "Both create completely independent copies",
+      "Both create references to the original object"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Shallow copy creates a new object but references the same nested objects. Deep copy creates completely independent copies of all nested objects.",
+    "category": "backend",
+    "difficulty": "hard",
+    "subject": "Python",
+    "topic": "Object Copying",
+    "skillLevel": "advanced",
+    "jobRole": "backend-developer",
+    "tags": "python,shallow-copy,deep-copy,object-copying,references"
+  },
+  {
+    "question": "What is the purpose of the 'yield' keyword in Python?",
+    "options": [
+      "To return a value from a function",
+      "To create a generator function",
+      "To break out of a loop",
+      "To define a class"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The 'yield' keyword is used to create generator functions that can yield values one at a time, allowing for memory-efficient iteration.",
+    "category": "backend",
+    "difficulty": "medium",
+    "subject": "Python",
+    "topic": "Generators",
+    "skillLevel": "intermediate",
+    "jobRole": "backend-developer",
+    "tags": "python,yield,generators,memory-efficiency"
+  },
+  {
+    "question": "What is the output of: print(len('Python'))?",
+    "options": [
+      "6",
+      "5",
+      "7",
+      "Error"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The len() function returns the length of a sequence. The string 'Python' has 6 characters.",
+    "category": "backend",
+    "difficulty": "easy",
+    "subject": "Python",
+    "topic": "Built-in Functions",
+    "skillLevel": "beginner",
+    "jobRole": "backend-developer",
+    "tags": "python,len,built-in-functions,strings"
+  }
+]

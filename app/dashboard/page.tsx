@@ -31,6 +31,7 @@ import {
   Plus,
   Target as TargetIcon,
   Home,
+  MessageSquare,
 } from "lucide-react";
 
 interface UserStats {
@@ -232,6 +233,12 @@ export default function DashboardPage() {
                 >
                   MCQs
                 </a>
+                <a
+                  href="/feedback"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                >
+                  Feedback
+                </a>
                 {(isAdmin || isSuperAdmin) && (
                   <a
                     href="/admin"
@@ -277,7 +284,7 @@ export default function DashboardPage() {
         {/* Mobile Navigation Menu */}
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-2">
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-5 gap-2">
               <a
                 href="/"
                 className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
@@ -298,6 +305,13 @@ export default function DashboardPage() {
               >
                 <BookOpen className="w-4 h-4 mb-1" />
                 MCQs
+              </a>
+              <a
+                href="/feedback"
+                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
+              >
+                <MessageSquare className="w-4 h-4 mb-1" />
+                Feedback
               </a>
               {(isAdmin || isSuperAdmin) && (
                 <a
