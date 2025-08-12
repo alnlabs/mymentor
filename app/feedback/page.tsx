@@ -94,12 +94,16 @@ export default function FeedbackPage() {
         body: JSON.stringify(feedback),
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const result = await response.json();
 
       if (result.success) {
         setSubmitted(true);
         setFeedback({
-          isAnonymous: false,
+          isAnonymous: true,
           type: "",
           category: "",
           subject: "",
@@ -112,6 +116,7 @@ export default function FeedbackPage() {
         );
       }
     } catch (error) {
+      console.error("Feedback submission error:", error);
       setError("Network error. Please check your connection and try again.");
     } finally {
       setSubmitting(false);
