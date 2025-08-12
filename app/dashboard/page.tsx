@@ -53,6 +53,11 @@ interface UserStats {
 export default function DashboardPage() {
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
+
+  // Debug logging
+  console.log("Dashboard - User:", user?.email);
+  console.log("Dashboard - isAdmin:", isAdmin);
+  console.log("Dashboard - isSuperAdmin:", isSuperAdmin);
   const [userStats, setUserStats] = useState<UserStats>({
     problemsSolved: 0,
     mcqCompleted: 0,

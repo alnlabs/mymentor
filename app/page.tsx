@@ -453,11 +453,11 @@ export default function HomePage() {
                     </p>
                     <Button
                       onClick={() =>
-                        (window.location.href = "/admin/interviews")
+                        (window.location.href = "/interviews")
                       }
                       className="w-full"
                     >
-                      Manage Interviews
+                      Start Interview
                     </Button>
                   </div>
                 </div>

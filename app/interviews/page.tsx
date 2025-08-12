@@ -12,11 +12,17 @@ import { Filter, Search, Plus } from "lucide-react";
 export default function InterviewsPage() {
   const { user, isAdmin, isSuperAdmin } = useAuthContext();
 
-  // Redirect non-admin users to admin panel
-  if (user && !isAdmin && !isSuperAdmin) {
-    window.location.href = "/admin/interviews";
-    return null;
-  }
+  // Debug logging
+  console.log("Interviews page - User:", user?.email);
+  console.log("Interviews page - isAdmin:", isAdmin);
+  console.log("Interviews page - isSuperAdmin:", isSuperAdmin);
+
+  // Redirect to homepage if not authenticated
+  React.useEffect(() => {
+    if (!user && !isSuperAdmin) {
+      window.location.href = "/";
+    }
+  }, [user, isSuperAdmin]);
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
