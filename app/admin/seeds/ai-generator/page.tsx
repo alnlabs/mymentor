@@ -480,40 +480,40 @@ export default function AIGeneratorPage() {
               <h3 className="text-lg font-semibold text-gray-900">
                 {config.language} - Database Statistics
               </h3>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-600 font-medium">
                 Total: {selectedLanguageStats.totalQuestions} questions
               </div>
             </div>
             <div className="grid grid-cols-4 gap-4">
               <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-2xl font-bold text-blue-700 mb-1">
+                <div className="text-2xl font-bold text-blue-800 mb-1">
                   {selectedLanguageStats.totalInDB}
                 </div>
-                <div className="text-sm text-blue-800 font-medium">
+                <div className="text-sm text-blue-900 font-medium">
                   In Database
                 </div>
               </div>
               <div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-                <div className="text-2xl font-bold text-green-700 mb-1">
+                <div className="text-2xl font-bold text-green-800 mb-1">
                   {selectedLanguageStats.beginner}
                 </div>
-                <div className="text-sm text-green-800 font-medium">
+                <div className="text-sm text-green-900 font-medium">
                   Beginner
                 </div>
               </div>
               <div className="text-center p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <div className="text-2xl font-bold text-yellow-700 mb-1">
+                <div className="text-2xl font-bold text-yellow-800 mb-1">
                   {selectedLanguageStats.intermediate}
                 </div>
-                <div className="text-sm text-yellow-800 font-medium">
+                <div className="text-sm text-yellow-900 font-medium">
                   Intermediate
                 </div>
               </div>
               <div className="text-center p-3 bg-red-50 rounded-lg border border-red-200">
-                <div className="text-2xl font-bold text-red-700 mb-1">
+                <div className="text-2xl font-bold text-red-800 mb-1">
                   {selectedLanguageStats.advanced}
                 </div>
-                <div className="text-sm text-red-800 font-medium">Advanced</div>
+                <div className="text-sm text-red-900 font-medium">Advanced</div>
               </div>
             </div>
           </div>
@@ -617,8 +617,8 @@ export default function AIGeneratorPage() {
                 </div>
 
                 {/* Options */}
-                <div className="space-y-1">
-                  <label className="flex items-center">
+                <div className="space-y-2">
+                  <label className="flex items-center text-gray-700 font-medium">
                     <input
                       type="checkbox"
                       checked={config.includeExplanation}
@@ -629,7 +629,7 @@ export default function AIGeneratorPage() {
                     />
                     Include Explanations
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center text-gray-700 font-medium">
                     <input
                       type="checkbox"
                       checked={config.includeTags}
@@ -640,7 +640,7 @@ export default function AIGeneratorPage() {
                     />
                     Include Tags
                   </label>
-                  <label className="flex items-center">
+                  <label className="flex items-center text-gray-700 font-medium">
                     <input
                       type="checkbox"
                       checked={config.includeCompanies}
@@ -679,30 +679,30 @@ export default function AIGeneratorPage() {
               {selectedLanguageStats && config.language && config.topic && (
                 <div className="mb-4 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-lg border border-blue-200 p-4">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-700 mb-1">
+                    <div className="text-3xl font-bold text-blue-800 mb-1">
                       {selectedLanguageStats[config.difficulty] || 0}
                     </div>
-                    <div className="text-sm text-gray-700 font-medium mb-2">
+                    <div className="text-sm text-gray-800 font-medium mb-2">
                       {config.difficulty} questions available
                     </div>
                     <div className="flex items-center justify-center space-x-3 text-xs">
                       <div className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-1"></div>
-                        <span className="text-blue-700 font-medium">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-1"></div>
+                        <span className="text-blue-800 font-medium">
                           {config.language}
                         </span>
                       </div>
-                      <div className="text-gray-400">•</div>
+                      <div className="text-gray-500">•</div>
                       <div className="flex items-center">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-1"></div>
-                        <span className="text-purple-700 font-medium">
+                        <div className="w-2 h-2 bg-purple-600 rounded-full mr-1"></div>
+                        <span className="text-purple-800 font-medium">
                           {config.topic}
                         </span>
                       </div>
-                      <div className="text-gray-400">•</div>
+                      <div className="text-gray-500">•</div>
                       <div className="flex items-center">
-                        <div className="w-2 h-2 bg-rose-500 rounded-full mr-1"></div>
-                        <span className="text-rose-700 font-medium capitalize">
+                        <div className="w-2 h-2 bg-rose-600 rounded-full mr-1"></div>
+                        <span className="text-rose-800 font-medium capitalize">
                           {config.difficulty}
                         </span>
                       </div>
@@ -764,7 +764,7 @@ export default function AIGeneratorPage() {
                   <h3 className="text-base font-medium text-gray-900 mb-2">
                     No Questions Generated
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-700">
                     Configure your settings and click "Generate Questions" to
                     create new MCQs
                   </p>
@@ -774,10 +774,10 @@ export default function AIGeneratorPage() {
                   {generatedQuestions.map((question, index) => (
                     <div
                       key={question.id}
-                      className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                      className="border border-gray-200 rounded-lg p-3 bg-white"
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-800">
                           Question {index + 1}
                         </span>
                         <span
@@ -792,7 +792,7 @@ export default function AIGeneratorPage() {
                           {question.difficulty}
                         </span>
                       </div>
-                      <p className="text-gray-900 mb-2 text-sm">
+                      <p className="text-gray-900 mb-2 text-sm font-medium">
                         {question.question}
                       </p>
                       <div className="space-y-1 mb-2">
@@ -801,8 +801,8 @@ export default function AIGeneratorPage() {
                             key={optIndex}
                             className={`text-xs ${
                               option === question.correctAnswer
-                                ? "text-green-700 font-medium"
-                                : "text-gray-700"
+                                ? "text-green-800 font-semibold"
+                                : "text-gray-800"
                             }`}
                           >
                             {String.fromCharCode(65 + optIndex)}. {option}
@@ -810,8 +810,8 @@ export default function AIGeneratorPage() {
                         ))}
                       </div>
                       {question.explanation && (
-                        <div className="text-xs text-gray-600 mb-2">
-                          <strong>Explanation:</strong> {question.explanation}
+                        <div className="text-xs text-gray-700 mb-2 bg-gray-50 p-2 rounded">
+                          <strong className="text-gray-800">Explanation:</strong> {question.explanation}
                         </div>
                       )}
                       {question.tags && question.tags.length > 0 && (
@@ -819,7 +819,7 @@ export default function AIGeneratorPage() {
                           {question.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="px-1 py-0.5 bg-blue-100 text-blue-800 text-xs rounded"
+                              className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded font-medium"
                             >
                               {tag}
                             </span>
