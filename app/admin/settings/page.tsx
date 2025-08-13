@@ -40,6 +40,7 @@ type TabType =
   | "users"
   | "platform"
   | "categories"
+  | "content"
   | "global"
   | "system";
 
@@ -212,6 +213,7 @@ function SettingsPageContent() {
     { id: "users", label: "Users", icon: "👥" },
     { id: "platform", label: "Platform", icon: "📊" },
     { id: "categories", label: "Categories", icon: "🏷️" },
+    { id: "content", label: "Content", icon: "📝" },
     { id: "global", label: "Global", icon: "🌍" },
     { id: "system", label: "System", icon: "🛠️" },
   ];
@@ -1412,6 +1414,198 @@ function SettingsPageContent() {
                     <Loading size="sm" text="Updating..." />
                   ) : (
                     "Update Platform Settings"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Card>
+        )}
+
+        {activeTab === "content" && (
+          <Card>
+            <h3 className="text-xl font-semibold mb-6">📝 Content Management Fields</h3>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              await updateSettings([
+                { key: "content_subjects", value: formData.get("content_subjects") as string, category: "content" },
+                { key: "content_topics", value: formData.get("content_topics") as string, category: "content" },
+                { key: "content_tools", value: formData.get("content_tools") as string, category: "content" },
+                { key: "content_technology_stacks", value: formData.get("content_technology_stacks") as string, category: "content" },
+                { key: "content_domains", value: formData.get("content_domains") as string, category: "content" },
+                { key: "content_skill_levels", value: formData.get("content_skill_levels") as string, category: "content" },
+                { key: "content_job_roles", value: formData.get("content_job_roles") as string, category: "content" },
+                { key: "content_company_types", value: formData.get("content_company_types") as string, category: "content" },
+                { key: "content_interview_types", value: formData.get("content_interview_types") as string, category: "content" },
+                { key: "content_categories", value: formData.get("content_categories") as string, category: "content" },
+                { key: "content_target_roles", value: formData.get("content_target_roles") as string, category: "content" },
+                { key: "content_programming_languages", value: formData.get("content_programming_languages") as string, category: "content" },
+              ]);
+            }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Subjects (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_subjects"
+                    defaultValue={getSettingValue("content_subjects", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="programming, data-science, web-development..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Topics (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_topics"
+                    defaultValue={getSettingValue("content_topics", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="arrays, strings, linked-lists..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Tools/Technologies (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_tools"
+                    defaultValue={getSettingValue("content_tools", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="python, javascript, java..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Technology Stacks (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_technology_stacks"
+                    defaultValue={getSettingValue("content_technology_stacks", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="frontend, backend, full-stack..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Domains (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_domains"
+                    defaultValue={getSettingValue("content_domains", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="web, mobile, ai-ml, data..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Skill Levels (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_skill_levels"
+                    defaultValue={getSettingValue("content_skill_levels", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="beginner, intermediate, advanced"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Job Roles (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_job_roles"
+                    defaultValue={getSettingValue("content_job_roles", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="frontend-developer, backend-developer..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Company Types (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_company_types"
+                    defaultValue={getSettingValue("content_company_types", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="tech, finance, healthcare..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Interview Types (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_interview_types"
+                    defaultValue={getSettingValue("content_interview_types", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="technical, behavioral, system-design..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Categories (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_categories"
+                    defaultValue={getSettingValue("content_categories", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="Programming, Data Structures, Algorithms..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Target Roles (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_target_roles"
+                    defaultValue={getSettingValue("content_target_roles", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="Frontend Developer, Backend Developer..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Programming Languages (comma-separated)
+                  </label>
+                  <textarea
+                    name="content_programming_languages"
+                    defaultValue={getSettingValue("content_programming_languages", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="JavaScript, Python, Java..."
+                  />
+                </div>
+              </div>
+              
+              <div className="mt-6 flex justify-end">
+                <Button type="submit" disabled={saving}>
+                  {saving ? (
+                    <Loading size="sm" text="Updating..." />
+                  ) : (
+                    "Update Content Fields"
                   )}
                 </Button>
               </div>
