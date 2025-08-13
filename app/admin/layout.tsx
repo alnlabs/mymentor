@@ -35,12 +35,6 @@ const navigation = [
     description: "Overview & Statistics",
   },
   {
-    name: "Content Management",
-    href: "/admin/content",
-    icon: FileText,
-    description: "Exams, Problems & MCQs",
-  },
-  {
     name: "Interviews",
     href: "/admin/interviews",
     icon: Target,

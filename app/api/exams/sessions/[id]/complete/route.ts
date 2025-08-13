@@ -69,7 +69,7 @@ export async function POST(
         const correctAnswerNum = Number(question.correctAnswer);
         isCorrect = userAnswerNum === correctAnswerNum;
         points = isCorrect ? question.points : 0;
-        
+
         console.log(`MCQ comparison:`, {
           userAnswer: userAnswerNum,
           correctAnswer: correctAnswerNum,
@@ -85,8 +85,9 @@ export async function POST(
 
       totalScore += points;
 
-      const processedUserAnswer = userAnswer !== undefined ? String(userAnswer) : null;
-      
+      const processedUserAnswer =
+        userAnswer !== undefined ? String(userAnswer) : null;
+
       console.log(`Processed answer for question ${question.id}:`, {
         original: userAnswer,
         processed: processedUserAnswer,

@@ -64,17 +64,17 @@ async function generateExamQuestions(examId: string, options: any) {
 
     // Combine subjects and languages for filtering
     const allSubjects = [];
-    
+
     // Add subjects if provided and not "General"
     if (subjects.length > 0 && !subjects.includes("General")) {
       allSubjects.push(...subjects);
     }
-    
+
     // Add languages if provided
     if (languages && languages.length > 0) {
       allSubjects.push(...languages);
     }
-    
+
     // Apply combined filter
     if (allSubjects.length > 0) {
       mcqWhere.subject = { in: allSubjects };
@@ -87,18 +87,22 @@ async function generateExamQuestions(examId: string, options: any) {
       console.log("Subjects filter:", subjects);
       console.log("Languages filter:", languages);
       console.log("Combined subjects filter:", allSubjects);
-      
+
       const mcqQuestions = await prisma.mCQQuestion.findMany({
         where: mcqWhere,
         take: mcqCount * 3, // Get more to ensure we have enough after filtering
       });
       console.log(`Found ${mcqQuestions.length} MCQ questions`);
-      
+
       // Log sample questions to verify filtering
       if (mcqQuestions.length > 0) {
         console.log("Sample questions found:");
         mcqQuestions.slice(0, 3).forEach((q, i) => {
-          console.log(`  ${i + 1}. Subject: ${q.subject}, Category: ${q.category}, Question: ${q.question.substring(0, 50)}...`);
+          console.log(
+            `  ${i + 1}. Subject: ${q.subject}, Category: ${
+              q.category
+            }, Question: ${q.question.substring(0, 50)}...`
+          );
         });
       }
 
