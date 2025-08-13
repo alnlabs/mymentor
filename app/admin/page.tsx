@@ -463,7 +463,19 @@ export default function AdminDashboard() {
                 <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
 
-
+              <Button
+                onClick={() => (window.location.href = "/admin/upload")}
+                className="w-full justify-start h-12 text-left"
+              >
+                <Upload className="w-5 h-5 mr-3" />
+                <div>
+                  <div className="font-medium">Upload New Content</div>
+                  <div className="text-sm text-gray-500">
+                    Add problems, MCQs, or interview templates
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 ml-auto" />
+              </Button>
 
               <Button
                 variant="outline"

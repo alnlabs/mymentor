@@ -92,13 +92,10 @@ export async function GET(
     }
 
     return NextResponse.json({
-      success: true,
-      data: {
-        ...exam,
-        examQuestions: examQuestionsWithData,
-        totalQuestions: exam._count.examQuestions,
-        totalAttempts: exam._count.examResults,
-      },
+      ...exam,
+      examQuestions: examQuestionsWithData,
+      totalQuestions: exam._count.examQuestions,
+      totalAttempts: exam._count.examResults,
     });
   } catch (error: any) {
     console.error("Error fetching exam:", error);
@@ -126,6 +123,9 @@ export async function PUT(
       questionTypes,
       totalQuestions,
       passingScore,
+      enableTimedQuestions,
+      enableOverallTimer,
+      defaultQuestionTime,
       isActive,
       isPublic,
     } = body;
@@ -169,6 +169,9 @@ export async function PUT(
         questionTypes,
         totalQuestions: totalQuestions ? parseInt(totalQuestions) : undefined,
         passingScore: passingScore ? parseInt(passingScore) : undefined,
+        enableTimedQuestions,
+        enableOverallTimer,
+        defaultQuestionTime: defaultQuestionTime ? parseInt(defaultQuestionTime) : undefined,
         isActive,
         isPublic,
       },

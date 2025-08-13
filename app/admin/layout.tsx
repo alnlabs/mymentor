@@ -140,16 +140,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [pathname]); // Remove expandedMenus from dependency to prevent infinite loops
 
   const toggleSubmenu = (menuName: string) => {
-    console.log('Toggling submenu for:', menuName);
-    console.log('Current expanded menus:', expandedMenus);
-    
+    console.log("Toggling submenu for:", menuName);
+    console.log("Current expanded menus:", expandedMenus);
+
     setExpandedMenus((prev) => {
       const isCurrentlyExpanded = prev.includes(menuName);
       const newState = isCurrentlyExpanded
         ? prev.filter((name) => name !== menuName)
         : [...prev, menuName];
-      console.log('Is currently expanded:', isCurrentlyExpanded);
-      console.log('New expanded menus:', newState);
+      console.log("Is currently expanded:", isCurrentlyExpanded);
+      console.log("New expanded menus:", newState);
       return newState;
     });
   };
@@ -219,9 +219,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* Navigation */}
           <nav className="flex-1 px-3 py-6 overflow-y-auto">
             {/* Debug info - remove in production */}
-            {process.env.NODE_ENV === 'development' && (
+            {process.env.NODE_ENV === "development" && (
               <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
-                <div>Expanded: {expandedMenus.join(', ')}</div>
+                <div>Expanded: {expandedMenus.join(", ")}</div>
                 <div>Current path: {pathname}</div>
               </div>
             )}
@@ -244,7 +244,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            console.log('Button clicked for:', item.name);
+                            console.log("Button clicked for:", item.name);
                             toggleSubmenu(item.name);
                           }}
                           className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
