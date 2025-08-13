@@ -2,10 +2,7 @@ import React from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/shared/components/Button";
 import { DropdownType } from "@/shared/types/exam";
-import {
-  PROGRAMMING_LANGUAGES,
-  REASONING_TYPES,
-} from "@/shared/config/examConfig";
+import { useAppSettings } from "@/shared/hooks/useAppSettings";
 
 interface AutoFillSectionProps {
   dropdownType: DropdownType;
@@ -24,6 +21,20 @@ export const AutoFillSection: React.FC<AutoFillSectionProps> = ({
   onSelectedOptionChange,
   onAutoPopulate,
 }) => {
+  const {
+    contentProgrammingLanguages,
+    contentTechnologyStacks,
+    contentTools,
+    contentSubjects,
+    contentTopics,
+    contentDomains,
+    contentCategories,
+    contentSkillLevels,
+    contentInterviewTypes,
+    contentTargetRoles,
+    contentJobRoles,
+    contentCompanyTypes,
+  } = useAppSettings();
   return (
     <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200 mb-6">
       <div className="mb-4">
@@ -87,16 +98,16 @@ export const AutoFillSection: React.FC<AutoFillSectionProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 <option value="">Choose programming language...</option>
-                {Object.entries(PROGRAMMING_LANGUAGES).map(
-                  ([category, languages]) => (
-                    <optgroup key={category} label={category}>
-                      {languages.map((language) => (
-                        <option key={language} value={language}>
-                          {language}
-                        </option>
-                      ))}
-                    </optgroup>
-                  )
+                {contentProgrammingLanguages.length > 0 ? (
+                  contentProgrammingLanguages.map((language) => (
+                    <option key={language} value={language}>
+                      {language}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>
+                    No programming languages configured in settings
+                  </option>
                 )}
               </select>
             )}
@@ -108,11 +119,40 @@ export const AutoFillSection: React.FC<AutoFillSectionProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 <option value="">Choose reasoning type...</option>
-                {REASONING_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
+                {contentSubjects.length > 0 && (
+                  <optgroup label="Subjects">
+                    {contentSubjects.map((subject) => (
+                      <option key={subject} value={subject}>
+                        {subject}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                {contentTopics.length > 0 && (
+                  <optgroup label="Topics">
+                    {contentTopics.map((topic) => (
+                      <option key={topic} value={topic}>
+                        {topic}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                {contentCategories.length > 0 && (
+                  <optgroup label="Categories">
+                    {contentCategories.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                {contentSubjects.length === 0 &&
+                  contentTopics.length === 0 &&
+                  contentCategories.length === 0 && (
+                    <option value="" disabled>
+                      No reasoning types configured in settings
+                    </option>
+                  )}
               </select>
             )}
           </div>
@@ -159,6 +199,31 @@ export const AutoFillSection: React.FC<AutoFillSectionProps> = ({
             </p>
           </div>
         )}
+
+        {/* Settings Content Status */}
+        <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded">
+          <p className="text-blue-700 font-medium mb-1">
+            ⚙️ Settings Content Status:
+          </p>
+          <div className="text-xs space-y-1">
+            <p>
+              Programming Languages: {contentProgrammingLanguages.length}{" "}
+              configured
+            </p>
+            <p>Subjects: {contentSubjects.length} configured</p>
+            <p>Topics: {contentTopics.length} configured</p>
+            <p>Categories: {contentCategories.length} configured</p>
+            {contentProgrammingLanguages.length === 0 &&
+              contentSubjects.length === 0 &&
+              contentTopics.length === 0 &&
+              contentCategories.length === 0 && (
+                <p className="text-orange-600 font-medium">
+                  ⚠️ No content configured in settings. Please configure content
+                  in Admin → Settings → Content tab.
+                </p>
+              )}
+          </div>
+        </div>
       </div>
     </div>
   );
