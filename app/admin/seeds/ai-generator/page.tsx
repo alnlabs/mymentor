@@ -20,6 +20,8 @@ import {
   TrendingUp,
   BarChart3,
   Layers,
+  Settings,
+  X,
 } from "lucide-react";
 
 interface GenerationConfig {
@@ -97,6 +99,8 @@ export default function AIGeneratorPage() {
   const [seedData, setSeedData] = useState<SeedData[]>([]);
   const [selectedLanguageStats, setSelectedLanguageStats] =
     useState<LanguageStats | null>(null);
+  const [showCustomForm, setShowCustomForm] = useState(false);
+  const [showBatchForm, setShowBatchForm] = useState(false);
 
   const difficulties = [
     { value: "beginner", label: "Beginner", color: "text-green-600" },
@@ -602,208 +606,338 @@ export default function AIGeneratorPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Configuration Panel */}
-          <div className="lg:col-span-1">
-            <Card className="p-4">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                <Zap className="w-4 h-4 mr-2" />
-                Generation Settings
-              </h2>
+        {/* Simple AI Generator Interface */}
+        <div className="max-w-4xl mx-auto">
+          <Card className="p-8">
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center mb-4">
+                <Brain className="w-12 h-12 text-purple-600 mr-3" />
+                <h2 className="text-2xl font-bold text-gray-900">AI Question Generator</h2>
+              </div>
+              <p className="text-gray-600">Generate custom questions with AI in just a few clicks</p>
+            </div>
 
-              <div className="space-y-3">
-                {/* Language Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Programming Language
-                  </label>
-                  <select
-                    value={config.language}
-                    onChange={(e) => updateConfig("language", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  >
-                    <option value="">Select Language</option>
-                    {availableLanguages.map((lang) => (
-                      <option key={lang} value={lang}>
-                        {lang}
-                      </option>
-                    ))}
-                  </select>
+            {/* Quick Generation Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {/* Quick Start Card */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-6 border border-blue-200">
+                <div className="flex items-center mb-4">
+                  <Zap className="w-6 h-6 text-blue-600 mr-2" />
+                  <h3 className="text-lg font-semibold text-blue-900">Quick Start</h3>
                 </div>
-
-                {/* Topic Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Topic
-                  </label>
-                  <select
-                    value={config.topic}
-                    onChange={(e) => updateConfig("topic", e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    disabled={
-                      !config.language || !availableTopics[config.language]
-                    }
-                  >
-                    <option value="">Select Topic</option>
-                    {/* Using index in key to handle potential duplicate topic names */}
-                    {availableTopics[config.language]?.map((topic, index) => (
-                      <option key={`${topic}-${index}`} value={topic}>
-                        {topic}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Difficulty Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Difficulty Level
-                  </label>
-                  <div className="space-y-1">
-                    {difficulties.map((diff) => (
-                      <label key={diff.value} className="flex items-center">
-                        <input
-                          type="radio"
-                          name="difficulty"
-                          value={diff.value}
-                          checked={config.difficulty === diff.value}
-                          onChange={(e) =>
-                            updateConfig("difficulty", e.target.value)
-                          }
-                          className="mr-2"
-                        />
-                        <span className={diff.color}>{diff.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Question Count */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Number of Questions
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="50"
-                    value={config.count || 10}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value);
-                      updateConfig(
-                        "count",
-                        isNaN(value) ? 10 : Math.max(1, Math.min(50, value))
-                      );
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                </div>
-
-                {/* Options */}
-                <div className="space-y-2">
-                  <label className="flex items-center text-gray-700 font-medium">
-                    <input
-                      type="checkbox"
-                      checked={config.includeExplanation}
-                      onChange={(e) =>
-                        updateConfig("includeExplanation", e.target.checked)
-                      }
-                      className="mr-2"
-                    />
-                    Include Explanations
-                  </label>
-                  <label className="flex items-center text-gray-700 font-medium">
-                    <input
-                      type="checkbox"
-                      checked={config.includeTags}
-                      onChange={(e) =>
-                        updateConfig("includeTags", e.target.checked)
-                      }
-                      className="mr-2"
-                    />
-                    Include Tags
-                  </label>
-                  <label className="flex items-center text-gray-700 font-medium">
-                    <input
-                      type="checkbox"
-                      checked={config.includeCompanies}
-                      onChange={(e) =>
-                        updateConfig("includeCompanies", e.target.checked)
-                      }
-                      className="mr-2"
-                    />
-                    Include Company Tags
-                  </label>
-                </div>
-
-                {/* Generate Button */}
+                <p className="text-blue-700 text-sm mb-4">Generate 10 beginner questions with explanations</p>
                 <Button
-                  onClick={generateQuestions}
-                  disabled={isGenerating || !config.language || !config.topic}
-                  className="w-full flex items-center justify-center"
+                  onClick={() => {
+                    updateConfig("language", "JavaScript");
+                    updateConfig("topic", "Variables and Hoisting");
+                    updateConfig("difficulty", "beginner");
+                    updateConfig("count", 10);
+                    updateConfig("includeExplanation", true);
+                    updateConfig("includeTags", true);
+                    updateConfig("includeCompanies", true);
+                    generateQuestions();
+                  }}
+                  disabled={isGenerating}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  {isGenerating ? (
-                    <Loading size="sm" />
-                  ) : (
-                    <>
-                      <Brain className="w-4 h-4 mr-2" />
-                      Generate Questions
-                    </>
-                  )}
+                  {isGenerating ? <Loading size="sm" /> : "Quick Generate"}
                 </Button>
               </div>
-            </Card>
-          </div>
 
-          {/* Generated Questions */}
-          <div className="lg:col-span-2">
-            <Card className="p-4">
-              {/* Current Config Stats */}
-              {selectedLanguageStats && config.language && config.topic && (
-                <div className="mb-4 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-lg border border-blue-200 p-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-800 mb-1">
-                      {(() => {
-                        const difficultyKey = config.difficulty as keyof typeof selectedLanguageStats;
-                        const count = selectedLanguageStats[difficultyKey] || 0;
-                        console.log('Generation Config Stats Debug:', {
-                          configDifficulty: config.difficulty,
-                          difficultyKey,
-                          selectedLanguageStats,
-                          count
-                        });
-                        return count;
-                      })()}
+              {/* Custom Generation Card */}
+              <div className="bg-gradient-to-br from-purple-50 to-pink-100 rounded-xl p-6 border border-purple-200">
+                <div className="flex items-center mb-4">
+                  <Settings className="w-6 h-6 text-purple-600 mr-2" />
+                  <h3 className="text-lg font-semibold text-purple-900">Custom</h3>
+                </div>
+                <p className="text-purple-700 text-sm mb-4">Choose your own settings</p>
+                <Button
+                  onClick={() => setShowCustomForm(true)}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
+                  Custom Settings
+                </Button>
+              </div>
+
+              {/* Batch Generation Card */}
+              <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-6 border border-green-200">
+                <div className="flex items-center mb-4">
+                  <BookOpen className="w-6 h-6 text-green-600 mr-2" />
+                  <h3 className="text-lg font-semibold text-green-900">Batch Generate</h3>
+                </div>
+                <p className="text-green-700 text-sm mb-4">Generate for multiple topics at once</p>
+                <Button
+                  onClick={() => setShowBatchForm(true)}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                >
+                  Batch Generate
+                </Button>
+              </div>
+            </div>
+
+            {/* Current Config Stats */}
+            {selectedLanguageStats && config.language && config.topic && (
+              <div className="mb-6 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-lg border border-blue-200 p-4">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-800 mb-1">
+                    {(() => {
+                      const difficultyKey = config.difficulty as keyof typeof selectedLanguageStats;
+                      const count = selectedLanguageStats[difficultyKey] || 0;
+                      console.log('Generation Config Stats Debug:', {
+                        configDifficulty: config.difficulty,
+                        difficultyKey,
+                        selectedLanguageStats,
+                        count
+                      });
+                      return count;
+                    })()}
+                  </div>
+                  <div className="text-sm text-gray-800 font-medium mb-2">
+                    {config.difficulty} questions available
+                  </div>
+                  <div className="flex items-center justify-center space-x-3 text-xs">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-blue-600 rounded-full mr-1"></div>
+                      <span className="text-blue-800 font-medium">
+                        {config.language}
+                      </span>
                     </div>
-                    <div className="text-sm text-gray-800 font-medium mb-2">
-                      {config.difficulty} questions available
+                    <div className="text-gray-500">•</div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-purple-600 rounded-full mr-1"></div>
+                      <span className="text-purple-800 font-medium">
+                        {config.topic}
+                      </span>
                     </div>
-                    <div className="flex items-center justify-center space-x-3 text-xs">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mr-1"></div>
-                        <span className="text-blue-800 font-medium">
-                          {config.language}
-                        </span>
-                      </div>
-                      <div className="text-gray-500">•</div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-purple-600 rounded-full mr-1"></div>
-                        <span className="text-purple-800 font-medium">
-                          {config.topic}
-                        </span>
-                      </div>
-                      <div className="text-gray-500">•</div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 bg-rose-600 rounded-full mr-1"></div>
-                        <span className="text-rose-800 font-medium capitalize">
-                          {config.difficulty}
-                        </span>
-                      </div>
+                    <div className="text-gray-500">•</div>
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-rose-600 rounded-full mr-1"></div>
+                      <span className="text-rose-800 font-medium capitalize">
+                        {config.difficulty}
+                      </span>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
+            {/* Custom Form Modal */}
+            {showCustomForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Custom Settings</h3>
+                    <button
+                      onClick={() => setShowCustomForm(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {/* Language Selection */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Programming Language
+                      </label>
+                      <select
+                        value={config.language}
+                        onChange={(e) => updateConfig("language", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="">Select Language</option>
+                        {availableLanguages.map((lang) => (
+                          <option key={lang} value={lang}>
+                            {lang}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Topic Selection */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Topic
+                      </label>
+                      <select
+                        value={config.topic}
+                        onChange={(e) => updateConfig("topic", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        disabled={!config.language || !availableTopics[config.language]}
+                      >
+                        <option value="">Select Topic</option>
+                        {availableTopics[config.language]?.map((topic, index) => (
+                          <option key={`${topic}-${index}`} value={topic}>
+                            {topic}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Difficulty Selection */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Difficulty Level
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {difficulties.map((diff) => (
+                          <button
+                            key={diff.value}
+                            onClick={() => updateConfig("difficulty", diff.value)}
+                            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                              config.difficulty === diff.value
+                                ? `${diff.color.replace('text-', 'bg-')} text-white`
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                          >
+                            {diff.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Question Count */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Number of Questions
+                      </label>
+                      <div className="flex space-x-2">
+                        {[5, 10, 15, 20].map((count) => (
+                          <button
+                            key={count}
+                            onClick={() => updateConfig("count", count)}
+                            className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                              config.count === count
+                                ? 'bg-purple-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                          >
+                            {count}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Options */}
+                    <div className="space-y-2">
+                      <label className="flex items-center text-gray-700 font-medium">
+                        <input
+                          type="checkbox"
+                          checked={config.includeExplanation}
+                          onChange={(e) => updateConfig("includeExplanation", e.target.checked)}
+                          className="mr-2"
+                        />
+                        Include Explanations
+                      </label>
+                      <label className="flex items-center text-gray-700 font-medium">
+                        <input
+                          type="checkbox"
+                          checked={config.includeTags}
+                          onChange={(e) => updateConfig("includeTags", e.target.checked)}
+                          className="mr-2"
+                        />
+                        Include Tags
+                      </label>
+                      <label className="flex items-center text-gray-700 font-medium">
+                        <input
+                          type="checkbox"
+                          checked={config.includeCompanies}
+                          onChange={(e) => updateConfig("includeCompanies", e.target.checked)}
+                          className="mr-2"
+                        />
+                        Include Company Tags
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-3 mt-6">
+                    <Button
+                      onClick={() => setShowCustomForm(false)}
+                      className="flex-1 bg-gray-500 hover:bg-gray-600 text-white"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        generateQuestions();
+                        setShowCustomForm(false);
+                      }}
+                      disabled={isGenerating || !config.language || !config.topic}
+                      className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                    >
+                      {isGenerating ? <Loading size="sm" /> : "Generate"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Batch Form Modal */}
+            {showBatchForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Batch Generation</h3>
+                    <button
+                      onClick={() => setShowBatchForm(false)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  <p className="text-gray-600 mb-4">Generate questions for multiple topics at once</p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Select Topics
+                      </label>
+                      <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                        {availableTopics[config.language]?.map((topic, index) => (
+                          <label key={`${topic}-${index}`} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              onChange={(e) => {
+                                // Handle batch topic selection
+                                console.log('Batch topic selected:', topic, e.target.checked);
+                              }}
+                            />
+                            <span className="text-sm text-gray-700">{topic}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-3 mt-6">
+                    <Button
+                      onClick={() => setShowBatchForm(false)}
+                      className="flex-1 bg-gray-500 hover:bg-gray-600 text-white"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        // Handle batch generation
+                        setShowBatchForm(false);
+                      }}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      Batch Generate
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </Card>
+        </div>
+
+          {/* Generated Questions */}
+          <div className="mt-6">
+            <Card className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                   <BookOpen className="w-4 h-4 mr-2" />
@@ -813,9 +947,8 @@ export default function AIGeneratorPage() {
                   <div className="flex space-x-2">
                     <Button
                       onClick={saveToDatabase}
-                      disabled={generatedQuestions.length === 0 || isSaving}
-                      variant="outline"
-                      size="sm"
+                      disabled={isSaving}
+                      className="flex items-center"
                     >
                       {isSaving ? (
                         <>
@@ -824,16 +957,15 @@ export default function AIGeneratorPage() {
                         </>
                       ) : (
                         <>
-                          <Database className="w-4 h-4 mr-2" />
-                          Save to DB
+                          <Save className="w-4 h-4 mr-2" />
+                          Save to Database
                         </>
                       )}
                     </Button>
                     <Button
                       onClick={exportToSeeds}
-                      disabled={generatedQuestions.length === 0 || isExporting}
-                      variant="outline"
-                      size="sm"
+                      disabled={isExporting}
+                      className="flex items-center"
                     >
                       {isExporting ? (
                         <>
@@ -858,8 +990,7 @@ export default function AIGeneratorPage() {
                     No Questions Generated
                   </h3>
                   <p className="text-sm text-gray-700">
-                    Configure your settings and click "Generate Questions" to
-                    create new MCQs
+                    Choose a generation option above to create new MCQs
                   </p>
                 </div>
               ) : (
