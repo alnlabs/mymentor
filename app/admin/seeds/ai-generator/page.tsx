@@ -121,7 +121,7 @@ export default function AIGeneratorPage() {
         // Count questions by difficulty
         const conceptQuestions = concept.questions || [];
         const conceptProblems = concept.problems || [];
-        
+
         // Count MCQ questions by difficulty
         conceptQuestions.forEach((q: any) => {
           if (
@@ -144,16 +144,21 @@ export default function AIGeneratorPage() {
           }
         });
 
-        // If no individual question difficulties, use concept difficulty
-        if (conceptQuestions.length === 0 && conceptProblems.length === 0 && concept.difficulty) {
+        // If questions don't have individual difficulty, use concept difficulty
+        const questionsWithoutDifficulty = conceptQuestions.filter((q: any) => !q.difficulty).length;
+        const problemsWithoutDifficulty = conceptProblems.filter((p: any) => !p.difficulty).length;
+        
+        if (questionsWithoutDifficulty > 0 || problemsWithoutDifficulty > 0) {
+          const totalWithoutDifficulty = questionsWithoutDifficulty + problemsWithoutDifficulty;
           if (
+            concept.difficulty &&
             difficultyCounts[
               concept.difficulty as keyof typeof difficultyCounts
             ] !== undefined
           ) {
             difficultyCounts[
               concept.difficulty as keyof typeof difficultyCounts
-            ] += concept.questionCount;
+            ] += totalWithoutDifficulty;
           }
         }
       });
@@ -163,7 +168,14 @@ export default function AIGeneratorPage() {
         totalInDB: seed.inDatabaseCount,
         difficultyCounts,
         conceptsCount: concepts.size,
-        topicsCount: topics.size
+        topicsCount: topics.size,
+        concepts: seed.concepts.map((c: any) => ({
+          name: c.name,
+          questionCount: c.questionCount,
+          questions: c.questions?.length || 0,
+          problems: c.problems?.length || 0,
+          difficulty: c.difficulty
+        }))
       });
 
       stats[seed.language] = {
@@ -544,7 +556,18 @@ export default function AIGeneratorPage() {
               <div className="font-medium mb-1">Debug Info:</div>
               <div>Concepts: {selectedLanguageStats.concepts.length}</div>
               <div>Topics: {selectedLanguageStats.topics.length}</div>
-              <div>Total by difficulty: {selectedLanguageStats.beginner + selectedLanguageStats.intermediate + selectedLanguageStats.advanced}</div>
+              <div>
+                Total by difficulty:{" "}
+                {selectedLanguageStats.beginner +
+                  selectedLanguageStats.intermediate +
+                  selectedLanguageStats.advanced}
+              </div>
+              <div className="mt-2 pt-2 border-t border-gray-200">
+                <div className="font-medium">Difficulty Breakdown:</div>
+                <div>Beginner: {selectedLanguageStats.beginner}</div>
+                <div>Intermediate: {selectedLanguageStats.intermediate}</div>
+                <div>Advanced: {selectedLanguageStats.advanced}</div>
+              </div>
             </div>
           </div>
         )}
