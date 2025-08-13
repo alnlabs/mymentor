@@ -46,7 +46,7 @@ interface Exam {
 export default function ExamQuestionsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const [exam, setExam] = useState<Exam | null>(null);
   const [examQuestions, setExamQuestions] = useState<ExamQuestion[]>([]);
@@ -57,15 +57,27 @@ export default function ExamQuestionsPage({
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [availableQuestions, setAvailableQuestions] = useState<any[]>([]);
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
+  const [examId, setExamId] = useState<string>("");
+
+  // Handle params as Promise
+  useEffect(() => {
+    const getExamId = async () => {
+      const resolvedParams = await params;
+      setExamId(resolvedParams.id);
+    };
+    getExamId();
+  }, [params]);
 
   useEffect(() => {
-    fetchExam();
-    fetchExamQuestions();
-  }, [params.id]);
+    if (examId) {
+      fetchExam();
+      fetchExamQuestions();
+    }
+  }, [examId]);
 
   const fetchExam = async () => {
     try {
-      const response = await fetch(`/api/exams/${params.id}`);
+      const response = await fetch(`/api/exams/${examId}`);
       const result = await response.json();
       if (result.success) {
         setExam(result.data);
@@ -78,7 +90,7 @@ export default function ExamQuestionsPage({
   const fetchExamQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/exams/${params.id}/questions`);
+      const response = await fetch(`/api/exams/${examId}/questions`);
       const result = await response.json();
       if (result.success) {
         setExamQuestions(result.data);
@@ -101,7 +113,7 @@ export default function ExamQuestionsPage({
 
     try {
       const response = await fetch(
-        `/api/exams/${params.id}/questions?questionId=${questionId}&questionType=${questionType}`,
+        `/api/exams/${examId}/questions?questionId=${questionId}&questionType=${questionType}`,
         { method: "DELETE" }
       );
       const result = await response.json();
@@ -120,7 +132,7 @@ export default function ExamQuestionsPage({
     try {
       setSaving(true);
       const response = await fetch(
-        `/api/exams/${params.id}/questions/${questionId}`,
+        `/api/exams/${examId}/questions/${questionId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -148,7 +160,7 @@ export default function ExamQuestionsPage({
       setSaving(true);
       const promises = selectedQuestions.map(async (questionId) => {
         const question = availableQuestions.find((q) => q.id === questionId);
-        const response = await fetch(`/api/exams/${params.id}/questions`, {
+        const response = await fetch(`/api/exams/${examId}/questions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

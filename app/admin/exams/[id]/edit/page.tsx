@@ -7,7 +7,16 @@ import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import { useAuthContext } from "@/shared/components/AuthContext";
 import { RouteGuard } from "@/shared/components/RouteGuard";
-import { ArrowLeft, Save, Trash2, AlertCircle, FileText, HelpCircle, Code, Settings } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Trash2,
+  AlertCircle,
+  FileText,
+  HelpCircle,
+  Code,
+  Settings,
+} from "lucide-react";
 
 interface ExamQuestion {
   id: string;
@@ -561,7 +570,9 @@ export default function EditExamPage() {
                 </div>
                 <Button
                   variant="outline"
-                  onClick={() => router.push(`/admin/exams/${examId}/questions`)}
+                  onClick={() =>
+                    router.push(`/admin/exams/${examId}/questions`)
+                  }
                   className="flex items-center space-x-2"
                 >
                   <Settings className="w-4 h-4" />
@@ -609,33 +620,39 @@ export default function EditExamPage() {
 
                           <div className="mb-3">
                             <h4 className="font-medium text-gray-900 mb-2">
-                              {question.question || "Question text not available"}
+                              {question.question ||
+                                "Question text not available"}
                             </h4>
-                            
-                            {question.questionType === "MCQ" && question.options && (
-                              <div className="ml-4 space-y-1">
-                                {question.options.map((option, optIndex) => (
-                                  <div
-                                    key={optIndex}
-                                    className={`text-sm ${
-                                      optIndex === question.correctAnswer
-                                        ? "text-green-700 font-medium"
-                                        : "text-gray-600"
-                                    }`}
-                                  >
-                                    {String.fromCharCode(65 + optIndex)}. {option}
-                                    {optIndex === question.correctAnswer && (
-                                      <span className="ml-2 text-green-600">✓</span>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+
+                            {question.questionType === "MCQ" &&
+                              question.options && (
+                                <div className="ml-4 space-y-1">
+                                  {question.options.map((option, optIndex) => (
+                                    <div
+                                      key={optIndex}
+                                      className={`text-sm ${
+                                        optIndex === question.correctAnswer
+                                          ? "text-green-700 font-medium"
+                                          : "text-gray-600"
+                                      }`}
+                                    >
+                                      {String.fromCharCode(65 + optIndex)}.{" "}
+                                      {option}
+                                      {optIndex === question.correctAnswer && (
+                                        <span className="ml-2 text-green-600">
+                                          ✓
+                                        </span>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
 
                             {question.questionType === "Problem" && (
                               <div className="ml-4">
                                 <div className="text-sm text-gray-600 mb-2">
-                                  <strong>Test Cases:</strong> {question.testCases || "Not available"}
+                                  <strong>Test Cases:</strong>{" "}
+                                  {question.testCases || "Not available"}
                                 </div>
                                 {question.solution && (
                                   <div className="text-sm text-gray-600">
@@ -648,7 +665,8 @@ export default function EditExamPage() {
 
                           {question.explanation && (
                             <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
-                              <strong>Explanation:</strong> {question.explanation}
+                              <strong>Explanation:</strong>{" "}
+                              {question.explanation}
                             </div>
                           )}
                         </div>
@@ -657,7 +675,9 @@ export default function EditExamPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => router.push(`/admin/exams/${examId}/questions`)}
+                            onClick={() =>
+                              router.push(`/admin/exams/${examId}/questions`)
+                            }
                             className="text-blue-600 hover:text-blue-700"
                           >
                             Edit
@@ -692,7 +712,9 @@ export default function EditExamPage() {
                     Add questions to this exam to make it complete.
                   </p>
                   <Button
-                    onClick={() => router.push(`/admin/exams/${examId}/questions`)}
+                    onClick={() =>
+                      router.push(`/admin/exams/${examId}/questions`)
+                    }
                     className="bg-blue-600 hover:bg-blue-700"
                   >
                     Add Questions

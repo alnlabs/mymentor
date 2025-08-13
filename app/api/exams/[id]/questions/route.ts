@@ -5,14 +5,15 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const questionType = searchParams.get("questionType") || "";
 
     // Build where clause
-    const where: any = { examId: params.id };
+    const where: any = { examId: id };
     if (questionType) {
       where.questionType = questionType;
     }
@@ -60,9 +61,10 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const { questionId, questionType, order, points, timeLimit } = body;
 
@@ -76,7 +78,7 @@ export async function POST(
 
     // Check if exam exists
     const exam = await prisma.exam.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!exam) {
@@ -112,7 +114,7 @@ export async function POST(
     // Check if question is already in exam
     const existingQuestion = await prisma.examQuestion.findFirst({
       where: {
-        examId: params.id,
+        examId: id,
         questionId,
         questionType,
       },
@@ -129,7 +131,7 @@ export async function POST(
     let questionOrder = order;
     if (!questionOrder) {
       const lastQuestion = await prisma.examQuestion.findFirst({
-        where: { examId: params.id },
+        where: { examId: id },
         orderBy: { order: "desc" },
       });
       questionOrder = lastQuestion ? lastQuestion.order + 1 : 1;
@@ -138,7 +140,7 @@ export async function POST(
     // Add question to exam
     const examQuestion = await prisma.examQuestion.create({
       data: {
-        examId: params.id,
+        examId: id,
         questionId,
         questionType,
         order: questionOrder,
@@ -149,11 +151,11 @@ export async function POST(
 
     // Update exam total questions count
     const questionCount = await prisma.examQuestion.count({
-      where: { examId: params.id },
+      where: { examId: id },
     });
 
     await prisma.exam.update({
-      where: { id: params.id },
+      where: { id },
       data: { totalQuestions: questionCount },
     });
 
@@ -173,9 +175,10 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
     const questionId = searchParams.get("questionId");
     const questionType = searchParams.get("questionType");
@@ -190,7 +193,7 @@ export async function DELETE(
     // Delete the exam question
     await prisma.examQuestion.deleteMany({
       where: {
-        examId: params.id,
+        examId: id,
         questionId,
         questionType,
       },
@@ -198,11 +201,11 @@ export async function DELETE(
 
     // Update exam total questions count
     const questionCount = await prisma.examQuestion.count({
-      where: { examId: params.id },
+      where: { examId: id },
     });
 
     await prisma.exam.update({
-      where: { id: params.id },
+      where: { id },
       data: { totalQuestions: questionCount },
     });
 

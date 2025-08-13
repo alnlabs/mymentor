@@ -171,7 +171,9 @@ export async function PUT(
         passingScore: passingScore ? parseInt(passingScore) : undefined,
         enableTimedQuestions,
         enableOverallTimer,
-        defaultQuestionTime: defaultQuestionTime ? parseInt(defaultQuestionTime) : undefined,
+        defaultQuestionTime: defaultQuestionTime
+          ? parseInt(defaultQuestionTime)
+          : undefined,
         isActive,
         isPublic,
       },
