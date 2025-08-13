@@ -1142,7 +1142,9 @@ function SettingsPageContent() {
                   },
                   {
                     key: "ai_max_questions_per_request",
-                    value: formData.get("ai_max_questions_per_request") as string,
+                    value: formData.get(
+                      "ai_max_questions_per_request"
+                    ) as string,
                     category: "platform",
                   },
                 ]);
@@ -1316,7 +1318,10 @@ function SettingsPageContent() {
                   <input
                     name="exam_default_question_time"
                     type="number"
-                    defaultValue={getSettingValue("exam_default_question_time", "120")}
+                    defaultValue={getSettingValue(
+                      "exam_default_question_time",
+                      "120"
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="30"
                     max="600"
@@ -1330,7 +1335,10 @@ function SettingsPageContent() {
                   <input
                     name="exam_default_passing_score"
                     type="number"
-                    defaultValue={getSettingValue("exam_default_passing_score", "60")}
+                    defaultValue={getSettingValue(
+                      "exam_default_passing_score",
+                      "60"
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="0"
                     max="100"
@@ -1372,7 +1380,10 @@ function SettingsPageContent() {
                   <input
                     name="interview_min_duration"
                     type="number"
-                    defaultValue={getSettingValue("interview_min_duration", "15")}
+                    defaultValue={getSettingValue(
+                      "interview_min_duration",
+                      "15"
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="5"
                     max="60"
@@ -1386,7 +1397,10 @@ function SettingsPageContent() {
                   <input
                     name="interview_max_duration"
                     type="number"
-                    defaultValue={getSettingValue("interview_max_duration", "180")}
+                    defaultValue={getSettingValue(
+                      "interview_max_duration",
+                      "180"
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="30"
                     max="480"
@@ -1400,7 +1414,10 @@ function SettingsPageContent() {
                   <input
                     name="ai_max_questions_per_request"
                     type="number"
-                    defaultValue={getSettingValue("ai_max_questions_per_request", "50")}
+                    defaultValue={getSettingValue(
+                      "ai_max_questions_per_request",
+                      "50"
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="10"
                     max="100"
@@ -1423,25 +1440,79 @@ function SettingsPageContent() {
 
         {activeTab === "content" && (
           <Card>
-            <h3 className="text-xl font-semibold mb-6">📝 Content Management Fields</h3>
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              await updateSettings([
-                { key: "content_subjects", value: formData.get("content_subjects") as string, category: "content" },
-                { key: "content_topics", value: formData.get("content_topics") as string, category: "content" },
-                { key: "content_tools", value: formData.get("content_tools") as string, category: "content" },
-                { key: "content_technology_stacks", value: formData.get("content_technology_stacks") as string, category: "content" },
-                { key: "content_domains", value: formData.get("content_domains") as string, category: "content" },
-                { key: "content_skill_levels", value: formData.get("content_skill_levels") as string, category: "content" },
-                { key: "content_job_roles", value: formData.get("content_job_roles") as string, category: "content" },
-                { key: "content_company_types", value: formData.get("content_company_types") as string, category: "content" },
-                { key: "content_interview_types", value: formData.get("content_interview_types") as string, category: "content" },
-                { key: "content_categories", value: formData.get("content_categories") as string, category: "content" },
-                { key: "content_target_roles", value: formData.get("content_target_roles") as string, category: "content" },
-                { key: "content_programming_languages", value: formData.get("content_programming_languages") as string, category: "content" },
-              ]);
-            }}>
+            <h3 className="text-xl font-semibold mb-6">
+              📝 Content Management Fields
+            </h3>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                await updateSettings([
+                  {
+                    key: "content_subjects",
+                    value: formData.get("content_subjects") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_topics",
+                    value: formData.get("content_topics") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_tools",
+                    value: formData.get("content_tools") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_technology_stacks",
+                    value: formData.get("content_technology_stacks") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_domains",
+                    value: formData.get("content_domains") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_skill_levels",
+                    value: formData.get("content_skill_levels") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_job_roles",
+                    value: formData.get("content_job_roles") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_company_types",
+                    value: formData.get("content_company_types") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_interview_types",
+                    value: formData.get("content_interview_types") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_categories",
+                    value: formData.get("content_categories") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_target_roles",
+                    value: formData.get("content_target_roles") as string,
+                    category: "content",
+                  },
+                  {
+                    key: "content_programming_languages",
+                    value: formData.get(
+                      "content_programming_languages"
+                    ) as string,
+                    category: "content",
+                  },
+                ]);
+              }}
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -1488,7 +1559,10 @@ function SettingsPageContent() {
                   </label>
                   <textarea
                     name="content_technology_stacks"
-                    defaultValue={getSettingValue("content_technology_stacks", "")}
+                    defaultValue={getSettingValue(
+                      "content_technology_stacks",
+                      ""
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     rows={3}
                     placeholder="frontend, backend, full-stack..."
@@ -1553,7 +1627,10 @@ function SettingsPageContent() {
                   </label>
                   <textarea
                     name="content_interview_types"
-                    defaultValue={getSettingValue("content_interview_types", "")}
+                    defaultValue={getSettingValue(
+                      "content_interview_types",
+                      ""
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     rows={3}
                     placeholder="technical, behavioral, system-design..."
@@ -1592,14 +1669,17 @@ function SettingsPageContent() {
                   </label>
                   <textarea
                     name="content_programming_languages"
-                    defaultValue={getSettingValue("content_programming_languages", "")}
+                    defaultValue={getSettingValue(
+                      "content_programming_languages",
+                      ""
+                    )}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     rows={3}
                     placeholder="JavaScript, Python, Java..."
                   />
                 </div>
               </div>
-              
+
               <div className="mt-6 flex justify-end">
                 <Button type="submit" disabled={saving}>
                   {saving ? (
