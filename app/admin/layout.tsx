@@ -137,16 +137,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (activeSubmenu && !expandedMenus.includes(activeSubmenu.name)) {
       setExpandedMenus((prev) => [...prev, activeSubmenu.name]);
     }
-  }, [pathname, expandedMenus]);
+  }, [pathname]); // Remove expandedMenus from dependency to prevent infinite loops
 
   const toggleSubmenu = (menuName: string) => {
     console.log('Toggling submenu for:', menuName);
     console.log('Current expanded menus:', expandedMenus);
     
     setExpandedMenus((prev) => {
-      const newState = prev.includes(menuName)
+      const isCurrentlyExpanded = prev.includes(menuName);
+      const newState = isCurrentlyExpanded
         ? prev.filter((name) => name !== menuName)
         : [...prev, menuName];
+      console.log('Is currently expanded:', isCurrentlyExpanded);
       console.log('New expanded menus:', newState);
       return newState;
     });
@@ -242,6 +244,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            console.log('Button clicked for:', item.name);
                             toggleSubmenu(item.name);
                           }}
                           className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
