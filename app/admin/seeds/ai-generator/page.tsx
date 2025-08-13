@@ -120,6 +120,9 @@ export default function AIGeneratorPage() {
 
         // Count questions by difficulty
         const conceptQuestions = concept.questions || [];
+        const conceptProblems = concept.problems || [];
+        
+        // Count MCQ questions by difficulty
         conceptQuestions.forEach((q: any) => {
           if (
             q.difficulty &&
@@ -130,8 +133,19 @@ export default function AIGeneratorPage() {
           }
         });
 
+        // Count problems by difficulty
+        conceptProblems.forEach((p: any) => {
+          if (
+            p.difficulty &&
+            difficultyCounts[p.difficulty as keyof typeof difficultyCounts] !==
+              undefined
+          ) {
+            difficultyCounts[p.difficulty as keyof typeof difficultyCounts]++;
+          }
+        });
+
         // If no individual question difficulties, use concept difficulty
-        if (conceptQuestions.length === 0 && concept.difficulty) {
+        if (conceptQuestions.length === 0 && conceptProblems.length === 0 && concept.difficulty) {
           if (
             difficultyCounts[
               concept.difficulty as keyof typeof difficultyCounts
@@ -142,6 +156,14 @@ export default function AIGeneratorPage() {
             ] += concept.questionCount;
           }
         }
+      });
+
+      console.log(`Stats for ${seed.language}:`, {
+        totalQuestions: seed.totalQuestions,
+        totalInDB: seed.inDatabaseCount,
+        difficultyCounts,
+        conceptsCount: concepts.size,
+        topicsCount: topics.size
       });
 
       stats[seed.language] = {
@@ -190,6 +212,7 @@ export default function AIGeneratorPage() {
       const data = await response.json();
 
       if (data.success) {
+        console.log("Seed data loaded:", data.data);
         setSeedData(data.data);
 
         // Set initial language and topic if not set
@@ -516,6 +539,13 @@ export default function AIGeneratorPage() {
                 <div className="text-sm text-red-900 font-medium">Advanced</div>
               </div>
             </div>
+            {/* Debug info */}
+            <div className="mt-4 p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
+              <div className="font-medium mb-1">Debug Info:</div>
+              <div>Concepts: {selectedLanguageStats.concepts.length}</div>
+              <div>Topics: {selectedLanguageStats.topics.length}</div>
+              <div>Total by difficulty: {selectedLanguageStats.beginner + selectedLanguageStats.intermediate + selectedLanguageStats.advanced}</div>
+            </div>
           </div>
         )}
 
@@ -811,7 +841,10 @@ export default function AIGeneratorPage() {
                       </div>
                       {question.explanation && (
                         <div className="text-xs text-gray-700 mb-2 bg-gray-50 p-2 rounded">
-                          <strong className="text-gray-800">Explanation:</strong> {question.explanation}
+                          <strong className="text-gray-800">
+                            Explanation:
+                          </strong>{" "}
+                          {question.explanation}
                         </div>
                       )}
                       {question.tags && question.tags.length > 0 && (
