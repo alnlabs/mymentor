@@ -27,13 +27,15 @@ interface ExamQuestion {
   points: number;
   timeLimit: number;
   isActive: boolean;
-  question?: string;
-  options?: string[];
-  correctAnswer?: number;
-  explanation?: string;
-  testCases?: string;
-  solution?: string;
-  type?: string;
+  questionData?: {
+    question?: string;
+    options?: string;
+    correctAnswer?: number;
+    explanation?: string;
+    testCases?: string;
+    solution?: string;
+    title?: string;
+  };
 }
 
 interface Exam {
@@ -628,41 +630,64 @@ export default function EditExamPage() {
 
                           <div className="mb-3">
                             <h4 className="font-medium text-gray-900 mb-2">
-                              {question.question ||
+                              {question.questionData?.question ||
+                                question.question ||
                                 "Question text not available"}
                             </h4>
 
-                            {question.questionType === "MCQ" &&
-                              question.options && (
-                                <div className="ml-4 space-y-1">
-                                  {question.options.map((option, optIndex) => (
-                                    <div
-                                      key={optIndex}
-                                      className={`text-sm ${
-                                        optIndex === question.correctAnswer
-                                          ? "text-green-700 font-medium"
-                                          : "text-gray-600"
-                                      }`}
-                                    >
-                                      {String.fromCharCode(65 + optIndex)}.{" "}
-                                      {option}
-                                      {optIndex === question.correctAnswer && (
-                                        <span className="ml-2 text-green-600">
-                                          ✓
-                                        </span>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
+                            {question.questionType === "MCQ" && (
+                              <div className="ml-4 space-y-1">
+                                {(() => {
+                                  try {
+                                    const options = question.questionData?.options 
+                                      ? JSON.parse(question.questionData.options) 
+                                      : null;
+                                    const correctAnswer = question.questionData?.correctAnswer;
+                                    
+                                    if (options && Array.isArray(options)) {
+                                      return options.map((option, optIndex) => (
+                                        <div
+                                          key={optIndex}
+                                          className={`text-sm ${
+                                            optIndex === correctAnswer
+                                              ? "text-green-700 font-medium"
+                                              : "text-gray-600"
+                                          }`}
+                                        >
+                                          {String.fromCharCode(65 + optIndex)}.{" "}
+                                          {option}
+                                          {optIndex === correctAnswer && (
+                                            <span className="ml-2 text-green-600">
+                                              ✓
+                                            </span>
+                                          )}
+                                        </div>
+                                      ));
+                                    } else {
+                                      return (
+                                        <div className="text-sm text-gray-500 italic">
+                                          Options not available
+                                        </div>
+                                      );
+                                    }
+                                  } catch (error) {
+                                    return (
+                                      <div className="text-sm text-gray-500 italic">
+                                        Error parsing options
+                                      </div>
+                                    );
+                                  }
+                                })()}
+                              </div>
+                            )}
 
                             {question.questionType === "Problem" && (
                               <div className="ml-4">
                                 <div className="text-sm text-gray-600 mb-2">
                                   <strong>Test Cases:</strong>{" "}
-                                  {question.testCases || "Not available"}
+                                  {question.questionData?.testCases || "Not available"}
                                 </div>
-                                {question.solution && (
+                                {question.questionData?.solution && (
                                   <div className="text-sm text-gray-600">
                                     <strong>Solution:</strong> Available
                                   </div>
@@ -671,10 +696,10 @@ export default function EditExamPage() {
                             )}
                           </div>
 
-                          {question.explanation && (
+                          {question.questionData?.explanation && (
                             <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded">
                               <strong>Explanation:</strong>{" "}
-                              {question.explanation}
+                              {question.questionData.explanation}
                             </div>
                           )}
                         </div>
