@@ -132,10 +132,8 @@ export default function AIGeneratorPage() {
 
       seed.concepts.forEach((concept) => {
         concepts.add(concept.name);
-        // Use concept name as topic - they're the same in our current structure
         topics.add(concept.name);
 
-        // Count questions by difficulty
         const conceptQuestions = concept.questions || [];
         const conceptProblems = concept.problems || [];
 
@@ -143,14 +141,8 @@ export default function AIGeneratorPage() {
         conceptQuestions.forEach((q: any) => {
           if (q.difficulty) {
             const mappedDifficulty = mapDifficulty(q.difficulty);
-            if (
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ] !== undefined
-            ) {
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ]++;
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
             }
           }
         });
@@ -159,14 +151,8 @@ export default function AIGeneratorPage() {
         conceptProblems.forEach((p: any) => {
           if (p.difficulty) {
             const mappedDifficulty = mapDifficulty(p.difficulty);
-            if (
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ] !== undefined
-            ) {
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ]++;
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
             }
           }
         });
@@ -184,32 +170,11 @@ export default function AIGeneratorPage() {
             questionsWithoutDifficulty + problemsWithoutDifficulty;
           if (concept.difficulty) {
             const mappedDifficulty = mapDifficulty(concept.difficulty);
-            if (
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ] !== undefined
-            ) {
-              difficultyCounts[
-                mappedDifficulty as keyof typeof difficultyCounts
-              ] += totalWithoutDifficulty;
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] += totalWithoutDifficulty;
             }
           }
         }
-      });
-
-      console.log(`Stats for ${seed.language}:`, {
-        totalQuestions: seed.totalQuestions,
-        totalInDB: seed.inDatabaseCount,
-        difficultyCounts,
-        conceptsCount: concepts.size,
-        topicsCount: topics.size,
-        concepts: seed.concepts.map((c: any) => ({
-          name: c.name,
-          questionCount: c.questionCount,
-          questions: c.questions?.length || 0,
-          problems: c.problems?.length || 0,
-          difficulty: c.difficulty,
-        })),
       });
 
       stats[seed.language] = {
@@ -219,68 +184,21 @@ export default function AIGeneratorPage() {
         intermediate: difficultyCounts.intermediate,
         advanced: difficultyCounts.advanced,
         concepts: Array.from(concepts),
-        topics: Array.from(topics), // Using Set automatically removes duplicates
+        topics: Array.from(topics),
       };
     });
 
     return stats;
   }, [seedData]);
 
-  // Get available languages and topics
-  const availableLanguages = useMemo(
-    () => Object.keys(languageStats),
-    [languageStats]
-  );
+  const availableLanguages = Object.keys(languageStats);
   const availableTopics = useMemo(() => {
     const topics: { [key: string]: string[] } = {};
-    availableLanguages.forEach((lang) => {
-      const langTopics = languageStats[lang]?.topics || [];
-      // Remove any duplicates that might have slipped through
-      const uniqueTopics = Array.from(new Set(langTopics));
-      topics[lang] = uniqueTopics;
-
-      // Debug: Log if we find duplicates
-      if (langTopics.length !== uniqueTopics.length) {
-        console.warn(`Found duplicate topics for ${lang}:`, {
-          original: langTopics,
-          unique: uniqueTopics,
-        });
-      }
+    seedData.forEach((seed) => {
+      topics[seed.language] = seed.concepts.map((c) => c.name);
     });
     return topics;
-  }, [availableLanguages, languageStats]);
-
-  // Load seed data
-  const loadSeedData = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch("/api/admin/seeds");
-      const data = await response.json();
-
-      if (data.success) {
-        console.log("Seed data loaded:", data.data);
-        setSeedData(data.data);
-
-        // Set initial language and topic if not set
-        if (!config.language && data.data.length > 0) {
-          const firstLanguage = data.data[0].language;
-          const firstTopic = data.data[0].concepts[0]?.name || "";
-          setConfig((prev) => ({
-            ...prev,
-            language: firstLanguage,
-            topic: firstTopic,
-          }));
-        }
-      } else {
-        setMessage({ type: "error", text: "Failed to load seed data" });
-      }
-    } catch (error) {
-      console.error("Error loading seed data:", error);
-      setMessage({ type: "error", text: "Failed to load seed data" });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [seedData]);
 
   // Update selected language stats when config changes
   useEffect(() => {
@@ -293,6 +211,21 @@ export default function AIGeneratorPage() {
   useEffect(() => {
     loadSeedData();
   }, []);
+
+  const loadSeedData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/admin/seeds");
+      if (response.ok) {
+        const data = await response.json();
+        setSeedData(data);
+      }
+    } catch (error) {
+      console.error("Error loading seed data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const generateQuestions = async () => {
     setIsGenerating(true);
@@ -340,12 +273,6 @@ export default function AIGeneratorPage() {
       return;
     }
 
-    console.log("🔄 Starting save process...", {
-      questionsCount: generatedQuestions.length,
-      language: config.language,
-      topic: config.topic,
-    });
-
     setIsSaving(true);
     setMessage(null);
 
@@ -367,14 +294,10 @@ export default function AIGeneratorPage() {
       const data = await response.json();
 
       if (data.success) {
-        console.log("✅ Save successful!", data);
-
-        // Success case with detailed feedback
         let successMessage = `✅ Successfully saved ${data.savedCount} out of ${data.totalQuestions} questions to database!`;
 
         if (data.errors && data.errors.length > 0) {
           successMessage += `\n⚠️ ${data.errors.length} questions had issues (duplicates or errors).`;
-          console.log("⚠️ Save errors:", data.errors);
         }
 
         setMessage({
@@ -385,22 +308,11 @@ export default function AIGeneratorPage() {
         // Clear generated questions only if all were saved successfully
         if (data.savedCount === data.totalQuestions) {
           setGeneratedQuestions([]);
-        } else {
-          // Keep questions that failed to save for retry
-          setMessage({
-            type: "warning",
-            text: `${successMessage}\n\nSome questions failed to save. You can try saving again or export the remaining questions.`,
-          });
         }
-
-        // Reload data to update stats
-        loadSeedData();
       } else {
-        // Error case
-        console.error("❌ Save failed:", data);
         setMessage({
           type: "error",
-          text: `❌ Save failed: ${data.error || "Unknown error occurred"}`,
+          text: data.error || "Failed to save questions",
         });
       }
     } catch (error: any) {
@@ -421,12 +333,6 @@ export default function AIGeneratorPage() {
       setMessage({ type: "error", text: "No questions to export" });
       return;
     }
-
-    console.log("🔄 Starting export to seeds...", {
-      questionsCount: generatedQuestions.length,
-      language: config.language,
-      topic: config.topic,
-    });
 
     setIsExporting(true);
     setMessage(null);
@@ -449,16 +355,12 @@ export default function AIGeneratorPage() {
       const data = await response.json();
 
       if (data.success) {
-        console.log("✅ Export successful!", data);
         setMessage({
           type: "success",
           text: `✅ Successfully exported ${data.exportedCount} questions to ${data.filePath}!`,
         });
-
-        // Reload data to update stats
         loadSeedData();
       } else {
-        console.error("❌ Export failed:", data);
         setMessage({
           type: "error",
           text: `❌ Export failed: ${data.error || "Unknown error occurred"}`,
@@ -582,12 +484,12 @@ export default function AIGeneratorPage() {
                 <div className="text-2xl font-bold text-red-800 mb-1">
                   {selectedLanguageStats.advanced}
                 </div>
-                <div className="text-sm text-red-900 font-medium">Advanced</div>
+                <div className="text-sm text-red-900 font-medium">
+                  Advanced
+                </div>
               </div>
             </div>
-            {/* Debug info */}
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
-              <div className="font-medium mb-1">Debug Info:</div>
+            <div className="mt-4 text-sm text-gray-600">
               <div>Concepts: {selectedLanguageStats.concepts.length}</div>
               <div>Topics: {selectedLanguageStats.topics.length}</div>
               <div>
@@ -596,12 +498,11 @@ export default function AIGeneratorPage() {
                   selectedLanguageStats.intermediate +
                   selectedLanguageStats.advanced}
               </div>
-              <div className="mt-2 pt-2 border-t border-gray-200">
-                <div className="font-medium">Difficulty Breakdown:</div>
-                <div>Beginner: {selectedLanguageStats.beginner}</div>
-                <div>Intermediate: {selectedLanguageStats.intermediate}</div>
-                <div>Advanced: {selectedLanguageStats.advanced}</div>
-              </div>
+            </div>
+            <div className="mt-2 text-xs text-gray-500">
+              <div>Beginner: {selectedLanguageStats.beginner}</div>
+              <div>Intermediate: {selectedLanguageStats.intermediate}</div>
+              <div>Advanced: {selectedLanguageStats.advanced}</div>
             </div>
           </div>
         )}
@@ -680,17 +581,7 @@ export default function AIGeneratorPage() {
               <div className="mb-6 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-lg border border-blue-200 p-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-800 mb-1">
-                    {(() => {
-                      const difficultyKey = config.difficulty as keyof typeof selectedLanguageStats;
-                      const count = selectedLanguageStats[difficultyKey] || 0;
-                      console.log('Generation Config Stats Debug:', {
-                        configDifficulty: config.difficulty,
-                        difficultyKey,
-                        selectedLanguageStats,
-                        count
-                      });
-                      return count;
-                    })()}
+                    {selectedLanguageStats[config.difficulty as keyof typeof selectedLanguageStats] || 0}
                   </div>
                   <div className="text-sm text-gray-800 font-medium mb-2">
                     {config.difficulty} questions available
@@ -901,7 +792,6 @@ export default function AIGeneratorPage() {
                               type="checkbox"
                               className="mr-2"
                               onChange={(e) => {
-                                // Handle batch topic selection
                                 console.log('Batch topic selected:', topic, e.target.checked);
                               }}
                             />
@@ -921,7 +811,6 @@ export default function AIGeneratorPage() {
                     </Button>
                     <Button
                       onClick={() => {
-                        // Handle batch generation
                         setShowBatchForm(false);
                       }}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white"
@@ -935,130 +824,129 @@ export default function AIGeneratorPage() {
           </Card>
         </div>
 
-          {/* Generated Questions */}
-          <div className="mt-6">
-            <Card className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Generated Questions ({generatedQuestions.length})
-                </h2>
-                {generatedQuestions.length > 0 && (
-                  <div className="flex space-x-2">
-                    <Button
-                      onClick={saveToDatabase}
-                      disabled={isSaving}
-                      className="flex items-center"
-                    >
-                      {isSaving ? (
-                        <>
-                          <Loading size="sm" />
-                          <span className="ml-2">Saving...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4 mr-2" />
-                          Save to Database
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      onClick={exportToSeeds}
-                      disabled={isExporting}
-                      className="flex items-center"
-                    >
-                      {isExporting ? (
-                        <>
-                          <Loading size="sm" />
-                          <span className="ml-2">Exporting...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-4 h-4 mr-2" />
-                          Export to Seeds
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {generatedQuestions.length === 0 ? (
-                <div className="text-center py-6">
-                  <Brain className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <h3 className="text-base font-medium text-gray-900 mb-2">
-                    No Questions Generated
-                  </h3>
-                  <p className="text-sm text-gray-700">
-                    Choose a generation option above to create new MCQs
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-80 overflow-y-auto">
-                  {generatedQuestions.map((question, index) => (
-                    <div
-                      key={question.id}
-                      className="border border-gray-200 rounded-lg p-3 bg-white"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-800">
-                          Question {index + 1}
-                        </span>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            question.difficulty === "beginner"
-                              ? "bg-green-100 text-green-800"
-                              : question.difficulty === "intermediate"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {question.difficulty}
-                        </span>
-                      </div>
-                      <p className="text-gray-900 mb-2 text-sm font-medium">
-                        {question.question}
-                      </p>
-                      <div className="space-y-1 mb-2">
-                        {question.options.map((option, optIndex) => (
-                          <div
-                            key={optIndex}
-                            className={`text-xs ${
-                              option === question.correctAnswer
-                                ? "text-green-800 font-semibold"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {String.fromCharCode(65 + optIndex)}. {option}
-                          </div>
-                        ))}
-                      </div>
-                      {question.explanation && (
-                        <div className="text-xs text-gray-700 mb-2 bg-gray-50 p-2 rounded">
-                          <strong className="text-gray-800">
-                            Explanation:
-                          </strong>{" "}
-                          {question.explanation}
-                        </div>
-                      )}
-                      {question.tags && question.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-2">
-                          {question.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded font-medium"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+        {/* Generated Questions */}
+        <div className="mt-6">
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Generated Questions ({generatedQuestions.length})
+              </h2>
+              {generatedQuestions.length > 0 && (
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={saveToDatabase}
+                    disabled={isSaving}
+                    className="flex items-center"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loading size="sm" />
+                        <span className="ml-2">Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save to Database
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    onClick={exportToSeeds}
+                    disabled={isExporting}
+                    className="flex items-center"
+                  >
+                    {isExporting ? (
+                      <>
+                        <Loading size="sm" />
+                        <span className="ml-2">Exporting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4 mr-2" />
+                        Export to Seeds
+                      </>
+                    )}
+                  </Button>
                 </div>
               )}
-            </Card>
-          </div>
+            </div>
+
+            {generatedQuestions.length === 0 ? (
+              <div className="text-center py-6">
+                <Brain className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <h3 className="text-base font-medium text-gray-900 mb-2">
+                  No Questions Generated
+                </h3>
+                <p className="text-sm text-gray-700">
+                  Choose a generation option above to create new MCQs
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-80 overflow-y-auto">
+                {generatedQuestions.map((question, index) => (
+                  <div
+                    key={question.id}
+                    className="border border-gray-200 rounded-lg p-3 bg-white"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-800">
+                        Question {index + 1}
+                      </span>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          question.difficulty === "beginner"
+                            ? "bg-green-100 text-green-800"
+                            : question.difficulty === "intermediate"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {question.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-gray-900 mb-2 text-sm font-medium">
+                      {question.question}
+                    </p>
+                    <div className="space-y-1 mb-2">
+                      {question.options.map((option, optIndex) => (
+                        <div
+                          key={optIndex}
+                          className={`text-xs ${
+                            option === question.correctAnswer
+                              ? "text-green-800 font-semibold"
+                              : "text-gray-800"
+                          }`}
+                        >
+                          {String.fromCharCode(65 + optIndex)}. {option}
+                        </div>
+                      ))}
+                    </div>
+                    {question.explanation && (
+                      <div className="text-xs text-gray-700 mb-2 bg-gray-50 p-2 rounded">
+                        <strong className="text-gray-800">
+                          Explanation:
+                        </strong>{" "}
+                        {question.explanation}
+                      </div>
+                    )}
+                    {question.tags && question.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {question.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded font-medium"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
         </div>
       </div>
     </div>
