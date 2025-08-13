@@ -347,6 +347,43 @@ model Feedback {
   @@map("feedback")
 }
 
+model GlobalConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  type        String   // 'string', 'number', 'boolean', 'json'
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("global_configs")
+}
+
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  category    String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // 'exam', 'question', 'interview'
+  description String?
+  color       String?  // hex color
+  icon        String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("categories")
+}
+
 enum UserRole {
   superadmin
   admin

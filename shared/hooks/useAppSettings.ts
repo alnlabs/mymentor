@@ -1,0 +1,71 @@
+import { useSettings } from "@/shared/contexts/SettingsContext";
+
+export function useAppSettings() {
+  const { getSetting, getGlobalConfig, loading } = useSettings();
+
+  return {
+    loading,
+
+    // Security settings
+    passwordMinLength: parseInt(getSetting("password_min_length", "8")),
+    passwordRequireSpecial:
+      getSetting("password_require_special", "false") === "true",
+    sessionTimeout: parseInt(getSetting("session_timeout", "30")),
+
+    // General settings
+    appName: getSetting("app_name", "Interview Platform"),
+    contactEmail: getSetting("contact_email", "admin@mymentorapp.com"),
+    defaultLanguage: getSetting("default_language", "en"),
+    defaultTimezone: getSetting("default_timezone", "UTC"),
+
+    // Platform settings
+    defaultExamDuration: parseInt(getSetting("default_exam_duration", "60")),
+    allowExamRetakes: getSetting("allow_exam_retakes", "true") === "true",
+    showResultsImmediately:
+      getSetting("show_results_immediately", "true") === "true",
+    defaultInterviewDuration: parseInt(
+      getSetting("default_interview_duration", "45")
+    ),
+    allowInterviewRescheduling:
+      getSetting("allow_interview_rescheduling", "true") === "true",
+
+    // User settings
+    allowUserRegistration:
+      getSetting("allow_user_registration", "true") === "true",
+    requireEmailVerification:
+      getSetting("require_email_verification", "true") === "true",
+    defaultUserRole: getSetting("default_user_role", "user"),
+    maxUsers: parseInt(getSetting("max_users", "1000")),
+
+    // System settings
+    maintenanceMode: getSetting("maintenance_mode", "false") === "true",
+    maintenanceMessage: getSetting(
+      "maintenance_message",
+      "System is under maintenance"
+    ),
+    autoBackup: getSetting("auto_backup", "daily"),
+    backupRetention: parseInt(getSetting("backup_retention", "30")),
+
+    // Global configs
+    maxFileUploadSize: parseInt(
+      getGlobalConfig("max_file_upload_size", "10485760")
+    ), // 10MB
+    maxQuestionsPerExam: parseInt(
+      getGlobalConfig("max_questions_per_exam", "50")
+    ),
+    maxInterviewsPerUser: parseInt(
+      getGlobalConfig("max_interviews_per_user", "10")
+    ),
+    pageSize: parseInt(getGlobalConfig("page_size", "20")),
+    enableSearch: getGlobalConfig("enable_search", "true") === "true",
+    enableAnalytics: getGlobalConfig("enable_analytics", "true") === "true",
+
+    // Helper functions
+    isFeatureEnabled: (feature: string) =>
+      getGlobalConfig(`feature_${feature}`, "true") === "true",
+    getConfig: (key: string, defaultValue: string = "") =>
+      getGlobalConfig(key, defaultValue),
+    getSetting: (key: string, defaultValue: string = "") =>
+      getSetting(key, defaultValue),
+  };
+}
