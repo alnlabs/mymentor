@@ -1,7 +1,7 @@
 import React from "react";
 import { BookOpen } from "lucide-react";
 import { ExamFormData } from "@/shared/types/exam";
-import { EXAM_CATEGORIES } from "@/shared/config/examConfig";
+import { useAppSettings } from "@/shared/hooks/useAppSettings";
 
 interface BasicInfoSectionProps {
   formData: ExamFormData;
@@ -16,6 +16,7 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   formData,
   onInputChange,
 }) => {
+  const { contentCategories } = useAppSettings();
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
       <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
@@ -49,11 +50,18 @@ export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             required
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           >
-            {EXAM_CATEGORIES.map((category) => (
-              <option key={category} value={category}>
-                {category}
+            <option value="">Select a category...</option>
+            {contentCategories.length > 0 ? (
+              contentCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>
+                No categories configured in settings
               </option>
-            ))}
+            )}
           </select>
         </div>
 

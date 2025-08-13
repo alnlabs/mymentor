@@ -1,10 +1,14 @@
+// Import dynamic configuration
+import { STATIC_CONFIG } from './dynamicConfig';
+
+// Legacy constants - now using dynamic config
 export const EXAM_CONSTANTS = {
-  MIN_DURATION: 15,
-  MAX_DURATION: 300,
-  MIN_QUESTIONS: 5,
-  MAX_QUESTIONS: 100,
-  DEFAULT_QUESTION_TIME: 120,
-  DEFAULT_PASSING_SCORE: 60,
+  MIN_DURATION: STATIC_CONFIG.exam.minDuration,
+  MAX_DURATION: STATIC_CONFIG.exam.maxDuration,
+  MIN_QUESTIONS: STATIC_CONFIG.exam.minQuestions,
+  MAX_QUESTIONS: STATIC_CONFIG.exam.maxQuestions,
+  DEFAULT_QUESTION_TIME: STATIC_CONFIG.exam.defaultQuestionTime,
+  DEFAULT_PASSING_SCORE: STATIC_CONFIG.exam.defaultPassingScore,
 } as const;
 
 export const EXAM_DIFFICULTIES = ["Easy", "Medium", "Hard"] as const;

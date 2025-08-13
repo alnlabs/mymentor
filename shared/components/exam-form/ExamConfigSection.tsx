@@ -1,11 +1,8 @@
 import React from "react";
 import { Target } from "lucide-react";
 import { ExamFormData } from "@/shared/types/exam";
-import {
-  EXAM_DIFFICULTIES,
-  TARGET_ROLES,
-  QUESTION_TYPES,
-} from "@/shared/config/examConfig";
+import { useAppSettings } from "@/shared/hooks/useAppSettings";
+import { EXAM_DIFFICULTIES, QUESTION_TYPES } from "@/shared/config/examConfig";
 
 interface ExamConfigSectionProps {
   formData: ExamFormData;
@@ -20,6 +17,7 @@ export const ExamConfigSection: React.FC<ExamConfigSectionProps> = ({
   formData,
   onInputChange,
 }) => {
+  const { contentTargetRoles, contentJobRoles } = useAppSettings();
   return (
     <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200">
       <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
@@ -73,11 +71,30 @@ export const ExamConfigSection: React.FC<ExamConfigSectionProps> = ({
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           >
             <option value="">Select Target Role</option>
-            {TARGET_ROLES.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
+            {contentTargetRoles.length > 0 && (
+              <optgroup label="Target Roles">
+                {contentTargetRoles.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            {contentJobRoles.length > 0 && (
+              <optgroup label="Job Roles">
+                {contentJobRoles.map((role) => (
+                  <option key={role} value={role}>
+                    {role}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            {contentTargetRoles.length === 0 &&
+              contentJobRoles.length === 0 && (
+                <option value="" disabled>
+                  No roles configured in settings
+                </option>
+              )}
           </select>
         </div>
 

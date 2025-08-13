@@ -592,7 +592,7 @@ export async function GET() {
         availableServices,
         supportedLanguages,
         supportedTopics,
-        maxQuestionsPerRequest: 50,
+        maxQuestionsPerRequest: 50, // This will be updated to use dynamic config
         supportedDifficulties: ["beginner", "intermediate", "advanced"],
       },
     });

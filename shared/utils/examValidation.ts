@@ -1,5 +1,6 @@
 import { ExamFormData } from "@/shared/types/exam";
 import { EXAM_CONSTANTS } from "@/shared/config/examConfig";
+import { STATIC_CONFIG } from "@/shared/config/dynamicConfig";
 import { showNotification } from "./notifications";
 
 export const validateExamForm = (data: ExamFormData): string[] => {
@@ -49,8 +50,8 @@ export const validateExamForm = (data: ExamFormData): string[] => {
   }
 
   // Default question time validation
-  if (data.defaultQuestionTime < 30 || data.defaultQuestionTime > 600) {
-    errors.push("Default question time must be between 30-600 seconds");
+  if (data.defaultQuestionTime < STATIC_CONFIG.question.minTime || data.defaultQuestionTime > STATIC_CONFIG.question.maxTime) {
+    errors.push(`Default question time must be between ${STATIC_CONFIG.question.minTime}-${STATIC_CONFIG.question.maxTime} seconds`);
   }
 
   // Category validation
