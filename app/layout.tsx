@@ -1,28 +1,29 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { AuthProvider } from '@/shared/components/AuthContext'
-import { AuthRedirect } from '@/shared/components/AuthRedirect'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { AuthProvider } from "@/shared/components/AuthContext";
+import { SettingsProvider } from "@/shared/contexts/SettingsContext";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Technical Interview Prep',
-  description: 'Practice coding problems and MCQ questions for technical interviews',
-}
+  title: "Technical Interview Prep",
+  description:
+    "Practice coding problems and MCQ questions for technical interviews",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          {children}
+          <SettingsProvider>{children}</SettingsProvider>
         </AuthProvider>
       </body>
     </html>
-  )
+  );
 }
