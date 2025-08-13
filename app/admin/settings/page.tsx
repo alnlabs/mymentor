@@ -486,6 +486,11 @@ function SettingsPageContent() {
                     value: formData.get("default_timezone") as string,
                     category: "general",
                   },
+                  {
+                    key: "popular_companies",
+                    value: formData.get("popular_companies") as string,
+                    category: "general",
+                  },
                 ]);
               }}
             >
@@ -550,6 +555,22 @@ function SettingsPageContent() {
                     <option value="America/Denver">Mountain Time</option>
                     <option value="America/Los_Angeles">Pacific Time</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Popular Companies (comma-separated)
+                  </label>
+                  <textarea
+                    name="popular_companies"
+                    defaultValue={getSettingValue("popular_companies", "")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    rows={3}
+                    placeholder="LocalShop, SmallOffice, DigitalPrint, WebDesign..."
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    List of popular companies for interview templates
+                  </p>
                 </div>
               </div>
 
@@ -1067,6 +1088,61 @@ function SettingsPageContent() {
                     value: formData.get("max_questions_per_exam") as string,
                     category: "platform",
                   },
+                  {
+                    key: "exam_min_duration",
+                    value: formData.get("exam_min_duration") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "exam_max_duration",
+                    value: formData.get("exam_max_duration") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "exam_min_questions",
+                    value: formData.get("exam_min_questions") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "exam_max_questions",
+                    value: formData.get("exam_max_questions") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "exam_default_question_time",
+                    value: formData.get("exam_default_question_time") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "exam_default_passing_score",
+                    value: formData.get("exam_default_passing_score") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "question_min_time",
+                    value: formData.get("question_min_time") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "question_max_time",
+                    value: formData.get("question_max_time") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "interview_min_duration",
+                    value: formData.get("interview_min_duration") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "interview_max_duration",
+                    value: formData.get("interview_max_duration") as string,
+                    category: "platform",
+                  },
+                  {
+                    key: "ai_max_questions_per_request",
+                    value: formData.get("ai_max_questions_per_request") as string,
+                    category: "platform",
+                  },
                 ]);
               }}
             >
@@ -1172,6 +1248,160 @@ function SettingsPageContent() {
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                     min="1"
                     max="200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Exam Min Duration (minutes)
+                  </label>
+                  <input
+                    name="exam_min_duration"
+                    type="number"
+                    defaultValue={getSettingValue("exam_min_duration", "15")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="5"
+                    max="60"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Exam Max Duration (minutes)
+                  </label>
+                  <input
+                    name="exam_max_duration"
+                    type="number"
+                    defaultValue={getSettingValue("exam_max_duration", "300")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="60"
+                    max="600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Exam Min Questions
+                  </label>
+                  <input
+                    name="exam_min_questions"
+                    type="number"
+                    defaultValue={getSettingValue("exam_min_questions", "5")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="1"
+                    max="20"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Exam Max Questions
+                  </label>
+                  <input
+                    name="exam_max_questions"
+                    type="number"
+                    defaultValue={getSettingValue("exam_max_questions", "100")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="20"
+                    max="200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Default Question Time (seconds)
+                  </label>
+                  <input
+                    name="exam_default_question_time"
+                    type="number"
+                    defaultValue={getSettingValue("exam_default_question_time", "120")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="30"
+                    max="600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Default Passing Score (%)
+                  </label>
+                  <input
+                    name="exam_default_passing_score"
+                    type="number"
+                    defaultValue={getSettingValue("exam_default_passing_score", "60")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="0"
+                    max="100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Question Min Time (seconds)
+                  </label>
+                  <input
+                    name="question_min_time"
+                    type="number"
+                    defaultValue={getSettingValue("question_min_time", "30")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="10"
+                    max="300"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Question Max Time (seconds)
+                  </label>
+                  <input
+                    name="question_max_time"
+                    type="number"
+                    defaultValue={getSettingValue("question_max_time", "600")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="60"
+                    max="1200"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Interview Min Duration (minutes)
+                  </label>
+                  <input
+                    name="interview_min_duration"
+                    type="number"
+                    defaultValue={getSettingValue("interview_min_duration", "15")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="5"
+                    max="60"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Interview Max Duration (minutes)
+                  </label>
+                  <input
+                    name="interview_max_duration"
+                    type="number"
+                    defaultValue={getSettingValue("interview_max_duration", "180")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="30"
+                    max="480"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    AI Max Questions Per Request
+                  </label>
+                  <input
+                    name="ai_max_questions_per_request"
+                    type="number"
+                    defaultValue={getSettingValue("ai_max_questions_per_request", "50")}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    min="10"
+                    max="100"
                   />
                 </div>
               </div>

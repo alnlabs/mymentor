@@ -17,6 +17,7 @@ export function useAppSettings() {
     contactEmail: getSetting("contact_email", "admin@mymentorapp.com"),
     defaultLanguage: getSetting("default_language", "en"),
     defaultTimezone: getSetting("default_timezone", "UTC"),
+    popularCompanies: getSetting("popular_companies", "").split(",").filter(Boolean),
 
     // Platform settings
     defaultExamDuration: parseInt(getSetting("default_exam_duration", "60")),
@@ -28,6 +29,19 @@ export function useAppSettings() {
     ),
     allowInterviewRescheduling:
       getSetting("allow_interview_rescheduling", "true") === "true",
+    
+    // Exam Configuration Limits
+    examMinDuration: parseInt(getSetting("exam_min_duration", "15")),
+    examMaxDuration: parseInt(getSetting("exam_max_duration", "300")),
+    examMinQuestions: parseInt(getSetting("exam_min_questions", "5")),
+    examMaxQuestions: parseInt(getSetting("exam_max_questions", "100")),
+    examDefaultQuestionTime: parseInt(getSetting("exam_default_question_time", "120")),
+    examDefaultPassingScore: parseInt(getSetting("exam_default_passing_score", "60")),
+    questionMinTime: parseInt(getSetting("question_min_time", "30")),
+    questionMaxTime: parseInt(getSetting("question_max_time", "600")),
+    interviewMinDuration: parseInt(getSetting("interview_min_duration", "15")),
+    interviewMaxDuration: parseInt(getSetting("interview_max_duration", "180")),
+    aiMaxQuestionsPerRequest: parseInt(getSetting("ai_max_questions_per_request", "50")),
 
     // User settings
     allowUserRegistration:

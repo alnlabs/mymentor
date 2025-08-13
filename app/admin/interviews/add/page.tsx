@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { useDynamicConfig } from "@/shared/config/dynamicConfig";
 import {
   Plus,
   ArrowLeft,
@@ -100,39 +101,8 @@ export default function AddInterviewTemplatePage() {
     { value: "scenario", label: "Real Scenario", icon: Brain },
   ];
 
-  const popularCompanies = [
-    // Local Small Companies
-    "LocalShop",
-    "SmallOffice",
-    "DigitalPrint",
-    "WebDesign",
-    "ComputerShop",
-    "InternetCafe",
-    "SoftwareStore",
-    "OfficeSupply",
-    "TechSupport",
-    "DataEntry",
-    "CallCenter",
-    "CustomerService",
-    "AdminWork",
-    "Receptionist",
-    "Assistant",
-    // Small Businesses
-    "Restaurant",
-    "RetailStore",
-    "Bakery",
-    "Salon",
-    "Gym",
-    "School",
-    "Hospital",
-    "Bank",
-    "Insurance",
-    "RealEstate",
-    "TravelAgency",
-    "EventPlanning",
-    "CleaningService",
-    "SecurityService",
-  ];
+  // Use dynamic configuration for companies
+  const { popularCompanies } = useDynamicConfig();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

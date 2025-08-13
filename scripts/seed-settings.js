@@ -53,6 +53,12 @@ async function seedSettings() {
         category: "general",
         description: "Default timezone",
       },
+      {
+        key: "popular_companies",
+        value: "LocalShop,SmallOffice,DigitalPrint,WebDesign,ComputerShop,InternetCafe,SoftwareStore,OfficeSupply,TechSupport,DataEntry,CallCenter,CustomerService,AdminWork,Receptionist,Assistant,Restaurant,RetailStore,Bakery,Salon,Gym,School,Hospital,Bank,Insurance,RealEstate,TravelAgency,EventPlanning,CleaningService,SecurityService",
+        category: "general",
+        description: "Popular companies for interviews (comma-separated)",
+      },
 
       // Platform settings
       {
@@ -84,6 +90,73 @@ async function seedSettings() {
         value: "true",
         category: "platform",
         description: "Allow interview rescheduling",
+      },
+      // Exam Configuration Limits
+      {
+        key: "exam_min_duration",
+        value: "15",
+        category: "platform",
+        description: "Minimum exam duration in minutes",
+      },
+      {
+        key: "exam_max_duration",
+        value: "300",
+        category: "platform",
+        description: "Maximum exam duration in minutes",
+      },
+      {
+        key: "exam_min_questions",
+        value: "5",
+        category: "platform",
+        description: "Minimum questions per exam",
+      },
+      {
+        key: "exam_max_questions",
+        value: "100",
+        category: "platform",
+        description: "Maximum questions per exam",
+      },
+      {
+        key: "exam_default_question_time",
+        value: "120",
+        category: "platform",
+        description: "Default question time in seconds",
+      },
+      {
+        key: "exam_default_passing_score",
+        value: "60",
+        category: "platform",
+        description: "Default passing score percentage",
+      },
+      {
+        key: "question_min_time",
+        value: "30",
+        category: "platform",
+        description: "Minimum question time in seconds",
+      },
+      {
+        key: "question_max_time",
+        value: "600",
+        category: "platform",
+        description: "Maximum question time in seconds",
+      },
+      {
+        key: "interview_min_duration",
+        value: "15",
+        category: "platform",
+        description: "Minimum interview duration in minutes",
+      },
+      {
+        key: "interview_max_duration",
+        value: "180",
+        category: "platform",
+        description: "Maximum interview duration in minutes",
+      },
+      {
+        key: "ai_max_questions_per_request",
+        value: "50",
+        category: "platform",
+        description: "Maximum AI questions per request",
       },
 
       // User settings

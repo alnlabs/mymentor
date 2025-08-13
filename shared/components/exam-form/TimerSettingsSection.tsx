@@ -2,6 +2,7 @@ import React from "react";
 import { Clock } from "lucide-react";
 import { ExamFormData } from "@/shared/types/exam";
 import { EXAM_CONSTANTS } from "@/shared/config/examConfig";
+import { useDynamicConfig } from "@/shared/config/dynamicConfig";
 
 interface TimerSettingsSectionProps {
   formData: ExamFormData;
@@ -16,6 +17,7 @@ export const TimerSettingsSection: React.FC<TimerSettingsSectionProps> = ({
   formData,
   onInputChange,
 }) => {
+  const config = useDynamicConfig();
   return (
     <div className="mt-6 p-4 bg-white rounded-lg border border-gray-200">
       <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -61,14 +63,14 @@ export const TimerSettingsSection: React.FC<TimerSettingsSectionProps> = ({
             value={formData.duration}
             onChange={onInputChange}
             required
-            min={EXAM_CONSTANTS.MIN_DURATION}
-            max={EXAM_CONSTANTS.MAX_DURATION}
+            min={config.exam.minDuration}
+            max={config.exam.maxDuration}
             disabled={!formData.enableOverallTimer}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Total exam duration ({EXAM_CONSTANTS.MIN_DURATION}-
-            {EXAM_CONSTANTS.MAX_DURATION} minutes)
+            Total exam duration ({config.exam.minDuration}-
+            {config.exam.maxDuration} minutes)
           </p>
         </div>
 
@@ -81,13 +83,13 @@ export const TimerSettingsSection: React.FC<TimerSettingsSectionProps> = ({
             name="defaultQuestionTime"
             value={formData.defaultQuestionTime}
             onChange={onInputChange}
-            min="30"
-            max="600"
+            min={config.question.minTime}
+            max={config.question.maxTime}
             disabled={!formData.enableTimedQuestions}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Default time limit per question (30-600 seconds)
+            Default time limit per question ({config.question.minTime}-{config.question.maxTime} seconds)
           </p>
         </div>
       </div>
