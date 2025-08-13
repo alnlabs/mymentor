@@ -128,24 +128,32 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   // Auto-expand submenu if current path matches a submenu item
   React.useEffect(() => {
-    const activeSubmenu = navigation.find(item => 
-      item.submenu && item.submenu.some(subItem => pathname === subItem.href)
+    const activeSubmenu = navigation.find(
+      (item) =>
+        item.submenu &&
+        item.submenu.some((subItem) => pathname === subItem.href)
     );
-    
+
     if (activeSubmenu && !expandedMenus.includes(activeSubmenu.name)) {
-      setExpandedMenus(prev => [...prev, activeSubmenu.name]);
+      setExpandedMenus((prev) => [...prev, activeSubmenu.name]);
     }
   }, [pathname, expandedMenus]);
 
   const toggleSubmenu = (menuName: string) => {
-    setExpandedMenus(prev => 
-      prev.includes(menuName) 
-        ? prev.filter(name => name !== menuName)
-        : [...prev, menuName]
-    );
+    console.log('Toggling submenu for:', menuName);
+    console.log('Current expanded menus:', expandedMenus);
+    
+    setExpandedMenus((prev) => {
+      const newState = prev.includes(menuName)
+        ? prev.filter((name) => name !== menuName)
+        : [...prev, menuName];
+      console.log('New expanded menus:', newState);
+      return newState;
+    });
   };
 
-  const isSubmenuExpanded = (menuName: string) => expandedMenus.includes(menuName);
+  const isSubmenuExpanded = (menuName: string) =>
+    expandedMenus.includes(menuName);
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -208,21 +216,35 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
           {/* Navigation */}
           <nav className="flex-1 px-3 py-6 overflow-y-auto">
+            {/* Debug info - remove in production */}
+            {process.env.NODE_ENV === 'development' && (
+              <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+                <div>Expanded: {expandedMenus.join(', ')}</div>
+                <div>Current path: {pathname}</div>
+              </div>
+            )}
             <div className="space-y-1">
               {navigation.map((item) => {
-                const isActive = pathname === item.href || 
-                  (item.submenu && item.submenu.some(subItem => pathname === subItem.href));
+                const isActive =
+                  pathname === item.href ||
+                  (item.submenu &&
+                    item.submenu.some((subItem) => pathname === subItem.href));
                 const IconComponent = item.icon;
                 const isExpanded = isSubmenuExpanded(item.name);
-                
+
                 return (
                   <div key={item.name}>
                     {item.hasSubmenu ? (
                       <>
                         {/* Main menu item with toggle */}
                         <button
-                          onClick={() => toggleSubmenu(item.name)}
-                          className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors ${
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleSubmenu(item.name);
+                          }}
+                          className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                             isActive
                               ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
                               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -244,7 +266,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <ChevronRight className="w-4 h-4 text-gray-400" />
                           )}
                         </button>
-                        
+
                         {/* Submenu */}
                         {isExpanded && (
                           <div className="ml-6 mt-1 space-y-1">
