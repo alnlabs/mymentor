@@ -7,11 +7,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup-superadmin": "node scripts/setup-superadmin.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "@prisma/client": "^6.13.0",
+    "@tanstack/react-table": "^8.21.3",
     "@types/bcryptjs": "^2.4.6",
     "autoprefixer": "^10.4.21",
     "bcryptjs": "^3.0.2",

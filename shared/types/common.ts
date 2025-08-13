@@ -33,7 +33,7 @@ export interface MCQQuestion {
   explanation?: string;
   category: string;
   difficulty: string;
-  tags?: string[];
+  tags?: string; // Comma-separated string
   companies?: string[];
   isActive: boolean;
   createdAt: string;

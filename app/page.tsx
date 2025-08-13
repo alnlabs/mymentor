@@ -13,13 +13,27 @@ import { MCQCard } from "@/modules/mcq/components/MCQCard";
 import { Problem, MCQQuestion } from "@/shared/types/common";
 
 export default function HomePage() {
-  const { user, userRole, isAdmin, isSuperAdmin } = useAuthContext();
+  const { user, isAdmin, isSuperAdmin, loading: authLoading } = useAuthContext();
   const [activeTab, setActiveTab] = useState<"problems" | "mcq" | "interviews">(
     "problems"
   );
   const [problems, setProblems] = useState<Problem[]>([]);
   const [mcqQuestions, setMCQQuestions] = useState<MCQQuestion[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Debug logging
+  console.log("Homepage - User:", user?.email);
+  console.log("Homepage - isAdmin:", isAdmin);
+  console.log("Homepage - isSuperAdmin:", isSuperAdmin);
+  console.log("Homepage - Auth Loading:", authLoading);
+
+  // Redirect authenticated students to student area
+  React.useEffect(() => {
+    if (!authLoading && user && !isAdmin && !isSuperAdmin) {
+      console.log("Homepage: Authenticated student detected, redirecting to student area");
+      window.location.href = "/student";
+    }
+  }, [user, isAdmin, isSuperAdmin, authLoading]);
 
 
   useEffect(() => {
@@ -86,6 +100,32 @@ export default function HomePage() {
 
 
 
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <Loading size="lg" text="Checking authentication..." />
+          <div className="mt-4 text-sm text-gray-600">
+            <p>Debug: Auth Loading = {authLoading.toString()}</p>
+            <p>Debug: User = {user ? user.email : 'null'}</p>
+            <p>Debug: isAdmin = {isAdmin.toString()}</p>
+            <p>Debug: isSuperAdmin = {isSuperAdmin.toString()}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while redirecting authenticated students
+  if (user && !isAdmin && !isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to dashboard..." />
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
@@ -109,8 +149,8 @@ export default function HomePage() {
               </h1>
             </div>
 
-            {/* Navigation Menu */}
-            {(user || isSuperAdmin) && (
+            {/* Navigation Menu - Only show for admin/superadmin on homepage */}
+            {(isAdmin || isSuperAdmin) && (
               <nav className="hidden md:flex items-center space-x-8">
                 <a
                   href="/"
@@ -119,25 +159,23 @@ export default function HomePage() {
                   Home
                 </a>
                 <a
-                  href="/dashboard"
+                  href="/student/dashboard"
                   className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 >
                   Dashboard
                 </a>
-                {(isAdmin || isSuperAdmin) && (
-                  <a
-                    href="/admin"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center space-x-1"
-                  >
-                    <span>⚙️</span>
-                    <span>Admin Panel</span>
-                  </a>
-                )}
+                <a
+                  href="/admin"
+                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center space-x-1"
+                >
+                  <span>⚙️</span>
+                  <span>Admin Panel</span>
+                </a>
               </nav>
             )}
 
             <div className="flex items-center space-x-4">
-              {user || isSuperAdmin ? (
+              {(isAdmin || isSuperAdmin) ? (
                 <>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
@@ -159,15 +197,13 @@ export default function HomePage() {
                   <Button variant="outline" size="sm" onClick={() => window.location.href = '/login'}>
                     Sign Out
                   </Button>
-                  {isAdmin && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => (window.location.href = "/admin")}
-                    >
-                      Admin Panel
-                    </Button>
-                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => (window.location.href = "/admin")}
+                  >
+                    Admin Panel
+                  </Button>
                 </>
               ) : (
                 <>
@@ -453,11 +489,11 @@ export default function HomePage() {
                     </p>
                     <Button
                       onClick={() =>
-                        (window.location.href = "/admin/interviews")
+                        (window.location.href = "/interviews")
                       }
                       className="w-full"
                     >
-                      Manage Interviews
+                      Start Interview
                     </Button>
                   </div>
                 </div>
