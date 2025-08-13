@@ -237,6 +237,14 @@ export default function EditExamPage() {
               <div className="flex items-center space-x-3">
                 <Button
                   variant="outline"
+                  onClick={() => router.push(`/admin/exams/${examId}/questions`)}
+                  className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Manage Questions
+                </Button>
+                <Button
+                  variant="outline"
                   onClick={handleDelete}
                   disabled={saving}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"

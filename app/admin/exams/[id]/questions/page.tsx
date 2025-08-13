@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
@@ -52,6 +53,7 @@ export default function ExamQuestionsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
   const [exam, setExam] = useState<Exam | null>(null);
   const [examQuestions, setExamQuestions] = useState<ExamQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -316,14 +318,24 @@ export default function ExamQuestionsPage({
                 <BookOpen className="w-8 h-8 mr-3" />
                 Exam Questions Management
               </h1>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/exams")}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                ← Back to Exams
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/admin/exams/${examId}/edit`)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to Exam
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push("/admin/exams")}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← All Exams
+                </Button>
+              </div>
             </div>
             {exam && (
               <div>
