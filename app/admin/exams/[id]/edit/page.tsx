@@ -239,7 +239,9 @@ export default function EditExamPage() {
               <div className="flex items-center space-x-3">
                 <Button
                   variant="outline"
-                  onClick={() => router.push(`/admin/exams/${examId}/questions`)}
+                  onClick={() =>
+                    router.push(`/admin/exams/${examId}/questions`)
+                  }
                   className="text-green-600 hover:text-green-700 hover:bg-green-50"
                 >
                   <Settings className="w-4 h-4 mr-2" />
@@ -639,11 +641,15 @@ export default function EditExamPage() {
                               <div className="ml-4 space-y-1">
                                 {(() => {
                                   try {
-                                    const options = question.questionData?.options 
-                                      ? JSON.parse(question.questionData.options) 
+                                    const options = question.questionData
+                                      ?.options
+                                      ? JSON.parse(
+                                          question.questionData.options
+                                        )
                                       : null;
-                                    const correctAnswer = question.questionData?.correctAnswer;
-                                    
+                                    const correctAnswer =
+                                      question.questionData?.correctAnswer;
+
                                     if (options && Array.isArray(options)) {
                                       return options.map((option, optIndex) => (
                                         <div
@@ -685,7 +691,8 @@ export default function EditExamPage() {
                               <div className="ml-4">
                                 <div className="text-sm text-gray-600 mb-2">
                                   <strong>Test Cases:</strong>{" "}
-                                  {question.questionData?.testCases || "Not available"}
+                                  {question.questionData?.testCases ||
+                                    "Not available"}
                                 </div>
                                 {question.questionData?.solution && (
                                   <div className="text-sm text-gray-600">

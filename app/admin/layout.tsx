@@ -196,7 +196,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:inset-0 flex flex-col ${
+          className={`fixed inset-y-0 left-0 z-50 w-64 max-w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:inset-0 flex flex-col overflow-hidden ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -217,7 +217,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-6 overflow-y-auto">
+          <nav className="flex-1 px-3 py-6 overflow-y-auto overflow-x-hidden">
             {/* Debug info - remove in production */}
             {process.env.NODE_ENV === "development" && (
               <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
@@ -254,20 +254,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                           }`}
                           title={item.description}
                         >
-                          <div className="flex items-center flex-1">
-                            <IconComponent className="w-5 h-5 mr-3" />
-                            <div className="flex-1 text-left">
-                              <div>{item.name}</div>
-                              <div className="text-xs text-gray-500 font-normal">
+                          <div className="flex items-center flex-1 min-w-0">
+                            <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
+                            <div className="flex-1 text-left min-w-0">
+                              <div className="truncate">{item.name}</div>
+                              <div className="text-xs text-gray-500 font-normal truncate">
                                 {item.description}
                               </div>
                             </div>
                           </div>
-                          {isExpanded ? (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
-                          ) : (
-                            <ChevronRight className="w-4 h-4 text-gray-400" />
-                          )}
+                          <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${
+                            isExpanded ? "rotate-0" : "-rotate-90"
+                          }`} />
                         </button>
 
                         {/* Submenu */}
@@ -288,10 +286,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                   onClick={() => setSidebarOpen(false)}
                                   title={subItem.description}
                                 >
-                                  <SubIconComponent className="w-4 h-4 mr-3" />
-                                  <div className="flex-1">
-                                    <div>{subItem.name}</div>
-                                    <div className="text-xs text-gray-400 font-normal">
+                                  <SubIconComponent className="w-4 h-4 mr-3 flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="truncate">{subItem.name}</div>
+                                    <div className="text-xs text-gray-400 font-normal truncate">
                                       {subItem.description}
                                     </div>
                                   </div>
@@ -313,10 +311,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         onClick={() => setSidebarOpen(false)}
                         title={item.description}
                       >
-                        <IconComponent className="w-5 h-5 mr-3" />
-                        <div className="flex-1">
-                          <div>{item.name}</div>
-                          <div className="text-xs text-gray-500 font-normal">
+                        <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="truncate">{item.name}</div>
+                          <div className="text-xs text-gray-500 font-normal truncate">
                             {item.description}
                           </div>
                         </div>
@@ -331,7 +329,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* User Info */}
           <div className="flex-shrink-0 p-4 border-t border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-sm font-medium">
                   {userInfo.avatar}
                 </span>
@@ -349,7 +347,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+        <div className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden lg:overflow-y-auto">
           {/* Top bar - aligned with sidebar navigation */}
           <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
             <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
