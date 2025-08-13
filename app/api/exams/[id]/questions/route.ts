@@ -190,12 +190,33 @@ export async function DELETE(
       );
     }
 
-    // Delete the exam question
-    await prisma.examQuestion.deleteMany({
+    // First, find the exam question to get its ID
+    const examQuestion = await prisma.examQuestion.findFirst({
       where: {
         examId: id,
         questionId,
         questionType,
+      },
+    });
+
+    if (!examQuestion) {
+      return NextResponse.json(
+        { success: false, error: "Question not found in exam" },
+        { status: 404 }
+      );
+    }
+
+    // Delete related exam question results first
+    await prisma.examQuestionResult.deleteMany({
+      where: {
+        questionId: examQuestion.id,
+      },
+    });
+
+    // Then delete the exam question
+    await prisma.examQuestion.delete({
+      where: {
+        id: examQuestion.id,
       },
     });
 
