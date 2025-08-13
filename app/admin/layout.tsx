@@ -26,6 +26,7 @@ import {
   BookOpen,
   Code,
   HelpCircle,
+  Brain,
 } from "lucide-react";
 
 interface SubMenuItem {
@@ -93,6 +94,21 @@ const navigation: NavigationItem[] = [
     href: "/admin/seeds",
     icon: Package,
     description: "Question Seeds Management",
+    hasSubmenu: true,
+    submenu: [
+      {
+        name: "Seeds Overview",
+        href: "/admin/seeds",
+        icon: Package,
+        description: "View All Seeds",
+      },
+      {
+        name: "AI Generator",
+        href: "/admin/seeds/ai-generator",
+        icon: Brain,
+        description: "Generate Questions with AI",
+      },
+    ],
   },
   {
     name: "Database",
@@ -249,8 +265,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                           }}
                           className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                             isActive
-                              ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                              ? "bg-blue-100 text-blue-800 border-r-2 border-blue-600"
+                              : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                           }`}
                           title={item.description}
                         >
@@ -258,7 +274,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                             <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
                             <div className="flex-1 text-left min-w-0">
                               <div className="truncate">{item.name}</div>
-                              <div className="text-xs text-gray-500 font-normal truncate">
+                              <div className={`text-xs font-normal truncate ${
+                                isActive ? "text-blue-600" : "text-gray-500"
+                              }`}>
                                 {item.description}
                               </div>
                             </div>
@@ -280,8 +298,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                   href={subItem.href}
                                   className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                     isSubActive
-                                      ? "bg-blue-50 text-blue-600 border-l-2 border-blue-400"
-                                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                      ? "bg-blue-50 text-blue-700 border-l-2 border-blue-400"
+                                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                                   }`}
                                   onClick={() => setSidebarOpen(false)}
                                   title={subItem.description}
@@ -289,7 +307,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                   <SubIconComponent className="w-4 h-4 mr-3 flex-shrink-0" />
                                   <div className="flex-1 min-w-0">
                                     <div className="truncate">{subItem.name}</div>
-                                    <div className="text-xs text-gray-400 font-normal truncate">
+                                    <div className={`text-xs font-normal truncate ${
+                                      isSubActive ? "text-blue-500" : "text-gray-500"
+                                    }`}>
                                       {subItem.description}
                                     </div>
                                   </div>
@@ -305,8 +325,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         href={item.href}
                         className={`group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors ${
                           isActive
-                            ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            ? "bg-blue-100 text-blue-800 border-r-2 border-blue-600"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                         }`}
                         onClick={() => setSidebarOpen(false)}
                         title={item.description}
@@ -314,7 +334,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
                           <div className="truncate">{item.name}</div>
-                          <div className="text-xs text-gray-500 font-normal truncate">
+                          <div className={`text-xs font-normal truncate ${
+                            isActive ? "text-blue-600" : "text-gray-500"
+                          }`}>
                             {item.description}
                           </div>
                         </div>
