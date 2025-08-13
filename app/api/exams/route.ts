@@ -42,66 +42,159 @@ async function generateExamQuestions(examId: string, options: any) {
       problemWhere.category = { in: categories };
     }
 
-    if (subjects.length > 0) {
+    // Only apply subject filter if subjects are provided and not "General"
+    if (subjects.length > 0 && !subjects.includes("General")) {
       mcqWhere.subject = { in: subjects };
       problemWhere.subject = { in: subjects };
     }
 
-    if (languages.length > 0) {
-      mcqWhere.language = { in: languages };
-      problemWhere.language = { in: languages };
-    }
+    // Note: Language filtering is not available in current schema
+    // Both MCQ and Problem models don't have language fields
 
-    // Get MCQ questions
+    // Get MCQ questions with difficulty filtering
     if (mcqCount > 0) {
       const mcqQuestions = await prisma.mCQQuestion.findMany({
         where: mcqWhere,
-        take: mcqCount * 2, // Get more to ensure we have enough after filtering
+        take: mcqCount * 3, // Get more to ensure we have enough after filtering
       });
 
-      // Shuffle and select based on difficulty distribution
-      const shuffledMcqs = mcqQuestions.sort(() => Math.random() - 0.5);
-      const selectedMcqs = shuffledMcqs.slice(0, mcqCount);
+      // Separate questions by difficulty
+      const easyQuestions = mcqQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "easy"
+      );
+      const mediumQuestions = mcqQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "medium"
+      );
+      const hardQuestions = mcqQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "hard"
+      );
 
-      for (const mcq of selectedMcqs) {
+      // Select questions based on difficulty distribution
+      const selectedMcqs = [];
+
+      // Add easy questions
+      const shuffledEasy = easyQuestions.sort(() => Math.random() - 0.5);
+      selectedMcqs.push(
+        ...shuffledEasy.slice(0, Math.min(easyCount, easyQuestions.length))
+      );
+
+      // Add medium questions
+      const shuffledMedium = mediumQuestions.sort(() => Math.random() - 0.5);
+      selectedMcqs.push(
+        ...shuffledMedium.slice(
+          0,
+          Math.min(mediumCount, mediumQuestions.length)
+        )
+      );
+
+      // Add hard questions
+      const shuffledHard = hardQuestions.sort(() => Math.random() - 0.5);
+      selectedMcqs.push(
+        ...shuffledHard.slice(0, Math.min(hardCount, hardQuestions.length))
+      );
+
+      // If we don't have enough questions, fill with remaining questions
+      if (selectedMcqs.length < mcqCount) {
+        const remainingQuestions = mcqQuestions.filter(
+          (q) => !selectedMcqs.includes(q)
+        );
+        const shuffledRemaining = remainingQuestions.sort(
+          () => Math.random() - 0.5
+        );
+        selectedMcqs.push(
+          ...shuffledRemaining.slice(0, mcqCount - selectedMcqs.length)
+        );
+      }
+
+      // Shuffle final selection and limit to mcqCount
+      const finalMcqs = selectedMcqs
+        .sort(() => Math.random() - 0.5)
+        .slice(0, mcqCount);
+
+      for (const mcq of finalMcqs) {
         questions.push({
           examId,
           questionType: "MCQ",
           questionId: mcq.id,
-          questionText: mcq.question,
-          options: mcq.options,
-          correctAnswer: mcq.correctAnswer,
-          explanation: mcq.explanation,
+          order: questions.length + 1,
           points: 1,
           timeLimit: 120,
+          isActive: true,
         });
       }
     }
 
-    // Get coding problems
+    // Get coding problems with difficulty filtering
     if (codingCount > 0) {
       const codingProblems = await prisma.problem.findMany({
         where: problemWhere,
-        take: codingCount * 2,
+        take: codingCount * 3, // Get more to ensure we have enough after filtering
       });
 
-      const shuffledProblems = codingProblems.sort(() => Math.random() - 0.5);
-      const selectedProblems = shuffledProblems.slice(0, codingCount);
+      // Separate problems by difficulty
+      const easyProblems = codingProblems.filter(
+        (p) => p.difficulty.toLowerCase() === "easy"
+      );
+      const mediumProblems = codingProblems.filter(
+        (p) => p.difficulty.toLowerCase() === "medium"
+      );
+      const hardProblems = codingProblems.filter(
+        (p) => p.difficulty.toLowerCase() === "hard"
+      );
 
-      for (const problem of selectedProblems) {
+      // Select problems based on difficulty distribution
+      const selectedProblems = [];
+
+      // Add easy problems
+      const shuffledEasy = easyProblems.sort(() => Math.random() - 0.5);
+      selectedProblems.push(
+        ...shuffledEasy.slice(0, Math.min(easyCount, easyProblems.length))
+      );
+
+      // Add medium problems
+      const shuffledMedium = mediumProblems.sort(() => Math.random() - 0.5);
+      selectedProblems.push(
+        ...shuffledMedium.slice(0, Math.min(mediumCount, mediumProblems.length))
+      );
+
+      // Add hard problems
+      const shuffledHard = hardProblems.sort(() => Math.random() - 0.5);
+      selectedProblems.push(
+        ...shuffledHard.slice(0, Math.min(hardCount, hardProblems.length))
+      );
+
+      // If we don't have enough problems, fill with remaining problems
+      if (selectedProblems.length < codingCount) {
+        const remainingProblems = codingProblems.filter(
+          (p) => !selectedProblems.includes(p)
+        );
+        const shuffledRemaining = remainingProblems.sort(
+          () => Math.random() - 0.5
+        );
+        selectedProblems.push(
+          ...shuffledRemaining.slice(0, codingCount - selectedProblems.length)
+        );
+      }
+
+      // Shuffle final selection and limit to codingCount
+      const finalProblems = selectedProblems
+        .sort(() => Math.random() - 0.5)
+        .slice(0, codingCount);
+
+      for (const problem of finalProblems) {
         questions.push({
           examId,
           questionType: "CODING",
           questionId: problem.id,
-          questionText: problem.title,
-          description: problem.description,
+          order: questions.length + 1,
           points: 5,
           timeLimit: 600, // 10 minutes for coding questions
+          isActive: true,
         });
       }
     }
 
-    // Get aptitude questions (non-technical)
+    // Get aptitude questions (non-technical) with difficulty filtering
     if (aptitudeCount > 0 && includeNonTechnical) {
       const aptitudeCategories = [
         "Aptitude",
@@ -120,25 +213,68 @@ async function generateExamQuestions(examId: string, options: any) {
 
       const aptitudeQuestions = await prisma.mCQQuestion.findMany({
         where: aptitudeWhere,
-        take: aptitudeCount * 2,
+        take: aptitudeCount * 3,
       });
 
-      const shuffledAptitude = aptitudeQuestions.sort(
-        () => Math.random() - 0.5
+      // Separate aptitude questions by difficulty
+      const easyAptitude = aptitudeQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "easy"
       );
-      const selectedAptitude = shuffledAptitude.slice(0, aptitudeCount);
+      const mediumAptitude = aptitudeQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "medium"
+      );
+      const hardAptitude = aptitudeQuestions.filter(
+        (q) => q.difficulty.toLowerCase() === "hard"
+      );
 
-      for (const aptitude of selectedAptitude) {
+      // Select aptitude questions based on difficulty distribution
+      const selectedAptitude = [];
+
+      // Add easy aptitude questions
+      const shuffledEasy = easyAptitude.sort(() => Math.random() - 0.5);
+      selectedAptitude.push(
+        ...shuffledEasy.slice(0, Math.min(easyCount, easyAptitude.length))
+      );
+
+      // Add medium aptitude questions
+      const shuffledMedium = mediumAptitude.sort(() => Math.random() - 0.5);
+      selectedAptitude.push(
+        ...shuffledMedium.slice(0, Math.min(mediumCount, mediumAptitude.length))
+      );
+
+      // Add hard aptitude questions
+      const shuffledHard = hardAptitude.sort(() => Math.random() - 0.5);
+      selectedAptitude.push(
+        ...shuffledHard.slice(0, Math.min(hardCount, hardAptitude.length))
+      );
+
+      // If we don't have enough aptitude questions, fill with remaining questions
+      if (selectedAptitude.length < aptitudeCount) {
+        const remainingAptitude = aptitudeQuestions.filter(
+          (q) => !selectedAptitude.includes(q)
+        );
+        const shuffledRemaining = remainingAptitude.sort(
+          () => Math.random() - 0.5
+        );
+        selectedAptitude.push(
+          ...shuffledRemaining.slice(0, aptitudeCount - selectedAptitude.length)
+        );
+      }
+
+      // Shuffle final selection and limit to aptitudeCount
+      const finalAptitude = selectedAptitude
+        .sort(() => Math.random() - 0.5)
+        .slice(0, aptitudeCount);
+
+      for (const aptitude of finalAptitude) {
         questions.push({
           examId,
           questionType: "APTITUDE",
           questionId: aptitude.id,
-          questionText: aptitude.question,
-          options: aptitude.options,
-          correctAnswer: aptitude.correctAnswer,
-          explanation: aptitude.explanation,
+          order: questions.length + 1,
           points: 1,
           timeLimit: 90,
+          isActive: true,
         });
       }
     }
@@ -253,6 +389,9 @@ export async function POST(request: NextRequest) {
       questionTypes,
       totalQuestions,
       passingScore,
+      enableTimedQuestions,
+      enableOverallTimer,
+      defaultQuestionTime,
       isActive,
       isPublic,
       autoGenerate,
@@ -298,6 +437,11 @@ export async function POST(request: NextRequest) {
         questionTypes,
         totalQuestions: parseInt(totalQuestions) || 0,
         passingScore: parseInt(passingScore) || 60,
+        enableTimedQuestions:
+          enableTimedQuestions !== undefined ? enableTimedQuestions : false,
+        enableOverallTimer:
+          enableOverallTimer !== undefined ? enableOverallTimer : true,
+        defaultQuestionTime: parseInt(defaultQuestionTime) || 120,
         isActive: isActive !== undefined ? isActive : true,
         isPublic: isPublic !== undefined ? isPublic : true,
       },
@@ -305,7 +449,18 @@ export async function POST(request: NextRequest) {
 
     // Auto-generate questions if enabled
     if (autoGenerate && autoGenerateOptions) {
-      await generateExamQuestions(exam.id, autoGenerateOptions);
+      try {
+        const questionsGenerated = await generateExamQuestions(
+          exam.id,
+          autoGenerateOptions
+        );
+        console.log(
+          `Generated ${questionsGenerated} questions for exam ${exam.id}`
+        );
+      } catch (error) {
+        console.error("Error in auto-generation:", error);
+        // Continue with exam creation even if auto-generation fails
+      }
     }
 
     return NextResponse.json({
@@ -315,8 +470,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Error creating exam:", error);
+    console.error("Error details:", error.message);
+    console.error("Error stack:", error.stack);
     return NextResponse.json(
-      { success: false, error: "Failed to create exam" },
+      { success: false, error: `Failed to create exam: ${error.message}` },
       { status: 500 }
     );
   }

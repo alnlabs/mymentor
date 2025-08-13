@@ -226,22 +226,25 @@ model InterviewFeedback {
 }
 
 model Exam {
-  id              String       @id @default(cuid())
-  title           String       @unique
-  description     String
-  duration        Int          // Duration in minutes
-  difficulty      String       // Easy, Medium, Hard
-  category        String       // Programming, Data Structures, etc.
-  targetRole      String?      // Frontend, Backend, Full Stack, etc.
-  questionTypes   String       // MCQ, Coding, Mixed
-  totalQuestions  Int          @default(0)
-  passingScore    Int          @default(60) // Percentage
-  isActive        Boolean      @default(true)
-  isPublic        Boolean      @default(true) // Public or private exam
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  examQuestions   ExamQuestion[]
-  examResults     ExamResult[]
+  id                    String       @id @default(cuid())
+  title                 String       @unique
+  description           String
+  duration              Int          // Duration in minutes
+  difficulty            String       // Easy, Medium, Hard
+  category              String       // Programming, Data Structures, etc.
+  targetRole            String?      // Frontend, Backend, Full Stack, etc.
+  questionTypes         String       // MCQ, Coding, Mixed
+  totalQuestions        Int          @default(0)
+  passingScore          Int          @default(60) // Percentage
+  enableTimedQuestions  Boolean      @default(false) // Enable individual question timers
+  enableOverallTimer    Boolean      @default(true) // Enable overall exam timer
+  defaultQuestionTime   Int          @default(120) // Default time per question in seconds
+  isActive              Boolean      @default(true)
+  isPublic              Boolean      @default(true) // Public or private exam
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  examQuestions         ExamQuestion[]
+  examResults           ExamResult[]
 
   @@map("exams")
 }

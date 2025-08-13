@@ -5,67 +5,111 @@ import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import { useAuthContext } from "@/shared/components/AuthContext";
+import { StudentHeader } from "@/shared/components/StudentHeader";
 import { InterviewCard } from "@/modules/interviews/components/InterviewCard";
 import { InterviewTemplate } from "@/shared/types/common";
 import { Filter, Search, Plus } from "lucide-react";
 
 export default function InterviewsPage() {
-  const { user, loading: authLoading, isAdmin, isSuperAdmin } = useAuthContext();
+  const {
+    user,
+    loading: authLoading,
+    isAdmin,
+    isSuperAdmin,
+  } = useAuthContext();
 
-  // Debug logging
-  console.log("Interviews page - User:", user?.email);
-  console.log("Interviews page - isAdmin:", isAdmin);
-  console.log("Interviews page - isSuperAdmin:", isSuperAdmin);
-  console.log("Interviews page - Auth Loading:", authLoading);
-
-  // Redirect to homepage if not authenticated
-  React.useEffect(() => {
-    if (!authLoading && !user) {
-      console.log("Interviews page: Not authenticated, redirecting to homepage");
-      window.location.href = "/";
-    }
-  }, [user, authLoading]);
-
-  // Redirect admin/superadmin to admin area
-  React.useEffect(() => {
-    if (!authLoading && user && (isAdmin || isSuperAdmin)) {
-      console.log("Interviews page: Admin/SuperAdmin detected, redirecting to admin");
-      window.location.href = "/admin";
-    }
-  }, [user, authLoading, isAdmin, isSuperAdmin]);
-
-  // Debug authentication state without redirecting
-  React.useEffect(() => {
-    console.log("Interviews page - Auth state changed:");
-    console.log("  - authLoading:", authLoading);
-    console.log("  - user:", user?.email);
-    console.log("  - isSuperAdmin:", isSuperAdmin);
-    console.log("  - isAdmin:", isAdmin);
-  }, [user, isSuperAdmin, authLoading, isAdmin]);
   const [templates, setTemplates] = useState<InterviewTemplate[]>([]);
+  const [filteredTemplates, setFilteredTemplates] = useState<
+    InterviewTemplate[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
 
+  // Fetch interview templates
   useEffect(() => {
-    fetchTemplates();
-  }, []);
-
-  const fetchTemplates = async () => {
-    try {
-      const response = await fetch("/api/interviews/templates");
-      const data = await response.json();
-
-      if (data.success) {
-        setTemplates(data.data);
+    const fetchTemplates = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/interviews/templates");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setTemplates(data.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching templates:", error);
-    } finally {
+    };
+
+    if (user && !isSuperAdmin) {
+      fetchTemplates();
+    } else if (isSuperAdmin) {
+      console.log("Interviews: SuperAdmin, skipping fetch");
+      setLoading(false);
+    } else {
+      console.log("Interviews: No user, setting loading to false");
       setLoading(false);
     }
+  }, [user, isSuperAdmin]);
+
+  // Handle redirects
+  useEffect(() => {
+    if (!authLoading) {
+      if (!user && !isSuperAdmin) {
+        console.log(
+          "Interviews: User not authenticated, redirecting to homepage"
+        );
+        window.location.href = "/";
+      } else if ((isAdmin || isSuperAdmin) && user) {
+        console.log(
+          "Interviews: Admin/SuperAdmin detected, redirecting to admin"
+        );
+        window.location.href = "/admin";
+      }
+    }
+  }, [user, authLoading, isAdmin, isSuperAdmin]);
+
+  // Filter templates
+  useEffect(() => {
+    filterTemplates();
+  }, [templates, searchTerm, selectedDifficulty, selectedCategory]);
+
+  const filterTemplates = () => {
+    let filtered = templates.filter((template) => template.isActive);
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (template) =>
+          template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          template.description
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          template.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Difficulty filter
+    if (selectedDifficulty && selectedDifficulty !== "all") {
+      filtered = filtered.filter(
+        (template) => template.difficulty === selectedDifficulty
+      );
+    }
+
+    // Category filter
+    if (selectedCategory && selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (template) => template.category === selectedCategory
+      );
+    }
+
+    setFilteredTemplates(filtered);
   };
 
   const handleTemplateSelect = async (template: InterviewTemplate) => {
@@ -81,7 +125,7 @@ export default function InterviewsPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: user?.id || "superadmin-user",
+          userId: user?.uid || "superadmin-user",
           templateId: template.id,
         }),
       });
@@ -100,18 +144,43 @@ export default function InterviewsPage() {
     }
   };
 
-  const filteredTemplates = templates.filter((template) => {
-    const matchesSearch =
-      template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDifficulty =
-      selectedDifficulty === "all" ||
-      template.difficulty === selectedDifficulty;
-    const matchesCategory =
-      selectedCategory === "all" || template.category === selectedCategory;
+  // Show loading while authentication is being checked
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
-    return matchesSearch && matchesDifficulty && matchesCategory;
-  });
+  // Show loading while fetching templates data
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Loading Interviews..." />
+      </div>
+    );
+  }
+
+  // Show loading while redirecting
+  if (!user && !isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to homepage..." />
+      </div>
+    );
+  }
+
+  // Show loading while redirecting admin
+  if ((isAdmin || isSuperAdmin) && user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to admin..." />
+      </div>
+    );
+  }
+
+  console.log("Interviews: Rendering main interviews content");
 
   const difficulties = ["all", "easy", "medium", "hard"];
   const categories = [
@@ -123,126 +192,89 @@ export default function InterviewsPage() {
     "mobile",
   ];
 
-  // Show loading while authentication is being checked (but allow rendering)
-  if (authLoading) {
-    console.log("Interviews page - Auth still loading, but allowing render");
-  }
-
-  // Show loading while fetching templates
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Loading Templates..." />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Interviews
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Practice with realistic interview scenarios
-              </p>
-            </div>
-            {(isAdmin || isSuperAdmin) && (
-              <Button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center space-x-2"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Create Template</span>
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
+      <StudentHeader title="MyMentor Interviews" currentPage="interviews" />
 
       {/* Filters and Search */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Card className="p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
-            <div className="flex-1">
+            <div className="md:col-span-2">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search interviews..."
+                  placeholder="Search interview templates..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             {/* Difficulty Filter */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-700">
-                Difficulty:
-              </span>
+            <div>
               <select
                 value={selectedDifficulty}
                 onChange={(e) => setSelectedDifficulty(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {difficulties.map((difficulty) => (
                   <option key={difficulty} value={difficulty}>
-                    {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                    {difficulty === "all"
+                      ? "All Difficulties"
+                      : difficulty.charAt(0).toUpperCase() +
+                        difficulty.slice(1)}
                   </option>
                 ))}
               </select>
             </div>
 
             {/* Category Filter */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-gray-700">
-                Category:
-              </span>
+            <div>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 {categories.map((category) => (
                   <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                    {category === "all"
+                      ? "All Categories"
+                      : category.charAt(0).toUpperCase() + category.slice(1)}
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
-        </Card>
-
-        {/* Results */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">
-              Available Interviews ({filteredTemplates.length})
-            </h2>
-            <div className="text-sm text-gray-600">
-              {filteredTemplates.length} of {templates.length} templates
             </div>
           </div>
         </div>
 
         {/* Templates Grid */}
         {filteredTemplates.length === 0 ? (
-          <Card className="p-12 text-center">
-            <div className="text-gray-500">
-              <Filter className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium mb-2">No interviews found</h3>
-              <p className="text-sm">
-                Try adjusting your search or filter criteria
-              </p>
+          <div className="text-center py-12">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Filter className="w-12 h-12 text-gray-400" />
             </div>
-          </Card>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No Interview Templates Available
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {templates.length === 0
+                ? "No interview templates have been created yet. Please check back later."
+                : "No templates match your current filters. Try adjusting your search criteria."}
+            </p>
+            {templates.length === 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                <p className="text-sm text-blue-800">
+                  <strong>Note:</strong> Interview templates need to be created
+                  by an administrator. Please contact your administrator to
+                  create interview templates.
+                </p>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTemplates.map((template) => (
@@ -250,36 +282,11 @@ export default function InterviewsPage() {
                 key={template.id}
                 template={template}
                 onSelect={handleTemplateSelect}
-                isAdmin={isAdmin}
               />
             ))}
           </div>
         )}
       </div>
-
-      {/* Create Template Modal (for admins) */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">
-              Create Interview Template
-            </h3>
-                          <p className="text-gray-600 mb-4">
-                This feature is coming soon! You'll be able to create custom
-                templates.
-              </p>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowCreateModal(false)}
-                variant="outline"
-                className="flex-1"
-              >
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

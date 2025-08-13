@@ -13,21 +13,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const {
-    user,
-    isSuperAdmin,
-    loading: authLoading,
-    updateUserRole,
-  } = useAuthContext();
+  const { user, isSuperAdmin, loading: authLoading } = useAuthContext();
 
   // Redirect authenticated users to appropriate area
   React.useEffect(() => {
     if (!authLoading && (user || isSuperAdmin)) {
       if (isSuperAdmin) {
-        console.log("Login page: SuperAdmin authenticated, redirecting to admin");
+        console.log(
+          "Login page: SuperAdmin authenticated, redirecting to admin"
+        );
         window.location.href = "/admin";
       } else if (user) {
-        console.log("Login page: User authenticated, redirecting to student area");
+        console.log(
+          "Login page: User authenticated, redirecting to student area"
+        );
         window.location.href = "/student";
       }
     }
@@ -56,9 +55,6 @@ export default function LoginPage() {
           "superAdminUser",
           JSON.stringify(result.data.user)
         );
-
-        // Update AuthContext
-        updateUserRole("superadmin");
 
         // Show success message
         alert("SuperAdmin login successful! Redirecting to admin panel...");

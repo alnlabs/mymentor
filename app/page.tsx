@@ -13,7 +13,7 @@ import { MCQCard } from "@/modules/mcq/components/MCQCard";
 import { Problem, MCQQuestion } from "@/shared/types/common";
 
 export default function HomePage() {
-  const { user, userRole, isAdmin, isSuperAdmin, loading: authLoading } = useAuthContext();
+  const { user, isAdmin, isSuperAdmin, loading: authLoading } = useAuthContext();
   const [activeTab, setActiveTab] = useState<"problems" | "mcq" | "interviews">(
     "problems"
   );
@@ -104,7 +104,15 @@ export default function HomePage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Checking authentication..." />
+        <div className="text-center">
+          <Loading size="lg" text="Checking authentication..." />
+          <div className="mt-4 text-sm text-gray-600">
+            <p>Debug: Auth Loading = {authLoading.toString()}</p>
+            <p>Debug: User = {user ? user.email : 'null'}</p>
+            <p>Debug: isAdmin = {isAdmin.toString()}</p>
+            <p>Debug: isSuperAdmin = {isSuperAdmin.toString()}</p>
+          </div>
+        </div>
       </div>
     );
   }

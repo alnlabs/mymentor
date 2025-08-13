@@ -5,6 +5,7 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { StudentHeader } from "@/shared/components/StudentHeader";
 import {
   MessageSquare,
   Send,
@@ -305,84 +306,7 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                <MessageSquare className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                Feedback
-              </h1>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Navigation Links */}
-              <nav className="hidden md:flex items-center space-x-6">
-                <a
-                  href="/student/dashboard"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  <Home className="w-4 h-4" />
-                  <span>Dashboard</span>
-                </a>
-                <a
-                  href="/problems"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors"
-                >
-                  <Code className="w-4 h-4" />
-                  <span>Problems</span>
-                </a>
-                <a
-                  href="/mcq"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  <span>MCQs</span>
-                </a>
-                <a
-                  href="/student/interviews"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
-                >
-                  <TargetIcon className="w-4 h-4" />
-                  <span>Interviews</span>
-                </a>
-              </nav>
-
-              {/* User Profile */}
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {isSuperAdmin
-                      ? "S"
-                      : user?.displayName?.charAt(0) ||
-                        user?.email?.charAt(0) ||
-                        "U"}
-                  </span>
-                </div>
-                <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin
-                    ? "SuperAdmin"
-                    : user?.displayName || user?.email || "User"}
-                </span>
-              </div>
-
-              {/* Sign Out Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={signOutUser}
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <StudentHeader title="MyMentor Feedback" currentPage="feedback" />
 
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
         {/* Header */}

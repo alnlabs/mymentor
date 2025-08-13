@@ -5,6 +5,7 @@ import { useAuthContext } from "@/shared/components/AuthContext";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { StudentHeader } from "@/shared/components/StudentHeader";
 import {
   BookOpen,
   Code,
@@ -54,10 +55,6 @@ export default function DashboardPage() {
   const { user, loading, isAdmin, isSuperAdmin, signOutUser } =
     useAuthContext();
 
-  // Debug logging
-  console.log("Dashboard - User:", user?.email);
-  console.log("Dashboard - isAdmin:", isAdmin);
-  console.log("Dashboard - isSuperAdmin:", isSuperAdmin);
   const [userStats, setUserStats] = useState<UserStats>({
     problemsSolved: 0,
     mcqCompleted: 0,
@@ -67,44 +64,36 @@ export default function DashboardPage() {
     recentActivity: [],
   });
   const [statsLoading, setStatsLoading] = useState(true);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  // Add timeout to prevent infinite loading
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setLoadingTimeout(true);
+    }, 5000); // 5 second timeout
+
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   // Fetch user statistics
-  React.useEffect(() => {
+  useEffect(() => {
     if (user && !isSuperAdmin) {
       fetchUserStats();
-    } else if (isSuperAdmin) {
+    } else {
       setStatsLoading(false);
     }
   }, [user, isSuperAdmin]);
 
-  // Redirect superadmin to admin dashboard
-  React.useEffect(() => {
-    if (!loading && isSuperAdmin) {
-      console.log("Dashboard: SuperAdmin detected, redirecting to admin dashboard");
-      window.location.href = "/admin";
-      return;
-    }
-  }, [loading, isSuperAdmin]);
-
-  // Redirect non-student users
-  React.useEffect(() => {
-    if (!loading && user && (isAdmin || isSuperAdmin)) {
-      console.log("Student Dashboard: Admin/SuperAdmin detected, redirecting to admin");
-      window.location.href = "/admin";
-      return;
-    }
-  }, [loading, user, isAdmin, isSuperAdmin]);
-
-  // Redirect to homepage if not authenticated (with delay to prevent immediate redirects)
-  React.useEffect(() => {
-    if (!loading && !user && !isSuperAdmin) {
-      console.log("Dashboard: User not authenticated, redirecting to homepage");
-      const timer = setTimeout(() => {
+  // Handle redirects
+  useEffect(() => {
+    if (!loading) {
+      if (!user && !isSuperAdmin) {
         window.location.href = "/";
-      }, 1000); // 1 second delay
-      return () => clearTimeout(timer);
+      } else if ((isAdmin || isSuperAdmin) && user) {
+        window.location.href = "/admin";
+      }
     }
-  }, [user, loading, isSuperAdmin]);
+  }, [user, loading, isAdmin, isSuperAdmin]);
 
   const fetchUserStats = async () => {
     try {
@@ -128,20 +117,41 @@ export default function DashboardPage() {
     }
   };
 
-  // Show loading while checking authentication
-  if (loading) {
+  // Show loading while authentication is being checked
+  if (loading && !loadingTimeout) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Loading Dashboard..." />
+        <Loading />
       </div>
     );
   }
 
-  // Show loading while redirecting superadmin
-  if (isSuperAdmin) {
+  // Show fallback if loading times out
+  if (loading && loadingTimeout) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Redirecting to admin dashboard..." />
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Authentication Issue
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Please try refreshing the page or signing in again.
+          </p>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Refresh Page
+            </button>
+            <button
+              onClick={() => (window.location.href = "/")}
+              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            >
+              Go to Homepage
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -151,6 +161,15 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <Loading size="lg" text="Redirecting to homepage..." />
+      </div>
+    );
+  }
+
+  // Show loading while redirecting admin
+  if ((isAdmin || isSuperAdmin) && user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <Loading size="lg" text="Redirecting to admin..." />
       </div>
     );
   }
@@ -232,287 +251,137 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">M</span>
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                MyMentor Dashboard
-              </h1>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              {/* Navigation Menu */}
-              <nav className="hidden md:flex items-center space-x-6">
-                <a
-                  href="/"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Home
-                </a>
-                              <a
-                href="/student/interviews"
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                Interviews
-              </a>
-              <a
-                href="/student/exams"
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                Exams
-              </a>
-              <a
-                href="/student/feedback"
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-              >
-                Feedback
-              </a>
-                {(isAdmin || isSuperAdmin) && (
-                  <a
-                    href="/admin"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    Admin
-                  </a>
-                )}
-              </nav>
-
-              {/* User Info */}
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">
-                    {isSuperAdmin
-                      ? "S"
-                      : user?.displayName?.charAt(0) ||
-                        user?.email?.charAt(0) ||
-                        "U"}
-                  </span>
-                </div>
-                <span className="text-sm text-gray-700 font-medium hidden sm:block">
-                  {isSuperAdmin
-                    ? "SuperAdmin"
-                    : user?.displayName || user?.email || "User"}
-                </span>
-              </div>
-
-              {/* Sign Out Button */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={signOutUser}
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Navigation Menu */}
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-4 py-2">
-            <div className="grid grid-cols-5 gap-2">
-              <a
-                href="/"
-                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
-              >
-                <Home className="w-4 h-4 mb-1" />
-                Home
-              </a>
-              <a
-                href="/student/interviews"
-                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
-              >
-                <Target className="w-4 h-4 mb-1" />
-                Interviews
-              </a>
-              <a
-                href="/student/exams"
-                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
-              >
-                <FileText className="w-4 h-4 mb-1" />
-                Exams
-              </a>
-              <a
-                href="/student/feedback"
-                className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
-              >
-                <MessageSquare className="w-4 h-4 mb-1" />
-                Feedback
-              </a>
-              {(isAdmin || isSuperAdmin) && (
-                <a
-                  href="/admin"
-                  className="flex flex-col items-center p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-md text-xs"
-                >
-                  <Settings className="w-4 h-4 mb-1" />
-                  Admin
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <StudentHeader title="MyMentor Dashboard" currentPage="dashboard" />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
+        {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-16 -translate-x-16"></div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back,{" "}
+            {isSuperAdmin
+              ? "SuperAdmin"
+              : user?.displayName || user?.email || "Student"}
+            !
+          </h2>
+          <p className="text-gray-600">
+            Ready to continue your learning journey? Let's get started!
+          </p>
+        </div>
 
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-3xl font-bold mb-2">
-                    Welcome back,{" "}
-                    {isSuperAdmin
-                      ? "SuperAdmin"
-                      : user?.displayName || user?.email || "User"}
-                    ! 👋
-                  </h2>
-                  <p className="text-blue-100 text-lg">
-                    Ready to level up your coding skills?
-                  </p>
-                </div>
-                {!isSuperAdmin && (
-                  <div className="text-right">
-                    <div
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${level.bg} ${level.color}`}
-                    >
-                      <Trophy className="w-4 h-4 mr-1" />
-                      {level.level}
-                    </div>
-                    <p className="text-blue-100 text-sm mt-1">
-                      {userStats.problemsSolved} problems solved
-                    </p>
-                  </div>
-                )}
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Problems Solved
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {userStats.problemsSolved}
+                </p>
               </div>
-
-              {!isSuperAdmin && (
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">
-                      {userStats.problemsSolved}
-                    </div>
-                    <div className="text-blue-100 text-sm">Problems</div>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">
-                      {userStats.mcqCompleted}
-                    </div>
-                    <div className="text-blue-100 text-sm">MCQs</div>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">
-                      {userStats.interviewsTaken}
-                    </div>
-                    <div className="text-blue-100 text-sm">Interviews</div>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">
-                      {userStats.successRate}%
-                    </div>
-                    <div className="text-blue-100 text-sm">Success Rate</div>
-                  </div>
-                </div>
-              )}
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Code className="w-6 h-6 text-blue-600" />
+              </div>
             </div>
-          </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  MCQs Completed
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {userStats.mcqCompleted}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-purple-600" />
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Interviews Taken
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {userStats.interviewsTaken}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <Target className="w-6 h-6 text-green-600" />
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  Success Rate
+                </p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {userStats.successRate}%
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-yellow-600" />
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Level Badge */}
+        <div className="mb-8">
+          <Card className="p-6">
+            <div className="flex items-center space-x-4">
+              <div
+                className={`w-16 h-16 ${level.bg} rounded-full flex items-center justify-center`}
+              >
+                <Trophy className={`w-8 h-8 ${level.color}`} />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Current Level: {level.level}
+                </h3>
+                <p className="text-gray-600">
+                  You've solved {userStats.problemsSolved} problems. Keep going!
+                </p>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <Zap className="w-5 h-5 mr-2 text-blue-600" />
-            Quick Start
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Quick Actions
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-blue-200">
-              <div
-                className="p-6 text-center"
-                onClick={() => (window.location.href = "/student/interviews")}
-              >
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <Target className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Start Interview
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Practice with realistic interview scenarios and improve your skills
-                </p>
-                <Button className="w-full group-hover:bg-blue-600 transition-colors">
-                  <Play className="w-4 h-4 mr-2" />
-                  Begin Interview
-                </Button>
-              </div>
-            </Card>
-
-            <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-purple-200">
-              <div
-                className="p-6 text-center"
-                onClick={() => (window.location.href = "/student/exams")}
-              >
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <FileText className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  Take Exam
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Test your knowledge with comprehensive practice exams
-                </p>
-                <Button className="w-full group-hover:bg-purple-600 transition-colors">
-                  <Bookmark className="w-4 h-4 mr-2" />
-                  Start Exam
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Main Navigation Grid */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <Award className="w-5 h-5 mr-2 text-blue-600" />
-            All Features
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredItems.map((item) => (
               <Card
-                key={index}
-                className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border-2 border-transparent hover:border-gray-200"
+                key={item.title}
+                className="p-6 hover:shadow-lg transition-shadow cursor-pointer group"
                 onClick={() => (window.location.href = item.href)}
               >
-                <div className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div
-                      className={`p-3 rounded-xl ${item.color} text-white group-hover:scale-110 transition-transform`}
-                    >
-                      <item.icon className="w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-4">
-                        {item.description}
-                      </p>
-                      <div className="flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
-                        <span>Explore</span>
-                        <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
+                <div className="flex items-center space-x-4">
+                  <div
+                    className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center`}
+                  >
+                    <item.icon className="w-6 h-6 text-white" />
                   </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h4>
+                    <p className="text-sm text-gray-600">{item.description}</p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
                 </div>
               </Card>
             ))}
@@ -520,133 +389,53 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Activity */}
-        {!isSuperAdmin && userStats.recentActivity.length > 0 && (
+        {userStats.recentActivity.length > 0 && (
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-              <Activity className="w-5 h-5 mr-2 text-blue-600" />
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Recent Activity
             </h3>
             <Card className="p-6">
               <div className="space-y-4">
-                {userStats.recentActivity.map((activity) => (
+                {userStats.recentActivity.slice(0, 5).map((activity) => (
                   <div
                     key={activity.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    className="flex items-center justify-between py-2"
                   >
-                    <div className="flex items-center space-x-4">
-                      {activity.status === "accepted" ? (
-                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                          <CheckCircle className="w-5 h-5 text-green-600" />
-                        </div>
-                      ) : activity.status === "rejected" ? (
-                        <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                          <XCircle className="w-5 h-5 text-red-600" />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                          <AlertCircle className="w-5 h-5 text-yellow-600" />
-                        </div>
-                      )}
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                        {activity.status === "completed" ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : activity.status === "failed" ? (
+                          <XCircle className="w-4 h-4 text-red-600" />
+                        ) : (
+                          <Clock className="w-4 h-4 text-yellow-600" />
+                        )}
+                      </div>
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-medium text-gray-900">
                           {activity.problemTitle}
                         </p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(activity.createdAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              weekday: "short",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
+                        <p className="text-sm text-gray-600">
+                          Score: {activity.score} •{" "}
+                          {new Date(activity.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p
-                        className={`text-sm font-semibold ${
-                          activity.status === "accepted"
-                            ? "text-green-600"
-                            : activity.status === "rejected"
-                            ? "text-red-600"
-                            : "text-yellow-600"
-                        }`}
-                      >
-                        {activity.status.charAt(0).toUpperCase() +
-                          activity.status.slice(1)}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Score: {activity.score}
-                      </p>
-                    </div>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        activity.status === "completed"
+                          ? "bg-green-100 text-green-800"
+                          : activity.status === "failed"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {activity.status}
+                    </span>
                   </div>
                 ))}
               </div>
             </Card>
-          </div>
-        )}
-
-        {/* Progress Insights */}
-        {!isSuperAdmin && (
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
-              Your Progress
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-lg font-semibold text-gray-900">
-                    Success Rate
-                  </h4>
-                  <div className="text-2xl font-bold text-blue-600">
-                    {userStats.successRate}%
-                  </div>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div
-                    className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500"
-                    style={{ width: `${userStats.successRate}%` }}
-                  ></div>
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  {userStats.problemsSolved} out of {userStats.totalSubmissions}{" "}
-                  problems solved successfully
-                </p>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-lg font-semibold text-gray-900">
-                    Learning Streak
-                  </h4>
-                  <div className="text-2xl font-bold text-green-600">
-                    {userStats.recentActivity.length > 0
-                      ? "🔥 Active"
-                      : "Start Today"}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
-                      Problems this week
-                    </span>
-                    <span className="font-semibold">
-                      {userStats.recentActivity.length}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
-                      Total practice time
-                    </span>
-                    <span className="font-semibold">
-                      ~{Math.round(userStats.totalSubmissions * 15)} min
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            </div>
           </div>
         )}
       </main>
