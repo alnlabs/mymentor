@@ -121,14 +121,14 @@ export async function GET(request: NextRequest) {
               const conceptProblems = Array.isArray(concept.problems)
                 ? concept.problems
                 : [];
-              
+
               const questionsInDB = conceptQuestions.filter((q: any) =>
                 existingQuestions.some((eq) => eq.question === q.question)
               ).length;
               const problemsInDB = conceptProblems.filter((p: any) =>
                 existingProblems.some((ep) => ep.title === p.title)
               ).length;
-              
+
               return sum + questionsInDB + problemsInDB;
             },
             0

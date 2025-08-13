@@ -104,6 +104,19 @@ export default function AIGeneratorPage() {
     { value: "advanced", label: "Advanced", color: "text-red-600" },
   ];
 
+  // Map difficulty levels from seed files to our standard format
+  const mapDifficulty = (difficulty: string): string => {
+    const mapping: { [key: string]: string } = {
+      easy: "beginner",
+      beginner: "beginner",
+      medium: "intermediate", 
+      intermediate: "intermediate",
+      hard: "advanced",
+      advanced: "advanced",
+    };
+    return mapping[difficulty?.toLowerCase()] || "intermediate";
+  };
+
   // Calculate language stats from seed data
   const languageStats = useMemo(() => {
     const stats: { [key: string]: LanguageStats } = {};
@@ -124,41 +137,40 @@ export default function AIGeneratorPage() {
 
         // Count MCQ questions by difficulty
         conceptQuestions.forEach((q: any) => {
-          if (
-            q.difficulty &&
-            difficultyCounts[q.difficulty as keyof typeof difficultyCounts] !==
-              undefined
-          ) {
-            difficultyCounts[q.difficulty as keyof typeof difficultyCounts]++;
+          if (q.difficulty) {
+            const mappedDifficulty = mapDifficulty(q.difficulty);
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
+            }
           }
         });
 
         // Count problems by difficulty
         conceptProblems.forEach((p: any) => {
-          if (
-            p.difficulty &&
-            difficultyCounts[p.difficulty as keyof typeof difficultyCounts] !==
-              undefined
-          ) {
-            difficultyCounts[p.difficulty as keyof typeof difficultyCounts]++;
+          if (p.difficulty) {
+            const mappedDifficulty = mapDifficulty(p.difficulty);
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
+            }
           }
         });
 
         // If questions don't have individual difficulty, use concept difficulty
-        const questionsWithoutDifficulty = conceptQuestions.filter((q: any) => !q.difficulty).length;
-        const problemsWithoutDifficulty = conceptProblems.filter((p: any) => !p.difficulty).length;
-        
+        const questionsWithoutDifficulty = conceptQuestions.filter(
+          (q: any) => !q.difficulty
+        ).length;
+        const problemsWithoutDifficulty = conceptProblems.filter(
+          (p: any) => !p.difficulty
+        ).length;
+
         if (questionsWithoutDifficulty > 0 || problemsWithoutDifficulty > 0) {
-          const totalWithoutDifficulty = questionsWithoutDifficulty + problemsWithoutDifficulty;
-          if (
-            concept.difficulty &&
-            difficultyCounts[
-              concept.difficulty as keyof typeof difficultyCounts
-            ] !== undefined
-          ) {
-            difficultyCounts[
-              concept.difficulty as keyof typeof difficultyCounts
-            ] += totalWithoutDifficulty;
+          const totalWithoutDifficulty =
+            questionsWithoutDifficulty + problemsWithoutDifficulty;
+          if (concept.difficulty) {
+            const mappedDifficulty = mapDifficulty(concept.difficulty);
+            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
+              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] += totalWithoutDifficulty;
+            }
           }
         }
       });
@@ -174,8 +186,8 @@ export default function AIGeneratorPage() {
           questionCount: c.questionCount,
           questions: c.questions?.length || 0,
           problems: c.problems?.length || 0,
-          difficulty: c.difficulty
-        }))
+          difficulty: c.difficulty,
+        })),
       });
 
       stats[seed.language] = {
