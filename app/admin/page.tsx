@@ -82,7 +82,12 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
-  const { user, loading: authLoading, isAdmin, isSuperAdmin } = useAuthContext();
+  const {
+    user,
+    loading: authLoading,
+    isAdmin,
+    isSuperAdmin,
+  } = useAuthContext();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -94,7 +99,9 @@ export default function AdminDashboard() {
   // Redirect non-admin users
   React.useEffect(() => {
     if (!authLoading && (!user || (!isAdmin && !isSuperAdmin))) {
-      console.log("Admin Dashboard: User not authorized, redirecting to homepage");
+      console.log(
+        "Admin Dashboard: User not authorized, redirecting to homepage"
+      );
       window.location.href = "/";
     }
   }, [user, isAdmin, isSuperAdmin, authLoading]);
@@ -178,7 +185,7 @@ export default function AdminDashboard() {
     );
   }
 
-    return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Dashboard Header */}
       <div className="bg-white shadow-sm border-b">
@@ -216,8 +223,6 @@ export default function AdminDashboard() {
                   Templates & Sessions
                 </span>
               </Button>
-
-
 
               <Button
                 onClick={() => (window.location.href = "/admin/problems")}
@@ -458,19 +463,7 @@ export default function AdminDashboard() {
                 <ArrowRight className="w-4 h-4 ml-auto" />
               </Button>
 
-              <Button
-                onClick={() => (window.location.href = "/admin/upload")}
-                className="w-full justify-start h-12 text-left"
-              >
-                <Upload className="w-5 h-5 mr-3" />
-                <div>
-                  <div className="font-medium">Upload New Content</div>
-                  <div className="text-sm text-gray-500">
-                    Add problems, MCQs, or interview templates
-                  </div>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto" />
-              </Button>
+
 
               <Button
                 variant="outline"

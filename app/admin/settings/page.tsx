@@ -149,8 +149,12 @@ function SettingsPageContent() {
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Settings</h2>
-          <p className="text-white opacity-90">Manage your application settings and configurations</p>
+          <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+            Settings
+          </h2>
+          <p className="text-white opacity-90">
+            Manage your application settings and configurations
+          </p>
         </div>
 
         {/* Message Display */}

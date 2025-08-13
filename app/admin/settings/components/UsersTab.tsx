@@ -11,7 +11,7 @@ interface UsersTabProps {
 
 export default function UsersTab({ context }: UsersTabProps) {
   const { getSettingValue, updateSettings, setMessage, categories } = context;
-  
+
   // Category form states
   const [newCategory, setNewCategory] = useState({
     name: "",
@@ -133,7 +133,10 @@ export default function UsersTab({ context }: UsersTabProps) {
               </label>
               <select
                 name="require_email_verification"
-                defaultValue={getSettingValue("require_email_verification", "true")}
+                defaultValue={getSettingValue(
+                  "require_email_verification",
+                  "true"
+                )}
                 className="w-full border border-gray-300 rounded-md px-3 py-2"
               >
                 <option value="true">Required</option>
@@ -184,7 +187,7 @@ export default function UsersTab({ context }: UsersTabProps) {
         <h3 className="text-xl font-semibold mb-6 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
           🏷️ Category Management
         </h3>
-        
+
         {/* Create New Category */}
         <form onSubmit={handleCreateCategory} className="mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -255,7 +258,9 @@ export default function UsersTab({ context }: UsersTabProps) {
                   🗑️
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mb-2">{category.description}</p>
+              <p className="text-sm text-gray-600 mb-2">
+                {category.description}
+              </p>
               <div className="flex items-center gap-2">
                 <span
                   className="w-4 h-4 rounded"

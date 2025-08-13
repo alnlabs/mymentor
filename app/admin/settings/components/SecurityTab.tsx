@@ -11,7 +11,7 @@ interface SecurityTabProps {
 
 export default function SecurityTab({ context }: SecurityTabProps) {
   const { getSettingValue, updateSettings, setMessage } = context;
-  
+
   // Form states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newUsername, setNewUsername] = useState("");
