@@ -1,0 +1,324 @@
+{
+  "language": "Java",
+  "category": "Java",
+  "concepts": [
+    {
+      "name": "Arrays & Strings",
+      "difficulty": "beginner",
+      "problems": [
+        {
+          "id": "java_array_001",
+          "title": "Find Maximum Element in Array",
+          "description": "Write a Java method that finds and returns the maximum element in an integer array.\n\nInput: An integer array\nOutput: The maximum value in the array\n\nExample:\nInput: [3, 7, 2, 9, 1, 5]\nOutput: 9\n\nNote: Handle edge cases like empty arrays or arrays with negative numbers.",
+          "testCases": [
+            {
+              "input": "[3, 7, 2, 9, 1, 5]",
+              "output": "9",
+              "description": "Basic test with positive numbers"
+            },
+            {
+              "input": "[-5, -2, -10, -1]",
+              "output": "-1",
+              "description": "Test with negative numbers"
+            },
+            {
+              "input": "[42]",
+              "output": "42",
+              "description": "Test with single element"
+            },
+            {
+              "input": "[]",
+              "output": "Integer.MIN_VALUE",
+              "description": "Test with empty array"
+            }
+          ],
+          "solution": "public class MaxElement {\n    public static int findMax(int[] arr) {\n        if (arr == null || arr.length == 0) {\n            return Integer.MIN_VALUE;\n        }\n        \n        int max = arr[0];\n        for (int i = 1; i < arr.length; i++) {\n            if (arr[i] > max) {\n                max = arr[i];\n            }\n        }\n        return max;\n    }\n}",
+          "hints": [
+            "Start by checking if the array is null or empty",
+            "Initialize max with the first element",
+            "Iterate through the array and update max if you find a larger element"
+          ],
+          "tags": [
+            "arrays",
+            "loops",
+            "comparison"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_array_002",
+          "title": "Reverse String",
+          "description": "Write a Java method that reverses a given string without using any built-in reverse methods.\n\nInput: A string\nOutput: The reversed string\n\nExample:\nInput: \"hello\"\nOutput: \"olleh\"\n\nNote: Handle edge cases like empty strings or single characters.",
+          "testCases": [
+            {
+              "input": "\"hello\"",
+              "output": "\"olleh\"",
+              "description": "Basic string reversal"
+            },
+            {
+              "input": "\"racecar\"",
+              "output": "\"racecar\"",
+              "description": "Palindrome string"
+            },
+            {
+              "input": "\"a\"",
+              "output": "\"a\"",
+              "description": "Single character"
+            },
+            {
+              "input": "\"\"",
+              "output": "\"\"",
+              "description": "Empty string"
+            }
+          ],
+          "solution": "public class StringReverser {\n    public static String reverse(String str) {\n        if (str == null || str.length() <= 1) {\n            return str;\n        }\n        \n        char[] chars = str.toCharArray();\n        int left = 0;\n        int right = chars.length - 1;\n        \n        while (left < right) {\n            char temp = chars[left];\n            chars[left] = chars[right];\n            chars[right] = temp;\n            left++;\n            right--;\n        }\n        \n        return new String(chars);\n    }\n}",
+          "hints": [
+            "Convert string to character array",
+            "Use two pointers (left and right)",
+            "Swap characters and move pointers inward"
+          ],
+          "tags": [
+            "strings",
+            "two-pointers",
+            "arrays"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    {
+      "name": "Data Structures",
+      "difficulty": "intermediate",
+      "problems": [
+        {
+          "id": "java_ds_001",
+          "title": "Implement Stack using Array",
+          "description": "Implement a Stack data structure using an array with the following operations:\n- push(int x): Add element to top of stack\n- pop(): Remove and return top element\n- peek(): Return top element without removing\n- isEmpty(): Check if stack is empty\n- size(): Return number of elements\n\nHandle edge cases like stack overflow and underflow.",
+          "testCases": [
+            {
+              "input": "push(1), push(2), push(3), pop(), peek()",
+              "output": "pop() returns 3, peek() returns 2",
+              "description": "Basic stack operations"
+            },
+            {
+              "input": "isEmpty(), push(5), isEmpty()",
+              "output": "true, false",
+              "description": "Check empty state"
+            },
+            {
+              "input": "pop() on empty stack",
+              "output": "Exception or -1",
+              "description": "Stack underflow"
+            }
+          ],
+          "solution": "public class Stack {\n    private int[] arr;\n    private int top;\n    private int capacity;\n    \n    public Stack(int size) {\n        arr = new int[size];\n        capacity = size;\n        top = -1;\n    }\n    \n    public void push(int x) {\n        if (isFull()) {\n            throw new StackOverflowError(\"Stack is full\");\n        }\n        arr[++top] = x;\n    }\n    \n    public int pop() {\n        if (isEmpty()) {\n            throw new IllegalStateException(\"Stack is empty\");\n        }\n        return arr[top--];\n    }\n    \n    public int peek() {\n        if (isEmpty()) {\n            throw new IllegalStateException(\"Stack is empty\");\n        }\n        return arr[top];\n    }\n    \n    public boolean isEmpty() {\n        return top == -1;\n    }\n    \n    public boolean isFull() {\n        return top == capacity - 1;\n    }\n    \n    public int size() {\n        return top + 1;\n    }\n}",
+          "hints": [
+            "Use an array to store elements",
+            "Keep track of the top index",
+            "Check for overflow/underflow conditions"
+          ],
+          "tags": [
+            "stack",
+            "arrays",
+            "data-structures"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_ds_002",
+          "title": "Find Middle Element of Linked List",
+          "description": "Write a method to find the middle element of a singly linked list in one pass.\n\nIf the list has an even number of nodes, return the second middle element.\n\nExample:\nInput: 1 -> 2 -> 3 -> 4 -> 5\nOutput: 3\n\nInput: 1 -> 2 -> 3 -> 4\nOutput: 3 (second middle element)",
+          "testCases": [
+            {
+              "input": "1->2->3->4->5",
+              "output": "3",
+              "description": "Odd number of nodes"
+            },
+            {
+              "input": "1->2->3->4",
+              "output": "3",
+              "description": "Even number of nodes"
+            },
+            {
+              "input": "1",
+              "output": "1",
+              "description": "Single node"
+            },
+            {
+              "input": "null",
+              "output": "null",
+              "description": "Empty list"
+            }
+          ],
+          "solution": "public class ListNode {\n    int val;\n    ListNode next;\n    ListNode(int val) { this.val = val; }\n}\n\npublic class MiddleElement {\n    public static ListNode findMiddle(ListNode head) {\n        if (head == null || head.next == null) {\n            return head;\n        }\n        \n        ListNode slow = head;\n        ListNode fast = head;\n        \n        while (fast != null && fast.next != null) {\n            slow = slow.next;\n            fast = fast.next.next;\n        }\n        \n        return slow;\n    }\n}",
+          "hints": [
+            "Use two pointers: slow and fast",
+            "Move slow pointer by 1, fast pointer by 2",
+            "When fast reaches end, slow will be at middle"
+          ],
+          "tags": [
+            "linked-list",
+            "two-pointers",
+            "data-structures"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    },
+    {
+      "name": "Algorithms",
+      "difficulty": "intermediate",
+      "problems": [
+        {
+          "id": "java_algo_001",
+          "title": "Binary Search",
+          "description": "Implement binary search to find a target element in a sorted array.\n\nReturn the index of the target if found, otherwise return -1.\n\nExample:\nInput: arr = [1, 3, 5, 7, 9, 11], target = 7\nOutput: 3\n\nNote: The array must be sorted in ascending order.",
+          "testCases": [
+            {
+              "input": "[1, 3, 5, 7, 9, 11], target = 7",
+              "output": "3",
+              "description": "Target found in middle"
+            },
+            {
+              "input": "[1, 3, 5, 7, 9, 11], target = 1",
+              "output": "0",
+              "description": "Target found at start"
+            },
+            {
+              "input": "[1, 3, 5, 7, 9, 11], target = 11",
+              "output": "5",
+              "description": "Target found at end"
+            },
+            {
+              "input": "[1, 3, 5, 7, 9, 11], target = 6",
+              "output": "-1",
+              "description": "Target not found"
+            }
+          ],
+          "solution": "public class BinarySearch {\n    public static int binarySearch(int[] arr, int target) {\n        int left = 0;\n        int right = arr.length - 1;\n        \n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            \n            if (arr[mid] == target) {\n                return mid;\n            } else if (arr[mid] < target) {\n                left = mid + 1;\n            } else {\n                right = mid - 1;\n            }\n        }\n        \n        return -1;\n    }\n}",
+          "hints": [
+            "Use two pointers: left and right",
+            "Calculate middle index carefully to avoid overflow",
+            "Update left or right based on comparison with target"
+          ],
+          "tags": [
+            "binary-search",
+            "algorithms",
+            "arrays"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_algo_002",
+          "title": "Two Sum",
+          "description": "Given an array of integers and a target sum, find two numbers in the array that add up to the target.\n\nReturn the indices of the two numbers. You may assume that each input has exactly one solution.\n\nExample:\nInput: nums = [2, 7, 11, 15], target = 9\nOutput: [0, 1] (because nums[0] + nums[1] = 2 + 7 = 9)",
+          "testCases": [
+            {
+              "input": "[2, 7, 11, 15], target = 9",
+              "output": "[0, 1]",
+              "description": "Basic two sum"
+            },
+            {
+              "input": "[3, 2, 4], target = 6",
+              "output": "[1, 2]",
+              "description": "Target in middle"
+            },
+            {
+              "input": "[3, 3], target = 6",
+              "output": "[0, 1]",
+              "description": "Same numbers"
+            }
+          ],
+          "solution": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class TwoSum {\n    public static int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> map = new HashMap<>();\n        \n        for (int i = 0; i < nums.length; i++) {\n            int complement = target - nums[i];\n            \n            if (map.containsKey(complement)) {\n                return new int[]{map.get(complement), i};\n            }\n            \n            map.put(nums[i], i);\n        }\n        \n        return new int[]{-1, -1}; // No solution found\n    }\n}",
+          "hints": [
+            "Use a HashMap to store numbers and their indices",
+            "For each number, check if its complement exists in the map",
+            "Time complexity: O(n), Space complexity: O(n)"
+          ],
+          "tags": [
+            "hashmap",
+            "arrays",
+            "algorithms"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    },
+    {
+      "name": "Object-Oriented Programming",
+      "difficulty": "intermediate",
+      "problems": [
+        {
+          "id": "java_oop_001",
+          "title": "Design a Bank Account Class",
+          "description": "Design a BankAccount class with the following features:\n\n- Constructor to initialize account with account number and initial balance\n- deposit(double amount): Add money to account\n- withdraw(double amount): Remove money from account (check for sufficient funds)\n- getBalance(): Return current balance\n- getAccountNumber(): Return account number\n- transfer(BankAccount other, double amount): Transfer money to another account\n\nHandle edge cases like negative amounts, insufficient funds, and null accounts.",
+          "testCases": [
+            {
+              "input": "Create account with $1000, deposit $500, withdraw $200",
+              "output": "Balance: $1300",
+              "description": "Basic operations"
+            },
+            {
+              "input": "Withdraw more than balance",
+              "output": "Exception or false",
+              "description": "Insufficient funds"
+            },
+            {
+              "input": "Transfer $300 to another account",
+              "output": "Both accounts updated correctly",
+              "description": "Transfer operation"
+            }
+          ],
+          "solution": "public class BankAccount {\n    private String accountNumber;\n    private double balance;\n    \n    public BankAccount(String accountNumber, double initialBalance) {\n        this.accountNumber = accountNumber;\n        this.balance = initialBalance;\n    }\n    \n    public void deposit(double amount) {\n        if (amount <= 0) {\n            throw new IllegalArgumentException(\"Deposit amount must be positive\");\n        }\n        balance += amount;\n    }\n    \n    public boolean withdraw(double amount) {\n        if (amount <= 0) {\n            throw new IllegalArgumentException(\"Withdrawal amount must be positive\");\n        }\n        if (amount > balance) {\n            return false; // Insufficient funds\n        }\n        balance -= amount;\n        return true;\n    }\n    \n    public double getBalance() {\n        return balance;\n    }\n    \n    public String getAccountNumber() {\n        return accountNumber;\n    }\n    \n    public boolean transfer(BankAccount other, double amount) {\n        if (other == null) {\n            throw new IllegalArgumentException(\"Target account cannot be null\");\n        }\n        if (withdraw(amount)) {\n            other.deposit(amount);\n            return true;\n        }\n        return false;\n    }\n}",
+          "hints": [
+            "Use private fields for encapsulation",
+            "Validate input parameters",
+            "Check for sufficient funds before withdrawal"
+          ],
+          "tags": [
+            "oop",
+            "classes",
+            "encapsulation",
+            "validation"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    }
+  ]
+}

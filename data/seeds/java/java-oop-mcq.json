@@ -1,0 +1,956 @@
+{
+  "language": "Java",
+  "category": "Java",
+  "version": "oop",
+  "concepts": [
+    {
+      "name": "Classes & Objects",
+      "difficulty": "beginner",
+      "questions": [
+        {
+          "id": "java_oop_001",
+          "question": "What is the difference between method overloading and method overriding?",
+          "options": [
+            "Overloading is in same class, overriding is in different classes",
+            "Overriding is in same class, overloading is in different classes",
+            "Both are the same concept",
+            "Overloading is for constructors only"
+          ],
+          "correctAnswer": "Overloading is in same class, overriding is in different classes",
+          "explanation": "Method overloading occurs within the same class with different parameters, while overriding occurs in a subclass with the same signature as the parent class.",
+          "tags": [
+            "oop",
+            "overloading",
+            "overriding",
+            "polymorphism"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_002",
+          "question": "Which access modifier provides the most restrictive access?",
+          "options": [
+            "public",
+            "protected",
+            "default (package-private)",
+            "private"
+          ],
+          "correctAnswer": "private",
+          "explanation": "Private provides the most restrictive access - only accessible within the same class. The order from most to least restrictive is: private, default, protected, public.",
+          "tags": [
+            "access-modifiers",
+            "encapsulation",
+            "visibility"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Facebook"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_003",
+          "question": "What is the purpose of the 'super' keyword in Java?",
+          "options": [
+            "To call the parent class constructor or methods",
+            "To create a new object",
+            "To define a static method",
+            "To declare an interface"
+          ],
+          "correctAnswer": "To call the parent class constructor or methods",
+          "explanation": "The 'super' keyword is used to call the parent class constructor or access parent class methods and variables from a subclass.",
+          "tags": [
+            "inheritance",
+            "super",
+            "parent-class"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "LinkedIn"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_004",
+          "question": "What is a constructor in Java?",
+          "options": [
+            "A special method with the same name as the class",
+            "A method that returns a value",
+            "A static method",
+            "A private method"
+          ],
+          "correctAnswer": "A special method with the same name as the class",
+          "explanation": "A constructor is a special method that has the same name as the class and is used to initialize objects.",
+          "tags": [
+            "constructors",
+            "classes",
+            "objects"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_005",
+          "question": "Can a constructor be private?",
+          "options": [
+            "Yes",
+            "No",
+            "Only in abstract classes",
+            "Only in interfaces"
+          ],
+          "correctAnswer": "Yes",
+          "explanation": "Yes, a constructor can be private. This is often used in singleton pattern to prevent direct instantiation.",
+          "tags": [
+            "constructors",
+            "private",
+            "singleton"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Netflix"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_006",
+          "question": "What is the default constructor?",
+          "options": [
+            "A constructor with no parameters",
+            "A constructor with default values",
+            "A constructor that Java provides automatically",
+            "A constructor that returns void"
+          ],
+          "correctAnswer": "A constructor that Java provides automatically",
+          "explanation": "If no constructor is defined in a class, Java automatically provides a default constructor with no parameters.",
+          "tags": [
+            "constructors",
+            "default",
+            "automatic"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Facebook"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_007",
+          "question": "What is the 'this' keyword used for?",
+          "options": [
+            "To refer to the current object",
+            "To create a new object",
+            "To call static methods",
+            "To declare variables"
+          ],
+          "correctAnswer": "To refer to the current object",
+          "explanation": "The 'this' keyword refers to the current object instance. It's used to distinguish between instance variables and parameters.",
+          "tags": [
+            "this",
+            "objects",
+            "instance"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "LinkedIn"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_008",
+          "question": "What is method overloading?",
+          "options": [
+            "Having multiple methods with the same name but different parameters",
+            "Having multiple methods with different names",
+            "Having methods in different classes",
+            "Having static and non-static methods"
+          ],
+          "correctAnswer": "Having multiple methods with the same name but different parameters",
+          "explanation": "Method overloading allows you to define multiple methods with the same name but different parameter lists in the same class.",
+          "tags": [
+            "overloading",
+            "methods",
+            "polymorphism"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_009",
+          "question": "What is the difference between instance variables and local variables?",
+          "options": [
+            "Instance variables are declared inside methods, local variables are declared in class",
+            "Instance variables are declared in class, local variables are declared inside methods",
+            "There is no difference",
+            "Instance variables are static, local variables are not"
+          ],
+          "correctAnswer": "Instance variables are declared in class, local variables are declared inside methods",
+          "explanation": "Instance variables are declared in the class and belong to each object, while local variables are declared inside methods and are only accessible within that method.",
+          "tags": [
+            "variables",
+            "instance",
+            "local",
+            "scope"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Netflix"
+          ],
+          "difficulty": "beginner"
+        },
+        {
+          "id": "java_oop_010",
+          "question": "What is a static method?",
+          "options": [
+            "A method that belongs to the class, not to instances",
+            "A method that cannot be overridden",
+            "A method that is always public",
+            "A method that returns void"
+          ],
+          "correctAnswer": "A method that belongs to the class, not to instances",
+          "explanation": "A static method belongs to the class itself, not to any specific instance. It can be called without creating an object.",
+          "tags": [
+            "static",
+            "methods",
+            "class"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Facebook"
+          ],
+          "difficulty": "beginner"
+        }
+      ]
+    },
+    {
+      "name": "Inheritance",
+      "difficulty": "intermediate",
+      "questions": [
+        {
+          "id": "java_inheritance_001",
+          "question": "What is inheritance in Java?",
+          "options": [
+            "A mechanism that allows a class to inherit properties from another class",
+            "A way to create multiple objects",
+            "A method to access private members",
+            "A way to declare constants"
+          ],
+          "correctAnswer": "A mechanism that allows a class to inherit properties from another class",
+          "explanation": "Inheritance is a mechanism that allows a class to inherit properties and methods from another class, promoting code reuse.",
+          "tags": [
+            "inheritance",
+            "code-reuse",
+            "properties"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_002",
+          "question": "What keyword is used for inheritance in Java?",
+          "options": [
+            "extends",
+            "implements",
+            "inherits",
+            "super"
+          ],
+          "correctAnswer": "extends",
+          "explanation": "The 'extends' keyword is used to create a subclass that inherits from a superclass.",
+          "tags": [
+            "inheritance",
+            "extends",
+            "subclass"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_003",
+          "question": "Can a class inherit from multiple classes in Java?",
+          "options": [
+            "Yes",
+            "No",
+            "Only abstract classes",
+            "Only interfaces"
+          ],
+          "correctAnswer": "No",
+          "explanation": "Java supports single inheritance for classes. A class can only extend one superclass, but can implement multiple interfaces.",
+          "tags": [
+            "inheritance",
+            "multiple",
+            "single"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_004",
+          "question": "What is method overriding?",
+          "options": [
+            "Providing a new implementation of a method in a subclass",
+            "Creating multiple methods with the same name",
+            "Calling a method from parent class",
+            "Declaring a method as final"
+          ],
+          "correctAnswer": "Providing a new implementation of a method in a subclass",
+          "explanation": "Method overriding occurs when a subclass provides a specific implementation of a method that is already defined in its parent class.",
+          "tags": [
+            "overriding",
+            "subclass",
+            "implementation"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_005",
+          "question": "What is the difference between super() and this()?",
+          "options": [
+            "super() calls parent constructor, this() calls current class constructor",
+            "this() calls parent constructor, super() calls current class constructor",
+            "Both call parent constructor",
+            "Both call current class constructor"
+          ],
+          "correctAnswer": "super() calls parent constructor, this() calls current class constructor",
+          "explanation": "super() is used to call the parent class constructor, while this() is used to call another constructor in the same class.",
+          "tags": [
+            "constructors",
+            "super",
+            "this"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_006",
+          "question": "What is the Object class in Java?",
+          "options": [
+            "The root class of all classes",
+            "A class for creating objects",
+            "An interface",
+            "A utility class"
+          ],
+          "correctAnswer": "The root class of all classes",
+          "explanation": "Object is the root class of the Java class hierarchy. Every class in Java inherits from Object either directly or indirectly.",
+          "tags": [
+            "object",
+            "root",
+            "hierarchy"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_007",
+          "question": "What is the final keyword used for in inheritance?",
+          "options": [
+            "To prevent a class from being inherited",
+            "To make a method static",
+            "To declare constants",
+            "To create abstract classes"
+          ],
+          "correctAnswer": "To prevent a class from being inherited",
+          "explanation": "When a class is declared as final, it cannot be inherited by any other class.",
+          "tags": [
+            "final",
+            "inheritance",
+            "prevention"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_008",
+          "question": "What is the instanceof operator used for?",
+          "options": [
+            "To check if an object is an instance of a specific class",
+            "To create new instances",
+            "To call static methods",
+            "To declare variables"
+          ],
+          "correctAnswer": "To check if an object is an instance of a specific class",
+          "explanation": "The instanceof operator is used to test whether an object is an instance of a specified class or interface.",
+          "tags": [
+            "instanceof",
+            "type-checking",
+            "objects"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_009",
+          "question": "What is the difference between composition and inheritance?",
+          "options": [
+            "Composition uses 'has-a' relationship, inheritance uses 'is-a' relationship",
+            "Inheritance uses 'has-a' relationship, composition uses 'is-a' relationship",
+            "Both use 'is-a' relationship",
+            "Both use 'has-a' relationship"
+          ],
+          "correctAnswer": "Composition uses 'has-a' relationship, inheritance uses 'is-a' relationship",
+          "explanation": "Composition represents a 'has-a' relationship (one class contains another), while inheritance represents an 'is-a' relationship (one class is a type of another).",
+          "tags": [
+            "composition",
+            "inheritance",
+            "relationships"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_inheritance_010",
+          "question": "What is the protected access modifier used for?",
+          "options": [
+            "To allow access within the same package and subclasses",
+            "To allow access only within the same class",
+            "To allow access from anywhere",
+            "To prevent any access"
+          ],
+          "correctAnswer": "To allow access within the same package and subclasses",
+          "explanation": "Protected members are accessible within the same package and by subclasses, even if they are in different packages.",
+          "tags": [
+            "protected",
+            "access-modifiers",
+            "subclasses"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    },
+    {
+      "name": "Polymorphism",
+      "difficulty": "intermediate",
+      "questions": [
+        {
+          "id": "java_polymorphism_001",
+          "question": "What is polymorphism in Java?",
+          "options": [
+            "The ability of different objects to respond to the same method call in different ways",
+            "The ability to create multiple objects",
+            "The ability to inherit from multiple classes",
+            "The ability to declare static methods"
+          ],
+          "correctAnswer": "The ability of different objects to respond to the same method call in different ways",
+          "explanation": "Polymorphism allows objects of different classes to be treated as objects of a common superclass and respond to the same method call differently.",
+          "tags": [
+            "polymorphism",
+            "objects",
+            "methods"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_002",
+          "question": "What are the two types of polymorphism in Java?",
+          "options": [
+            "Compile-time and runtime polymorphism",
+            "Static and dynamic polymorphism",
+            "Method overloading and overriding",
+            "All of the above"
+          ],
+          "correctAnswer": "All of the above",
+          "explanation": "Java has two types of polymorphism: compile-time (method overloading) and runtime (method overriding). These are also called static and dynamic polymorphism.",
+          "tags": [
+            "polymorphism",
+            "types",
+            "overloading",
+            "overriding"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_003",
+          "question": "What is compile-time polymorphism?",
+          "options": [
+            "Method overloading",
+            "Method overriding",
+            "Dynamic binding",
+            "Late binding"
+          ],
+          "correctAnswer": "Method overloading",
+          "explanation": "Compile-time polymorphism is achieved through method overloading, where the method to be called is determined at compile time.",
+          "tags": [
+            "polymorphism",
+            "compile-time",
+            "overloading"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_004",
+          "question": "What is runtime polymorphism?",
+          "options": [
+            "Method overriding",
+            "Method overloading",
+            "Static binding",
+            "Early binding"
+          ],
+          "correctAnswer": "Method overriding",
+          "explanation": "Runtime polymorphism is achieved through method overriding, where the method to be called is determined at runtime based on the actual object type.",
+          "tags": [
+            "polymorphism",
+            "runtime",
+            "overriding"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_005",
+          "question": "What is dynamic binding?",
+          "options": [
+            "The process of linking a method call to the method body at runtime",
+            "The process of linking a method call to the method body at compile time",
+            "The process of creating objects",
+            "The process of declaring variables"
+          ],
+          "correctAnswer": "The process of linking a method call to the method body at runtime",
+          "explanation": "Dynamic binding occurs at runtime when the method to be called is determined based on the actual object type, not the reference type.",
+          "tags": [
+            "dynamic-binding",
+            "runtime",
+            "methods"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_006",
+          "question": "What is static binding?",
+          "options": [
+            "The process of linking a method call to the method body at compile time",
+            "The process of linking a method call to the method body at runtime",
+            "The process of creating static methods",
+            "The process of declaring static variables"
+          ],
+          "correctAnswer": "The process of linking a method call to the method body at compile time",
+          "explanation": "Static binding occurs at compile time when the method to be called is determined based on the reference type.",
+          "tags": [
+            "static-binding",
+            "compile-time",
+            "methods"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_007",
+          "question": "What is the difference between upcasting and downcasting?",
+          "options": [
+            "Upcasting is automatic, downcasting requires explicit casting",
+            "Downcasting is automatic, upcasting requires explicit casting",
+            "Both require explicit casting",
+            "Both are automatic"
+          ],
+          "correctAnswer": "Upcasting is automatic, downcasting requires explicit casting",
+          "explanation": "Upcasting (subclass to superclass) is automatic and safe, while downcasting (superclass to subclass) requires explicit casting and can cause ClassCastException.",
+          "tags": [
+            "casting",
+            "upcasting",
+            "downcasting"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_008",
+          "question": "What is method hiding?",
+          "options": [
+            "When a static method in subclass hides a static method in parent class",
+            "When a method is declared private",
+            "When a method is declared final",
+            "When a method is abstract"
+          ],
+          "correctAnswer": "When a static method in subclass hides a static method in parent class",
+          "explanation": "Method hiding occurs when a static method in a subclass has the same signature as a static method in the parent class.",
+          "tags": [
+            "method-hiding",
+            "static",
+            "subclass"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_009",
+          "question": "What is the difference between method overriding and method hiding?",
+          "options": [
+            "Overriding is for instance methods, hiding is for static methods",
+            "Hiding is for instance methods, overriding is for static methods",
+            "Both are for instance methods",
+            "Both are for static methods"
+          ],
+          "correctAnswer": "Overriding is for instance methods, hiding is for static methods",
+          "explanation": "Method overriding applies to instance methods and uses dynamic binding, while method hiding applies to static methods and uses static binding.",
+          "tags": [
+            "overriding",
+            "hiding",
+            "static",
+            "instance"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_polymorphism_010",
+          "question": "What is the @Override annotation used for?",
+          "options": [
+            "To indicate that a method is intended to override a method in the parent class",
+            "To make a method static",
+            "To declare a method as final",
+            "To create an abstract method"
+          ],
+          "correctAnswer": "To indicate that a method is intended to override a method in the parent class",
+          "explanation": "The @Override annotation indicates that a method is intended to override a method in the parent class. It helps catch errors if the method signature doesn't match.",
+          "tags": [
+            "override",
+            "annotation",
+            "method"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    },
+    {
+      "name": "Encapsulation & Abstraction",
+      "difficulty": "intermediate",
+      "questions": [
+        {
+          "id": "java_encapsulation_001",
+          "question": "What is encapsulation in Java?",
+          "options": [
+            "The bundling of data and methods that operate on that data within a single unit",
+            "The process of creating objects",
+            "The process of inheriting from a class",
+            "The process of declaring variables"
+          ],
+          "correctAnswer": "The bundling of data and methods that operate on that data within a single unit",
+          "explanation": "Encapsulation is the bundling of data and methods that operate on that data within a single unit (class), hiding the internal state and requiring all interaction to be performed through an object's methods.",
+          "tags": [
+            "encapsulation",
+            "data-hiding",
+            "bundling"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Microsoft"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_002",
+          "question": "What is data hiding?",
+          "options": [
+            "Making data private and providing public methods to access it",
+            "Making all data public",
+            "Making methods private",
+            "Making classes private"
+          ],
+          "correctAnswer": "Making data private and providing public methods to access it",
+          "explanation": "Data hiding is achieved by making the data members private and providing public methods (getters and setters) to access and modify the data.",
+          "tags": [
+            "data-hiding",
+            "private",
+            "getters",
+            "setters"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_003",
+          "question": "What are getter and setter methods?",
+          "options": [
+            "Methods to read and write private data",
+            "Methods to create objects",
+            "Methods to inherit from classes",
+            "Methods to declare variables"
+          ],
+          "correctAnswer": "Methods to read and write private data",
+          "explanation": "Getter methods (getters) are used to read private data, while setter methods (setters) are used to write/modify private data.",
+          "tags": [
+            "getters",
+            "setters",
+            "access-methods"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_004",
+          "question": "What is abstraction in Java?",
+          "options": [
+            "Hiding complex implementation details and showing only necessary features",
+            "Creating multiple objects",
+            "Inheriting from multiple classes",
+            "Declaring static methods"
+          ],
+          "correctAnswer": "Hiding complex implementation details and showing only necessary features",
+          "explanation": "Abstraction is the process of hiding complex implementation details and showing only the necessary features of an object.",
+          "tags": [
+            "abstraction",
+            "implementation",
+            "features"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_005",
+          "question": "What is an abstract class?",
+          "options": [
+            "A class that cannot be instantiated and may contain abstract methods",
+            "A class that can only be inherited",
+            "A class with only static methods",
+            "A class with only private methods"
+          ],
+          "correctAnswer": "A class that cannot be instantiated and may contain abstract methods",
+          "explanation": "An abstract class is a class that cannot be instantiated and may contain abstract methods that must be implemented by subclasses.",
+          "tags": [
+            "abstract-class",
+            "instantiation",
+            "abstract-methods"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_006",
+          "question": "What is an abstract method?",
+          "options": [
+            "A method without implementation that must be implemented by subclasses",
+            "A method that cannot be called",
+            "A static method",
+            "A private method"
+          ],
+          "correctAnswer": "A method without implementation that must be implemented by subclasses",
+          "explanation": "An abstract method is a method declared without implementation (no body) that must be implemented by any concrete subclass.",
+          "tags": [
+            "abstract-method",
+            "implementation",
+            "subclass"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Facebook"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_007",
+          "question": "Can an abstract class have constructors?",
+          "options": [
+            "Yes",
+            "No",
+            "Only static constructors",
+            "Only private constructors"
+          ],
+          "correctAnswer": "Yes",
+          "explanation": "Yes, an abstract class can have constructors. They are called when a concrete subclass is instantiated.",
+          "tags": [
+            "abstract-class",
+            "constructors",
+            "instantiation"
+          ],
+          "companies": [
+            "Microsoft",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_008",
+          "question": "What is the difference between abstract class and interface?",
+          "options": [
+            "Abstract class can have implementation, interface cannot",
+            "Interface can have implementation, abstract class cannot",
+            "Both can have implementation",
+            "Neither can have implementation"
+          ],
+          "correctAnswer": "Abstract class can have implementation, interface cannot",
+          "explanation": "An abstract class can have both abstract and concrete methods, while an interface (before Java 8) could only have abstract methods.",
+          "tags": [
+            "abstract-class",
+            "interface",
+            "implementation"
+          ],
+          "companies": [
+            "Oracle",
+            "IBM",
+            "Uber"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_009",
+          "question": "What is the purpose of the final keyword in methods?",
+          "options": [
+            "To prevent method overriding",
+            "To make a method static",
+            "To declare constants",
+            "To create abstract methods"
+          ],
+          "correctAnswer": "To prevent method overriding",
+          "explanation": "When a method is declared as final, it cannot be overridden by any subclass.",
+          "tags": [
+            "final",
+            "methods",
+            "overriding"
+          ],
+          "companies": [
+            "Google",
+            "Amazon",
+            "Netflix"
+          ],
+          "difficulty": "intermediate"
+        },
+        {
+          "id": "java_encapsulation_010",
+          "question": "What is the purpose of the final keyword in variables?",
+          "options": [
+            "To make a variable constant (cannot be changed after initialization)",
+            "To make a variable static",
+            "To make a variable private",
+            "To make a variable public"
+          ],
+          "correctAnswer": "To make a variable constant (cannot be changed after initialization)",
+          "explanation": "When a variable is declared as final, it becomes a constant and cannot be changed after it is initialized.",
+          "tags": [
+            "final",
+            "variables",
+            "constants"
+          ],
+          "companies": [
+            "Facebook",
+            "Apple",
+            "LinkedIn"
+          ],
+          "difficulty": "intermediate"
+        }
+      ]
+    }
+  ]
+}

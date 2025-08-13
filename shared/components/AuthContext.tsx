@@ -21,8 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-  // Check for SuperAdmin session
-  const checkSuperAdminSession = () => {
+  // Check for existing sessions
+  const checkExistingSessions = () => {
+    // Check for SuperAdmin session
     const superAdminSession = localStorage.getItem("superAdminUser");
     if (superAdminSession) {
       try {
@@ -39,12 +40,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("superAdminUser");
       }
     }
+
+    // Check for regular user session
+    const userSession = localStorage.getItem("userSession");
+    if (userSession) {
+      try {
+        const userData = JSON.parse(userSession);
+        if (userData.role && userData.role !== "superadmin") {
+          setUser(userData);
+          setIsAdmin(userData.role === "admin");
+          setIsSuperAdmin(false);
+          setLoading(false);
+          return true;
+        }
+      } catch (e) {
+        console.error("Failed to parse userSession from localStorage", e);
+        localStorage.removeItem("userSession");
+      }
+    }
+
     return false;
   };
 
   useEffect(() => {
-    // Check for SuperAdmin session first
-    if (checkSuperAdminSession()) {
+    // Check for existing sessions first
+    if (checkExistingSessions()) {
       return;
     }
 
@@ -114,8 +134,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOutUser = async () => {
     try {
-      // Clear SuperAdmin session
+      // Clear all sessions
       localStorage.removeItem("superAdminUser");
+      localStorage.removeItem("userSession");
 
       // Sign out from Firebase
       await auth.signOut();

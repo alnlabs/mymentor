@@ -1,0 +1,216 @@
+{
+  "category": "javascript",
+  "language": "JavaScript",
+  "concepts": [
+    {
+      "name": "Variables and Hoisting",
+      "difficulty": "easy",
+      "questions": [
+        {
+          "id": "js-var-let-const",
+          "question": "What is the difference between var, let, and const?",
+          "options": "[\"var is function-scoped, let/const are block-scoped\", \"They are all the same\", \"var is block-scoped, let/const are function-scoped\", \"There is no difference\"]",
+          "correctAnswer": 0,
+          "explanation": "var is function-scoped and hoisted, while let and const are block-scoped and not hoisted. const also prevents reassignment.",
+          "tags": "[\"variables\", \"scope\", \"hoisting\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "easy"
+        },
+        {
+          "id": "js-hoisting-basic",
+          "question": "What is hoisting in JavaScript?",
+          "options": "[\"Moving variables to the top of their scope\", \"Moving functions to the bottom\", \"A way to optimize code\", \"A type of variable declaration\"]",
+          "correctAnswer": 0,
+          "explanation": "Hoisting is JavaScript's default behavior of moving declarations to the top of their scope during compilation.",
+          "tags": "[\"hoisting\", \"variables\", \"scope\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "name": "Functions and Closures",
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "js-closure-basic",
+          "question": "What is a closure in JavaScript?",
+          "options": "[\"A function that has access to variables in its outer scope\", \"A way to close browser tabs\", \"A type of loop\", \"A method to end functions\"]",
+          "correctAnswer": 0,
+          "explanation": "A closure is a function that has access to variables in its outer (enclosing) scope even after the outer function has returned.",
+          "tags": "[\"closure\", \"scope\", \"functions\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Amazon\"]",
+          "difficulty": "medium"
+        },
+        {
+          "id": "js-this-keyword",
+          "question": "What does 'this' refer to in a regular function?",
+          "options": "[\"The function itself\", \"The global object (window in browser)\", \"The object that called the function\", \"The parent object\"]",
+          "correctAnswer": 1,
+          "explanation": "In a regular function, 'this' refers to the global object (window in browser, global in Node.js).",
+          "tags": "[\"this\", \"context\", \"functions\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "name": "ES6+ Features",
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "js-arrow-function",
+          "question": "What is the main difference between arrow functions and regular functions?",
+          "options": "[\"Arrow functions are faster\", \"Arrow functions don't have their own 'this' binding\", \"Arrow functions can't be called\", \"Arrow functions are always async\"]",
+          "correctAnswer": 1,
+          "explanation": "Arrow functions don't have their own 'this' binding - they inherit 'this' from the enclosing scope.",
+          "tags": "[\"arrow-functions\", \"es6\", \"this\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Amazon\"]",
+          "difficulty": "medium"
+        },
+        {
+          "id": "js-destructuring",
+          "question": "What is destructuring in JavaScript?",
+          "options": "[\"A way to destroy objects\", \"A syntax that allows you to extract values from objects or arrays\", \"A way to create objects\", \"A type of loop\"]",
+          "correctAnswer": 1,
+          "explanation": "Destructuring is a syntax that allows you to extract values from objects or arrays into distinct variables.",
+          "tags": "[\"destructuring\", \"es6\", \"objects\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "name": "Asynchronous Programming",
+      "difficulty": "hard",
+      "questions": [
+        {
+          "id": "js-promise-basic",
+          "question": "What does Promise.resolve() return?",
+          "options": "[\"A rejected promise\", \"A pending promise\", \"A fulfilled promise with undefined value\", \"A fulfilled promise with the given value\"]",
+          "correctAnswer": 3,
+          "explanation": "Promise.resolve() returns a Promise object that is resolved with the given value.",
+          "tags": "[\"promise\", \"async\", \"es6\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "hard"
+        },
+        {
+          "id": "js-event-loop",
+          "question": "What is the event loop in JavaScript?",
+          "options": "[\"A way to handle loops\", \"A mechanism that allows JavaScript to perform non-blocking operations\", \"A type of for loop\", \"A way to handle events\"]",
+          "correctAnswer": 1,
+          "explanation": "The event loop is a mechanism that allows JavaScript to perform non-blocking operations despite being single-threaded.",
+          "tags": "[\"event-loop\", \"async\", \"performance\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "hard"
+        }
+      ]
+    },
+    {
+      "name": "Variables & Data Types",
+      "difficulty": "beginner",
+      "questions": [
+        {
+          "id": "javascript-variables-&-data-types-1",
+          "question": "What is the difference between var, let, and const in JavaScript? (AI Generated 1)",
+          "options": "[\"var is function-scoped, let and const are block-scoped\",\"All three are block-scoped\",\"var and let are function-scoped, const is block-scoped\",\"There is no difference between them\"]",
+          "correctAnswer": 0,
+          "explanation": "var has function scope, while let and const have block scope. const also prevents reassignment.",
+          "tags": "[\"javascript\",\"variables\",\"scope\",\"es6\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-2",
+          "question": "What is the output of: console.log(typeof null)? (AI Generated 2)",
+          "options": "[\"null\",\"undefined\",\"object\",\"number\"]",
+          "correctAnswer": 2,
+          "explanation": "This is a known JavaScript quirk. typeof null returns 'object' due to a bug in the original JavaScript implementation.",
+          "tags": "[\"javascript\",\"typeof\",\"null\",\"data-types\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-3",
+          "question": "What is the difference between var, let, and const in JavaScript? (AI Generated 3)",
+          "options": "[\"var is function-scoped, let and const are block-scoped\",\"All three are block-scoped\",\"var and let are function-scoped, const is block-scoped\",\"There is no difference between them\"]",
+          "correctAnswer": 0,
+          "explanation": "var has function scope, while let and const have block scope. const also prevents reassignment.",
+          "tags": "[\"javascript\",\"variables\",\"scope\",\"es6\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-4",
+          "question": "What is the output of: console.log(typeof null)? (AI Generated 4)",
+          "options": "[\"null\",\"undefined\",\"object\",\"number\"]",
+          "correctAnswer": 2,
+          "explanation": "This is a known JavaScript quirk. typeof null returns 'object' due to a bug in the original JavaScript implementation.",
+          "tags": "[\"javascript\",\"typeof\",\"null\",\"data-types\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-5",
+          "question": "What is the difference between var, let, and const in JavaScript? (AI Generated 5)",
+          "options": "[\"var is function-scoped, let and const are block-scoped\",\"All three are block-scoped\",\"var and let are function-scoped, const is block-scoped\",\"There is no difference between them\"]",
+          "correctAnswer": 0,
+          "explanation": "var has function scope, while let and const have block scope. const also prevents reassignment.",
+          "tags": "[\"javascript\",\"variables\",\"scope\",\"es6\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-6",
+          "question": "What is the output of: console.log(typeof null)? (AI Generated 6)",
+          "options": "[\"null\",\"undefined\",\"object\",\"number\"]",
+          "correctAnswer": 2,
+          "explanation": "This is a known JavaScript quirk. typeof null returns 'object' due to a bug in the original JavaScript implementation.",
+          "tags": "[\"javascript\",\"typeof\",\"null\",\"data-types\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-7",
+          "question": "What is the difference between var, let, and const in JavaScript? (AI Generated 7)",
+          "options": "[\"var is function-scoped, let and const are block-scoped\",\"All three are block-scoped\",\"var and let are function-scoped, const is block-scoped\",\"There is no difference between them\"]",
+          "correctAnswer": 0,
+          "explanation": "var has function scope, while let and const have block scope. const also prevents reassignment.",
+          "tags": "[\"javascript\",\"variables\",\"scope\",\"es6\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-8",
+          "question": "What is the output of: console.log(typeof null)? (AI Generated 8)",
+          "options": "[\"null\",\"undefined\",\"object\",\"number\"]",
+          "correctAnswer": 2,
+          "explanation": "This is a known JavaScript quirk. typeof null returns 'object' due to a bug in the original JavaScript implementation.",
+          "tags": "[\"javascript\",\"typeof\",\"null\",\"data-types\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-9",
+          "question": "What is the difference between var, let, and const in JavaScript? (AI Generated 9)",
+          "options": "[\"var is function-scoped, let and const are block-scoped\",\"All three are block-scoped\",\"var and let are function-scoped, const is block-scoped\",\"There is no difference between them\"]",
+          "correctAnswer": 0,
+          "explanation": "var has function scope, while let and const have block scope. const also prevents reassignment.",
+          "tags": "[\"javascript\",\"variables\",\"scope\",\"es6\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        },
+        {
+          "id": "javascript-variables-&-data-types-10",
+          "question": "What is the output of: console.log(typeof null)? (AI Generated 10)",
+          "options": "[\"null\",\"undefined\",\"object\",\"number\"]",
+          "correctAnswer": 2,
+          "explanation": "This is a known JavaScript quirk. typeof null returns 'object' due to a bug in the original JavaScript implementation.",
+          "tags": "[\"javascript\",\"typeof\",\"null\",\"data-types\"]",
+          "companies": "[\"Google\",\"Facebook\",\"Netflix\"]",
+          "difficulty": "beginner"
+        }
+      ]
+    }
+  ]
+}

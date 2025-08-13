@@ -67,3 +67,41 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response, { status: 500 });
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { ids } = body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "IDs array is required" },
+        { status: 400 }
+      );
+    }
+
+    // Delete multiple MCQ questions
+    const result = await prisma.mCQQuestion.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+
+    const response: ApiResponse = {
+      success: true,
+      data: { deletedCount: result.count },
+      message: `Successfully deleted ${result.count} MCQ question(s)`,
+    };
+
+    return NextResponse.json(response);
+  } catch (error: any) {
+    console.error("Error deleting MCQ questions:", error);
+    const response: ApiResponse = {
+      success: false,
+      error: "Failed to delete MCQ questions",
+    };
+    return NextResponse.json(response, { status: 500 });
+  }
+}

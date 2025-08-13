@@ -1,0 +1,104 @@
+{
+  "name": "python",
+  "language": "Python",
+  "status": "in_progress",
+  "coverage": 25,
+  "questions": 8,
+  "problems": 0,
+  "concepts": 8,
+  "difficultyDistribution": {
+    "easy": 2,
+    "medium": 4,
+    "hard": 2
+  },
+  "priority": "high",
+  "lastUpdated": "2025-01-13",
+  "files": [
+    {
+      "name": "python-mcq.json",
+      "type": "mcq",
+      "questions": 8,
+      "concepts": 8,
+      "size": "4.8KB"
+    }
+  ],
+  "concepts": [
+    {
+      "name": "Basic Syntax",
+      "difficulty": "beginner",
+      "questions": 2,
+      "coverage": "complete",
+      "topics": ["variables", "data types", "operators", "indentation"]
+    },
+    {
+      "name": "Data Structures",
+      "difficulty": "beginner",
+      "questions": 2,
+      "coverage": "partial",
+      "topics": ["lists", "tuples", "dictionaries", "sets"]
+    },
+    {
+      "name": "Control Flow",
+      "difficulty": "beginner",
+      "questions": 2,
+      "coverage": "partial",
+      "topics": ["if/else", "loops", "list comprehensions"]
+    },
+    {
+      "name": "Functions",
+      "difficulty": "intermediate",
+      "questions": 1,
+      "coverage": "basic",
+      "topics": ["function definition", "parameters", "return values"]
+    },
+    {
+      "name": "File Operations",
+      "difficulty": "intermediate",
+      "questions": 1,
+      "coverage": "basic",
+      "topics": ["file reading", "file writing", "context managers"]
+    }
+  ],
+  "plannedConcepts": [
+    {
+      "name": "Object-Oriented Programming",
+      "priority": "high",
+      "plannedQuestions": 10,
+      "topics": ["classes", "inheritance", "encapsulation", "polymorphism"]
+    },
+    {
+      "name": "Exception Handling",
+      "priority": "medium",
+      "plannedQuestions": 5,
+      "topics": ["try-except", "custom exceptions", "finally blocks"]
+    },
+    {
+      "name": "Modules & Packages",
+      "priority": "medium",
+      "plannedQuestions": 5,
+      "topics": [
+        "import statements",
+        "package structure",
+        "virtual environments"
+      ]
+    },
+    {
+      "name": "Advanced Features",
+      "priority": "high",
+      "plannedQuestions": 8,
+      "topics": ["decorators", "generators", "context managers", "metaclasses"]
+    }
+  ],
+  "qualityMetrics": {
+    "questionQuality": "good",
+    "explanationQuality": "excellent",
+    "difficultyAccuracy": "accurate",
+    "coverageCompleteness": "basic"
+  },
+  "nextActions": [
+    "Add OOP concepts questions",
+    "Create exception handling scenarios",
+    "Add modules and packages questions",
+    "Include advanced Python features"
+  ]
+}

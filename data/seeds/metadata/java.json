@@ -1,0 +1,179 @@
+{
+  "name": "java",
+  "language": "Java",
+  "status": "in_progress",
+  "coverage": 40,
+  "questions": 18,
+  "problems": 7,
+  "concepts": 10,
+  "difficultyDistribution": {
+    "easy": 6,
+    "medium": 9,
+    "hard": 3
+  },
+  "priority": "high",
+  "lastUpdated": "2025-01-13",
+  "files": [
+    {
+      "name": "java-mcq.json",
+      "type": "mcq",
+      "questions": 18,
+      "concepts": 6,
+      "size": "13KB"
+    },
+    {
+      "name": "java-problems.json",
+      "type": "coding",
+      "problems": 7,
+      "concepts": 4,
+      "size": "15KB"
+    }
+  ],
+  "concepts": [
+    {
+      "name": "Basic Syntax & Variables",
+      "difficulty": "beginner",
+      "questions": 3,
+      "coverage": "complete",
+      "topics": [
+        "variable declaration",
+        "data types",
+        "constants",
+        "default values"
+      ]
+    },
+    {
+      "name": "Control Structures",
+      "difficulty": "beginner",
+      "questions": 3,
+      "coverage": "complete",
+      "topics": [
+        "loops",
+        "conditionals",
+        "comparison operators",
+        "break/continue"
+      ]
+    },
+    {
+      "name": "Object-Oriented Programming",
+      "difficulty": "intermediate",
+      "questions": 3,
+      "coverage": "partial",
+      "topics": ["overloading", "overriding", "access modifiers", "inheritance"]
+    },
+    {
+      "name": "Collections Framework",
+      "difficulty": "intermediate",
+      "questions": 3,
+      "coverage": "partial",
+      "topics": ["ArrayList", "HashMap", "TreeMap", "thread safety"]
+    },
+    {
+      "name": "Exception Handling",
+      "difficulty": "intermediate",
+      "questions": 3,
+      "coverage": "partial",
+      "topics": ["checked exceptions", "unchecked exceptions", "finally blocks"]
+    },
+    {
+      "name": "Multithreading",
+      "difficulty": "advanced",
+      "questions": 3,
+      "coverage": "basic",
+      "topics": ["Thread vs Runnable", "synchronization", "deadlocks"]
+    },
+    {
+      "name": "Arrays & Strings",
+      "difficulty": "beginner",
+      "problems": 2,
+      "coverage": "basic",
+      "topics": ["array operations", "string manipulation", "two pointers"]
+    },
+    {
+      "name": "Data Structures",
+      "difficulty": "intermediate",
+      "problems": 2,
+      "coverage": "basic",
+      "topics": ["stack implementation", "linked lists", "two pointers"]
+    },
+    {
+      "name": "Algorithms",
+      "difficulty": "intermediate",
+      "problems": 2,
+      "coverage": "basic",
+      "topics": ["binary search", "two sum", "hashmap usage"]
+    },
+    {
+      "name": "Object-Oriented Design",
+      "difficulty": "intermediate",
+      "problems": 1,
+      "coverage": "basic",
+      "topics": ["class design", "encapsulation", "validation"]
+    }
+  ],
+  "plannedConcepts": [
+    {
+      "name": "Streams API",
+      "priority": "high",
+      "plannedQuestions": 10,
+      "topics": [
+        "stream operations",
+        "collectors",
+        "parallel streams",
+        "functional programming"
+      ]
+    },
+    {
+      "name": "Spring Framework",
+      "priority": "high",
+      "plannedQuestions": 15,
+      "topics": [
+        "dependency injection",
+        "Spring Boot",
+        "REST APIs",
+        "database integration"
+      ]
+    },
+    {
+      "name": "Java 8+ Features",
+      "priority": "medium",
+      "plannedQuestions": 8,
+      "topics": [
+        "lambda expressions",
+        "method references",
+        "optional",
+        "completable future"
+      ]
+    },
+    {
+      "name": "Design Patterns",
+      "priority": "medium",
+      "plannedQuestions": 10,
+      "topics": ["singleton", "factory", "observer", "strategy", "decorator"]
+    },
+    {
+      "name": "Memory Management",
+      "priority": "medium",
+      "plannedQuestions": 5,
+      "topics": [
+        "garbage collection",
+        "memory leaks",
+        "JVM tuning",
+        "heap vs stack"
+      ]
+    }
+  ],
+  "qualityMetrics": {
+    "questionQuality": "excellent",
+    "explanationQuality": "excellent",
+    "difficultyAccuracy": "accurate",
+    "coverageCompleteness": "good"
+  },
+  "nextActions": [
+    "Add Streams API questions",
+    "Create Spring Framework questions",
+    "Add Java 8+ features",
+    "Include design patterns",
+    "Add memory management topics"
+  ]
+}

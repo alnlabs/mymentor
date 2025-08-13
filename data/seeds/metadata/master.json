@@ -1,0 +1,126 @@
+{
+  "lastUpdated": "2025-01-13",
+  "version": "1.0",
+  "totalCategories": 3,
+  "totalQuestions": 34,
+  "totalProblems": 10,
+  "categories": [
+    {
+      "name": "javascript",
+      "language": "JavaScript",
+      "status": "in_progress",
+      "metadataFile": "javascript.json",
+      "priority": "high",
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "name": "python",
+      "language": "Python",
+      "status": "in_progress",
+      "metadataFile": "python.json",
+      "priority": "high",
+      "lastUpdated": "2025-01-13"
+    },
+    {
+      "name": "java",
+      "language": "Java",
+      "status": "in_progress",
+      "metadataFile": "java.json",
+      "priority": "high",
+      "lastUpdated": "2025-01-13"
+    }
+  ],
+  "plannedCategories": [
+    {
+      "name": "react",
+      "language": "JavaScript/TypeScript",
+      "status": "planned",
+      "priority": "high",
+      "plannedConcepts": [
+        "Components and Props",
+        "State and Lifecycle",
+        "Hooks",
+        "Context API",
+        "Performance Optimization",
+        "Testing"
+      ]
+    },
+    {
+      "name": "nodejs",
+      "language": "JavaScript",
+      "status": "planned",
+      "priority": "medium",
+      "plannedConcepts": [
+        "Event Loop",
+        "Streams",
+        "Modules",
+        "Express.js",
+        "Database Integration",
+        "Authentication"
+      ]
+    },
+    {
+      "name": "sql",
+      "language": "SQL",
+      "status": "planned",
+      "priority": "medium",
+      "plannedConcepts": [
+        "Basic Queries",
+        "Joins",
+        "Aggregations",
+        "Indexing",
+        "Transactions",
+        "Performance"
+      ]
+    }
+  ],
+  "statistics": {
+    "byDifficulty": {
+      "easy": 11,
+      "medium": 17,
+      "hard": 6
+    },
+    "byType": {
+      "mcq": 34,
+      "coding": 10
+    },
+    "byStatus": {
+      "completed": 0,
+      "in_progress": 3,
+      "planned": 3
+    }
+  },
+  "roadmap": {
+    "q1_2025": {
+      "status": "in_progress",
+      "goals": [
+        "Complete JavaScript fundamentals",
+        "Add Python data structures",
+        "Create Java basics",
+        "Add React fundamentals"
+      ]
+    },
+    "q2_2025": {
+      "status": "planned",
+      "goals": [
+        "Complete Python advanced features",
+        "Add Node.js backend concepts",
+        "Create SQL database questions",
+        "Add algorithms and data structures"
+      ]
+    }
+  },
+  "qualityMetrics": {
+    "averageDifficulty": "medium",
+    "questionQuality": "good",
+    "coverageCompleteness": "partial",
+    "diversityScore": 7.5
+  },
+  "nextActions": [
+    "Add more JavaScript DOM manipulation questions",
+    "Create Python coding problems",
+    "Add Java advanced concepts (Streams, Spring)",
+    "Add React component questions",
+    "Include more advanced algorithms"
+  ]
+}

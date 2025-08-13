@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  postgres:
+    environment:
+      POSTGRES_DB: interview_platform_test
+      POSTGRES_PASSWORD: test_password_123
+    ports:
+      - "5433:5432"
+
+  redis:
+    command: redis-server --appendonly yes --requirepass test_redis_123
+    ports:
+      - "6380:6379"
+
+  pgadmin:
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@interview-platform.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    profiles: []
+
+  # Test database seeding service
+  seed-test:
+    image: node:18-alpine
+    container_name: interview-platform-seed-test
+    restart: "no"
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql://postgres:test_password_123@postgres:5432/interview_platform_test
+      NODE_ENV: test
+    networks:
+      - interview-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - seed
+    command:
+      [
+        "sh",
+        "-c",
+        "npm install && npx prisma migrate deploy && npm run seed:test",
+      ]
+
+  # Test runner service
+  test-runner:
+    image: node:18-alpine
+    container_name: interview-platform-test-runner
+    restart: "no"
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql://postgres:test_password_123@postgres:5432/interview_platform_test
+      REDIS_URL: redis://:test_redis_123@redis:6379
+      NODE_ENV: test
+    networks:
+      - interview-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    profiles:
+      - test
+    command: ["sh", "-c", "npm install && npm run test"]

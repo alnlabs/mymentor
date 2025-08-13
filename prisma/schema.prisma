@@ -3,13 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id               String          @id @default(cuid())
   email            String          @unique
+  username         String?         @unique
   name             String
   password         String?
   avatar           String?
@@ -28,71 +29,75 @@ model User {
   lastLoginAt      DateTime?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
+  isDeleted        Boolean         @default(false)
+  deletedAt        DateTime?
+  deletedBy        String?
+  examResults      ExamResult[]
+  examSessions     ExamSession[]
+  feedback         Feedback[]
   mockInterviews   MockInterview[]
   submissions      Submission[]
   userProgress     UserProgress[]
-  examResults      ExamResult[]
-  feedback         Feedback[]
 
   @@map("users")
 }
 
 model Problem {
-  id               String         @id @default(cuid())
-  title            String         @unique
-  description      String
-  difficulty       String
-  category         String
-  subject          String?
-  topic            String?
-  tool             String?
-  technologyStack  String?
-  domain           String?
-  skillLevel       String?
-  jobRole          String?
-  companyType      String?
-  interviewType    String?
-  testCases        String
-  solution         String?
-  hints            String?
-  tags             String?
-  companies        String?
-  priority         String?
-  status           String?
-  isActive         Boolean        @default(true)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  submissions      Submission[]
-  userProgress     UserProgress[]
+  id              String         @id @default(cuid())
+  title           String         @unique
+  description     String
+  difficulty      String
+  category        String
+  subject         String?
+  topic           String?
+  tool            String?
+  technologyStack String?
+  domain          String?
+  skillLevel      String?
+  jobRole         String?
+  companyType     String?
+  interviewType   String?
+  testCases       String
+  solution        String?
+  hints           String?
+  tags            String?
+  companies       String?
+  priority        String?
+  status          String?
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  submissions     Submission[]
+  userProgress    UserProgress[]
 
   @@map("problems")
 }
 
 model MCQQuestion {
-  id               String         @id @default(cuid())
-  question         String         @unique
-  options          String
-  correctAnswer    Int
-  explanation      String?
-  category         String
-  subject          String?
-  topic            String?
-  tool             String?
-  technologyStack  String?
-  domain           String?
-  skillLevel       String?
-  jobRole          String?
-  companyType      String?
-  interviewType    String?
-  difficulty       String
-  tags             String?
-  companies        String?
-  priority         String?
-  status           String?
-  isActive         Boolean        @default(true)
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  userProgress     UserProgress[]
+  id              String         @id @default(cuid())
+  question        String         @unique
+  options         String
+  correctAnswer   Int
+  explanation     String?
+  category        String
+  subject         String?
+  topic           String?
+  tool            String?
+  technologyStack String?
+  domain          String?
+  skillLevel      String?
+  jobRole         String?
+  companyType     String?
+  interviewType   String?
+  difficulty      String
+  tags            String?
+  companies       String?
+  priority        String?
+  status          String?
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  userProgress    UserProgress[]
 
   @@map("mcq_questions")
 }
@@ -109,7 +114,7 @@ model Submission {
   memory    Int?
   createdAt DateTime @default(now())
   problem   Problem  @relation(fields: [problemId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("submissions")
 }
@@ -125,9 +130,9 @@ model UserProgress {
   startedAt    DateTime     @default(now())
   completedAt  DateTime?
   updatedAt    DateTime     @updatedAt
-  question     MCQQuestion? @relation(fields: [questionId], references: [id])
   problem      Problem?     @relation(fields: [problemId], references: [id])
-  user         User         @relation(fields: [userId], references: [id])
+  question     MCQQuestion? @relation(fields: [questionId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_progress")
 }
@@ -165,7 +170,7 @@ model MockInterview {
   answers     InterviewAnswer[]
   feedback    InterviewFeedback?
   template    InterviewTemplate  @relation(fields: [templateId], references: [id])
-  user        User               @relation(fields: [userId], references: [id])
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("mock_interviews")
 }
@@ -201,8 +206,8 @@ model InterviewAnswer {
   timeSpent      Int?
   feedback       String?
   createdAt      DateTime          @default(now())
+  interview      MockInterview     @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   question       InterviewQuestion @relation(fields: [questionId], references: [id])
-  interview      MockInterview     @relation(fields: [interviewId], references: [id])
 
   @@map("interview_answers")
 }
@@ -220,88 +225,124 @@ model InterviewFeedback {
   detailedFeedback    String?
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
-  interview           MockInterview @relation(fields: [interviewId], references: [id])
+  interview           MockInterview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
 
   @@map("interview_feedback")
 }
 
 model Exam {
-  id                    String       @id @default(cuid())
-  title                 String       @unique
-  description           String
-  duration              Int          // Duration in minutes
-  difficulty            String       // Easy, Medium, Hard
-  category              String       // Programming, Data Structures, etc.
-  targetRole            String?      // Frontend, Backend, Full Stack, etc.
-  questionTypes         String       // MCQ, Coding, Mixed
-  totalQuestions        Int          @default(0)
-  passingScore          Int          @default(60) // Percentage
-  enableTimedQuestions  Boolean      @default(false) // Enable individual question timers
-  enableOverallTimer    Boolean      @default(true) // Enable overall exam timer
-  defaultQuestionTime   Int          @default(120) // Default time per question in seconds
-  isActive              Boolean      @default(true)
-  isPublic              Boolean      @default(true) // Public or private exam
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
-  examQuestions         ExamQuestion[]
-  examResults           ExamResult[]
+  id                   String         @id @default(cuid())
+  title                String         @unique
+  description          String
+  duration             Int
+  difficulty           String
+  category             String
+  targetRole           String?
+  questionTypes        String
+  totalQuestions       Int            @default(0)
+  passingScore         Int            @default(60)
+  enableTimedQuestions Boolean        @default(false)
+  enableOverallTimer   Boolean        @default(true)
+  defaultQuestionTime  Int            @default(120)
+  isActive             Boolean        @default(true)
+  isPublic             Boolean        @default(true)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  examQuestions        ExamQuestion[]
+  examResults          ExamResult[]
+  examSessions         ExamSession[]
 
   @@map("exams")
 }
 
 model ExamQuestion {
-  id           String   @id @default(cuid())
-  examId       String
-  questionId   String
-  questionType String   // MCQ or Problem
-  order        Int      @default(0)
-  points       Int      @default(10)
-  timeLimit    Int?     // Time limit in seconds for this specific question
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  exam         Exam     @relation(fields: [examId], references: [id])
+  id              String               @id @default(cuid())
+  examId          String
+  questionId      String
+  questionType    String
+  order           Int                  @default(0)
+  points          Int                  @default(10)
+  timeLimit       Int?
+  isActive        Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  questionResults ExamQuestionResult[]
+  exam            Exam                 @relation(fields: [examId], references: [id])
 
   @@map("exam_questions")
 }
 
 model ExamResult {
-  id           String   @id @default(cuid())
-  examId       String
-  userId       String
-  score        Int      @default(0)
-  maxScore     Int      @default(0)
-  percentage   Float    @default(0)
-  passed       Boolean  @default(false)
-  startedAt    DateTime @default(now())
-  completedAt  DateTime?
-  timeSpent    Int?     // Time spent in minutes
-  answers      String?  // JSON string of answers with individual question timing
-  feedback     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  exam         Exam     @relation(fields: [examId], references: [id])
-  user         User     @relation(fields: [userId], references: [id])
+  id          String    @id @default(cuid())
+  examId      String
+  userId      String
+  score       Int       @default(0)
+  maxScore    Int       @default(0)
+  percentage  Float     @default(0)
+  passed      Boolean   @default(false)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  timeSpent   Int?
+  answers     String?
+  feedback    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  exam        Exam      @relation(fields: [examId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("exam_results")
 }
 
+model ExamSession {
+  id          String               @id @default(cuid())
+  examId      String
+  userId      String
+  startTime   DateTime             @default(now())
+  endTime     DateTime?
+  timeSpent   Int                  @default(0)
+  score       Int?
+  status      String               @default("in-progress")
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  examResults ExamQuestionResult[]
+  exam        Exam                 @relation(fields: [examId], references: [id])
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("exam_sessions")
+}
+
+model ExamQuestionResult {
+  id         String       @id @default(cuid())
+  sessionId  String
+  questionId String
+  userAnswer String?
+  isCorrect  Boolean      @default(false)
+  points     Int          @default(0)
+  timeSpent  Int?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  question   ExamQuestion @relation(fields: [questionId], references: [id])
+  session    ExamSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("exam_question_results")
+}
+
 model Feedback {
-  id          String   @id @default(cuid())
-  userId      String   // Always stored for admin reference (secret)
-  isAnonymous Boolean  @default(false) // User's choice to display as anonymous
-  type        String   // general, bug, feature, suggestion, complaint, praise
-  category    String   // platform, content, interface, performance, other
-  subject     String   // Brief subject line
-  message     String   // Detailed feedback message
-  rating      Int?     // Optional rating 1-5
-  status      String   @default("pending") // pending, reviewed, in-progress, resolved, closed
-  priority    String   @default("medium") // low, medium, high, urgent
-  adminNotes  String?  // Internal admin notes
+  id          String    @id @default(cuid())
+  userId      String
+  isAnonymous Boolean   @default(false)
+  type        String
+  category    String
+  subject     String
+  message     String
+  rating      Int?
+  status      String    @default("pending")
+  priority    String    @default("medium")
+  adminNotes  String?
   resolvedAt  DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("feedback")
 }

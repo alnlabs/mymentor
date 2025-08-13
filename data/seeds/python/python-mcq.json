@@ -1,0 +1,110 @@
+{
+  "category": "python",
+  "language": "Python",
+  "concepts": [
+    {
+      "name": "Basic Syntax and Data Types",
+      "difficulty": "easy",
+      "questions": [
+        {
+          "id": "py-variables",
+          "question": "How do you declare a variable in Python?",
+          "options": "[\"var x = 5\", \"let x = 5\", \"x = 5\", \"const x = 5\"]",
+          "correctAnswer": 2,
+          "explanation": "In Python, you simply assign a value to create a variable. No declaration keyword is needed.",
+          "tags": "[\"variables\", \"syntax\", \"basics\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "easy"
+        },
+        {
+          "id": "py-data-types",
+          "question": "Which of the following is NOT a built-in data type in Python?",
+          "options": "[\"list\", \"dictionary\", \"array\", \"tuple\"]",
+          "correctAnswer": 2,
+          "explanation": "Python has lists, dictionaries, and tuples as built-in types, but 'array' is not a built-in type (though there's an array module).",
+          "tags": "[\"data-types\", \"built-in\", \"basics\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "name": "Functions and Scope",
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "py-functions",
+          "question": "What is the correct way to define a function in Python?",
+          "options": "[\"function myFunc():\", \"def myFunc():\", \"func myFunc():\", \"define myFunc():\"]",
+          "correctAnswer": 1,
+          "explanation": "In Python, functions are defined using the 'def' keyword followed by the function name and parameters.",
+          "tags": "[\"functions\", \"syntax\", \"definition\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "medium"
+        },
+        {
+          "id": "py-lambda",
+          "question": "What is a lambda function in Python?",
+          "options": "[\"A function that takes no arguments\", \"An anonymous function\", \"A function that returns lambda\", \"A function with lambda keyword\"]",
+          "correctAnswer": 1,
+          "explanation": "A lambda function is an anonymous function that can have any number of arguments but only one expression.",
+          "tags": "[\"lambda\", \"anonymous\", \"functions\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "name": "Object-Oriented Programming",
+      "difficulty": "medium",
+      "questions": [
+        {
+          "id": "py-classes",
+          "question": "How do you define a class in Python?",
+          "options": "[\"class MyClass:\", \"def class MyClass:\", \"object MyClass:\", \"new class MyClass:\"]",
+          "correctAnswer": 0,
+          "explanation": "Classes in Python are defined using the 'class' keyword followed by the class name and a colon.",
+          "tags": "[\"classes\", \"oop\", \"definition\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "medium"
+        },
+        {
+          "id": "py-inheritance",
+          "question": "What is inheritance in Python?",
+          "options": "[\"A way to create new classes\", \"A mechanism that allows a class to inherit attributes and methods from another class\", \"A way to copy objects\", \"A method to delete classes\"]",
+          "correctAnswer": 1,
+          "explanation": "Inheritance allows a class to inherit attributes and methods from a parent class, promoting code reuse.",
+          "tags": "[\"inheritance\", \"oop\", \"classes\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "name": "Advanced Concepts",
+      "difficulty": "hard",
+      "questions": [
+        {
+          "id": "py-generators",
+          "question": "What is a generator in Python?",
+          "options": "[\"A function that generates random numbers\", \"A function that yields values one at a time\", \"A function that generates classes\", \"A function that generates files\"]",
+          "correctAnswer": 1,
+          "explanation": "A generator is a function that uses the 'yield' keyword to return values one at a time, making it memory efficient.",
+          "tags": "[\"generators\", \"yield\", \"memory\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "hard"
+        },
+        {
+          "id": "py-decorators",
+          "question": "What is a decorator in Python?",
+          "options": "[\"A function that decorates strings\", \"A function that modifies another function\", \"A way to create classes\", \"A type of variable\"]",
+          "correctAnswer": 1,
+          "explanation": "A decorator is a function that takes another function as input and extends its behavior without modifying the original function.",
+          "tags": "[\"decorators\", \"functions\", \"modification\"]",
+          "companies": "[\"Google\", \"Amazon\", \"Microsoft\"]",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ]
+}
