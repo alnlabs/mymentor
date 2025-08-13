@@ -37,9 +37,29 @@ async function generateExamQuestions(examId: string, options: any) {
     const mcqWhere: any = {};
     const problemWhere: any = {};
 
-    if (categories.length > 0) {
-      mcqWhere.category = { in: categories };
-      problemWhere.category = { in: categories };
+    // Map form categories to database categories
+    const categoryMapping: { [key: string]: string[] } = {
+      Programming: [
+        "algorithms",
+        "data-structures",
+        "arrays",
+        "strings",
+        "stacks",
+        "math",
+      ],
+      "Data Structures": ["data-structures", "arrays", "strings", "stacks"],
+      Algorithms: ["algorithms", "arrays", "strings"],
+      "Web Development": ["algorithms", "data-structures"], // Fallback categories
+      Database: ["algorithms", "data-structures"], // Fallback categories
+      "System Design": ["algorithms", "data-structures"], // Fallback categories
+    };
+
+    // Get mapped categories or use original categories
+    const mappedCategories = categoryMapping[categories[0]] || categories;
+
+    if (mappedCategories.length > 0) {
+      mcqWhere.category = { in: mappedCategories };
+      problemWhere.category = { in: mappedCategories };
     }
 
     // Only apply subject filter if subjects are provided and not "General"
@@ -53,10 +73,12 @@ async function generateExamQuestions(examId: string, options: any) {
 
     // Get MCQ questions with difficulty filtering
     if (mcqCount > 0) {
+      console.log("Looking for MCQ questions with criteria:", mcqWhere);
       const mcqQuestions = await prisma.mCQQuestion.findMany({
         where: mcqWhere,
         take: mcqCount * 3, // Get more to ensure we have enough after filtering
       });
+      console.log(`Found ${mcqQuestions.length} MCQ questions`);
 
       // Separate questions by difficulty
       const easyQuestions = mcqQuestions.filter(
@@ -126,10 +148,12 @@ async function generateExamQuestions(examId: string, options: any) {
 
     // Get coding problems with difficulty filtering
     if (codingCount > 0) {
+      console.log("Looking for coding problems with criteria:", problemWhere);
       const codingProblems = await prisma.problem.findMany({
         where: problemWhere,
         take: codingCount * 3, // Get more to ensure we have enough after filtering
       });
+      console.log(`Found ${codingProblems.length} coding problems`);
 
       // Separate problems by difficulty
       const easyProblems = codingProblems.filter(
@@ -184,7 +208,7 @@ async function generateExamQuestions(examId: string, options: any) {
       for (const problem of finalProblems) {
         questions.push({
           examId,
-          questionType: "CODING",
+          questionType: "Problem",
           questionId: problem.id,
           order: questions.length + 1,
           points: 5,
@@ -269,7 +293,7 @@ async function generateExamQuestions(examId: string, options: any) {
       for (const aptitude of finalAptitude) {
         questions.push({
           examId,
-          questionType: "APTITUDE",
+          questionType: "MCQ",
           questionId: aptitude.id,
           order: questions.length + 1,
           points: 1,
@@ -290,6 +314,39 @@ async function generateExamQuestions(examId: string, options: any) {
         where: { id: examId },
         data: { totalQuestions: questions.length },
       });
+    } else {
+      console.log(
+        "No questions found with specified criteria, adding fallback questions"
+      );
+
+      // Fallback: Add some basic questions if none were found
+      const fallbackMcqs = await prisma.mCQQuestion.findMany({
+        take: Math.min(5, questionCount),
+      });
+
+      const fallbackQuestions = fallbackMcqs.map((mcq, index) => ({
+        examId,
+        questionType: "MCQ",
+        questionId: mcq.id,
+        order: index + 1,
+        points: 1,
+        timeLimit: 120,
+        isActive: true,
+      }));
+
+      if (fallbackQuestions.length > 0) {
+        await prisma.examQuestion.createMany({
+          data: fallbackQuestions,
+        });
+
+        await prisma.exam.update({
+          where: { id: examId },
+          data: { totalQuestions: fallbackQuestions.length },
+        });
+
+        console.log(`Added ${fallbackQuestions.length} fallback questions`);
+        return fallbackQuestions.length;
+      }
     }
 
     return questions.length;
@@ -316,9 +373,9 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { category: { contains: search, mode: "insensitive" } },
+        { title: { contains: search } },
+        { description: { contains: search } },
+        { category: { contains: search } },
       ];
     }
 

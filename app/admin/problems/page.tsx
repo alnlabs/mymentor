@@ -19,6 +19,8 @@ import {
   XCircle,
   AlertCircle,
   Upload,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 
 interface Problem {
@@ -59,6 +61,9 @@ export default function AdminProblemsPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedProblems, setSelectedProblems] = useState<string[]>([]);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   useEffect(() => {
     fetchProblems();
@@ -144,6 +149,92 @@ export default function AdminProblemsPage() {
         return "text-green-600 bg-green-100";
       default:
         return "text-gray-600 bg-gray-100";
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selectedProblems.length === filteredProblems.length) {
+      setSelectedProblems([]);
+    } else {
+      setSelectedProblems(filteredProblems.map(problem => problem.id));
+    }
+  };
+
+  const handleSelectProblem = (problemId: string) => {
+    setSelectedProblems(prev =>
+      prev.includes(problemId)
+        ? prev.filter(id => id !== problemId)
+        : [...prev, problemId]
+    );
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedProblems.length === 0) {
+      setMessage({ type: 'error', text: 'Please select problems to delete' });
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selectedProblems.length} problem(s)?`)) {
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      const response = await fetch('/api/problems', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ids: selectedProblems }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage({ type: 'success', text: `Successfully deleted ${selectedProblems.length} problem(s)` });
+        setSelectedProblems([]);
+        fetchProblems(); // Refresh the list
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Failed to delete problems' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete problems' });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (filteredProblems.length === 0) {
+      setMessage({ type: 'error', text: 'No problems to delete' });
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ALL ${filteredProblems.length} problem(s)? This action cannot be undone.`)) {
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      const response = await fetch('/api/problems', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ids: filteredProblems.map(problem => problem.id) }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage({ type: 'success', text: `Successfully deleted all ${filteredProblems.length} problem(s)` });
+        setSelectedProblems([]);
+        fetchProblems(); // Refresh the list
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Failed to delete problems' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to delete problems' });
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -401,6 +492,80 @@ export default function AdminProblemsPage() {
           </div>
         </div>
 
+        {/* Message */}
+        {message && (
+          <div className={`mb-6 p-4 rounded-lg ${
+            message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+          }`}>
+            <div className="flex items-center">
+              {message.type === 'success' ? (
+                <CheckCircle className="w-5 h-5 mr-2" />
+              ) : (
+                <XCircle className="w-5 h-5 mr-2" />
+              )}
+              <p className="font-medium">{message.text}</p>
+              <button
+                onClick={() => setMessage(null)}
+                className="ml-auto text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Bulk Actions */}
+        {filteredProblems.length > 0 && (
+          <div className="bg-white rounded-lg p-4 shadow-sm border mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSelectAll}
+                  className="flex items-center"
+                >
+                  {selectedProblems.length === filteredProblems.length ? (
+                    <CheckSquare className="w-4 h-4 mr-2" />
+                  ) : (
+                    <Square className="w-4 h-4 mr-2" />
+                  )}
+                  {selectedProblems.length === filteredProblems.length ? 'Deselect All' : 'Select All'}
+                </Button>
+                {selectedProblems.length > 0 && (
+                  <span className="text-sm text-gray-600">
+                    {selectedProblems.length} of {filteredProblems.length} selected
+                  </span>
+                )}
+              </div>
+              <div className="flex space-x-2">
+                {selectedProblems.length > 0 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleDeleteSelected}
+                    disabled={actionLoading}
+                    className="flex items-center"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Selected ({selectedProblems.length})
+                  </Button>
+                )}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDeleteAll}
+                  disabled={actionLoading}
+                  className="flex items-center"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete All ({filteredProblems.length})
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Results */}
         <div className="mb-4">
           <p className="text-gray-600">
@@ -415,16 +580,29 @@ export default function AdminProblemsPage() {
           {filteredProblems.map((problem) => (
             <Card
               key={problem.id}
-              className="hover:shadow-lg transition-shadow duration-200"
+              className={`hover:shadow-lg transition-shadow duration-200 ${
+                selectedProblems.includes(problem.id) ? 'ring-2 ring-blue-500' : ''
+              }`}
             >
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {problem.title}
-                    </h3>
-                    <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex items-start space-x-3 flex-1">
+                    <button
+                      onClick={() => handleSelectProblem(problem.id)}
+                      className="mt-1 flex-shrink-0"
+                    >
+                      {selectedProblems.includes(problem.id) ? (
+                        <CheckSquare className="w-5 h-5 text-blue-600" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                        {problem.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mb-3">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
                           problem.difficulty
@@ -450,6 +628,7 @@ export default function AdminProblemsPage() {
                       )}
                     </div>
                   </div>
+                </div>
                 </div>
 
                 {/* Description */}

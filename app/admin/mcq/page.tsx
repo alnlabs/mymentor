@@ -20,6 +20,8 @@ import {
   Brain,
   BookOpen,
   Upload,
+  CheckSquare,
+  Square,
 } from "lucide-react";
 
 interface MCQQuestion {
@@ -56,6 +58,12 @@ export default function AdminMCQPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedMCQs, setSelectedMCQs] = useState<string[]>([]);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchMCQs();
@@ -155,6 +163,110 @@ export default function AdminMCQPage() {
     }
   };
 
+  const handleSelectAll = () => {
+    if (selectedMCQs.length === filteredMCQs.length) {
+      setSelectedMCQs([]);
+    } else {
+      setSelectedMCQs(filteredMCQs.map((mcq) => mcq.id));
+    }
+  };
+
+  const handleSelectMCQ = (mcqId: string) => {
+    setSelectedMCQs((prev) =>
+      prev.includes(mcqId)
+        ? prev.filter((id) => id !== mcqId)
+        : [...prev, mcqId]
+    );
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedMCQs.length === 0) {
+      setMessage({ type: "error", text: "Please select MCQs to delete" });
+      return;
+    }
+
+    if (
+      !confirm(`Are you sure you want to delete ${selectedMCQs.length} MCQ(s)?`)
+    ) {
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      const response = await fetch("/api/mcq", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: selectedMCQs }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage({
+          type: "success",
+          text: `Successfully deleted ${selectedMCQs.length} MCQ(s)`,
+        });
+        setSelectedMCQs([]);
+        fetchMCQs(); // Refresh the list
+      } else {
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to delete MCQs",
+        });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Failed to delete MCQs" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (filteredMCQs.length === 0) {
+      setMessage({ type: "error", text: "No MCQs to delete" });
+      return;
+    }
+
+    if (
+      !confirm(
+        `Are you sure you want to delete ALL ${filteredMCQs.length} MCQ(s)? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    setActionLoading(true);
+    try {
+      const response = await fetch("/api/mcq", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids: filteredMCQs.map((mcq) => mcq.id) }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage({
+          type: "success",
+          text: `Successfully deleted all ${filteredMCQs.length} MCQ(s)`,
+        });
+        setSelectedMCQs([]);
+        fetchMCQs(); // Refresh the list
+      } else {
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to delete MCQs",
+        });
+      }
+    } catch (error) {
+      setMessage({ type: "error", text: "Failed to delete MCQs" });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6">
@@ -200,9 +312,7 @@ export default function AdminMCQPage() {
                 Add MCQ
               </Button>
               <Button
-                onClick={() =>
-                  (window.location.href = "/admin/mcq/upload")
-                }
+                onClick={() => (window.location.href = "/admin/mcq/upload")}
                 variant="outline"
                 className="flex items-center"
               >
@@ -358,10 +468,14 @@ export default function AdminMCQPage() {
                   <option value="Aptitude">Aptitude</option>
                   <option value="Logical Reasoning">Logical Reasoning</option>
                   <option value="Verbal Ability">Verbal Ability</option>
-                  <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                  <option value="Quantitative Aptitude">
+                    Quantitative Aptitude
+                  </option>
                   <option value="General Knowledge">General Knowledge</option>
                   <option value="English Language">English Language</option>
-                  <option value="Business Communication">Business Communication</option>
+                  <option value="Business Communication">
+                    Business Communication
+                  </option>
                   <option value="Problem Solving">Problem Solving</option>
                   <option value="Critical Thinking">Critical Thinking</option>
                   <option value="Team Management">Team Management</option>
@@ -429,6 +543,86 @@ export default function AdminMCQPage() {
           </div>
         </div>
 
+        {/* Message */}
+        {message && (
+          <div
+            className={`mb-6 p-4 rounded-lg ${
+              message.type === "success"
+                ? "bg-green-50 text-green-800"
+                : "bg-red-50 text-red-800"
+            }`}
+          >
+            <div className="flex items-center">
+              {message.type === "success" ? (
+                <CheckCircle className="w-5 h-5 mr-2" />
+              ) : (
+                <XCircle className="w-5 h-5 mr-2" />
+              )}
+              <p className="font-medium">{message.text}</p>
+              <button
+                onClick={() => setMessage(null)}
+                className="ml-auto text-gray-400 hover:text-gray-600"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Bulk Actions */}
+        {filteredMCQs.length > 0 && (
+          <div className="bg-white rounded-lg p-4 shadow-sm border mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSelectAll}
+                  className="flex items-center"
+                >
+                  {selectedMCQs.length === filteredMCQs.length ? (
+                    <CheckSquare className="w-4 h-4 mr-2" />
+                  ) : (
+                    <Square className="w-4 h-4 mr-2" />
+                  )}
+                  {selectedMCQs.length === filteredMCQs.length
+                    ? "Deselect All"
+                    : "Select All"}
+                </Button>
+                {selectedMCQs.length > 0 && (
+                  <span className="text-sm text-gray-600">
+                    {selectedMCQs.length} of {filteredMCQs.length} selected
+                  </span>
+                )}
+              </div>
+              <div className="flex space-x-2">
+                {selectedMCQs.length > 0 && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleDeleteSelected}
+                    disabled={actionLoading}
+                    className="flex items-center"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Selected ({selectedMCQs.length})
+                  </Button>
+                )}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDeleteAll}
+                  disabled={actionLoading}
+                  className="flex items-center"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete All ({filteredMCQs.length})
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Results */}
         <div className="mb-4">
           <p className="text-gray-600">
@@ -442,39 +636,53 @@ export default function AdminMCQPage() {
           {filteredMCQs.map((mcq) => (
             <Card
               key={mcq.id}
-              className="hover:shadow-lg transition-shadow duration-200"
+              className={`hover:shadow-lg transition-shadow duration-200 ${
+                selectedMCQs.includes(mcq.id) ? "ring-2 ring-blue-500" : ""
+              }`}
             >
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-3">
-                      {mcq.question}
-                    </h3>
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
-                          mcq.difficulty
-                        )}`}
-                      >
-                        {mcq.difficulty}
-                      </span>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          mcq.status || "draft"
-                        )}`}
-                      >
-                        {mcq.status || "draft"}
-                      </span>
-                      {mcq.priority && (
+                  <div className="flex items-start space-x-3 flex-1">
+                    <button
+                      onClick={() => handleSelectMCQ(mcq.id)}
+                      className="mt-1 flex-shrink-0"
+                    >
+                      {selectedMCQs.includes(mcq.id) ? (
+                        <CheckSquare className="w-5 h-5 text-blue-600" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+                      )}
+                    </button>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-3">
+                        {mcq.question}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mb-3">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
-                            mcq.priority
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
+                            mcq.difficulty
                           )}`}
                         >
-                          {mcq.priority}
+                          {mcq.difficulty}
                         </span>
-                      )}
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                            mcq.status || "draft"
+                          )}`}
+                        >
+                          {mcq.status || "draft"}
+                        </span>
+                        {mcq.priority && (
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                              mcq.priority
+                            )}`}
+                          >
+                            {mcq.priority}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -487,31 +695,38 @@ export default function AdminMCQPage() {
                   <div className="space-y-1">
                     {(() => {
                       const options = parseOptions(mcq.options);
-                      return options.slice(0, 2).map((option: string, index: number) => (
-                        <div key={index} className="flex items-center text-sm">
-                          <span
-                            className={`w-4 h-4 rounded-full mr-2 flex items-center justify-center ${
-                              index === mcq.correctAnswer
-                                ? "bg-green-100 text-green-600"
-                                : "bg-gray-100 text-gray-400"
-                            }`}
+                      return options
+                        .slice(0, 2)
+                        .map((option: string, index: number) => (
+                          <div
+                            key={index}
+                            className="flex items-center text-sm"
                           >
-                            {index === mcq.correctAnswer
-                              ? "✓"
-                              : String.fromCharCode(65 + index)}
-                          </span>
-                          <span className="text-gray-600 line-clamp-1">
-                            {option}
-                          </span>
-                        </div>
-                      ));
+                            <span
+                              className={`w-4 h-4 rounded-full mr-2 flex items-center justify-center ${
+                                index === mcq.correctAnswer
+                                  ? "bg-green-100 text-green-600"
+                                  : "bg-gray-100 text-gray-400"
+                              }`}
+                            >
+                              {index === mcq.correctAnswer
+                                ? "✓"
+                                : String.fromCharCode(65 + index)}
+                            </span>
+                            <span className="text-gray-600 line-clamp-1">
+                              {option}
+                            </span>
+                          </div>
+                        ));
                     })()}
                     {(() => {
                       const options = parseOptions(mcq.options);
-                      return options.length > 2 && (
-                        <div className="text-xs text-gray-500">
-                          +{options.length - 2} more options
-                        </div>
+                      return (
+                        options.length > 2 && (
+                          <div className="text-xs text-gray-500">
+                            +{options.length - 2} more options
+                          </div>
+                        )
                       );
                     })()}
                   </div>
@@ -614,9 +829,7 @@ export default function AdminMCQPage() {
                   Add Your First MCQ
                 </Button>
                 <Button
-                  onClick={() =>
-                    (window.location.href = "/admin/mcq/upload")
-                  }
+                  onClick={() => (window.location.href = "/admin/mcq/upload")}
                   variant="outline"
                 >
                   <Upload className="w-4 h-4 mr-2" />

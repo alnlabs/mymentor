@@ -19,6 +19,8 @@ import {
   X,
   Eye,
   MessageSquare,
+  Database,
+  Package,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -33,10 +35,10 @@ const navigation = [
     description: "Overview & Statistics",
   },
   {
-    name: "Exams",
-    href: "/admin/exams",
+    name: "Content Management",
+    href: "/admin/content",
     icon: FileText,
-    description: "Create & Manage Exams",
+    description: "Exams, Problems & MCQs",
   },
   {
     name: "Interviews",
@@ -45,28 +47,22 @@ const navigation = [
     description: "Templates & Sessions",
   },
   {
-    name: "Coding Problems",
-    href: "/admin/problems",
-    icon: FileText,
-    description: "View & Manage Problems",
+    name: "Seeds",
+    href: "/admin/seeds",
+    icon: Package,
+    description: "Question Seeds Management",
   },
   {
-    name: "MCQ Questions",
-    href: "/admin/mcq",
-    icon: FileText,
-    description: "View & Manage MCQs",
+    name: "Database",
+    href: "/admin/database",
+    icon: Database,
+    description: "Database Management",
   },
   {
-    name: "Manage Users",
+    name: "Users",
     href: "/admin/users",
     icon: Users,
     description: "User Accounts",
-  },
-  {
-    name: "Analytics",
-    href: "/admin/analytics",
-    icon: BarChart3,
-    description: "Performance Data",
   },
   {
     name: "Feedback",
@@ -85,8 +81,7 @@ const navigation = [
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const { user, isAdmin, isSuperAdmin, signOutUser } =
-    useAuthContext();
+  const { user, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -343,7 +338,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* Page content */}
-          <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 w-full overflow-x-hidden">{children}</main>
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 w-full overflow-x-hidden">
+            {children}
+          </main>
         </div>
       </div>
     </RouteGuard>

@@ -1,0 +1,57 @@
+{
+  "category": "javascript",
+  "language": "JavaScript",
+  "concepts": [
+    {
+      "name": "Array Methods",
+      "difficulty": "easy",
+      "problems": [
+        {
+          "id": "js-array-methods",
+          "title": "Array Methods Implementation",
+          "description": "Implement your own versions of map(), filter(), and reduce() methods for arrays. Write functions that mimic the behavior of these built-in array methods.",
+          "testCases": "[{\"input\": \"[1,2,3,4,5], x => x * 2\", \"output\": \"[2,4,6,8,10]\"}, {\"input\": \"[1,2,3,4,5], x => x > 2\", \"output\": \"[3,4,5]\"}, {\"input\": \"[1,2,3,4,5], (acc, x) => acc + x, 0\", \"output\": \"15\"}]",
+          "solution": "Use for loops to iterate through arrays and apply the callback function to each element. For reduce, maintain an accumulator.",
+          "hints": "[\"Use for loops\", \"Apply callback to each element\", \"Maintain accumulator for reduce\"]",
+          "tags": "[\"javascript\", \"arrays\", \"functions\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "easy"
+        }
+      ]
+    },
+    {
+      "name": "Closures and Scope",
+      "difficulty": "medium",
+      "problems": [
+        {
+          "id": "js-closure-counter",
+          "title": "Closure Counter",
+          "description": "Create a counter function using closures that can increment, decrement, and get the current count. The function should return an object with methods: increment(), decrement(), and getCount().",
+          "testCases": "[{\"input\": \"counter()\", \"output\": \"{increment: fn, decrement: fn, getCount: fn}\"}, {\"input\": \"counter().increment().increment().getCount()\", \"output\": \"2\"}, {\"input\": \"counter().decrement().getCount()\", \"output\": \"-1\"}]",
+          "solution": "Use a closure to maintain the count variable. Return an object with methods that access and modify the count.",
+          "hints": "[\"Use closure\", \"Return object with methods\", \"Maintain count in closure\"]",
+          "tags": "[\"javascript\", \"closure\", \"functions\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Amazon\"]",
+          "difficulty": "medium"
+        }
+      ]
+    },
+    {
+      "name": "Asynchronous Programming",
+      "difficulty": "hard",
+      "problems": [
+        {
+          "id": "js-promise-all",
+          "title": "Promise.all Implementation",
+          "description": "Implement your own version of Promise.all() that takes an array of promises and returns a single promise that resolves when all promises resolve, or rejects if any promise rejects.",
+          "testCases": "[{\"input\": \"[Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)]\", \"output\": \"[1,2,3]\"}, {\"input\": \"[Promise.resolve(1), Promise.reject('error')]\", \"output\": \"'error'\"}]",
+          "solution": "Use Promise constructor and track resolved promises. Resolve with array of results when all complete, or reject on first error.",
+          "hints": "[\"Use Promise constructor\", \"Track resolved promises\", \"Handle rejections\"]",
+          "tags": "[\"javascript\", \"promise\", \"async\"]",
+          "companies": "[\"Google\", \"Facebook\", \"Netflix\"]",
+          "difficulty": "hard"
+        }
+      ]
+    }
+  ]
+}

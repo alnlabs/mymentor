@@ -16,6 +16,9 @@ export async function GET(request: NextRequest) {
       acceptedSubmissions,
       totalInterviews,
       completedInterviews,
+      totalExams,
+      totalExamSessions,
+      totalFeedback,
       recentUsers,
       recentSubmissions,
       recentInterviews,
@@ -60,6 +63,15 @@ export async function GET(request: NextRequest) {
           status: "completed",
         },
       }),
+
+      // Total exams
+      prisma.exam.count(),
+
+      // Total exam sessions
+      prisma.examSession.count(),
+
+      // Total feedback
+      prisma.feedback.count(),
 
       // Recent users (last 7 days)
       prisma.user.findMany({
@@ -184,6 +196,9 @@ export async function GET(request: NextRequest) {
         acceptedSubmissions,
         totalInterviews,
         completedInterviews,
+        totalExams,
+        totalExamSessions,
+        totalFeedback,
         successRate,
         interviewCompletionRate,
         userEngagementRate,

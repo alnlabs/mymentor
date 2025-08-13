@@ -18,6 +18,10 @@ import { BasicInfoSection } from "@/shared/components/exam-form/BasicInfoSection
 import { ExamConfigSection } from "@/shared/components/exam-form/ExamConfigSection";
 import { TimerSettingsSection } from "@/shared/components/exam-form/TimerSettingsSection";
 import { showNotification } from "@/shared/utils/notifications";
+import {
+  LANGUAGE_TEMPLATES,
+  REASONING_TEMPLATES,
+} from "@/shared/data/examTemplates";
 
 export default function AddExamPage() {
   const {
@@ -38,17 +42,50 @@ export default function AddExamPage() {
     setLastUsedDropdown,
   } = useExamForm();
 
-  const handleAutoPopulate = () => {
+  const handleAutoPopulate = async () => {
     if (selectedOption) {
-      // Simple count based on dropdown type
-      const count = (dropdownType === "programming" ? 1 : 1) + 1;
-
+      // Get template to check for existing exams with similar titles
+      let template;
       if (dropdownType === "programming") {
-        setLastUsedDropdown("language");
-        handleAutoFillWithLanguage(selectedOption, count);
+        template = LANGUAGE_TEMPLATES[selectedOption];
       } else {
-        setLastUsedDropdown("reasoning");
-        handleAutoFillWithReasoning(selectedOption, count);
+        template = REASONING_TEMPLATES[selectedOption];
+      }
+
+      if (template) {
+        // Check for existing exams with similar titles
+        try {
+          const response = await fetch(
+            `/api/exams?search=${encodeURIComponent(template.title)}`
+          );
+          const result = await response.json();
+          const existingExams = result.data || [];
+
+          // Find all exams based on selection and append totalCount + 1
+          const baseTitle = template.title;
+          const similarExams = existingExams.filter((exam: any) =>
+            exam.title.startsWith(baseTitle)
+          );
+
+          const count = similarExams.length + 1;
+
+          if (dropdownType === "programming") {
+            setLastUsedDropdown("language");
+            handleAutoFillWithLanguage(selectedOption, count);
+          } else {
+            setLastUsedDropdown("reasoning");
+            handleAutoFillWithReasoning(selectedOption, count);
+          }
+        } catch (error) {
+          // Fallback to count 1 if API call fails
+          if (dropdownType === "programming") {
+            setLastUsedDropdown("language");
+            handleAutoFillWithLanguage(selectedOption, 1);
+          } else {
+            setLastUsedDropdown("reasoning");
+            handleAutoFillWithReasoning(selectedOption, 1);
+          }
+        }
       }
       setSelectedOption(""); // Reset selection
     } else {

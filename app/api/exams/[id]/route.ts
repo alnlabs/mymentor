@@ -5,11 +5,12 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const exam = await prisma.exam.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         examQuestions: {
           orderBy: { order: "asc" },
@@ -23,6 +24,66 @@ export async function GET(
       },
     });
 
+    // Fetch the actual question data for each exam question
+    const examQuestionsWithData = await Promise.all(
+      exam.examQuestions.map(async (examQuestion) => {
+        if (examQuestion.questionType === "MCQ") {
+          // Fetch MCQ question data
+          const mcqQuestion = await prisma.mCQQuestion.findUnique({
+            where: { id: examQuestion.questionId },
+          });
+
+          if (mcqQuestion) {
+            return {
+              ...examQuestion,
+              question: mcqQuestion.question,
+              options: JSON.parse(mcqQuestion.options),
+              correctAnswer: mcqQuestion.correctAnswer,
+              explanation: mcqQuestion.explanation,
+              type: "mcq",
+            };
+          }
+        } else if (examQuestion.questionType === "Problem") {
+          // Fetch Problem data
+          const problem = await prisma.problem.findUnique({
+            where: { id: examQuestion.questionId },
+          });
+
+          if (problem) {
+            return {
+              ...examQuestion,
+              question: problem.description,
+              testCases: problem.testCases,
+              solution: problem.solution,
+              type: "coding",
+            };
+          }
+        } else if (examQuestion.questionType === "CODING") {
+          // Handle legacy CODING type
+          const problem = await prisma.problem.findUnique({
+            where: { id: examQuestion.questionId },
+          });
+
+          if (problem) {
+            return {
+              ...examQuestion,
+              question: problem.description,
+              testCases: problem.testCases,
+              solution: problem.solution,
+              type: "coding",
+            };
+          }
+        }
+
+        // Return exam question as is if no matching question found
+        return {
+          ...examQuestion,
+          question: "Question not found",
+          type: "unknown",
+        };
+      })
+    );
+
     if (!exam) {
       return NextResponse.json(
         { success: false, error: "Exam not found" },
@@ -34,6 +95,7 @@ export async function GET(
       success: true,
       data: {
         ...exam,
+        examQuestions: examQuestionsWithData,
         totalQuestions: exam._count.examQuestions,
         totalAttempts: exam._count.examResults,
       },
@@ -49,9 +111,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const {
       title,
@@ -69,7 +132,7 @@ export async function PUT(
 
     // Check if exam exists
     const existingExam = await prisma.exam.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingExam) {
@@ -95,7 +158,7 @@ export async function PUT(
 
     // Update exam
     const exam = await prisma.exam.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -127,12 +190,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     // Check if exam exists
     const existingExam = await prisma.exam.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingExam) {
@@ -144,17 +208,17 @@ export async function DELETE(
 
     // Delete exam questions first
     await prisma.examQuestion.deleteMany({
-      where: { examId: params.id },
+      where: { examId: id },
     });
 
     // Delete exam results
     await prisma.examResult.deleteMany({
-      where: { examId: params.id },
+      where: { examId: id },
     });
 
     // Delete exam
     await prisma.exam.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({

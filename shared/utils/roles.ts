@@ -1,92 +1,125 @@
-export type UserRole = 'superadmin' | 'admin' | 'user';
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: UserRole;
-  isActive: boolean;
+export enum UserRole {
+  STUDENT = "STUDENT",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
+  READ_ONLY = "READ_ONLY",
 }
 
-export const ROLES = {
-  SUPERADMIN: 'superadmin' as const,
-  ADMIN: 'admin' as const,
-  USER: 'user' as const,
-} as const;
-
-export const ROLE_HIERARCHY = {
-  [ROLES.SUPERADMIN]: 3,
-  [ROLES.ADMIN]: 2,
-  [ROLES.USER]: 1,
-} as const;
-
-export const ROLE_PERMISSIONS = {
-  [ROLES.SUPERADMIN]: {
-    canManageUsers: true,
-    canManageAdmins: true,
-    canUploadContent: true,
-    canDeleteContent: true,
-    canViewAnalytics: true,
-    canManageSystem: true,
-    canSolveProblems: true,
-    canTakeMCQs: true,
-  },
-  [ROLES.ADMIN]: {
-    canManageUsers: true,
-    canManageAdmins: false,
-    canUploadContent: true,
-    canDeleteContent: true,
-    canViewAnalytics: true,
-    canManageSystem: false,
-    canSolveProblems: true,
-    canTakeMCQs: true,
-  },
-  [ROLES.USER]: {
-    canManageUsers: false,
-    canManageAdmins: false,
-    canUploadContent: false,
-    canDeleteContent: false,
-    canViewAnalytics: false,
-    canManageSystem: false,
-    canSolveProblems: true,
-    canTakeMCQs: true,
-  },
-} as const;
-
-export function hasPermission(userRole: UserRole, permission: keyof typeof ROLE_PERMISSIONS[typeof ROLES.SUPERADMIN]): boolean {
-  return ROLE_PERMISSIONS[userRole]?.[permission] || false;
+export enum DatabaseOperation {
+  READ = "READ",
+  CREATE = "CREATE",
+  UPDATE = "UPDATE",
+  DELETE = "DELETE",
+  MIGRATE = "MIGRATE",
+  RESET = "RESET",
+  BACKUP = "BACKUP",
 }
 
-export function canManageRole(currentUserRole: UserRole, targetRole: UserRole): boolean {
-  const currentLevel = ROLE_HIERARCHY[currentUserRole];
-  const targetLevel = ROLE_HIERARCHY[targetRole];
-  
-  // Can only manage roles at or below your level
-  return currentLevel >= targetLevel;
+export interface Permission {
+  operation: DatabaseOperation;
+  resources: string[];
+  allowed: boolean;
 }
 
-export function getRoleDisplayName(role: UserRole): string {
-  switch (role) {
-    case ROLES.SUPERADMIN:
-      return 'Super Admin';
-    case ROLES.ADMIN:
-      return 'Admin';
-    case ROLES.USER:
-      return 'User';
-    default:
-      return 'Unknown';
+export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
+  [UserRole.STUDENT]: [
+    { operation: DatabaseOperation.READ, resources: ["*"], allowed: true },
+    {
+      operation: DatabaseOperation.CREATE,
+      resources: ["submissions", "userProgress"],
+      allowed: true,
+    },
+    {
+      operation: DatabaseOperation.UPDATE,
+      resources: ["userProgress"],
+      allowed: true,
+    },
+    { operation: DatabaseOperation.DELETE, resources: [], allowed: false },
+    { operation: DatabaseOperation.MIGRATE, resources: [], allowed: false },
+    { operation: DatabaseOperation.RESET, resources: [], allowed: false },
+    { operation: DatabaseOperation.BACKUP, resources: [], allowed: false },
+  ],
+  [UserRole.ADMIN]: [
+    { operation: DatabaseOperation.READ, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.CREATE, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.UPDATE, resources: ["*"], allowed: true },
+    {
+      operation: DatabaseOperation.DELETE,
+      resources: ["users", "questions", "problems"],
+      allowed: true,
+    },
+    { operation: DatabaseOperation.MIGRATE, resources: [], allowed: false },
+    { operation: DatabaseOperation.RESET, resources: [], allowed: false },
+    { operation: DatabaseOperation.BACKUP, resources: ["*"], allowed: true },
+  ],
+  [UserRole.SUPER_ADMIN]: [
+    { operation: DatabaseOperation.READ, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.CREATE, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.UPDATE, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.DELETE, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.MIGRATE, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.RESET, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.BACKUP, resources: ["*"], allowed: true },
+  ],
+  [UserRole.READ_ONLY]: [
+    { operation: DatabaseOperation.READ, resources: ["*"], allowed: true },
+    { operation: DatabaseOperation.CREATE, resources: [], allowed: false },
+    { operation: DatabaseOperation.UPDATE, resources: [], allowed: false },
+    { operation: DatabaseOperation.DELETE, resources: [], allowed: false },
+    { operation: DatabaseOperation.MIGRATE, resources: [], allowed: false },
+    { operation: DatabaseOperation.RESET, resources: [], allowed: false },
+    { operation: DatabaseOperation.BACKUP, resources: [], allowed: false },
+  ],
+};
+
+export function hasPermission(
+  userRole: UserRole,
+  operation: DatabaseOperation,
+  resource?: string
+): boolean {
+  const permissions = ROLE_PERMISSIONS[userRole] || [];
+  const permission = permissions.find((p) => p.operation === operation);
+
+  if (!permission || !permission.allowed) {
+    return false;
+  }
+
+  if (
+    resource &&
+    !permission.resources.includes("*") &&
+    !permission.resources.includes(resource)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function requirePermission(
+  userRole: UserRole,
+  operation: DatabaseOperation,
+  resource?: string
+): void {
+  if (!hasPermission(userRole, operation, resource)) {
+    throw new Error(
+      `Access denied: ${userRole} cannot perform ${operation} on ${
+        resource || "any resource"
+      }`
+    );
   }
 }
 
-export function getRoleColor(role: UserRole): string {
-  switch (role) {
-    case ROLES.SUPERADMIN:
-      return 'bg-red-100 text-red-800';
-    case ROLES.ADMIN:
-      return 'bg-blue-100 text-blue-800';
-    case ROLES.USER:
-      return 'bg-green-100 text-green-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
+// Special dangerous operations that require confirmation
+export const DANGEROUS_OPERATIONS = [
+  DatabaseOperation.RESET,
+  DatabaseOperation.MIGRATE,
+  DatabaseOperation.DELETE,
+];
+
+export function isDangerousOperation(operation: DatabaseOperation): boolean {
+  return DANGEROUS_OPERATIONS.includes(operation);
+}
+
+export function requireConfirmation(operation: DatabaseOperation): boolean {
+  return isDangerousOperation(operation);
 }

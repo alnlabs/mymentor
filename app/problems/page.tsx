@@ -292,7 +292,7 @@ export default function ProblemsPage() {
               <Card
                 key={problem.id}
                 className="hover:shadow-lg transition-shadow duration-200 cursor-pointer group"
-                onClick={() => window.location.href = `/problems/${problem.id}`}
+                onClick={() => window.location.href = `/problems/take/${problem.id}`}
               >
                 <div className="p-6">
                   {/* Header */}
