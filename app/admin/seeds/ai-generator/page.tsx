@@ -109,7 +109,7 @@ export default function AIGeneratorPage() {
     const mapping: { [key: string]: string } = {
       easy: "beginner",
       beginner: "beginner",
-      medium: "intermediate", 
+      medium: "intermediate",
       intermediate: "intermediate",
       hard: "advanced",
       advanced: "advanced",
@@ -139,8 +139,14 @@ export default function AIGeneratorPage() {
         conceptQuestions.forEach((q: any) => {
           if (q.difficulty) {
             const mappedDifficulty = mapDifficulty(q.difficulty);
-            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
-              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
+            if (
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ] !== undefined
+            ) {
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ]++;
             }
           }
         });
@@ -149,8 +155,14 @@ export default function AIGeneratorPage() {
         conceptProblems.forEach((p: any) => {
           if (p.difficulty) {
             const mappedDifficulty = mapDifficulty(p.difficulty);
-            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
-              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts]++;
+            if (
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ] !== undefined
+            ) {
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ]++;
             }
           }
         });
@@ -168,8 +180,14 @@ export default function AIGeneratorPage() {
             questionsWithoutDifficulty + problemsWithoutDifficulty;
           if (concept.difficulty) {
             const mappedDifficulty = mapDifficulty(concept.difficulty);
-            if (difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] !== undefined) {
-              difficultyCounts[mappedDifficulty as keyof typeof difficultyCounts] += totalWithoutDifficulty;
+            if (
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ] !== undefined
+            ) {
+              difficultyCounts[
+                mappedDifficulty as keyof typeof difficultyCounts
+              ] += totalWithoutDifficulty;
             }
           }
         }
@@ -745,7 +763,17 @@ export default function AIGeneratorPage() {
                 <div className="mb-4 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-lg border border-blue-200 p-4">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-800 mb-1">
-                      {selectedLanguageStats[config.difficulty] || 0}
+                      {(() => {
+                        const difficultyKey = config.difficulty as keyof typeof selectedLanguageStats;
+                        const count = selectedLanguageStats[difficultyKey] || 0;
+                        console.log('Generation Config Stats Debug:', {
+                          configDifficulty: config.difficulty,
+                          difficultyKey,
+                          selectedLanguageStats,
+                          count
+                        });
+                        return count;
+                      })()}
                     </div>
                     <div className="text-sm text-gray-800 font-medium mb-2">
                       {config.difficulty} questions available
