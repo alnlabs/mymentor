@@ -39,30 +39,56 @@ async function generateWithAI(
           // Create realistic MCQ questions based on actual programming concepts
           const mcqTemplates = [
             {
-              title: `${language} ${topic} Variable Scope MCQ ${i + 1} (${uniqueSuffix})`,
-              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = ${10 + i};\nfunction testScope${i + 1}() {\n  let x = ${20 + i};\n  console.log(x);\n}\ntestScope${i + 1}();\nconsole.log(x);\n\`\`\``,
-              options: [`${20 + i}, ${10 + i}`, `${10 + i}, ${20 + i}`, `${20 + i}, ${20 + i}`, `${10 + i}, ${10 + i}`],
-              correctAnswer: `${20 + i}, ${10 + i}`,
-              explanation: `This tests understanding of variable scope in ${language} with unique values ${uniqueSuffix}. The inner 'x' shadows the outer 'x' within the function scope.`,
+              title: `${language} ${topic} ${topic === "System Design" ? "Load Balancer" : topic === "Algorithms" ? "Sorting Algorithm" : "Variable Scope"} MCQ ${i + 1}`,
+              content: topic === "System Design" 
+                ? `Which load balancing algorithm is best for ${language} applications with ${10 + i} servers?\n\n**Scenario:**\nYou have ${10 + i} ${language} servers and need to distribute traffic efficiently.`
+                : topic === "Algorithms"
+                ? `Which sorting algorithm is most efficient for an array of ${100 + i * 10} elements in ${language}?\n\n**Array:**\n[${5 + i}, ${3 + i}, ${7 + i}, ${1 + i}, ${9 + i}, ${2 + i}, ${8 + i}, ${4 + i}, ${6 + i}]`
+                : `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+              options: topic === "System Design"
+                ? [
+                    "Round Robin - distributes requests evenly",
+                    "Least Connections - sends to server with fewest active connections", 
+                    "IP Hash - routes based on client IP",
+                    "Random - randomly selects server"
+                  ]
+                : topic === "Algorithms"
+                ? [
+                    "Bubble Sort - O(n²) time complexity",
+                    "Quick Sort - O(n log n) average case",
+                    "Merge Sort - O(n log n) guaranteed",
+                    "Insertion Sort - O(n²) but good for small arrays"
+                  ]
+                : ["20, 10", "10, 20", "20, 20", "10, 10"],
+              correctAnswer: topic === "System Design"
+                ? "Least Connections - sends to server with fewest active connections"
+                : topic === "Algorithms"
+                ? "Quick Sort - O(n log n) average case"
+                : "20, 10",
+              explanation: topic === "System Design"
+                ? `For ${language} applications with ${10 + i} servers, Least Connections provides better performance by avoiding overloaded servers.`
+                : topic === "Algorithms"
+                ? `For ${100 + i * 10} elements in ${language}, Quick Sort provides the best average-case performance.`
+                : `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
             },
             {
-              title: `${language} ${topic} Array Methods MCQ ${i + 1} (${uniqueSuffix})`,
-              content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [${1 + i}, ${2 + i}, ${3 + i}, ${4 + i}, ${5 + i}];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
+              title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
+              content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
               options: [
-                `[${2 + i * 2}, ${4 + i * 2}, ${6 + i * 2}, ${8 + i * 2}, ${10 + i * 2}]`,
-                `[${1 + i}, ${2 + i}, ${3 + i}, ${4 + i}, ${5 + i}]`,
+                "[2, 4, 6, 8, 10]",
+                "[1, 2, 3, 4, 5]",
                 "Error",
                 "Undefined",
               ],
-              correctAnswer: `[${1 + i}, ${2 + i}, ${3 + i}, ${4 + i}, ${5 + i}]`,
-              explanation: `The map() method creates a new array and doesn't modify the original array. This example uses unique values ${uniqueSuffix}.`,
+              correctAnswer: "[1, 2, 3, 4, 5]",
+              explanation: `The map() method creates a new array and doesn't modify the original array.`,
             },
             {
-              title: `${language} ${topic} Async/Await MCQ ${i + 1} (${uniqueSuffix})`,
-              content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test${i + 1}() {\n  console.log('${1 + i}');\n  await new Promise(resolve => setTimeout(resolve, ${100 + i * 10}));\n  console.log('${2 + i}');\n}\nconsole.log('${3 + i}');\ntest${i + 1}();\nconsole.log('${4 + i}');\n\`\`\``,
-              options: [`${1 + i}, ${3 + i}, ${4 + i}, ${2 + i}`, `${3 + i}, ${1 + i}, ${4 + i}, ${2 + i}`, `${1 + i}, ${2 + i}, ${3 + i}, ${4 + i}`, `${3 + i}, ${4 + i}, ${1 + i}, ${2 + i}`],
-              correctAnswer: `${3 + i}, ${1 + i}, ${4 + i}, ${2 + i}`,
-              explanation: `The async function is called but doesn't block execution. '${3 + i}' logs first, then '${1 + i}', then '${4 + i}', and finally '${2 + i}' after the timeout. Unique scenario ${uniqueSuffix}.`,
+              title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
+              content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
+              options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
+              correctAnswer: "3, 1, 4, 2",
+              explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
             },
             {
               title: `${language} ${topic} Object Destructuring MCQ ${i + 1}`,
