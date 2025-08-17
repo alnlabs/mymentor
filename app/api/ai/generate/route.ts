@@ -36,121 +36,180 @@ async function generateWithAI(
 
       switch (type) {
         case "mcq":
-          // Create realistic MCQ questions based on actual programming concepts
-          const mcqTemplates = [
-            {
-              title: `${language} ${topic} ${topic === "System Design" ? "Load Balancer" : topic === "Algorithms" ? "Sorting Algorithm" : "Variable Scope"} MCQ ${i + 1}`,
-              content: topic === "System Design" 
-                ? `Which load balancing algorithm is best for ${language} applications with ${10 + i} servers?\n\n**Scenario:**\nYou have ${10 + i} ${language} servers and need to distribute traffic efficiently.`
-                : topic === "Algorithms"
-                ? `Which sorting algorithm is most efficient for an array of ${100 + i * 10} elements in ${language}?\n\n**Array:**\n[${5 + i}, ${3 + i}, ${7 + i}, ${1 + i}, ${9 + i}, ${2 + i}, ${8 + i}, ${4 + i}, ${6 + i}]`
-                : `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
-              options: topic === "System Design"
-                ? [
-                    "Round Robin - distributes requests evenly",
-                    "Least Connections - sends to server with fewest active connections", 
-                    "IP Hash - routes based on client IP",
-                    "Random - randomly selects server"
-                  ]
-                : topic === "Algorithms"
-                ? [
-                    "Bubble Sort - O(n²) time complexity",
-                    "Quick Sort - O(n log n) average case",
-                    "Merge Sort - O(n log n) guaranteed",
-                    "Insertion Sort - O(n²) but good for small arrays"
-                  ]
-                : ["20, 10", "10, 20", "20, 20", "10, 10"],
-              correctAnswer: topic === "System Design"
-                ? "Least Connections - sends to server with fewest active connections"
-                : topic === "Algorithms"
-                ? "Quick Sort - O(n log n) average case"
-                : "20, 10",
-              explanation: topic === "System Design"
-                ? `For ${language} applications with ${10 + i} servers, Least Connections provides better performance by avoiding overloaded servers.`
-                : topic === "Algorithms"
-                ? `For ${100 + i * 10} elements in ${language}, Quick Sort provides the best average-case performance.`
-                : `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
-            },
-            {
-              title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
-              content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
-              options: [
-                "[2, 4, 6, 8, 10]",
-                "[1, 2, 3, 4, 5]",
-                "Error",
-                "Undefined",
-              ],
-              correctAnswer: "[1, 2, 3, 4, 5]",
-              explanation: `The map() method creates a new array and doesn't modify the original array.`,
-            },
-            {
-              title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
-              content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
-              options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
-              correctAnswer: "3, 1, 4, 2",
-              explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
-            },
-            {
-              title: `${language} ${topic} Object Destructuring MCQ ${i + 1}`,
-              content: `What is the value of 'name' after this ${language} destructuring?\n\n\`\`\`${language.toLowerCase()}\nconst user = { id: 1, name: 'John', email: 'john@example.com' };\nconst { name, age = 25 } = user;\nconsole.log(name);\n\`\`\``,
-              options: ["'John'", "undefined", "25", "Error"],
-              correctAnswer: "'John'",
-              explanation: `Destructuring extracts the 'name' property from the user object, which is 'John'. The age default value doesn't affect name.`,
-            },
-            {
-              title: `${language} ${topic} Closure MCQ ${i + 1}`,
-              content: `What will this ${language} closure code output?\n\n\`\`\`${language.toLowerCase()}\nfunction createCounter() {\n  let count = 0;\n  return function() {\n    return ++count;\n  };\n}\nconst counter = createCounter();\nconsole.log(counter());\nconsole.log(counter());\n\`\`\``,
-              options: ["0, 1", "1, 2", "1, 1", "Error"],
-              correctAnswer: "1, 2",
-              explanation: `The closure maintains the count variable in its scope. Each call increments and returns the current count.`,
-            },
-            {
-              title: `${language} ${topic} Promise MCQ ${i + 1}`,
-              content: `What happens when a Promise is rejected in ${language}?\n\n\`\`\`${language.toLowerCase()}\nconst promise = new Promise((resolve, reject) => {\n  reject('Error occurred');\n});\npromise.then(result => console.log('Success:', result))\n       .catch(error => console.log('Error:', error));\n\`\`\``,
-              options: [
-                "Success: Error occurred",
-                "Error: Error occurred",
-                "Nothing",
-                "Promise pending",
-              ],
-              correctAnswer: "Error: Error occurred",
-              explanation: `When a Promise is rejected, the .catch() handler is called with the rejection reason.`,
-            },
-            {
-              title: `${language} ${topic} Event Loop MCQ ${i + 1}`,
-              content: `In ${language}'s event loop, what is the correct order of execution?\n\n\`\`\`${language.toLowerCase()}\nconsole.log('1');\nsetTimeout(() => console.log('2'), 0);\nPromise.resolve().then(() => console.log('3'));\nconsole.log('4');\n\`\`\``,
-              options: ["1, 2, 3, 4", "1, 4, 3, 2", "1, 4, 2, 3", "4, 1, 3, 2"],
-              correctAnswer: "1, 4, 3, 2",
-              explanation: `Synchronous code (1, 4) runs first, then microtasks (Promise - 3), then macrotasks (setTimeout - 2).`,
-            },
-            {
-              title: `${language} ${topic} Hoisting MCQ ${i + 1}`,
-              content: `What is the result of this ${language} hoisting example?\n\n\`\`\`${language.toLowerCase()}\nconsole.log(x);\nvar x = 5;\nconsole.log(x);\n\`\`\``,
-              options: ["undefined, 5", "5, 5", "Error, 5", "Error, Error"],
-              correctAnswer: "undefined, 5",
-              explanation: `Variable declarations are hoisted but not initializations. 'x' is undefined before assignment.`,
-            },
-            {
-              title: `${language} ${topic} This Context MCQ ${i + 1}`,
-              content: `What does 'this' refer to in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nconst obj = {\n  name: 'Object',\n  method: function() {\n    console.log(this.name);\n  }\n};\nconst func = obj.method;\nfunc();\n\`\`\``,
-              options: ["'Object'", "undefined", "Error", "Global object"],
-              correctAnswer: "undefined",
-              explanation: `When a method is assigned to a variable and called, 'this' loses its context and becomes undefined (in strict mode) or the global object.`,
-            },
-            {
-              title: `${language} ${topic} Module System MCQ ${i + 1}`,
-              content: `What is the difference between 'export default' and 'export' in ${language} modules?\n\n\`\`\`${language.toLowerCase()}\n// file1.js\nexport default function() {}\nexport const helper = {};\n\n// file2.js\nimport myFunc, { helper } from './file1.js';\n\`\`\``,
-              options: [
-                "No difference, both work the same",
-                "Default export can be imported with any name, named exports must use exact names",
-                "Default exports are private, named exports are public",
-                "Default exports are synchronous, named exports are asynchronous",
-              ],
-              correctAnswer:
-                "Default export can be imported with any name, named exports must use exact names",
-              explanation: `Default exports allow renaming during import, while named exports require the exact export name.`,
-            },
-          ];
+          // Create topic-specific MCQ questions
+          let mcqTemplates = [];
+          
+          if (topic === "System Design") {
+            mcqTemplates = [
+              {
+                title: `${language} ${topic} Load Balancer MCQ ${i + 1}`,
+                content: `Which load balancing algorithm is best for ${language} applications with ${10 + i} servers?\n\n**Scenario:**\nYou have ${10 + i} ${language} servers and need to distribute traffic efficiently.`,
+                options: [
+                  "Round Robin - distributes requests evenly",
+                  "Least Connections - sends to server with fewest active connections",
+                  "IP Hash - routes based on client IP",
+                  "Random - randomly selects server",
+                ],
+                correctAnswer: "Least Connections - sends to server with fewest active connections",
+                explanation: `For ${language} applications with ${10 + i} servers, Least Connections provides better performance by avoiding overloaded servers.`,
+              },
+              {
+                title: `${language} ${topic} Database Scaling MCQ ${i + 1}`,
+                content: `How would you scale a ${language} application's database to handle ${1000 + i * 100} requests per second?\n\n**Current Setup:**\nSingle database server handling ${500 + i * 50} requests/sec.`,
+                options: [
+                  "Vertical scaling - upgrade server hardware",
+                  "Horizontal scaling - add read replicas",
+                  "Sharding - split data across multiple databases",
+                  "Caching - add Redis/memcached layer",
+                ],
+                correctAnswer: "Horizontal scaling - add read replicas",
+                explanation: `Horizontal scaling with read replicas is most effective for ${language} applications needing to handle ${1000 + i * 100} requests/sec.`,
+              },
+              {
+                title: `${language} ${topic} Microservices MCQ ${i + 1}`,
+                content: `When should you split a ${language} monolith into microservices?\n\n**Current Application:**\n${language} app with ${5 + i} modules and ${20 + i * 2} developers.`,
+                options: [
+                  "Always - microservices are always better",
+                  "When team size exceeds ${15 + i} developers",
+                  "When deployment frequency becomes a bottleneck",
+                  "Never - monoliths are simpler to maintain",
+                ],
+                correctAnswer: "When deployment frequency becomes a bottleneck",
+                explanation: `For ${language} applications, split into microservices when deployment and scaling become bottlenecks, not just team size.`,
+              },
+              {
+                title: `${language} ${topic} Caching Strategy MCQ ${i + 1}`,
+                content: `Which caching strategy is best for a ${language} e-commerce application?\n\n**Requirements:**\n- Product catalog with ${10000 + i * 1000} items\n- User sessions with ${1000 + i * 100} concurrent users`,
+                options: [
+                  "Cache-aside - load data on demand",
+                  "Write-through - update cache immediately",
+                  "Write-behind - batch cache updates",
+                  "Refresh-ahead - preload popular items",
+                ],
+                correctAnswer: "Cache-aside - load data on demand",
+                explanation: `Cache-aside is ideal for ${language} e-commerce apps as it provides flexibility and handles varying product popularity.`,
+              },
+              {
+                title: `${language} ${topic} API Design MCQ ${i + 1}`,
+                content: `How should you design REST APIs for a ${language} microservices architecture?\n\n**Architecture:**\n${3 + i} microservices communicating via HTTP APIs.`,
+                options: [
+                  "Use different API versions for each service",
+                  "Standardize on common API patterns and conventions",
+                  "Let each team design APIs independently",
+                  "Use GraphQL for all service communication",
+                ],
+                correctAnswer: "Standardize on common API patterns and conventions",
+                explanation: `For ${language} microservices, standardized API patterns ensure consistency and easier integration.`,
+              },
+            ];
+          } else if (topic === "Algorithms") {
+            mcqTemplates = [
+              {
+                title: `${language} ${topic} Sorting Algorithm MCQ ${i + 1}`,
+                content: `Which sorting algorithm is most efficient for an array of ${100 + i * 10} elements in ${language}?\n\n**Array:**\n[${5 + i}, ${3 + i}, ${7 + i}, ${1 + i}, ${9 + i}, ${2 + i}, ${8 + i}, ${4 + i}, ${6 + i}]`,
+                options: [
+                  "Bubble Sort - O(n²) time complexity",
+                  "Quick Sort - O(n log n) average case",
+                  "Merge Sort - O(n log n) guaranteed",
+                  "Insertion Sort - O(n²) but good for small arrays",
+                ],
+                correctAnswer: "Quick Sort - O(n log n) average case",
+                explanation: `For ${100 + i * 10} elements in ${language}, Quick Sort provides the best average-case performance.`,
+              },
+              {
+                title: `${language} ${topic} Search Algorithm MCQ ${i + 1}`,
+                content: `What is the time complexity of searching for element ${10 + i} in a sorted array using ${language}?\n\n**Array:**\n[1, 3, 5, 7, 9, 11, 13, 15, 17, 19]`,
+                options: [
+                  "O(1) - constant time",
+                  "O(log n) - logarithmic time",
+                  "O(n) - linear time",
+                  "O(n²) - quadratic time",
+                ],
+                correctAnswer: "O(log n) - logarithmic time",
+                explanation: `Binary search in a sorted array has O(log n) time complexity in ${language}.`,
+              },
+              {
+                title: `${language} ${topic} Data Structure MCQ ${i + 1}`,
+                content: `Which data structure is best for implementing a priority queue in ${language}?\n\n**Requirements:**\n- Insert operations: ${100 + i} per second\n- Extract max operations: ${50 + i} per second`,
+                options: [
+                  "Array - simple but inefficient",
+                  "Linked List - good for insertions",
+                  "Binary Heap - optimal for priority queues",
+                  "Binary Search Tree - balanced operations",
+                ],
+                correctAnswer: "Binary Heap - optimal for priority queues",
+                explanation: `Binary Heap provides O(log n) for both insert and extract operations in ${language} priority queues.`,
+              },
+              {
+                title: `${language} ${topic} Dynamic Programming MCQ ${i + 1}`,
+                content: `How would you solve the Fibonacci sequence problem in ${language} using dynamic programming?\n\n**Problem:**\nCalculate the ${10 + i}th Fibonacci number efficiently.`,
+                options: [
+                  "Recursive approach - simple but exponential time",
+                  "Memoization - cache recursive results",
+                  "Tabulation - bottom-up approach",
+                  "Iterative approach - space efficient",
+                ],
+                correctAnswer: "Tabulation - bottom-up approach",
+                explanation: `Tabulation provides O(n) time and O(1) space for Fibonacci in ${language}, avoiding stack overflow.`,
+              },
+              {
+                title: `${language} ${topic} Graph Algorithm MCQ ${i + 1}`,
+                content: `Which algorithm finds the shortest path in a weighted graph using ${language}?\n\n**Graph:**\n${5 + i} nodes with ${10 + i * 2} weighted edges.`,
+                options: [
+                  "Breadth-First Search (BFS)",
+                  "Depth-First Search (DFS)",
+                  "Dijkstra's Algorithm",
+                  "Bellman-Ford Algorithm",
+                ],
+                correctAnswer: "Dijkstra's Algorithm",
+                explanation: `Dijkstra's Algorithm efficiently finds shortest paths in weighted graphs using ${language}.`,
+              },
+            ];
+          } else {
+            // Default templates for other topics
+            mcqTemplates = [
+              {
+                title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
+                content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+                options: ["20, 10", "10, 20", "20, 20", "10, 10"],
+                correctAnswer: "20, 10",
+                explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
+              },
+              {
+                title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
+                content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
+                options: [
+                  "[2, 4, 6, 8, 10]",
+                  "[1, 2, 3, 4, 5]",
+                  "Error",
+                  "Undefined",
+                ],
+                correctAnswer: "[1, 2, 3, 4, 5]",
+                explanation: `The map() method creates a new array and doesn't modify the original array.`,
+              },
+              {
+                title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
+                content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
+                options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
+                correctAnswer: "3, 1, 4, 2",
+                explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
+              },
+              {
+                title: `${language} ${topic} Object Destructuring MCQ ${i + 1}`,
+                content: `What is the value of 'name' after this ${language} destructuring?\n\n\`\`\`${language.toLowerCase()}\nconst user = { id: 1, name: 'John', email: 'john@example.com' };\nconst { name, age = 25 } = user;\nconsole.log(name);\n\`\`\``,
+                options: ["'John'", "undefined", "25", "Error"],
+                correctAnswer: "'John'",
+                explanation: `Destructuring extracts the 'name' property from the user object, which is 'John'. The age default value doesn't affect name.`,
+              },
+              {
+                title: `${language} ${topic} Closure MCQ ${i + 1}`,
+                content: `What will this ${language} closure code output?\n\n\`\`\`${language.toLowerCase()}\nfunction createCounter() {\n  let count = 0;\n  return function() {\n    return ++count;\n  };\n}\nconst counter = createCounter();\nconsole.log(counter());\nconsole.log(counter());\n\`\`\``,
+                options: ["0, 1", "1, 2", "1, 1", "Error"],
+                correctAnswer: "1, 2",
+                explanation: `The closure maintains the count variable in its scope. Each call increments and returns the current count.`,
+              },
+            ];
+          }
 
           const selectedMCQ = mcqTemplates[i % mcqTemplates.length];
 
