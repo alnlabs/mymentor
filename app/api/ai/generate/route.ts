@@ -221,10 +221,9 @@ async function generateWithAI(
     switch (type) {
       case "mcq":
         // Use predefined template if available, otherwise create dynamic content
-        const mcqTemplate = difficultyContent.questions?.[
-          i % difficultyContent.questions.length
-        ];
-        
+        const mcqTemplate =
+          difficultyContent.questions?.[i % difficultyContent.questions.length];
+
         if (mcqTemplate && i < difficultyContent.questions.length) {
           // Use predefined template
           generatedContent.push({
@@ -250,44 +249,48 @@ async function generateWithAI(
           const dynamicQuestions = [
             {
               title: `${language} ${dynamicTopic} MCQ ${i + 1}`,
-              content: `${dynamicContext}What is the output of the following ${dynamicLanguage} code?\n\n\`\`\`${dynamicLanguage}\n// ${dynamicTopic} example\nconst result = process${dynamicTopic.charAt(0).toUpperCase() + dynamicTopic.slice(1)}();\nconsole.log(result);\n\`\`\``,
+              content: `${dynamicContext}What is the output of the following ${dynamicLanguage} code?\n\n\`\`\`${dynamicLanguage}\n// ${dynamicTopic} example\nconst result = process${
+                dynamicTopic.charAt(0).toUpperCase() + dynamicTopic.slice(1)
+              }();\nconsole.log(result);\n\`\`\``,
               options: [
-                "Expected output based on ${dynamicTopic}",
+                `Expected output based on ${dynamicTopic}`,
                 "Error or exception",
                 "Undefined or null",
-                "Different result based on context"
+                "Different result based on context",
               ],
-              correctAnswer: "Expected output based on ${dynamicTopic}",
-              explanation: `This question tests understanding of ${dynamicTopic} in ${language}. The code demonstrates ${dynamicTopic.toLowerCase()} concepts and their practical application.`
+              correctAnswer: `Expected output based on ${dynamicTopic}`,
+              explanation: `This question tests understanding of ${dynamicTopic} in ${language}. The code demonstrates ${dynamicTopic.toLowerCase()} concepts and their practical application.`,
             },
             {
               title: `${language} ${dynamicTopic} Best Practices MCQ ${i + 1}`,
               content: `${dynamicContext}Which of the following is the best practice for ${dynamicTopic.toLowerCase()} in ${language}?`,
               options: [
-                "Use modern ${language} features and patterns",
+                `Use modern ${language} features and patterns`,
                 "Always use legacy approaches for compatibility",
                 "Ignore performance considerations",
-                "Skip error handling for simplicity"
+                "Skip error handling for simplicity",
               ],
-              correctAnswer: "Use modern ${language} features and patterns",
-              explanation: `Best practices for ${dynamicTopic} in ${language} include using modern features, proper error handling, and performance optimization.`
+              correctAnswer: `Use modern ${language} features and patterns`,
+              explanation: `Best practices for ${dynamicTopic} in ${language} include using modern features, proper error handling, and performance optimization.`,
             },
             {
               title: `${language} ${dynamicTopic} Implementation MCQ ${i + 1}`,
               content: `${dynamicContext}How would you implement a ${dynamicTopic.toLowerCase()} solution in ${language}?`,
               options: [
-                "Using appropriate design patterns and ${language} features",
+                `Using appropriate design patterns and ${language} features`,
                 "Copy-pasting code from the internet",
                 "Using the most complex approach possible",
-                "Avoiding any external libraries or frameworks"
+                "Avoiding any external libraries or frameworks",
               ],
-              correctAnswer: "Using appropriate design patterns and ${language} features",
-              explanation: `Proper implementation of ${dynamicTopic} in ${language} involves understanding design patterns, language features, and best practices.`
-            }
+              correctAnswer:
+                `Using appropriate design patterns and ${language} features`,
+              explanation: `Proper implementation of ${dynamicTopic} in ${language} involves understanding design patterns, language features, and best practices.`,
+            },
           ];
 
-          const selectedQuestion = dynamicQuestions[i % dynamicQuestions.length];
-          
+          const selectedQuestion =
+            dynamicQuestions[i % dynamicQuestions.length];
+
           generatedContent.push({
             id,
             type: "question",
@@ -311,10 +314,9 @@ async function generateWithAI(
         break;
 
       case "problem":
-        const problemTemplate = difficultyContent.problems?.[
-          i % difficultyContent.problems.length
-        ];
-        
+        const problemTemplate =
+          difficultyContent.problems?.[i % difficultyContent.problems.length];
+
         if (problemTemplate && i < difficultyContent.problems.length) {
           // Use predefined template
           generatedContent.push({
@@ -337,19 +339,25 @@ async function generateWithAI(
           // Create dynamic problem based on form settings
           const dynamicProblems = [
             {
-              title: `${language} ${dynamicTopic} Implementation Problem ${i + 1}`,
+              title: `${language} ${dynamicTopic} Implementation Problem ${
+                i + 1
+              }`,
               content: `Write a function to solve the following problem:\n\n**Problem Description:**\nCreate a ${dynamicTopic.toLowerCase()} system in ${language}.\n\n**Requirements:**\n- Implement using modern ${language} features\n- Handle edge cases and errors gracefully\n- Include proper documentation and comments\n- Optimize for performance and readability\n- Follow ${language} best practices\n\n${dynamicContext}`,
-              explanation: `This problem tests implementation skills for ${dynamicTopic} in ${language}, including design patterns, error handling, and best practices.`
+              explanation: `This problem tests implementation skills for ${dynamicTopic} in ${language}, including design patterns, error handling, and best practices.`,
             },
             {
-              title: `${language} ${dynamicTopic} Optimization Problem ${i + 1}`,
-              content: `Optimize the following ${dynamicTopic.toLowerCase()} code in ${language}:\n\n**Current Implementation:**\n\`\`\`${dynamicLanguage}\n// Inefficient ${dynamicTopic} implementation\nfunction process${dynamicTopic.charAt(0).toUpperCase() + dynamicTopic.slice(1)}() {\n  // TODO: Optimize this code\n}\n\`\`\`\n\n**Requirements:**\n- Improve performance and efficiency\n- Maintain functionality and readability\n- Add proper error handling\n- Include performance benchmarks\n\n${dynamicContext}`,
-              explanation: `This problem focuses on optimizing ${dynamicTopic} implementations in ${language}, considering performance, maintainability, and best practices.`
-            }
+              title: `${language} ${dynamicTopic} Optimization Problem ${
+                i + 1
+              }`,
+              content: `Optimize the following ${dynamicTopic.toLowerCase()} code in ${language}:\n\n**Current Implementation:**\n\`\`\`${dynamicLanguage}\n// Inefficient ${dynamicTopic} implementation\nfunction process${
+                dynamicTopic.charAt(0).toUpperCase() + dynamicTopic.slice(1)
+              }() {\n  // TODO: Optimize this code\n}\n\`\`\`\n\n**Requirements:**\n- Improve performance and efficiency\n- Maintain functionality and readability\n- Add proper error handling\n- Include performance benchmarks\n\n${dynamicContext}`,
+              explanation: `This problem focuses on optimizing ${dynamicTopic} implementations in ${language}, considering performance, maintainability, and best practices.`,
+            },
           ];
 
           const selectedProblem = dynamicProblems[i % dynamicProblems.length];
-          
+
           generatedContent.push({
             id,
             type: "problem",
@@ -374,7 +382,9 @@ async function generateWithAI(
         generatedContent.push({
           id,
           type: "question",
-          title: `Comprehensive ${language} ${dynamicTopic} Exam Question ${i + 1}`,
+          title: `Comprehensive ${language} ${dynamicTopic} Exam Question ${
+            i + 1
+          }`,
           content: `**Exam Question:**\n\n${dynamicContext}Explain the concept of ${dynamicTopic.toLowerCase()} in ${language} and provide practical examples. Include:\n\n1. Definition and purpose of ${dynamicTopic}\n2. Syntax and usage in ${language}\n3. Common pitfalls and challenges\n4. Best practices and optimization\n5. Real-world applications\n\nProvide code examples to support your explanation.`,
           difficulty,
           category: topic,
@@ -394,7 +404,9 @@ async function generateWithAI(
         generatedContent.push({
           id,
           type: "interview_question",
-          title: `Senior ${language} ${dynamicTopic} Interview Question ${i + 1}`,
+          title: `Senior ${language} ${dynamicTopic} Interview Question ${
+            i + 1
+          }`,
           content: `**Interview Question:**\n\n${dynamicContext}How would you design a system to handle ${dynamicTopic.toLowerCase()} in ${language}? Consider:\n\n- Scalability requirements and architecture\n- Performance optimization strategies\n- Error handling and resilience patterns\n- Testing strategies and quality assurance\n- Deployment and monitoring considerations\n- Security and data protection\n\nWalk through your design process and justify your decisions.`,
           difficulty,
           category: topic,
