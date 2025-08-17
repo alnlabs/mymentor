@@ -127,7 +127,7 @@ export default function AddMCQPage() {
 
       if (result.success) {
         alert("MCQ saved successfully!");
-        // Reset form
+        // Reset form to initial state
         setMCQ({
           question: "",
           options: ["", "", "", ""],
@@ -261,6 +261,29 @@ export default function AddMCQPage() {
         throw new Error(result.error || "Failed to save AI generated content");
       }
 
+      // Clear the form after successful save
+      setMCQ({
+        question: "",
+        options: ["", "", "", ""],
+        correctAnswer: 0,
+        explanation: "",
+        category: "",
+        subject: "",
+        topic: "",
+        tool: "",
+        technologyStack: "",
+        domain: "",
+        skillLevel: "beginner",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        difficulty: "easy",
+        tags: "",
+        companies: "",
+        priority: "medium",
+        status: "draft",
+      });
+
       return result;
     } catch (error) {
       console.error("Error saving AI content:", error);
@@ -318,6 +341,38 @@ export default function AddMCQPage() {
                 className="flex items-center"
               >
                 ← Back to MCQs
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm("Are you sure you want to clear the form?")) {
+                    setMCQ({
+                      question: "",
+                      options: ["", "", "", ""],
+                      correctAnswer: 0,
+                      explanation: "",
+                      category: "",
+                      subject: "",
+                      topic: "",
+                      tool: "",
+                      technologyStack: "",
+                      domain: "",
+                      skillLevel: "beginner",
+                      jobRole: "",
+                      companyType: "",
+                      interviewType: "",
+                      difficulty: "easy",
+                      tags: "",
+                      companies: "",
+                      priority: "medium",
+                      status: "draft",
+                    });
+                  }
+                }}
+                className="flex items-center"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear Form
               </Button>
               <Button
                 onClick={handleSave}
