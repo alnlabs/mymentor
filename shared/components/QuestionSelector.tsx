@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Loading } from "./Loading";
-import { 
-  Search, 
-  Filter, 
-  CheckCircle, 
-  AlertCircle, 
-  BookOpen, 
+import {
+  Search,
+  Filter,
+  CheckCircle,
+  AlertCircle,
+  BookOpen,
   Code,
   Plus,
-  X
+  X,
 } from "lucide-react";
 
 interface Question {
@@ -101,7 +101,9 @@ export default function QuestionSelector({
         setQuestions(result.data || []);
         setMessage({
           type: "success",
-          text: `Found ${result.data?.length || 0} questions matching your criteria.`,
+          text: `Found ${
+            result.data?.length || 0
+          } questions matching your criteria.`,
         });
       } else {
         throw new Error(result.error || "Failed to fetch questions");
@@ -122,17 +124,19 @@ export default function QuestionSelector({
   }, [filters, searchTerm]);
 
   const handleQuestionToggle = (question: Question) => {
-    const isSelected = selectedQuestions.some(q => q.id === question.id);
-    
+    const isSelected = selectedQuestions.some((q) => q.id === question.id);
+
     if (isSelected) {
-      onQuestionsSelected(selectedQuestions.filter(q => q.id !== question.id));
+      onQuestionsSelected(
+        selectedQuestions.filter((q) => q.id !== question.id)
+      );
     } else {
       onQuestionsSelected([...selectedQuestions, question]);
     }
   };
 
   const isQuestionSelected = (questionId: string) => {
-    return selectedQuestions.some(q => q.id === questionId);
+    return selectedQuestions.some((q) => q.id === questionId);
   };
 
   const clearFilters = () => {
@@ -185,7 +189,9 @@ export default function QuestionSelector({
             </label>
             <select
               value={filters.language}
-              onChange={(e) => setFilters(prev => ({ ...prev, language: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, language: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {languages.map((lang) => (
@@ -202,7 +208,9 @@ export default function QuestionSelector({
             </label>
             <select
               value={filters.topic}
-              onChange={(e) => setFilters(prev => ({ ...prev, topic: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, topic: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {topics.map((topic) => (
@@ -219,7 +227,9 @@ export default function QuestionSelector({
             </label>
             <select
               value={filters.difficulty}
-              onChange={(e) => setFilters(prev => ({ ...prev, difficulty: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, difficulty: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {difficulties.map((diff) => (
@@ -236,7 +246,12 @@ export default function QuestionSelector({
             </label>
             <select
               value={filters.type}
-              onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as "all" | "mcq" | "problem" }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  type: e.target.value as "all" | "mcq" | "problem",
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Types</option>
@@ -251,7 +266,12 @@ export default function QuestionSelector({
             </label>
             <select
               value={filters.limit}
-              onChange={(e) => setFilters(prev => ({ ...prev, limit: parseInt(e.target.value) }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  limit: parseInt(e.target.value),
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={10}>10 Questions</option>
@@ -325,8 +345,12 @@ export default function QuestionSelector({
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {questions.map((question) => {
               const isSelected = isQuestionSelected(question.id);
-              const questionText = question.title || question.question || question.content || "No content";
-              
+              const questionText =
+                question.title ||
+                question.question ||
+                question.content ||
+                "No content";
+
               return (
                 <div
                   key={question.id}
@@ -408,7 +432,10 @@ export default function QuestionSelector({
                     <Code className="w-4 h-4 text-purple-600" />
                   )}
                   <span className="text-sm font-medium">
-                    {question.title || question.question || question.content || "No content"}
+                    {question.title ||
+                      question.question ||
+                      question.content ||
+                      "No content"}
                   </span>
                   <span className="text-xs px-2 py-1 bg-gray-200 text-gray-600 rounded">
                     {question.difficulty}

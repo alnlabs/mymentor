@@ -4,7 +4,7 @@ import { prisma } from "@/shared/lib/database";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    
+
     const language = searchParams.get("language");
     const topic = searchParams.get("topic");
     const difficulty = searchParams.get("difficulty");
