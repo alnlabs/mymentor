@@ -99,9 +99,22 @@ export default function AddExamPage() {
 
   const handleCreateExamFromAI = async (content: GeneratedContent[]) => {
     try {
-      // Convert AI content to exam format and create exam
+      // Ensure all required fields are provided with defaults if not set
       const examData = {
-        ...formData,
+        title: formData.title || `AI Generated Exam - ${new Date().toLocaleDateString()}`,
+        description: formData.description || "Exam created from AI-generated questions",
+        duration: formData.duration || 60,
+        difficulty: formData.difficulty || "Medium",
+        category: formData.category || "Programming",
+        targetRole: formData.targetRole || "",
+        questionTypes: formData.questionTypes || "Mixed",
+        totalQuestions: formData.totalQuestions || content.length,
+        passingScore: formData.passingScore || 60,
+        enableTimedQuestions: formData.enableTimedQuestions || false,
+        enableOverallTimer: formData.enableOverallTimer || true,
+        defaultQuestionTime: formData.defaultQuestionTime || 120,
+        isActive: formData.isActive !== undefined ? formData.isActive : true,
+        isPublic: formData.isPublic !== undefined ? formData.isPublic : true,
         autoGenerate: false,
         selectedQuestions: content.map((item) => ({
           id: item.id,
@@ -114,8 +127,12 @@ export default function AddExamPage() {
           category: item.category,
           topic: item.category,
           tool: item.language || "JavaScript",
-          difficulty: item.difficulty === "beginner" ? "easy" : 
-                     item.difficulty === "intermediate" ? "medium" : "hard",
+          difficulty:
+            item.difficulty === "beginner"
+              ? "easy"
+              : item.difficulty === "intermediate"
+              ? "medium"
+              : "hard",
           skillLevel: item.difficulty,
         })),
       };
@@ -137,7 +154,7 @@ export default function AddExamPage() {
 
       // Redirect to exams page on success
       window.location.href = "/admin/exams";
-      
+
       return result;
     } catch (error) {
       console.error("Error creating exam from AI content:", error);
