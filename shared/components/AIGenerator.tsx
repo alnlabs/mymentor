@@ -121,6 +121,7 @@ export default function AIGenerator({
           : currentSettings.difficulty === "hard"
           ? "advanced"
           : "intermediate") as "beginner" | "intermediate" | "advanced",
+        count: prev.count || 5, // Ensure count is preserved
         context: currentSettings
           ? `Subject: ${currentSettings.subject || ""}, Domain: ${
               currentSettings.domain || ""
@@ -325,13 +326,16 @@ export default function AIGenerator({
               type="number"
               min="1"
               max="100"
-              value={config.count}
-              onChange={(e) =>
-                setConfig((prev) => ({
-                  ...prev,
-                  count: parseInt(e.target.value),
-                }))
-              }
+              value={config.count || 5}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 1 && value <= 100) {
+                  setConfig((prev) => ({
+                    ...prev,
+                    count: value,
+                  }));
+                }
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>

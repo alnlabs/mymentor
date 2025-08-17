@@ -29,7 +29,7 @@ async function generateWithAI(
     // Enhanced content generation with realistic, varied questions
     const baseTimestamp = Date.now();
     const randomSeed = Math.random().toString(36).substr(2, 9);
-    
+
     for (let i = 0; i < count; i++) {
       const id = `ai-generated-${type}-${baseTimestamp + i}-${randomSeed}-${i}`;
       const uniqueSuffix = `${randomSeed}-${i}`;
@@ -48,7 +48,12 @@ async function generateWithAI(
             {
               title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
               content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
-              options: ["[2, 4, 6, 8, 10]", "[1, 2, 3, 4, 5]", "Error", "Undefined"],
+              options: [
+                "[2, 4, 6, 8, 10]",
+                "[1, 2, 3, 4, 5]",
+                "Error",
+                "Undefined",
+              ],
               correctAnswer: "[1, 2, 3, 4, 5]",
               explanation: `The map() method creates a new array and doesn't modify the original array.`,
             },
@@ -76,7 +81,12 @@ async function generateWithAI(
             {
               title: `${language} ${topic} Promise MCQ ${i + 1}`,
               content: `What happens when a Promise is rejected in ${language}?\n\n\`\`\`${language.toLowerCase()}\nconst promise = new Promise((resolve, reject) => {\n  reject('Error occurred');\n});\npromise.then(result => console.log('Success:', result))\n       .catch(error => console.log('Error:', error));\n\`\`\``,
-              options: ["Success: Error occurred", "Error: Error occurred", "Nothing", "Promise pending"],
+              options: [
+                "Success: Error occurred",
+                "Error: Error occurred",
+                "Nothing",
+                "Promise pending",
+              ],
               correctAnswer: "Error: Error occurred",
               explanation: `When a Promise is rejected, the .catch() handler is called with the rejection reason.`,
             },
@@ -108,15 +118,16 @@ async function generateWithAI(
                 "No difference, both work the same",
                 "Default export can be imported with any name, named exports must use exact names",
                 "Default exports are private, named exports are public",
-                "Default exports are synchronous, named exports are asynchronous"
+                "Default exports are synchronous, named exports are asynchronous",
               ],
-              correctAnswer: "Default export can be imported with any name, named exports must use exact names",
+              correctAnswer:
+                "Default export can be imported with any name, named exports must use exact names",
               explanation: `Default exports allow renaming during import, while named exports require the exact export name.`,
-            }
+            },
           ];
 
           const selectedMCQ = mcqTemplates[i % mcqTemplates.length];
-          
+
           generatedContent.push({
             id,
             type: "question",
@@ -171,15 +182,19 @@ async function generateWithAI(
               explanation: `This tests advanced algorithm implementation, recursion, and sorting techniques in ${language}.`,
             },
             {
-              title: `${language} ${topic} Queue Implementation Problem ${i + 1}`,
+              title: `${language} ${topic} Queue Implementation Problem ${
+                i + 1
+              }`,
               content: `Implement a Queue data structure in ${language}.\n\n**Requirements:**\n- Include enqueue, dequeue, peek, and isEmpty methods\n- Handle edge cases (empty queue operations)\n- Consider both array and linked list implementations\n- Analyze time complexity for each operation\n\n**Example:**\nconst queue = new Queue();\nqueue.enqueue(1);\nqueue.enqueue(2);\nqueue.dequeue(); // returns 1`,
               explanation: `This tests data structure implementation and object-oriented programming in ${language}.`,
             },
             {
-              title: `${language} ${topic} Promise Implementation Problem ${i + 1}`,
+              title: `${language} ${topic} Promise Implementation Problem ${
+                i + 1
+              }`,
               content: `Implement a basic Promise-like class in ${language}.\n\n**Requirements:**\n- Support .then() and .catch() methods\n- Handle both resolve and reject states\n- Support chaining of promises\n- Handle asynchronous operations\n\n**Example:**\nconst promise = new MyPromise((resolve, reject) => {\n  setTimeout(() => resolve('Success'), 1000);\n});`,
               explanation: `This tests advanced ${language} concepts, asynchronous programming, and class implementation.`,
-            }
+            },
           ];
 
           const selectedProblem = problemTemplates[i % problemTemplates.length];
