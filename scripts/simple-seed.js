@@ -33,58 +33,6 @@ const essentialUsers = [
   },
 ];
 
-// Minimal content for testing
-const minimalProblems = [
-  {
-    title: 'Hello World',
-    description: 'Write a function that returns "Hello, World!"',
-    difficulty: 'easy',
-    category: 'basics',
-    subject: 'Programming Fundamentals',
-    topic: 'Basic Functions',
-    tool: 'JavaScript',
-    technologyStack: 'JavaScript',
-    domain: 'Programming',
-    skillLevel: 'beginner',
-    jobRole: 'Student',
-    companyType: 'Tech',
-    interviewType: 'Technical',
-    testCases: JSON.stringify([
-      { input: '', output: '"Hello, World!"' }
-    ]),
-    solution: 'function helloWorld() { return "Hello, World!"; }',
-    hints: JSON.stringify(['Just return the string']),
-    tags: 'basics,functions,beginner',
-    companies: 'All',
-    priority: 'low',
-    status: 'active',
-  },
-];
-
-const minimalMCQs = [
-  {
-    question: 'What is 2 + 2?',
-    options: JSON.stringify(['3', '4', '5', '6']),
-    correctAnswer: 1,
-    explanation: 'Basic arithmetic: 2 + 2 = 4',
-    category: 'basics',
-    subject: 'Mathematics',
-    topic: 'Basic Arithmetic',
-    tool: 'General',
-    technologyStack: 'General',
-    domain: 'Mathematics',
-    skillLevel: 'beginner',
-    jobRole: 'Student',
-    companyType: 'All',
-    interviewType: 'General',
-    difficulty: 'easy',
-    tags: 'basics,math,beginner',
-    companies: 'All',
-    priority: 'low',
-    status: 'active',
-  },
-];
-
 async function simpleSeed() {
   console.log('🌱 Starting simple database seeding...');
 
@@ -106,7 +54,7 @@ async function simpleSeed() {
     await prisma.problem.deleteMany();
     await prisma.user.deleteMany();
 
-    // Create essential users
+    // Create essential users only
     console.log('👥 Creating essential users...');
     for (const userData of essentialUsers) {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -118,27 +66,9 @@ async function simpleSeed() {
       });
     }
 
-    // Create minimal problems
-    console.log('💻 Creating minimal coding problems...');
-    for (const problemData of minimalProblems) {
-      await prisma.problem.create({
-        data: problemData,
-      });
-    }
-
-    // Create minimal MCQs
-    console.log('❓ Creating minimal MCQ questions...');
-    for (const mcqData of minimalMCQs) {
-      await prisma.mCQQuestion.create({
-        data: mcqData,
-      });
-    }
-
     console.log('✅ Simple seeding completed successfully!');
     console.log('\n📊 Seeded Data Summary:');
     console.log(`- ${essentialUsers.length} users created`);
-    console.log(`- ${minimalProblems.length} coding problems created`);
-    console.log(`- ${minimalMCQs.length} MCQ questions created`);
 
     console.log('\n👑 Login Credentials:');
     console.log('- Super Admin: superadmin@interview-platform.com / superadmin123');
