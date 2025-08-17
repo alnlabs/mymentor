@@ -38,24 +38,35 @@ async function generateWithAI(
         case "mcq":
           // Create topic-specific MCQ questions
           let mcqTemplates = [];
-          
+
           if (topic === "System Design") {
             mcqTemplates = [
               {
                 title: `${language} ${topic} Load Balancer MCQ ${i + 1}`,
-                content: `Which load balancing algorithm is best for ${language} applications with ${10 + i} servers?\n\n**Scenario:**\nYou have ${10 + i} ${language} servers and need to distribute traffic efficiently.`,
+                content: `Which load balancing algorithm is best for ${language} applications with ${
+                  10 + i
+                } servers?\n\n**Scenario:**\nYou have ${
+                  10 + i
+                } ${language} servers and need to distribute traffic efficiently.`,
                 options: [
                   "Round Robin - distributes requests evenly",
                   "Least Connections - sends to server with fewest active connections",
                   "IP Hash - routes based on client IP",
                   "Random - randomly selects server",
                 ],
-                correctAnswer: "Least Connections - sends to server with fewest active connections",
-                explanation: `For ${language} applications with ${10 + i} servers, Least Connections provides better performance by avoiding overloaded servers.`,
+                correctAnswer:
+                  "Least Connections - sends to server with fewest active connections",
+                explanation: `For ${language} applications with ${
+                  10 + i
+                } servers, Least Connections provides better performance by avoiding overloaded servers.`,
               },
               {
                 title: `${language} ${topic} Database Scaling MCQ ${i + 1}`,
-                content: `How would you scale a ${language} application's database to handle ${1000 + i * 100} requests per second?\n\n**Current Setup:**\nSingle database server handling ${500 + i * 50} requests/sec.`,
+                content: `How would you scale a ${language} application's database to handle ${
+                  1000 + i * 100
+                } requests per second?\n\n**Current Setup:**\nSingle database server handling ${
+                  500 + i * 50
+                } requests/sec.`,
                 options: [
                   "Vertical scaling - upgrade server hardware",
                   "Horizontal scaling - add read replicas",
@@ -63,11 +74,15 @@ async function generateWithAI(
                   "Caching - add Redis/memcached layer",
                 ],
                 correctAnswer: "Horizontal scaling - add read replicas",
-                explanation: `Horizontal scaling with read replicas is most effective for ${language} applications needing to handle ${1000 + i * 100} requests/sec.`,
+                explanation: `Horizontal scaling with read replicas is most effective for ${language} applications needing to handle ${
+                  1000 + i * 100
+                } requests/sec.`,
               },
               {
                 title: `${language} ${topic} Microservices MCQ ${i + 1}`,
-                content: `When should you split a ${language} monolith into microservices?\n\n**Current Application:**\n${language} app with ${5 + i} modules and ${20 + i * 2} developers.`,
+                content: `When should you split a ${language} monolith into microservices?\n\n**Current Application:**\n${language} app with ${
+                  5 + i
+                } modules and ${20 + i * 2} developers.`,
                 options: [
                   "Always - microservices are always better",
                   "When team size exceeds ${15 + i} developers",
@@ -79,7 +94,11 @@ async function generateWithAI(
               },
               {
                 title: `${language} ${topic} Caching Strategy MCQ ${i + 1}`,
-                content: `Which caching strategy is best for a ${language} e-commerce application?\n\n**Requirements:**\n- Product catalog with ${10000 + i * 1000} items\n- User sessions with ${1000 + i * 100} concurrent users`,
+                content: `Which caching strategy is best for a ${language} e-commerce application?\n\n**Requirements:**\n- Product catalog with ${
+                  10000 + i * 1000
+                } items\n- User sessions with ${
+                  1000 + i * 100
+                } concurrent users`,
                 options: [
                   "Cache-aside - load data on demand",
                   "Write-through - update cache immediately",
@@ -91,14 +110,17 @@ async function generateWithAI(
               },
               {
                 title: `${language} ${topic} API Design MCQ ${i + 1}`,
-                content: `How should you design REST APIs for a ${language} microservices architecture?\n\n**Architecture:**\n${3 + i} microservices communicating via HTTP APIs.`,
+                content: `How should you design REST APIs for a ${language} microservices architecture?\n\n**Architecture:**\n${
+                  3 + i
+                } microservices communicating via HTTP APIs.`,
                 options: [
                   "Use different API versions for each service",
                   "Standardize on common API patterns and conventions",
                   "Let each team design APIs independently",
                   "Use GraphQL for all service communication",
                 ],
-                correctAnswer: "Standardize on common API patterns and conventions",
+                correctAnswer:
+                  "Standardize on common API patterns and conventions",
                 explanation: `For ${language} microservices, standardized API patterns ensure consistency and easier integration.`,
               },
             ];
@@ -106,7 +128,13 @@ async function generateWithAI(
             mcqTemplates = [
               {
                 title: `${language} ${topic} Sorting Algorithm MCQ ${i + 1}`,
-                content: `Which sorting algorithm is most efficient for an array of ${100 + i * 10} elements in ${language}?\n\n**Array:**\n[${5 + i}, ${3 + i}, ${7 + i}, ${1 + i}, ${9 + i}, ${2 + i}, ${8 + i}, ${4 + i}, ${6 + i}]`,
+                content: `Which sorting algorithm is most efficient for an array of ${
+                  100 + i * 10
+                } elements in ${language}?\n\n**Array:**\n[${5 + i}, ${
+                  3 + i
+                }, ${7 + i}, ${1 + i}, ${9 + i}, ${2 + i}, ${8 + i}, ${
+                  4 + i
+                }, ${6 + i}]`,
                 options: [
                   "Bubble Sort - O(n²) time complexity",
                   "Quick Sort - O(n log n) average case",
@@ -114,11 +142,15 @@ async function generateWithAI(
                   "Insertion Sort - O(n²) but good for small arrays",
                 ],
                 correctAnswer: "Quick Sort - O(n log n) average case",
-                explanation: `For ${100 + i * 10} elements in ${language}, Quick Sort provides the best average-case performance.`,
+                explanation: `For ${
+                  100 + i * 10
+                } elements in ${language}, Quick Sort provides the best average-case performance.`,
               },
               {
                 title: `${language} ${topic} Search Algorithm MCQ ${i + 1}`,
-                content: `What is the time complexity of searching for element ${10 + i} in a sorted array using ${language}?\n\n**Array:**\n[1, 3, 5, 7, 9, 11, 13, 15, 17, 19]`,
+                content: `What is the time complexity of searching for element ${
+                  10 + i
+                } in a sorted array using ${language}?\n\n**Array:**\n[1, 3, 5, 7, 9, 11, 13, 15, 17, 19]`,
                 options: [
                   "O(1) - constant time",
                   "O(log n) - logarithmic time",
@@ -130,7 +162,9 @@ async function generateWithAI(
               },
               {
                 title: `${language} ${topic} Data Structure MCQ ${i + 1}`,
-                content: `Which data structure is best for implementing a priority queue in ${language}?\n\n**Requirements:**\n- Insert operations: ${100 + i} per second\n- Extract max operations: ${50 + i} per second`,
+                content: `Which data structure is best for implementing a priority queue in ${language}?\n\n**Requirements:**\n- Insert operations: ${
+                  100 + i
+                } per second\n- Extract max operations: ${50 + i} per second`,
                 options: [
                   "Array - simple but inefficient",
                   "Linked List - good for insertions",
@@ -142,7 +176,9 @@ async function generateWithAI(
               },
               {
                 title: `${language} ${topic} Dynamic Programming MCQ ${i + 1}`,
-                content: `How would you solve the Fibonacci sequence problem in ${language} using dynamic programming?\n\n**Problem:**\nCalculate the ${10 + i}th Fibonacci number efficiently.`,
+                content: `How would you solve the Fibonacci sequence problem in ${language} using dynamic programming?\n\n**Problem:**\nCalculate the ${
+                  10 + i
+                }th Fibonacci number efficiently.`,
                 options: [
                   "Recursive approach - simple but exponential time",
                   "Memoization - cache recursive results",
@@ -154,7 +190,9 @@ async function generateWithAI(
               },
               {
                 title: `${language} ${topic} Graph Algorithm MCQ ${i + 1}`,
-                content: `Which algorithm finds the shortest path in a weighted graph using ${language}?\n\n**Graph:**\n${5 + i} nodes with ${10 + i * 2} weighted edges.`,
+                content: `Which algorithm finds the shortest path in a weighted graph using ${language}?\n\n**Graph:**\n${
+                  5 + i
+                } nodes with ${10 + i * 2} weighted edges.`,
                 options: [
                   "Breadth-First Search (BFS)",
                   "Depth-First Search (DFS)",
@@ -163,10 +201,75 @@ async function generateWithAI(
                 ],
                 correctAnswer: "Dijkstra's Algorithm",
                 explanation: `Dijkstra's Algorithm efficiently finds shortest paths in weighted graphs using ${language}.`,
-              },
-            ];
-          } else {
-            // Default templates for other topics
+                             },
+             ];
+           } else if (topic === "Database") {
+             mcqTemplates = [
+               {
+                 title: `${language} ${topic} SQL Query MCQ ${i + 1}`,
+                 content: `What is the correct SQL query to find all users who registered in the last ${
+                   30 + i
+                 } days?\n\n**Table:**\nusers (id, name, email, created_at, status)\n\n**Requirements:**\n- Active users only\n- Registered within last ${30 + i} days\n- Order by registration date`,
+                 options: [
+                   `SELECT * FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL ${30 + i} DAY)`,
+                   `SELECT * FROM users WHERE created_at > NOW() - ${30 + i}`,
+                   `SELECT * FROM users WHERE status = 'active' AND created_at >= DATE_SUB(NOW(), INTERVAL ${30 + i} DAY) ORDER BY created_at`,
+                   `SELECT * FROM users WHERE created_at BETWEEN NOW() AND DATE_SUB(NOW(), INTERVAL ${30 + i} DAY)`,
+                 ],
+                 correctAnswer: `SELECT * FROM users WHERE status = 'active' AND created_at >= DATE_SUB(NOW(), INTERVAL ${30 + i} DAY) ORDER BY created_at`,
+                 explanation: `This query filters active users, checks registration within last ${30 + i} days, and orders by creation date.`,
+               },
+               {
+                 title: `${language} ${topic} Database Index MCQ ${i + 1}`,
+                 content: `Which index strategy is best for a ${language} application's user table with ${10000 + i * 1000} records?\n\n**Table:**\nusers (id, email, username, created_at, last_login)\n\n**Query Pattern:**\n- Frequent searches by email\n- Occasional searches by username\n- Rare searches by created_at`,
+                 options: [
+                   "Single index on (email, username, created_at)",
+                   "Separate indexes on email, username, and created_at",
+                   "Composite index on (email, username) and separate index on created_at",
+                   "No indexes needed for small tables",
+                 ],
+                 correctAnswer: "Composite index on (email, username) and separate index on created_at",
+                 explanation: `For ${10000 + i * 1000} records, composite index on frequently searched columns with separate index for less common searches optimizes performance.`,
+               },
+               {
+                 title: `${language} ${topic} Transaction MCQ ${i + 1}`,
+                 content: `What happens when a ${language} application tries to update ${5 + i} user records in a single transaction?\n\n**Scenario:**\n- Update user status to 'inactive'\n- Update last_login timestamp\n- Update profile_count field\n\n**Database:**\nMySQL with InnoDB engine`,
+                 options: [
+                   "All updates succeed or all fail (ACID compliance)",
+                   "Some updates succeed, others fail randomly",
+                   "Updates are queued and processed one by one",
+                   "Only the first update succeeds",
+                 ],
+                 correctAnswer: "All updates succeed or all fail (ACID compliance)",
+                 explanation: `InnoDB transactions ensure ACID properties - all ${5 + i} updates either commit together or rollback together.`,
+               },
+               {
+                 title: `${language} ${topic} Database Design MCQ ${i + 1}`,
+                 content: `How should you design a database for a ${language} e-commerce application?\n\n**Requirements:**\n- ${1000 + i * 100} products\n- ${10000 + i * 1000} orders\n- ${50000 + i * 5000} customers\n- Support for product categories and reviews`,
+                 options: [
+                   "Single table with all data",
+                   "Normalized design with separate tables for products, orders, customers, categories, reviews",
+                   "Denormalized design with embedded JSON data",
+                   "NoSQL database only",
+                 ],
+                 correctAnswer: "Normalized design with separate tables for products, orders, customers, categories, reviews",
+                 explanation: `For ${language} e-commerce with ${1000 + i * 100} products and ${10000 + i * 1000} orders, normalized design prevents data redundancy and maintains integrity.`,
+               },
+               {
+                 title: `${language} ${topic} Performance MCQ ${i + 1}`,
+                 content: `Which query optimization technique is most effective for a ${language} application with ${100000 + i * 10000} user records?\n\n**Slow Query:**\nSELECT * FROM users WHERE email LIKE '%@gmail.com' AND status = 'active' ORDER BY created_at DESC LIMIT 50`,
+                 options: [
+                   "Add index on (email, status, created_at)",
+                   "Use SELECT specific columns instead of *",
+                   "Add WHERE clause to filter results",
+                   "Use LIMIT to reduce results",
+                 ],
+                 correctAnswer: "Add index on (email, status, created_at)",
+                 explanation: `For ${100000 + i * 10000} records, a composite index on (email, status, created_at) will dramatically improve query performance.`,
+               },
+             ];
+           } else {
+             // Default templates for other topics
             mcqTemplates = [
               {
                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
@@ -190,7 +293,12 @@ async function generateWithAI(
               {
                 title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
                 content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
-                options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
+                options: [
+                  "1, 3, 4, 2",
+                  "3, 1, 4, 2",
+                  "1, 2, 3, 4",
+                  "3, 4, 1, 2",
+                ],
                 correctAnswer: "3, 1, 4, 2",
                 explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
               },
