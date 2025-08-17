@@ -56,24 +56,53 @@ export default function AIGenerator({
   currentSettings,
   clearContent = false,
 }: AIGeneratorProps) {
-  const [config, setConfig] = useState<GenerationConfig>({
-    language: currentSettings?.tool || "JavaScript",
-    topic: currentSettings?.topic || "General",
-    difficulty: (currentSettings?.difficulty === "easy"
-      ? "beginner"
-      : currentSettings?.difficulty === "medium"
-      ? "intermediate"
-      : currentSettings?.difficulty === "hard"
-      ? "advanced"
-      : "intermediate") as "beginner" | "intermediate" | "advanced",
-    count: 5,
-    context: currentSettings
-      ? `Subject: ${currentSettings.subject || ""}, Domain: ${
-          currentSettings.domain || ""
-        }, Category: ${currentSettings.category || ""}, Tags: ${
-          currentSettings.tags || ""
-        }`
-      : undefined,
+  const [config, setConfig] = useState<GenerationConfig>(() => {
+    // Try to load saved form data first
+    const savedForm = loadSavedForm();
+    
+    if (savedForm) {
+      return {
+        ...savedForm,
+        // Override with currentSettings if available
+        language: currentSettings?.tool || savedForm.language,
+        topic: currentSettings?.topic || savedForm.topic,
+        difficulty: (currentSettings?.difficulty === "easy"
+          ? "beginner"
+          : currentSettings?.difficulty === "medium"
+          ? "intermediate"
+          : currentSettings?.difficulty === "hard"
+          ? "advanced"
+          : savedForm.difficulty) as "beginner" | "intermediate" | "advanced",
+        context: currentSettings
+          ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+              currentSettings.domain || ""
+            }, Category: ${currentSettings.category || ""}, Tags: ${
+              currentSettings.tags || ""
+            }`
+          : savedForm.context,
+      };
+    }
+    
+    // Default values if no saved data
+    return {
+      language: currentSettings?.tool || "JavaScript",
+      topic: currentSettings?.topic || "General",
+      difficulty: (currentSettings?.difficulty === "easy"
+        ? "beginner"
+        : currentSettings?.difficulty === "medium"
+        ? "intermediate"
+        : currentSettings?.difficulty === "hard"
+        ? "advanced"
+        : "intermediate") as "beginner" | "intermediate" | "advanced",
+      count: 5,
+      context: currentSettings
+        ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+            currentSettings.domain || ""
+          }, Category: ${currentSettings.category || ""}, Tags: ${
+            currentSettings.tags || ""
+          }`
+        : undefined,
+    };
   });
 
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>(
@@ -85,6 +114,36 @@ export default function AIGenerator({
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  // Form persistence key
+  const formKey = `ai-generator-${type}`;
+
+  // Load saved form data from localStorage
+  const loadSavedForm = (): GenerationConfig | null => {
+    try {
+      const saved = localStorage.getItem(formKey);
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error("Error loading saved form data:", error);
+      return null;
+    }
+  };
+
+  // Save form data to localStorage
+  const saveFormData = (data: GenerationConfig) => {
+    try {
+      localStorage.setItem(formKey, JSON.stringify(data));
+    } catch (error) {
+      console.error("Error saving form data:", error);
+    }
+  };
+
+  // Update config and save to localStorage
+  const updateConfig = (updates: Partial<GenerationConfig>) => {
+    const newConfig = { ...config, ...updates };
+    setConfig(newConfig);
+    saveFormData(newConfig);
+  };
 
   const languages = [
     "JavaScript",
@@ -110,8 +169,7 @@ export default function AIGenerator({
 
   useEffect(() => {
     if (currentSettings) {
-      setConfig((prev) => ({
-        ...prev,
+      const updatedConfig = {
         language: currentSettings.tool || "JavaScript",
         topic: currentSettings.topic || "General",
         difficulty: (currentSettings.difficulty === "easy"
@@ -121,15 +179,18 @@ export default function AIGenerator({
           : currentSettings.difficulty === "hard"
           ? "advanced"
           : "intermediate") as "beginner" | "intermediate" | "advanced",
-        count: prev.count || 5, // Ensure count is preserved
+        count: config.count || 5, // Ensure count is preserved
         context: `Subject: ${currentSettings.subject || ""}, Domain: ${
           currentSettings.domain || ""
         }, Category: ${currentSettings.category || ""}, Tags: ${
           currentSettings.tags || ""
         }`,
-      }));
+      };
+      
+      setConfig(updatedConfig);
+      saveFormData(updatedConfig);
     }
-  }, [currentSettings]);
+  }, [currentSettings, config.count]);
 
   // Clear generated content when clearContent prop is true
   useEffect(() => {
@@ -293,7 +354,7 @@ export default function AIGenerator({
             <select
               value={currentSettings?.tool || config.language}
               onChange={(e) =>
-                setConfig((prev) => ({ ...prev, language: e.target.value }))
+                updateConfig({ language: e.target.value })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -312,7 +373,7 @@ export default function AIGenerator({
             <select
               value={currentSettings?.topic || config.topic}
               onChange={(e) =>
-                setConfig((prev) => ({ ...prev, topic: e.target.value }))
+                updateConfig({ topic: e.target.value })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -339,10 +400,9 @@ export default function AIGenerator({
                   : config.difficulty
               }
               onChange={(e) =>
-                setConfig((prev) => ({
-                  ...prev,
-                  difficulty: e.target.value as any,
-                }))
+                updateConfig({
+                  difficulty: e.target.value as "beginner" | "intermediate" | "advanced",
+                })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -366,20 +426,20 @@ export default function AIGenerator({
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === "") {
-                  setConfig((prev) => ({ ...prev, count: 5 }));
+                  updateConfig({ count: 5 });
                 } else {
                   const numValue = parseInt(value);
                   if (!isNaN(numValue) && numValue >= 1 && numValue <= 100) {
-                    setConfig((prev) => ({ ...prev, count: numValue }));
+                    updateConfig({ count: numValue });
                   }
                 }
               }}
               onBlur={(e) => {
                 const value = parseInt(e.target.value);
                 if (isNaN(value) || value < 1) {
-                  setConfig((prev) => ({ ...prev, count: 5 }));
+                  updateConfig({ count: 5 });
                 } else if (value > 100) {
-                  setConfig((prev) => ({ ...prev, count: 100 }));
+                  updateConfig({ count: 100 });
                 }
               }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -394,7 +454,7 @@ export default function AIGenerator({
           <textarea
             value={config.context || ""}
             onChange={(e) =>
-              setConfig((prev) => ({ ...prev, context: e.target.value }))
+              updateConfig({ context: e.target.value })
             }
             placeholder="Add specific requirements or context for the AI..."
             rows={3}
@@ -402,23 +462,47 @@ export default function AIGenerator({
           />
         </div>
 
-        <Button
-          onClick={handleGenerate}
-          disabled={isGenerating}
-          className="w-full flex items-center justify-center"
-        >
-          {isGenerating ? (
-            <>
-              <Loading size="sm" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-4 h-4 mr-2" />
-              Generate Content
-            </>
-          )}
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="flex-1 flex items-center justify-center"
+          >
+            {isGenerating ? (
+              <>
+                <Loading size="sm" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generate Content
+              </>
+            )}
+          </Button>
+          
+          <Button
+            onClick={() => {
+              const defaultConfig = {
+                language: "JavaScript",
+                topic: "General",
+                difficulty: "intermediate" as const,
+                count: 5,
+                context: "",
+              };
+              setConfig(defaultConfig);
+              saveFormData(defaultConfig);
+              setMessage({
+                type: "success",
+                text: "Form reset to default values!",
+              });
+            }}
+            variant="outline"
+            className="px-4"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </Button>
+        </div>
       </Card>
 
       {/* Message Display */}
