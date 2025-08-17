@@ -21,6 +21,7 @@ import {
   MessageSquare,
   Code,
   Brain,
+  X,
 } from "lucide-react";
 
 interface InterviewQuestion {

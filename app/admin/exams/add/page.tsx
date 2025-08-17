@@ -14,6 +14,7 @@ import {
   Save,
   BookOpen,
   Brain,
+  X,
 } from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { AutoFillSection } from "@/shared/components/exam-form/AutoFillSection";
