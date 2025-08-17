@@ -24,6 +24,13 @@ export default function AddExamPage() {
     GeneratedContent[]
   >([]);
   const [questionMode, setQuestionMode] = useState<"manual" | "ai">("manual");
+  const [questionTypes, setQuestionTypes] = useState<{
+    mcq: boolean;
+    problem: boolean;
+  }>({
+    mcq: true,
+    problem: true,
+  });
 
   const {
     formData,
@@ -139,6 +146,48 @@ export default function AddExamPage() {
             </button>
           </div>
 
+          {/* Question Type Selection */}
+          <div className="mb-6">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">
+              Question Types to Include
+            </h3>
+            <div className="flex space-x-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={questionTypes.mcq}
+                  onChange={(e) =>
+                    setQuestionTypes((prev) => ({
+                      ...prev,
+                      mcq: e.target.checked,
+                    }))
+                  }
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">MCQ Questions</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={questionTypes.problem}
+                  onChange={(e) =>
+                    setQuestionTypes((prev) => ({
+                      ...prev,
+                      problem: e.target.checked,
+                    }))
+                  }
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">Problem Questions</span>
+              </label>
+            </div>
+            {!questionTypes.mcq && !questionTypes.problem && (
+              <p className="text-sm text-red-600 mt-2">
+                Please select at least one question type
+              </p>
+            )}
+          </div>
+
           {/* Content Based on Selected Mode */}
           {questionMode === "manual" && (
             <div>
@@ -151,6 +200,7 @@ export default function AddExamPage() {
               <QuestionSelector
                 onQuestionsSelected={handleQuestionsSelected}
                 selectedQuestions={selectedQuestions}
+                questionTypes={questionTypes}
               />
             </div>
           )}
@@ -167,6 +217,7 @@ export default function AddExamPage() {
                 type="exam"
                 onContentGenerated={handleAIContentGenerated}
                 onSaveToDatabase={handleSaveAIContentToDatabase}
+                questionTypes={questionTypes}
               />
             </div>
           )}
@@ -242,6 +293,13 @@ export default function AddExamPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            
+            // Validate question types selection
+            if (!questionTypes.mcq && !questionTypes.problem) {
+              alert("Please select at least one question type (MCQ or Problem)");
+              return;
+            }
+            
             if (questionMode === "ai" && aiGeneratedContent.length > 0) {
               // Use AI-selected content
               handleSubmit(e, aiGeneratedContent);

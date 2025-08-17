@@ -34,12 +34,17 @@ interface QuestionSelectorProps {
   onQuestionsSelected: (questions: Question[]) => void;
   selectedQuestions: Question[];
   className?: string;
+  questionTypes?: {
+    mcq: boolean;
+    problem: boolean;
+  };
 }
 
 export default function QuestionSelector({
   onQuestionsSelected,
   selectedQuestions,
   className = "",
+  questionTypes,
 }: QuestionSelectorProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
@@ -79,6 +84,19 @@ export default function QuestionSelector({
   ];
 
   const difficulties = ["beginner", "intermediate", "advanced"];
+
+  // Update type filter based on questionTypes prop
+  useEffect(() => {
+    if (questionTypes) {
+      if (questionTypes.mcq && questionTypes.problem) {
+        setFilters(prev => ({ ...prev, type: "all" }));
+      } else if (questionTypes.mcq) {
+        setFilters(prev => ({ ...prev, type: "mcq" }));
+      } else if (questionTypes.problem) {
+        setFilters(prev => ({ ...prev, type: "problem" }));
+      }
+    }
+  }, [questionTypes]);
 
   const fetchQuestions = async () => {
     setLoading(true);
@@ -252,12 +270,20 @@ export default function QuestionSelector({
                   type: e.target.value as "all" | "mcq" | "problem",
                 }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={!!questionTypes}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                questionTypes ? "bg-gray-100 cursor-not-allowed" : ""
+              }`}
             >
               <option value="all">All Types</option>
               <option value="mcq">MCQ Only</option>
               <option value="problem">Problems Only</option>
             </select>
+            {questionTypes && (
+              <p className="text-xs text-gray-500 mt-1">
+                Controlled by exam settings
+              </p>
+            )}
           </div>
 
           <div>

@@ -38,6 +38,10 @@ interface AIGeneratorProps {
     tags?: string;
   };
   clearContent?: boolean;
+  questionTypes?: {
+    mcq: boolean;
+    problem: boolean;
+  };
 }
 
 interface GenerationConfig {
@@ -56,6 +60,7 @@ export default function AIGenerator({
   className = "",
   currentSettings,
   clearContent = false,
+  questionTypes,
 }: AIGeneratorProps) {
   // Form persistence key
   const formKey = `ai-generator-${type}`;
@@ -280,6 +285,7 @@ export default function AIGenerator({
               currentSettings.tags || ""
             }`
           : config.context,
+        mixTypes: questionTypes ? questionTypes.mcq && questionTypes.problem : config.mixTypes,
       };
 
       console.log("AI Generation Request:", {
