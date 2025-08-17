@@ -74,6 +74,7 @@ export default function AIGenerator({
   const saveFormData = (data: GenerationConfig) => {
     try {
       localStorage.setItem(formKey, JSON.stringify(data));
+      console.log(`Form data saved for ${type}:`, data);
     } catch (error) {
       console.error("Error saving form data:", error);
     }
@@ -163,34 +164,49 @@ export default function AIGenerator({
   // Update config and save to localStorage
   const updateConfig = (updates: Partial<GenerationConfig>) => {
     const newConfig = { ...config, ...updates };
+    console.log(`Updating config for ${type}:`, { current: config, updates, new: newConfig });
     setConfig(newConfig);
     saveFormData(newConfig);
   };
 
   useEffect(() => {
     if (currentSettings) {
-      const updatedConfig = {
-        language: currentSettings.tool || "JavaScript",
-        topic: currentSettings.topic || "General",
-        difficulty: (currentSettings.difficulty === "easy"
-          ? "beginner"
-          : currentSettings.difficulty === "medium"
-          ? "intermediate"
-          : currentSettings.difficulty === "hard"
-          ? "advanced"
-          : "intermediate") as "beginner" | "intermediate" | "advanced",
-        count: config.count || 5, // Ensure count is preserved
-        context: `Subject: ${currentSettings.subject || ""}, Domain: ${
-          currentSettings.domain || ""
-        }, Category: ${currentSettings.category || ""}, Tags: ${
-          currentSettings.tags || ""
-        }`,
-      };
+      // Only update if we don't have saved form data, or if currentSettings has new values
+      const savedForm = loadSavedForm();
+      const shouldUpdate = !savedForm || 
+        (currentSettings.tool && currentSettings.tool !== savedForm.language) ||
+        (currentSettings.topic && currentSettings.topic !== savedForm.topic) ||
+        (currentSettings.difficulty && 
+          ((currentSettings.difficulty === "easy" && savedForm.difficulty !== "beginner") ||
+           (currentSettings.difficulty === "medium" && savedForm.difficulty !== "intermediate") ||
+           (currentSettings.difficulty === "hard" && savedForm.difficulty !== "advanced")));
 
-      setConfig(updatedConfig);
-      saveFormData(updatedConfig);
+      if (shouldUpdate) {
+        const updatedConfig = {
+          language: currentSettings.tool || config.language,
+          topic: currentSettings.topic || config.topic,
+          difficulty: (currentSettings.difficulty === "easy"
+            ? "beginner"
+            : currentSettings.difficulty === "medium"
+            ? "intermediate"
+            : currentSettings.difficulty === "hard"
+            ? "advanced"
+            : config.difficulty) as "beginner" | "intermediate" | "advanced",
+          count: config.count || 5, // Preserve user's count preference
+          context: currentSettings.subject || currentSettings.domain || currentSettings.category || currentSettings.tags
+            ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+                currentSettings.domain || ""
+              }, Category: ${currentSettings.category || ""}, Tags: ${
+                currentSettings.tags || ""
+              }`
+            : config.context, // Preserve user's context if no currentSettings context
+        };
+
+        setConfig(updatedConfig);
+        saveFormData(updatedConfig);
+      }
     }
-  }, [currentSettings, config.count]);
+  }, [currentSettings]);
 
   // Clear generated content when clearContent prop is true
   useEffect(() => {
