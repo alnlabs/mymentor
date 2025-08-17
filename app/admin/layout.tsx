@@ -81,6 +81,12 @@ const navigation: NavigationItem[] = [
     ],
   },
   {
+    name: "AI Content Creation",
+    href: "/admin/ai-content",
+    icon: Brain,
+    description: "AI-Powered Content Generation",
+  },
+  {
     name: "Interviews",
     href: "/admin/interviews",
     icon: Target,

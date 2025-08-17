@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
 import {
   Plus,
   ArrowLeft,
@@ -11,6 +13,7 @@ import {
   AlertCircle,
   Save,
   BookOpen,
+  Brain,
 } from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { AutoFillSection } from "@/shared/components/exam-form/AutoFillSection";
@@ -24,6 +27,8 @@ import {
 } from "@/shared/data/examTemplates";
 
 export default function AddExamPage() {
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
+  
   const {
     formData,
     loading,
@@ -93,6 +98,53 @@ export default function AddExamPage() {
     }
   };
 
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    // Handle AI generated exam content
+    console.log('AI generated exam content:', content);
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI generated content to exam format
+      const examData = {
+        title: `AI Generated Exam - ${new Date().toLocaleDateString()}`,
+        description: `AI generated exam with ${content.length} questions`,
+        duration: 60,
+        questions: content.map(item => ({
+          question: item.content,
+          type: item.type === 'question' ? 'mcq' : 'coding',
+          difficulty: item.difficulty,
+          category: item.category,
+          options: item.options || [],
+          correctAnswer: item.correctAnswer || '',
+          explanation: item.explanation || '',
+        })),
+        difficulty: content[0]?.difficulty || 'intermediate',
+        category: content[0]?.category || 'General',
+        status: 'draft'
+      };
+
+      const response = await fetch("/api/exams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(examData),
+      });
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save AI generated exam');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error saving AI exam content:', error);
+      throw error;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -104,14 +156,25 @@ export default function AddExamPage() {
                 <Plus className="w-8 h-8 mr-3" />
                 Create New Exam
               </h1>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/exams")}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                ← Back to Exams
-              </Button>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => setShowAIGenerator(!showAIGenerator)}
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => (window.location.href = "/admin/exams")}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to Exams
+                </Button>
+              </div>
             </div>
             <p className="text-green-100 text-lg">
               Create a comprehensive exam for fresh graduates with technical and
@@ -143,6 +206,17 @@ export default function AddExamPage() {
           </div>
         </div>
       </div>
+
+      {/* AI Generator */}
+      {showAIGenerator && (
+        <Card className="mb-6">
+          <AIGenerator
+            type="exam"
+            onContentGenerated={handleAIContentGenerated}
+            onSaveToDatabase={handleSaveAIContentToDatabase}
+          />
+        </Card>
+      )}
 
       {/* Form */}
       <Card>

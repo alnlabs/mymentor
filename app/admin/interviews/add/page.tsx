@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
 import { useDynamicConfig } from "@/shared/config/dynamicConfig";
 import {
   Plus,
@@ -45,6 +47,7 @@ interface InterviewTemplate {
 
 export default function AddInterviewTemplatePage() {
   const [loading, setLoading] = useState(false);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [template, setTemplate] = useState<InterviewTemplate>({
     name: "",
     description: "",
@@ -131,6 +134,54 @@ export default function AddInterviewTemplatePage() {
       alert("Failed to create template");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    // Handle AI generated interview content
+    console.log('AI generated interview content:', content);
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI generated content to interview template format
+      const interviewData = {
+        name: `AI Generated Interview - ${new Date().toLocaleDateString()}`,
+        description: `AI generated interview template with ${content.length} questions`,
+        duration: 30,
+        difficulty: content[0]?.difficulty || 'intermediate',
+        category: content[0]?.category || 'General',
+        companies: [],
+        questions: content.map((item, index) => ({
+          questionType: item.type === 'interview_question' ? 'behavioral' : 'mcq',
+          question: item.content,
+          options: item.options || [],
+          correctAnswer: item.correctAnswer || '',
+          explanation: item.explanation || '',
+          points: 5,
+          timeLimit: 120,
+          order: index,
+        })),
+      };
+
+      const response = await fetch("/api/interviews/templates", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(interviewData),
+      });
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save AI generated interview template');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error saving AI interview content:', error);
+      throw error;
     }
   };
 
@@ -266,14 +317,25 @@ export default function AddInterviewTemplatePage() {
                 <Target className="w-8 h-8 mr-3" />
                 Create Interview Template
               </h1>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/interviews")}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                ← Back to Interviews
-              </Button>
+              <div className="flex space-x-3">
+                <Button
+                  onClick={() => setShowAIGenerator(!showAIGenerator)}
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
+                >
+                  <Brain className="w-4 h-4 mr-2" />
+                  {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => (window.location.href = "/admin/interviews")}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to Interviews
+                </Button>
+              </div>
             </div>
             <p className="text-purple-100 text-lg">
               Design position-based interview templates for fresh graduates -
@@ -282,6 +344,17 @@ export default function AddInterviewTemplatePage() {
           </div>
         </div>
       </div>
+
+      {/* AI Generator */}
+      {showAIGenerator && (
+        <Card className="mb-6">
+          <AIGenerator
+            type="interview"
+            onContentGenerated={handleAIContentGenerated}
+            onSaveToDatabase={handleSaveAIContentToDatabase}
+          />
+        </Card>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Template Details */}

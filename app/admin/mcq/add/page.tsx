@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
 import {
   ArrowLeft,
   Save,
@@ -12,6 +14,7 @@ import {
   FileText,
   CheckCircle,
   AlertCircle,
+  Brain,
 } from "lucide-react";
 
 interface MCQ {
@@ -39,6 +42,7 @@ interface MCQ {
 export default function AddMCQPage() {
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [mcq, setMCQ] = useState<MCQ>({
     question: "",
     options: ["", "", "", ""],
@@ -154,6 +158,62 @@ export default function AddMCQPage() {
     }
   };
 
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    // Handle AI generated content
+    console.log('AI generated content:', content);
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI generated content to MCQ format
+      const mcqData = content.map(item => ({
+        question: item.content,
+        options: item.options || ['Option A', 'Option B', 'Option C', 'Option D'],
+        correctAnswer: item.options?.indexOf(item.correctAnswer || 'Option A') || 0,
+        explanation: item.explanation || '',
+        category: item.category,
+        subject: item.category,
+        topic: item.category,
+        tool: item.language || '',
+        technologyStack: item.language || '',
+        domain: item.category,
+        skillLevel: item.difficulty === 'beginner' ? 'beginner' : 
+                   item.difficulty === 'intermediate' ? 'intermediate' : 'advanced',
+        jobRole: '',
+        companyType: '',
+        interviewType: '',
+        difficulty: item.difficulty === 'beginner' ? 'easy' : 
+                   item.difficulty === 'intermediate' ? 'medium' : 'hard',
+        tags: item.tags?.join(', ') || '',
+        companies: '',
+        priority: 'medium',
+        status: 'draft',
+      }));
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "mcq",
+          data: mcqData,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save AI generated content');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Error saving AI content:', error);
+      throw error;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -175,26 +235,47 @@ export default function AddMCQPage() {
                 Add New MCQ
               </h1>
             </div>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center"
-            >
-              {saving ? (
-                <Loading size="sm" text="Saving..." />
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Save MCQ
-                </>
-              )}
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => setShowAIGenerator(!showAIGenerator)}
+                variant="outline"
+                className="flex items-center"
+              >
+                <Brain className="w-4 h-4 mr-2" />
+                {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center"
+              >
+                {saving ? (
+                  <Loading size="sm" text="Saving..." />
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save MCQ
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
           <p className="text-gray-600">
             Create a new MCQ question with comprehensive categorization and
             details.
           </p>
         </div>
+
+        {/* AI Generator */}
+        {showAIGenerator && (
+          <Card className="mb-6">
+            <AIGenerator
+              type="mcq"
+              onContentGenerated={handleAIContentGenerated}
+              onSaveToDatabase={handleSaveAIContentToDatabase}
+            />
+          </Card>
+        )}
 
         {/* Form */}
         <Card className="mb-6">
