@@ -26,7 +26,7 @@ async function generateWithAI(
 
     const generatedContent: GeneratedContent[] = [];
 
-    // Enhanced content generation with more variety and uniqueness
+    // Enhanced content generation with realistic, varied questions
     const baseTimestamp = Date.now();
     const randomSeed = Math.random().toString(36).substr(2, 9);
     
@@ -36,74 +36,87 @@ async function generateWithAI(
 
       switch (type) {
         case "mcq":
-          // Create highly varied MCQ templates with unique content
+          // Create realistic MCQ questions based on actual programming concepts
           const mcqTemplates = [
             {
-              title: `${language} ${topic} Fundamentals MCQ ${i + 1}`,
-              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n// ${topic} example ${uniqueSuffix}\nconst result = ${topic.toLowerCase()}Example${i + 1}();\nconsole.log(result);\n\`\`\``,
-              options: [
-                `Expected ${topic} result ${i + 1}`,
-                "Runtime error",
-                "Compilation error", 
-                "Undefined behavior"
-              ],
-              correctAnswer: `Expected ${topic} result ${i + 1}`,
-              explanation: `This question tests fundamental understanding of ${topic} in ${language} with unique scenario ${i + 1}.`,
+              title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
+              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+              options: ["20, 10", "10, 20", "20, 20", "10, 10"],
+              correctAnswer: "20, 10",
+              explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
             },
             {
-              title: `${language} ${topic} Best Practices MCQ ${i + 1}`,
-              content: `Which of the following is the best practice for ${topic.toLowerCase()} in ${language} when dealing with scenario ${i + 1}?`,
-              options: [
-                `Use modern ${language} features and patterns for ${topic} ${i + 1}`,
-                "Always use legacy approaches for compatibility",
-                "Ignore performance considerations",
-                "Skip error handling for simplicity",
-              ],
-              correctAnswer: `Use modern ${language} features and patterns for ${topic} ${i + 1}`,
-              explanation: `Best practices for ${topic} in ${language} scenario ${i + 1} include using modern features, proper error handling, and performance optimization.`,
+              title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
+              content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
+              options: ["[2, 4, 6, 8, 10]", "[1, 2, 3, 4, 5]", "Error", "Undefined"],
+              correctAnswer: "[1, 2, 3, 4, 5]",
+              explanation: `The map() method creates a new array and doesn't modify the original array.`,
             },
             {
-              title: `${language} ${topic} Implementation MCQ ${i + 1}`,
-              content: `How would you implement a ${topic.toLowerCase()} solution in ${language} for use case ${i + 1}?`,
-              options: [
-                `Using appropriate design patterns and ${language} features for ${topic} ${i + 1}`,
-                "Copy-pasting code from the internet",
-                "Using the most complex approach possible",
-                "Avoiding any external libraries or frameworks",
-              ],
-              correctAnswer: `Using appropriate design patterns and ${language} features for ${topic} ${i + 1}`,
-              explanation: `Proper implementation of ${topic} in ${language} for use case ${i + 1} involves understanding design patterns, language features, and best practices.`,
+              title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
+              content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
+              options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
+              correctAnswer: "3, 1, 4, 2",
+              explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
             },
             {
-              title: `${language} ${topic} Debugging MCQ ${i + 1}`,
-              content: `What would you do to debug this ${topic.toLowerCase()} issue in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Buggy ${topic} code ${uniqueSuffix}\nfunction process${
-                topic.charAt(0).toUpperCase() + topic.slice(1)
-              }${i + 1}() {\n  // TODO: Fix the bug in scenario ${i + 1}\n}\n\`\`\`\n\n**Questions:**\n1. Use debugging tools and systematic approach\n2. Ignore the issue and move on\n3. Randomly change code until it works\n4. Ask someone else to fix it`,
-              options: [
-                "Use debugging tools and systematic approach",
-                "Ignore the issue and move on",
-                "Randomly change code until it works",
-                "Ask someone else to fix it",
-              ],
-              correctAnswer: "Use debugging tools and systematic approach",
-              explanation: `Debugging ${topic} issues in ${language} scenario ${i + 1} requires systematic analysis, debugging tools, and understanding of the problem domain.`,
+              title: `${language} ${topic} Object Destructuring MCQ ${i + 1}`,
+              content: `What is the value of 'name' after this ${language} destructuring?\n\n\`\`\`${language.toLowerCase()}\nconst user = { id: 1, name: 'John', email: 'john@example.com' };\nconst { name, age = 25 } = user;\nconsole.log(name);\n\`\`\``,
+              options: ["'John'", "undefined", "25", "Error"],
+              correctAnswer: "'John'",
+              explanation: `Destructuring extracts the 'name' property from the user object, which is 'John'. The age default value doesn't affect name.`,
             },
             {
-              title: `${language} ${topic} Performance MCQ ${i + 1}`,
-              content: `How would you optimize the performance of this ${topic.toLowerCase()} code in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation ${uniqueSuffix}\nfor (let i = 0; i < ${1000000 + i * 1000}; i++) {\n  // Expensive operation ${i + 1}\n}\n\`\`\`\n\n**Questions:**\n1. Analyze and optimize the algorithm\n2. Add more hardware resources\n3. Ignore performance issues\n4. Use the slowest possible approach`,
-              options: [
-                "Analyze and optimize the algorithm",
-                "Add more hardware resources",
-                "Ignore performance issues",
-                "Use the slowest possible approach",
-              ],
-              correctAnswer: "Analyze and optimize the algorithm",
-              explanation: `Performance optimization for ${topic} in ${language} scenario ${i + 1} involves algorithmic analysis, profiling, and targeted improvements.`,
+              title: `${language} ${topic} Closure MCQ ${i + 1}`,
+              content: `What will this ${language} closure code output?\n\n\`\`\`${language.toLowerCase()}\nfunction createCounter() {\n  let count = 0;\n  return function() {\n    return ++count;\n  };\n}\nconst counter = createCounter();\nconsole.log(counter());\nconsole.log(counter());\n\`\`\``,
+              options: ["0, 1", "1, 2", "1, 1", "Error"],
+              correctAnswer: "1, 2",
+              explanation: `The closure maintains the count variable in its scope. Each call increments and returns the current count.`,
             },
+            {
+              title: `${language} ${topic} Promise MCQ ${i + 1}`,
+              content: `What happens when a Promise is rejected in ${language}?\n\n\`\`\`${language.toLowerCase()}\nconst promise = new Promise((resolve, reject) => {\n  reject('Error occurred');\n});\npromise.then(result => console.log('Success:', result))\n       .catch(error => console.log('Error:', error));\n\`\`\``,
+              options: ["Success: Error occurred", "Error: Error occurred", "Nothing", "Promise pending"],
+              correctAnswer: "Error: Error occurred",
+              explanation: `When a Promise is rejected, the .catch() handler is called with the rejection reason.`,
+            },
+            {
+              title: `${language} ${topic} Event Loop MCQ ${i + 1}`,
+              content: `In ${language}'s event loop, what is the correct order of execution?\n\n\`\`\`${language.toLowerCase()}\nconsole.log('1');\nsetTimeout(() => console.log('2'), 0);\nPromise.resolve().then(() => console.log('3'));\nconsole.log('4');\n\`\`\``,
+              options: ["1, 2, 3, 4", "1, 4, 3, 2", "1, 4, 2, 3", "4, 1, 3, 2"],
+              correctAnswer: "1, 4, 3, 2",
+              explanation: `Synchronous code (1, 4) runs first, then microtasks (Promise - 3), then macrotasks (setTimeout - 2).`,
+            },
+            {
+              title: `${language} ${topic} Hoisting MCQ ${i + 1}`,
+              content: `What is the result of this ${language} hoisting example?\n\n\`\`\`${language.toLowerCase()}\nconsole.log(x);\nvar x = 5;\nconsole.log(x);\n\`\`\``,
+              options: ["undefined, 5", "5, 5", "Error, 5", "Error, Error"],
+              correctAnswer: "undefined, 5",
+              explanation: `Variable declarations are hoisted but not initializations. 'x' is undefined before assignment.`,
+            },
+            {
+              title: `${language} ${topic} This Context MCQ ${i + 1}`,
+              content: `What does 'this' refer to in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nconst obj = {\n  name: 'Object',\n  method: function() {\n    console.log(this.name);\n  }\n};\nconst func = obj.method;\nfunc();\n\`\`\``,
+              options: ["'Object'", "undefined", "Error", "Global object"],
+              correctAnswer: "undefined",
+              explanation: `When a method is assigned to a variable and called, 'this' loses its context and becomes undefined (in strict mode) or the global object.`,
+            },
+            {
+              title: `${language} ${topic} Module System MCQ ${i + 1}`,
+              content: `What is the difference between 'export default' and 'export' in ${language} modules?\n\n\`\`\`${language.toLowerCase()}\n// file1.js\nexport default function() {}\nexport const helper = {};\n\n// file2.js\nimport myFunc, { helper } from './file1.js';\n\`\`\``,
+              options: [
+                "No difference, both work the same",
+                "Default export can be imported with any name, named exports must use exact names",
+                "Default exports are private, named exports are public",
+                "Default exports are synchronous, named exports are asynchronous"
+              ],
+              correctAnswer: "Default export can be imported with any name, named exports must use exact names",
+              explanation: `Default exports allow renaming during import, while named exports require the exact export name.`,
+            }
           ];
 
           const selectedMCQ = mcqTemplates[i % mcqTemplates.length];
-
+          
           generatedContent.push({
             id,
             type: "question",
@@ -125,25 +138,48 @@ async function generateWithAI(
           break;
 
         case "problem":
-          // Create different problem templates based on index
+          // Create realistic programming problems
           const problemTemplates = [
             {
-              title: `${language} ${topic} Implementation Problem ${i + 1}`,
-              content: `Write a function to solve the following problem:\n\n**Problem Description:**\nCreate a ${topic.toLowerCase()} solution in ${language} for scenario ${i + 1}.\n\n**Requirements:**\n- Implement using modern ${language} features\n- Handle edge cases and errors gracefully\n- Include proper documentation\n- Consider performance for ${uniqueSuffix}`,
-              explanation: `This problem tests implementation skills for ${topic} in ${language} scenario ${i + 1}.`,
+              title: `${language} ${topic} Reverse String Problem ${i + 1}`,
+              content: `Write a function to reverse a string in ${language}.\n\n**Requirements:**\n- Implement without using built-in reverse methods\n- Handle edge cases (empty string, single character)\n- Consider performance for large strings\n- Include proper error handling\n\n**Example:**\nInput: "hello"\nOutput: "olleh"`,
+              explanation: `This tests string manipulation and algorithm implementation skills in ${language}.`,
             },
             {
-              title: `${language} ${topic} Optimization Problem ${i + 1}`,
-              content: `Optimize the following ${topic.toLowerCase()} code in ${language}:\n\n**Current Implementation:**\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation ${uniqueSuffix}\nfunction process${
-                topic.charAt(0).toUpperCase() + topic.slice(1)
-              }${i + 1}() {\n  // TODO: Optimize this code for scenario ${i + 1}\n}\n\`\`\`\n\n**Requirements:**\n- Improve performance and efficiency\n- Maintain functionality and readability\n- Add proper error handling\n- Consider scalability for ${uniqueSuffix}`,
-              explanation: `This problem focuses on optimizing ${topic} implementations in ${language} scenario ${i + 1}, considering performance and maintainability.`,
+              title: `${language} ${topic} Find Duplicates Problem ${i + 1}`,
+              content: `Write a function to find duplicate elements in an array using ${language}.\n\n**Requirements:**\n- Return an array of duplicate elements\n- Handle edge cases (empty array, no duplicates)\n- Optimize for time complexity\n- Include proper documentation\n\n**Example:**\nInput: [1, 2, 3, 2, 4, 5, 3]\nOutput: [2, 3]`,
+              explanation: `This tests array manipulation, algorithm design, and optimization skills in ${language}.`,
             },
             {
-              title: `${language} ${topic} Design Problem ${i + 1}`,
-              content: `Design a system for ${topic.toLowerCase()} in ${language}:\n\n**Requirements:**\n- Design scalable architecture for scenario ${i + 1}\n- Consider performance implications\n- Include error handling strategies\n- Plan for testing and maintenance\n- Document your design decisions\n- Consider ${uniqueSuffix} requirements`,
-              explanation: `This problem tests system design skills for ${topic} in ${language} scenario ${i + 1}, including architecture and scalability considerations.`,
+              title: `${language} ${topic} Valid Parentheses Problem ${i + 1}`,
+              content: `Write a function to check if a string of parentheses is valid in ${language}.\n\n**Requirements:**\n- Support (), [], and {} parentheses\n- Return true if valid, false otherwise\n- Handle edge cases (empty string, single character)\n- Consider time and space complexity\n\n**Examples:**\n"()" → true\n"([)]" → false\n"{[]}" → true`,
+              explanation: `This tests stack data structure implementation and string parsing in ${language}.`,
             },
+            {
+              title: `${language} ${topic} Fibonacci Sequence Problem ${i + 1}`,
+              content: `Write a function to generate the Fibonacci sequence in ${language}.\n\n**Requirements:**\n- Implement both iterative and recursive approaches\n- Handle large numbers efficiently\n- Include memoization for recursive version\n- Consider performance implications\n\n**Example:**\nInput: 8\nOutput: [0, 1, 1, 2, 3, 5, 8, 13]`,
+              explanation: `This tests recursive programming, memoization, and algorithm optimization in ${language}.`,
+            },
+            {
+              title: `${language} ${topic} Binary Search Problem ${i + 1}`,
+              content: `Implement binary search algorithm in ${language}.\n\n**Requirements:**\n- Work with sorted arrays\n- Return index of target element or -1 if not found\n- Handle edge cases (empty array, single element)\n- Analyze time complexity\n\n**Example:**\nInput: [1, 3, 5, 7, 9], target: 5\nOutput: 2`,
+              explanation: `This tests algorithm implementation, array manipulation, and complexity analysis in ${language}.`,
+            },
+            {
+              title: `${language} ${topic} Merge Sort Problem ${i + 1}`,
+              content: `Implement merge sort algorithm in ${language}.\n\n**Requirements:**\n- Sort array in ascending order\n- Use divide-and-conquer approach\n- Handle edge cases (empty array, single element)\n- Analyze time and space complexity\n\n**Example:**\nInput: [64, 34, 25, 12, 22, 11, 90]\nOutput: [11, 12, 22, 25, 34, 64, 90]`,
+              explanation: `This tests advanced algorithm implementation, recursion, and sorting techniques in ${language}.`,
+            },
+            {
+              title: `${language} ${topic} Queue Implementation Problem ${i + 1}`,
+              content: `Implement a Queue data structure in ${language}.\n\n**Requirements:**\n- Include enqueue, dequeue, peek, and isEmpty methods\n- Handle edge cases (empty queue operations)\n- Consider both array and linked list implementations\n- Analyze time complexity for each operation\n\n**Example:**\nconst queue = new Queue();\nqueue.enqueue(1);\nqueue.enqueue(2);\nqueue.dequeue(); // returns 1`,
+              explanation: `This tests data structure implementation and object-oriented programming in ${language}.`,
+            },
+            {
+              title: `${language} ${topic} Promise Implementation Problem ${i + 1}`,
+              content: `Implement a basic Promise-like class in ${language}.\n\n**Requirements:**\n- Support .then() and .catch() methods\n- Handle both resolve and reject states\n- Support chaining of promises\n- Handle asynchronous operations\n\n**Example:**\nconst promise = new MyPromise((resolve, reject) => {\n  setTimeout(() => resolve('Success'), 1000);\n});`,
+              explanation: `This tests advanced ${language} concepts, asynchronous programming, and class implementation.`,
+            }
           ];
 
           const selectedProblem = problemTemplates[i % problemTemplates.length];
