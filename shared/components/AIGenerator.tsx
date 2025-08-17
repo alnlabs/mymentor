@@ -222,13 +222,38 @@ export default function AIGenerator({
     }
   }, [currentSettings]);
 
-  // Clear generated content when clearContent prop is true
+  // Clear generated content and reset form when clearContent prop is true
   useEffect(() => {
     if (clearContent) {
       setGeneratedContent([]);
       setMessage(null);
+      
+      // Reset form to default values
+      const defaultConfig: GenerationConfig = {
+        language: currentSettings?.tool || "JavaScript",
+        topic: currentSettings?.topic || "General",
+        difficulty: (currentSettings?.difficulty === "easy"
+          ? "beginner"
+          : currentSettings?.difficulty === "medium"
+          ? "intermediate"
+          : currentSettings?.difficulty === "hard"
+          ? "advanced"
+          : "intermediate") as "beginner" | "intermediate" | "advanced",
+        count: 5, // Reset count to default
+        context: currentSettings
+          ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+              currentSettings.domain || ""
+            }, Category: ${currentSettings.category || ""}, Tags: ${
+              currentSettings.tags || ""
+            }`
+          : undefined,
+        mixTypes: false, // Reset mix types to default
+      };
+      
+      setConfig(defaultConfig);
+      saveFormData(defaultConfig);
     }
-  }, [clearContent]);
+  }, [clearContent, currentSettings]);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -535,22 +560,40 @@ export default function AIGenerator({
 
           <Button
             onClick={() => {
-              const defaultConfig = {
-                language: "JavaScript",
-                topic: "General",
-                difficulty: "intermediate" as const,
-                count: 5,
-                context: "",
-              };
-              setConfig(defaultConfig);
-              saveFormData(defaultConfig);
-              setMessage({
-                type: "success",
-                text: "Form reset to default values!",
-              });
+              if (confirm("Are you sure you want to clear the AI Generator form?")) {
+                const defaultConfig: GenerationConfig = {
+                  language: currentSettings?.tool || "JavaScript",
+                  topic: currentSettings?.topic || "General",
+                  difficulty: (currentSettings?.difficulty === "easy"
+                    ? "beginner"
+                    : currentSettings?.difficulty === "medium"
+                    ? "intermediate"
+                    : currentSettings?.difficulty === "hard"
+                    ? "advanced"
+                    : "intermediate") as "beginner" | "intermediate" | "advanced",
+                  count: 5,
+                  context: currentSettings
+                    ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+                        currentSettings.domain || ""
+                      }, Category: ${currentSettings.category || ""}, Tags: ${
+                        currentSettings.tags || ""
+                      }`
+                    : undefined,
+                  mixTypes: false,
+                };
+                
+                setConfig(defaultConfig);
+                saveFormData(defaultConfig);
+                setGeneratedContent([]);
+                setMessage({
+                  type: "success",
+                  text: "Form reset to default values!",
+                });
+              }
             }}
             variant="outline"
             className="px-4"
+            title="Clear Form"
           >
             <RefreshCw className="w-4 h-4" />
           </Button>
