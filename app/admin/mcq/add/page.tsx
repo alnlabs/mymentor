@@ -46,6 +46,7 @@ interface MCQ {
 
 export default function AddMCQPage() {
   const [saving, setSaving] = useState(false);
+  const [clearAIContent, setClearAIContent] = useState(false);
   const [mcq, setMCQ] = useState<MCQ>({
     question: "",
     options: ["", "", "", ""],
@@ -149,6 +150,10 @@ export default function AddMCQPage() {
           priority: "medium",
           status: "draft",
         });
+
+        // Clear AI Generator content
+        setClearAIContent(true);
+        setTimeout(() => setClearAIContent(false), 100);
       } else {
         alert("Failed to save MCQ: " + result.error);
       }
@@ -170,7 +175,10 @@ export default function AddMCQPage() {
       // Auto-populate MAIN FORM FIELDS (Question, Options, Explanation)
       updateMCQ("question", firstItem.content || mcq.question);
       updateMCQ("options", firstItem.options || mcq.options);
-      updateMCQ("correctAnswer", firstItem.options?.indexOf(firstItem.correctAnswer || "Option A") || 0);
+      updateMCQ(
+        "correctAnswer",
+        firstItem.options?.indexOf(firstItem.correctAnswer || "Option A") || 0
+      );
       updateMCQ("explanation", firstItem.explanation || mcq.explanation);
 
       // Auto-populate SETTINGS FIELDS
@@ -284,6 +292,10 @@ export default function AddMCQPage() {
         status: "draft",
       });
 
+      // Clear AI Generator content
+      setClearAIContent(true);
+      setTimeout(() => setClearAIContent(false), 100);
+
       return result;
     } catch (error) {
       console.error("Error saving AI content:", error);
@@ -367,6 +379,10 @@ export default function AddMCQPage() {
                       priority: "medium",
                       status: "draft",
                     });
+
+                    // Clear AI Generator content
+                    setClearAIContent(true);
+                    setTimeout(() => setClearAIContent(false), 100);
                   }
                 }}
                 className="flex items-center"
@@ -405,22 +421,23 @@ export default function AddMCQPage() {
                     AI Generator
                   </h3>
                 </div>
-                <AIGenerator
-                  type="mcq"
-                  onContentGenerated={handleAIContentGenerated}
-                  onSaveToDatabase={handleSaveAIContentToDatabase}
-                  currentSettings={{
-                    category: mcq.category,
-                    subject: mcq.subject,
-                    topic: mcq.topic,
-                    tool: mcq.tool,
-                    technologyStack: mcq.technologyStack,
-                    domain: mcq.domain,
-                    difficulty: mcq.difficulty,
-                    skillLevel: mcq.skillLevel,
-                    tags: mcq.tags,
-                  }}
-                />
+                                  <AIGenerator
+                    type="mcq"
+                    onContentGenerated={handleAIContentGenerated}
+                    onSaveToDatabase={handleSaveAIContentToDatabase}
+                    clearContent={clearAIContent}
+                    currentSettings={{
+                      category: mcq.category,
+                      subject: mcq.subject,
+                      topic: mcq.topic,
+                      tool: mcq.tool,
+                      technologyStack: mcq.technologyStack,
+                      domain: mcq.domain,
+                      difficulty: mcq.difficulty,
+                      skillLevel: mcq.skillLevel,
+                      tags: mcq.tags,
+                    }}
+                  />
               </div>
             </Card>
           </div>

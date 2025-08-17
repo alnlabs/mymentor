@@ -37,6 +37,7 @@ interface AIGeneratorProps {
     skillLevel?: string;
     tags?: string;
   };
+  clearContent?: boolean;
 }
 
 interface GenerationConfig {
@@ -53,6 +54,7 @@ export default function AIGenerator({
   onSaveToDatabase,
   className = "",
   currentSettings,
+  clearContent = false,
 }: AIGeneratorProps) {
   const [config, setConfig] = useState<GenerationConfig>({
     language: currentSettings?.tool || "JavaScript",
@@ -129,6 +131,14 @@ export default function AIGenerator({
       }));
     }
   }, [currentSettings]);
+
+  // Clear generated content when clearContent prop is true
+  useEffect(() => {
+    if (clearContent) {
+      setGeneratedContent([]);
+      setMessage(null);
+    }
+  }, [clearContent]);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
