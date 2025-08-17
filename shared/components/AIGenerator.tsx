@@ -164,7 +164,11 @@ export default function AIGenerator({
   // Update config and save to localStorage
   const updateConfig = (updates: Partial<GenerationConfig>) => {
     const newConfig = { ...config, ...updates };
-    console.log(`Updating config for ${type}:`, { current: config, updates, new: newConfig });
+    console.log(`Updating config for ${type}:`, {
+      current: config,
+      updates,
+      new: newConfig,
+    });
     setConfig(newConfig);
     saveFormData(newConfig);
   };
@@ -173,13 +177,17 @@ export default function AIGenerator({
     if (currentSettings) {
       // Only update if we don't have saved form data, or if currentSettings has new values
       const savedForm = loadSavedForm();
-      const shouldUpdate = !savedForm || 
+      const shouldUpdate =
+        !savedForm ||
         (currentSettings.tool && currentSettings.tool !== savedForm.language) ||
         (currentSettings.topic && currentSettings.topic !== savedForm.topic) ||
-        (currentSettings.difficulty && 
-          ((currentSettings.difficulty === "easy" && savedForm.difficulty !== "beginner") ||
-           (currentSettings.difficulty === "medium" && savedForm.difficulty !== "intermediate") ||
-           (currentSettings.difficulty === "hard" && savedForm.difficulty !== "advanced")));
+        (currentSettings.difficulty &&
+          ((currentSettings.difficulty === "easy" &&
+            savedForm.difficulty !== "beginner") ||
+            (currentSettings.difficulty === "medium" &&
+              savedForm.difficulty !== "intermediate") ||
+            (currentSettings.difficulty === "hard" &&
+              savedForm.difficulty !== "advanced")));
 
       if (shouldUpdate) {
         const updatedConfig = {
@@ -193,13 +201,17 @@ export default function AIGenerator({
             ? "advanced"
             : config.difficulty) as "beginner" | "intermediate" | "advanced",
           count: config.count || 5, // Preserve user's count preference
-          context: currentSettings.subject || currentSettings.domain || currentSettings.category || currentSettings.tags
-            ? `Subject: ${currentSettings.subject || ""}, Domain: ${
-                currentSettings.domain || ""
-              }, Category: ${currentSettings.category || ""}, Tags: ${
-                currentSettings.tags || ""
-              }`
-            : config.context, // Preserve user's context if no currentSettings context
+          context:
+            currentSettings.subject ||
+            currentSettings.domain ||
+            currentSettings.category ||
+            currentSettings.tags
+              ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+                  currentSettings.domain || ""
+                }, Category: ${currentSettings.category || ""}, Tags: ${
+                  currentSettings.tags || ""
+                }`
+              : config.context, // Preserve user's context if no currentSettings context
         };
 
         setConfig(updatedConfig);

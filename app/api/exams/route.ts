@@ -479,6 +479,7 @@ export async function POST(request: NextRequest) {
       isPublic,
       autoGenerate,
       autoGenerateOptions,
+      selectedQuestions,
     } = body;
 
     // Validate required fields
@@ -530,8 +531,39 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Auto-generate questions if enabled
-    if (autoGenerate && autoGenerateOptions) {
+    // Handle selected questions or auto-generate questions
+    if (selectedQuestions && selectedQuestions.length > 0) {
+      try {
+        console.log(`Adding ${selectedQuestions.length} selected questions to exam ${exam.id}`);
+        
+        for (const question of selectedQuestions) {
+          if (question.type === "mcq") {
+            await prisma.examQuestion.create({
+              data: {
+                examId: exam.id,
+                questionId: question.id,
+                questionType: "mcq",
+                order: 0, // Will be updated by the exam system
+              },
+            });
+          } else if (question.type === "problem") {
+            await prisma.examQuestion.create({
+              data: {
+                examId: exam.id,
+                questionId: question.id,
+                questionType: "coding",
+                order: 0, // Will be updated by the exam system
+              },
+            });
+          }
+        }
+        
+        console.log(`Successfully added ${selectedQuestions.length} questions to exam ${exam.id}`);
+      } catch (error) {
+        console.error("Error adding selected questions:", error);
+        // Continue with exam creation even if adding questions fails
+      }
+    } else if (autoGenerate && autoGenerateOptions) {
       try {
         const questionsGenerated = await generateExamQuestions(
           exam.id,
