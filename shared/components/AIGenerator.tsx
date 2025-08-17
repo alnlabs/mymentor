@@ -352,7 +352,7 @@ export default function AIGenerator({
               Language
             </label>
             <select
-              value={currentSettings?.tool || config.language}
+              value={config.language}
               onChange={(e) => updateConfig({ language: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -369,7 +369,7 @@ export default function AIGenerator({
               Topic
             </label>
             <select
-              value={currentSettings?.topic || config.topic}
+              value={config.topic}
               onChange={(e) => updateConfig({ topic: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
@@ -386,15 +386,7 @@ export default function AIGenerator({
               Difficulty
             </label>
             <select
-              value={
-                currentSettings?.difficulty === "easy"
-                  ? "beginner"
-                  : currentSettings?.difficulty === "medium"
-                  ? "intermediate"
-                  : currentSettings?.difficulty === "hard"
-                  ? "advanced"
-                  : config.difficulty
-              }
+              value={config.difficulty}
               onChange={(e) =>
                 updateConfig({
                   difficulty: e.target.value as
