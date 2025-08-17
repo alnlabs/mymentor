@@ -44,7 +44,7 @@ interface GenerationConfig {
   language: string;
   topic: string;
   difficulty: "beginner" | "intermediate" | "advanced";
-  count: number;
+  count?: number;
   context?: string;
   mixTypes?: boolean;
 }
@@ -227,7 +227,7 @@ export default function AIGenerator({
     if (clearContent) {
       setGeneratedContent([]);
       setMessage(null);
-      
+
       // Reset form to default values
       const defaultConfig: GenerationConfig = {
         language: currentSettings?.tool || "JavaScript",
@@ -249,7 +249,7 @@ export default function AIGenerator({
           : undefined,
         mixTypes: false, // Reset mix types to default
       };
-      
+
       setConfig(defaultConfig);
       saveFormData(defaultConfig);
     }
@@ -501,11 +501,12 @@ export default function AIGenerator({
               type="number"
               min="1"
               max="100"
-              value={config.count || 5}
+              value={config.count || ""}
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === "") {
-                  updateConfig({ count: 5 });
+                  // Allow empty value temporarily
+                  updateConfig({ count: undefined });
                 } else {
                   const numValue = parseInt(value);
                   if (!isNaN(numValue) && numValue >= 1 && numValue <= 100) {
@@ -514,10 +515,10 @@ export default function AIGenerator({
                 }
               }}
               onBlur={(e) => {
-                const value = parseInt(e.target.value);
-                if (isNaN(value) || value < 1) {
+                const value = e.target.value;
+                if (value === "" || isNaN(parseInt(value)) || parseInt(value) < 1) {
                   updateConfig({ count: 5 });
-                } else if (value > 100) {
+                } else if (parseInt(value) > 100) {
                   updateConfig({ count: 100 });
                 }
               }}
@@ -560,7 +561,9 @@ export default function AIGenerator({
 
           <Button
             onClick={() => {
-              if (confirm("Are you sure you want to clear the AI Generator form?")) {
+              if (
+                confirm("Are you sure you want to clear the AI Generator form?")
+              ) {
                 const defaultConfig: GenerationConfig = {
                   language: currentSettings?.tool || "JavaScript",
                   topic: currentSettings?.topic || "General",
@@ -570,7 +573,10 @@ export default function AIGenerator({
                     ? "intermediate"
                     : currentSettings?.difficulty === "hard"
                     ? "advanced"
-                    : "intermediate") as "beginner" | "intermediate" | "advanced",
+                    : "intermediate") as
+                    | "beginner"
+                    | "intermediate"
+                    | "advanced",
                   count: 5,
                   context: currentSettings
                     ? `Subject: ${currentSettings.subject || ""}, Domain: ${
@@ -581,7 +587,7 @@ export default function AIGenerator({
                     : undefined,
                   mixTypes: false,
                 };
-                
+
                 setConfig(defaultConfig);
                 saveFormData(defaultConfig);
                 setGeneratedContent([]);
