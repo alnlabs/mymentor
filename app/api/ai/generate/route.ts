@@ -521,30 +521,101 @@ async function generateWithAI(
                },
              ];
            } else {
-             // Default templates for other topics
+             // Default templates for other topics with language-specific syntax
+             const getLanguageSyntax = (lang: string) => {
+               switch (lang.toLowerCase()) {
+                 case "python":
+                   return {
+                     variable: "x = 10",
+                     function: "def test_scope():",
+                     print: "print(x)",
+                     array: "numbers = [1, 2, 3, 4, 5]",
+                     listComp: "[x * 2 for x in numbers]",
+                     async: "async def test():",
+                     await: "await asyncio.sleep(0.1)",
+                     dict: "user = {'name': 'John'}",
+                     get: "user.get('name')",
+                     generator: "yield count",
+                     next: "next(counter)",
+                     import: "import asyncio",
+                     run: "asyncio.run(test())"
+                   };
+                 case "java":
+                   return {
+                     variable: "int x = 10;",
+                     function: "public void testScope() {",
+                     print: "System.out.println(x);",
+                     array: "int[] numbers = {1, 2, 3, 4, 5};",
+                     listComp: "Arrays.stream(numbers).map(x -> x * 2).toArray()",
+                     async: "public CompletableFuture<Void> test() {",
+                     await: "Thread.sleep(100);",
+                     dict: "Map<String, String> user = new HashMap<>();",
+                     get: "user.get(\"name\")",
+                     generator: "return count;",
+                     next: "iterator.next()",
+                     import: "import java.util.concurrent.*;",
+                     run: "CompletableFuture.runAsync(() -> test())"
+                   };
+                 case "c++":
+                   return {
+                     variable: "int x = 10;",
+                     function: "void testScope() {",
+                     print: "cout << x << endl;",
+                     array: "int numbers[] = {1, 2, 3, 4, 5};",
+                     listComp: "transform(numbers, numbers + 5, numbers, [](int x) { return x * 2; })",
+                     async: "std::async(std::launch::async, []() {",
+                     await: "std::this_thread::sleep_for(std::chrono::milliseconds(100));",
+                     dict: "std::map<std::string, std::string> user;",
+                     get: "user[\"name\"]",
+                     generator: "return count;",
+                     next: "iterator->next()",
+                     import: "#include <future>",
+                     run: "auto future = std::async(test);"
+                   };
+                 default: // JavaScript
+                   return {
+                     variable: "let x = 10;",
+                     function: "function testScope() {",
+                     print: "console.log(x);",
+                     array: "const numbers = [1, 2, 3, 4, 5];",
+                     listComp: "numbers.map(x => x * 2)",
+                     async: "async function test() {",
+                     await: "await new Promise(resolve => setTimeout(resolve, 100));",
+                     dict: "const user = {name: 'John'};",
+                     get: "user.name",
+                     generator: "return count;",
+                     next: "iterator.next()",
+                     import: "",
+                     run: "test();"
+                   };
+               }
+             };
+
+             const syntax = getLanguageSyntax(language);
+             
             mcqTemplates = [
               {
                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
-                content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+                content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n${syntax.variable}\n${syntax.function}\n  ${syntax.variable.replace('10', '20')}\n  ${syntax.print}\n}\n${syntax.function.replace('test_scope', 'test_scope')}();\n${syntax.print}\n\`\`\``,
                 options: ["20, 10", "10, 20", "20, 20", "10, 10"],
                 correctAnswer: "20, 10",
-                explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
+                explanation: `This tests understanding of variable scope in ${language}. The inner variable shadows the outer variable within the function scope.`,
               },
               {
-                title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
-                content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
+                title: `${language} ${topic} Data Structure MCQ ${i + 1}`,
+                content: `Which ${language} data structure method returns a new collection without modifying the original?\n\n\`\`\`${language.toLowerCase()}\n${syntax.array}\n${syntax.listComp}\n${syntax.print}  # What will this output?\n\`\`\``,
                 options: [
                   "[2, 4, 6, 8, 10]",
                   "[1, 2, 3, 4, 5]",
                   "Error",
-                  "Undefined",
+                  "None",
                 ],
                 correctAnswer: "[1, 2, 3, 4, 5]",
-                explanation: `The map() method creates a new array and doesn't modify the original array.`,
+                explanation: `The transformation method creates a new collection and doesn't modify the original in ${language}.`,
               },
               {
-                title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
-                content: `What will be logged first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nasync function test() {\n  console.log('1');\n  await new Promise(resolve => setTimeout(resolve, 100));\n  console.log('2');\n}\nconsole.log('3');\ntest();\nconsole.log('4');\n\`\`\``,
+                title: `${language} ${topic} Async Programming MCQ ${i + 1}`,
+                content: `What will be printed first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\n${syntax.import}\n\n${syntax.async}\n  ${syntax.print.replace('x', "'1'")}\n  ${syntax.await}\n  ${syntax.print.replace('x', "'2'")}\n}\n\n${syntax.print.replace('x', "'3'")}\n${syntax.run}\n${syntax.print.replace('x', "'4'")}\n\`\`\``,
                 options: [
                   "1, 3, 4, 2",
                   "3, 1, 4, 2",
@@ -552,21 +623,21 @@ async function generateWithAI(
                   "3, 4, 1, 2",
                 ],
                 correctAnswer: "3, 1, 4, 2",
-                explanation: `The async function is called but doesn't block execution. '3' logs first, then '1', then '4', and finally '2' after the timeout.`,
+                explanation: `The async function is called but doesn't block execution. '3' prints first, then '1', then '4', and finally '2' after the delay.`,
               },
               {
-                title: `${language} ${topic} Object Destructuring MCQ ${i + 1}`,
-                content: `What is the value of 'name' after this ${language} destructuring?\n\n\`\`\`${language.toLowerCase()}\nconst user = { id: 1, name: 'John', email: 'john@example.com' };\nconst { name, age = 25 } = user;\nconsole.log(name);\n\`\`\``,
-                options: ["'John'", "undefined", "25", "Error"],
+                title: `${language} ${topic} Data Access MCQ ${i + 1}`,
+                content: `What is the value after this ${language} data access operation?\n\n\`\`\`${language.toLowerCase()}\n${syntax.dict}\n${syntax.get}\n${syntax.print}\n\`\`\``,
+                options: ["'John'", "None", "'Unknown'", "Error"],
                 correctAnswer: "'John'",
-                explanation: `Destructuring extracts the 'name' property from the user object, which is 'John'. The age default value doesn't affect name.`,
+                explanation: `The get method retrieves the value from the data structure, which is 'John'.`,
               },
               {
-                title: `${language} ${topic} Closure MCQ ${i + 1}`,
-                content: `What will this ${language} closure code output?\n\n\`\`\`${language.toLowerCase()}\nfunction createCounter() {\n  let count = 0;\n  return function() {\n    return ++count;\n  };\n}\nconst counter = createCounter();\nconsole.log(counter());\nconsole.log(counter());\n\`\`\``,
+                title: `${language} ${topic} Control Flow MCQ ${i + 1}`,
+                content: `What will this ${language} control flow code output?\n\n\`\`\`${language.toLowerCase()}\n${syntax.function}\n  count = 0\n  while True:\n    count += 1\n    ${syntax.generator}\n\ncounter = create_counter()\n${syntax.next}\n${syntax.next}\n\`\`\``,
                 options: ["0, 1", "1, 2", "1, 1", "Error"],
                 correctAnswer: "1, 2",
-                explanation: `The closure maintains the count variable in its scope. Each call increments and returns the current count.`,
+                explanation: `The control flow maintains state and returns incremented values on each iteration.`,
               },
             ];
           }
