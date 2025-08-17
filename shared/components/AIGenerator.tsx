@@ -376,7 +376,11 @@ export default function AIGenerator({
           <Settings className="w-5 h-5 text-gray-400" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className={`grid gap-4 mb-6 ${
+          config.mixTypes 
+            ? "grid-cols-1 md:grid-cols-2" 
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        }`}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Language
@@ -394,46 +398,50 @@ export default function AIGenerator({
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Topic
-            </label>
-            <select
-              value={config.topic}
-              onChange={(e) => updateConfig({ topic: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {topics.map((topic) => (
-                <option key={topic} value={topic}>
-                  {topic}
-                </option>
-              ))}
-            </select>
-          </div>
+          {!config.mixTypes && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Topic
+              </label>
+              <select
+                value={config.topic}
+                onChange={(e) => updateConfig({ topic: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                {topics.map((topic) => (
+                  <option key={topic} value={topic}>
+                    {topic}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Difficulty
-            </label>
-            <select
-              value={config.difficulty}
-              onChange={(e) =>
-                updateConfig({
-                  difficulty: e.target.value as
-                    | "beginner"
-                    | "intermediate"
-                    | "advanced",
-                })
-              }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            >
-              {difficulties.map((diff) => (
-                <option key={diff} value={diff}>
-                  {diff.charAt(0).toUpperCase() + diff.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
+          {!config.mixTypes && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Difficulty
+              </label>
+              <select
+                value={config.difficulty}
+                onChange={(e) =>
+                  updateConfig({
+                    difficulty: e.target.value as
+                      | "beginner"
+                      | "intermediate"
+                      | "advanced",
+                  })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                {difficulties.map((diff) => (
+                  <option key={diff} value={diff}>
+                    {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -490,12 +498,16 @@ export default function AIGenerator({
               onChange={(e) => updateConfig({ mixTypes: e.target.checked })}
               className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
             />
-            <label htmlFor="mixTypes" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="mixTypes"
+              className="text-sm font-medium text-gray-700"
+            >
               Mix Question Types
             </label>
           </div>
           <p className="text-xs text-gray-500 mt-1 ml-7">
-            Generate a mix of different question types (MCQ, Problems, etc.) for the selected language
+            Generate a mix of different question types (MCQ, Problems, etc.) for
+            the selected language
           </p>
         </div>
 
