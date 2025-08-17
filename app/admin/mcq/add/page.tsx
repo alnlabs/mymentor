@@ -494,6 +494,102 @@ export default function AddMCQPage() {
                     />
                   </div>
 
+                  {/* Subject */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                    <input
+                      type="text"
+                      value={mcq.subject}
+                      onChange={(e) => updateMCQ("subject", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Programming, Data Structures, Algorithms"
+                    />
+                  </div>
+
+                  {/* Topic */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Topic</label>
+                    <input
+                      type="text"
+                      value={mcq.topic}
+                      onChange={(e) => updateMCQ("topic", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Variables, Functions, Classes"
+                    />
+                  </div>
+
+                  {/* Tool */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Tool</label>
+                    <input
+                      type="text"
+                      value={mcq.tool}
+                      onChange={(e) => updateMCQ("tool", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., React, Node.js, MongoDB"
+                    />
+                  </div>
+
+                  {/* Technology Stack */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Technology Stack</label>
+                    <input
+                      type="text"
+                      value={mcq.technologyStack}
+                      onChange={(e) => updateMCQ("technologyStack", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., MERN, LAMP, MEAN"
+                    />
+                  </div>
+
+                  {/* Domain */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Domain</label>
+                    <input
+                      type="text"
+                      value={mcq.domain}
+                      onChange={(e) => updateMCQ("domain", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Web Development, Mobile, AI/ML"
+                    />
+                  </div>
+
+                  {/* Job Role */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Job Role</label>
+                    <input
+                      type="text"
+                      value={mcq.jobRole}
+                      onChange={(e) => updateMCQ("jobRole", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Frontend Developer, Backend Engineer"
+                    />
+                  </div>
+
+                  {/* Company Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Company Type</label>
+                    <input
+                      type="text"
+                      value={mcq.companyType}
+                      onChange={(e) => updateMCQ("companyType", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Startup, Enterprise, Agency"
+                    />
+                  </div>
+
+                  {/* Interview Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Interview Type</label>
+                    <input
+                      type="text"
+                      value={mcq.interviewType}
+                      onChange={(e) => updateMCQ("interviewType", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Technical, Behavioral, System Design"
+                    />
+                  </div>
+
                   {/* Companies */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Companies</label>
