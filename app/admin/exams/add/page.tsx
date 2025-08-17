@@ -6,12 +6,16 @@ import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import PageHeader from "@/shared/components/PageHeader";
 import QuestionSelector from "@/shared/components/QuestionSelector";
-import { CheckCircle, AlertCircle, Save, BookOpen } from "lucide-react";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
+import { CheckCircle, AlertCircle, Save, BookOpen, Sparkles } from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { BasicInfoSection } from "@/shared/components/exam-form/BasicInfoSection";
 
 export default function AddExamPage() {
   const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
+  const [aiGeneratedContent, setAiGeneratedContent] = useState<GeneratedContent[]>([]);
+  const [useAI, setUseAI] = useState(false);
 
   const {
     formData,
@@ -27,6 +31,53 @@ export default function AddExamPage() {
     console.log("Selected questions:", questions);
   };
 
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    setAiGeneratedContent(content);
+    console.log("AI generated exam content:", content);
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI generated content to exam format
+      const examData = {
+        title: `AI Generated Exam - ${new Date().toLocaleDateString()}`,
+        description: `AI generated exam with ${content.length} questions`,
+        duration: 60,
+        questions: content.map((item) => ({
+          question: item.content,
+          type: item.type === "question" ? "mcq" : "coding",
+          difficulty: item.difficulty,
+          category: item.category,
+          options: item.options || [],
+          correctAnswer: item.correctAnswer || "",
+          explanation: item.explanation || "",
+        })),
+        difficulty: content[0]?.difficulty || "intermediate",
+        category: content[0]?.category || "General",
+        status: "draft",
+      };
+
+      const response = await fetch("/api/exams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(examData),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save AI generated exam");
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Error saving AI exam content:", error);
+      throw error;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -36,56 +87,113 @@ export default function AddExamPage() {
         backText="Back to Exams"
       />
 
-      {/* Question Selector */}
+      {/* Question Selection Method Toggle */}
       <Card className="mb-6">
         <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Select Questions from Database
-          </h3>
-          <QuestionSelector
-            onQuestionsSelected={handleQuestionsSelected}
-            selectedQuestions={selectedQuestions}
-          />
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Question Selection Method
+            </h3>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Use AI Generation</span>
+              <button
+                onClick={() => setUseAI(!useAI)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  useAI ? 'bg-blue-600' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    useAI ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          {useAI ? (
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Sparkles className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-medium text-gray-700">
+                  AI Content Generator
+                </span>
+              </div>
+              <AIGenerator
+                type="exam"
+                onContentGenerated={handleAIContentGenerated}
+                onSaveToDatabase={handleSaveAIContentToDatabase}
+              />
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <BookOpen className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700">
+                  Select from Existing Questions
+                </span>
+              </div>
+              <QuestionSelector
+                onQuestionsSelected={handleQuestionsSelected}
+                selectedQuestions={selectedQuestions}
+              />
+            </div>
+          )}
         </div>
       </Card>
 
-      {/* Selected Questions Summary */}
-      {selectedQuestions.length > 0 && (
+            {/* Questions Summary */}
+      {(selectedQuestions.length > 0 || aiGeneratedContent.length > 0) && (
         <Card className="mb-6">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                Selected Questions for Exam ({selectedQuestions.length})
+                {useAI ? "AI Generated Questions" : "Selected Questions"} for Exam (
+                {useAI ? aiGeneratedContent.length : selectedQuestions.length})
               </h3>
               <div className="text-sm text-gray-500">
-                These questions will be included in your exam
+                {useAI 
+                  ? "AI will generate these questions when you create the exam"
+                  : "These questions will be included in your exam"
+                }
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-green-50 p-4 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <BookOpen className="w-4 h-4 text-green-600" />
-                  <span className="font-medium text-green-800">
-                    MCQ Questions:{" "}
-                    {selectedQuestions.filter((q) => q.type === "mcq").length}
-                  </span>
-                </div>
-              </div>
-
+            
+            {useAI ? (
               <div className="bg-purple-50 p-4 rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <BookOpen className="w-4 h-4 text-purple-600" />
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-4 h-4 text-purple-600" />
                   <span className="font-medium text-purple-800">
-                    Problem Questions:{" "}
-                    {
-                      selectedQuestions.filter((q) => q.type === "problem")
-                        .length
-                    }
+                    AI will generate {aiGeneratedContent.length} questions based on your criteria
                   </span>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <BookOpen className="w-4 h-4 text-green-600" />
+                    <span className="font-medium text-green-800">
+                      MCQ Questions:{" "}
+                      {selectedQuestions.filter((q) => q.type === "mcq").length}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="bg-purple-50 p-4 rounded-lg">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <BookOpen className="w-4 h-4 text-purple-600" />
+                    <span className="font-medium text-purple-800">
+                      Problem Questions:{" "}
+                      {
+                        selectedQuestions.filter((q) => q.type === "problem")
+                          .length
+                      }
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </Card>
       )}
@@ -95,7 +203,13 @@ export default function AddExamPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSubmit(e, selectedQuestions);
+            if (useAI && aiGeneratedContent.length > 0) {
+              // Use AI-generated content
+              handleSubmit(e, aiGeneratedContent);
+            } else {
+              // Use manually selected questions
+              handleSubmit(e, selectedQuestions);
+            }
           }}
           className="space-y-6"
         >
