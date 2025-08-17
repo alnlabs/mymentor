@@ -97,6 +97,54 @@ export default function AddExamPage() {
     }
   };
 
+  const handleCreateExamFromAI = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI content to exam format and create exam
+      const examData = {
+        ...formData,
+        autoGenerate: false,
+        selectedQuestions: content.map((item) => ({
+          id: item.id,
+          type: item.type === "question" ? "mcq" : "problem",
+          title: item.title,
+          content: item.content,
+          options: item.options || [],
+          correctAnswer: item.correctAnswer || "",
+          explanation: item.explanation || "",
+          category: item.category,
+          topic: item.category,
+          tool: item.language || "JavaScript",
+          difficulty: item.difficulty === "beginner" ? "easy" : 
+                     item.difficulty === "intermediate" ? "medium" : "hard",
+          skillLevel: item.difficulty,
+        })),
+      };
+
+      // Use the existing exam form submission logic
+      const response = await fetch("/api/exams", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(examData),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to create exam");
+      }
+
+      // Redirect to exams page on success
+      window.location.href = "/admin/exams";
+      
+      return result;
+    } catch (error) {
+      console.error("Error creating exam from AI content:", error);
+      throw error;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -218,7 +266,7 @@ export default function AddExamPage() {
               <AIGenerator
                 type="exam"
                 onContentGenerated={handleAIContentGenerated}
-                onSaveToDatabase={handleSaveAIContentToDatabase}
+                onSaveToDatabase={handleCreateExamFromAI}
                 questionTypes={questionTypes}
               />
             </div>
