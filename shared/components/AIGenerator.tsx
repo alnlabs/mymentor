@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "./Card";
 import { Button } from "./Button";
 import { Loading } from "./Loading";
@@ -57,13 +57,21 @@ export default function AIGenerator({
   const [config, setConfig] = useState<GenerationConfig>({
     language: currentSettings?.tool || "JavaScript",
     topic: currentSettings?.topic || "General",
-    difficulty: (currentSettings?.difficulty === "easy" ? "beginner" : 
-                currentSettings?.difficulty === "medium" ? "intermediate" : 
-                currentSettings?.difficulty === "hard" ? "advanced" : "intermediate") as "beginner" | "intermediate" | "advanced",
+    difficulty: (currentSettings?.difficulty === "easy"
+      ? "beginner"
+      : currentSettings?.difficulty === "medium"
+      ? "intermediate"
+      : currentSettings?.difficulty === "hard"
+      ? "advanced"
+      : "intermediate") as "beginner" | "intermediate" | "advanced",
     count: 5,
-    context: currentSettings ? 
-      `Subject: ${currentSettings.subject || ""}, Domain: ${currentSettings.domain || ""}, Category: ${currentSettings.category || ""}, Tags: ${currentSettings.tags || ""}` : 
-      undefined,
+    context: currentSettings
+      ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+          currentSettings.domain || ""
+        }, Category: ${currentSettings.category || ""}, Tags: ${
+          currentSettings.tags || ""
+        }`
+      : undefined,
   });
 
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>(
@@ -97,6 +105,30 @@ export default function AIGenerator({
     "DevOps",
   ];
   const difficulties = ["beginner", "intermediate", "advanced"];
+
+  useEffect(() => {
+    if (currentSettings) {
+      setConfig((prev) => ({
+        ...prev,
+        language: currentSettings.tool || "JavaScript",
+        topic: currentSettings.topic || "General",
+        difficulty: (currentSettings.difficulty === "easy"
+          ? "beginner"
+          : currentSettings.difficulty === "medium"
+          ? "intermediate"
+          : currentSettings.difficulty === "hard"
+          ? "advanced"
+          : "intermediate") as "beginner" | "intermediate" | "advanced",
+        context: currentSettings
+          ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+              currentSettings.domain || ""
+            }, Category: ${currentSettings.category || ""}, Tags: ${
+              currentSettings.tags || ""
+            }`
+          : undefined,
+      }));
+    }
+  }, [currentSettings]);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
@@ -298,7 +330,7 @@ export default function AIGenerator({
         >
           {isGenerating ? (
             <>
-                              <Loading size="sm" />
+              <Loading size="sm" />
               Generating...
             </>
           ) : (

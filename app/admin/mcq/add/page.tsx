@@ -7,7 +7,20 @@ import { Loading } from "@/shared/components/Loading";
 import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
-import { Save, Plus, Trash2, CheckCircle, AlertCircle, Brain, Zap, Target, BookOpen, Users, Building, Star } from "lucide-react";
+import {
+  Save,
+  Plus,
+  Trash2,
+  CheckCircle,
+  AlertCircle,
+  Brain,
+  Zap,
+  Target,
+  BookOpen,
+  Users,
+  Building,
+  Star,
+} from "lucide-react";
 
 interface MCQ {
   question: string;
@@ -150,10 +163,10 @@ export default function AddMCQPage() {
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
     // Handle AI generated content and auto-populate settings
     console.log("AI generated MCQ content:", content);
-    
+
     if (content.length > 0) {
       const firstItem = content[0];
-      
+
       // Auto-populate settings based on generated content
       updateMCQ("category", firstItem.category || mcq.category);
       updateMCQ("subject", firstItem.category || mcq.subject);
@@ -161,16 +174,24 @@ export default function AddMCQPage() {
       updateMCQ("tool", firstItem.language || mcq.tool);
       updateMCQ("technologyStack", firstItem.language || mcq.technologyStack);
       updateMCQ("domain", firstItem.category || mcq.domain);
-      updateMCQ("difficulty", 
-        firstItem.difficulty === "beginner" ? "easy" :
-        firstItem.difficulty === "intermediate" ? "medium" : "hard"
+      updateMCQ(
+        "difficulty",
+        firstItem.difficulty === "beginner"
+          ? "easy"
+          : firstItem.difficulty === "intermediate"
+          ? "medium"
+          : "hard"
       );
-      updateMCQ("skillLevel", 
-        firstItem.difficulty === "beginner" ? "beginner" :
-        firstItem.difficulty === "intermediate" ? "intermediate" : "advanced"
+      updateMCQ(
+        "skillLevel",
+        firstItem.difficulty === "beginner"
+          ? "beginner"
+          : firstItem.difficulty === "intermediate"
+          ? "intermediate"
+          : "advanced"
       );
       updateMCQ("tags", firstItem.tags?.join(", ") || mcq.tags);
-      
+
       // Show success message
       alert(`AI generated ${content.length} MCQs and auto-populated settings!`);
     }
@@ -249,8 +270,16 @@ export default function AddMCQPage() {
 
   const skillLevels = [
     { value: "beginner", label: "Beginner", color: "text-blue-600 bg-blue-50" },
-    { value: "intermediate", label: "Intermediate", color: "text-purple-600 bg-purple-50" },
-    { value: "advanced", label: "Advanced", color: "text-orange-600 bg-orange-50" },
+    {
+      value: "intermediate",
+      label: "Intermediate",
+      color: "text-purple-600 bg-purple-50",
+    },
+    {
+      value: "advanced",
+      label: "Advanced",
+      color: "text-orange-600 bg-orange-50",
+    },
   ];
 
   const priorities = [
@@ -271,7 +300,9 @@ export default function AddMCQPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Create MCQ</h1>
-                <p className="text-gray-600 mt-1">Build engaging multiple choice questions</p>
+                <p className="text-gray-600 mt-1">
+                  Build engaging multiple choice questions
+                </p>
               </div>
             </div>
             <div className="flex space-x-3">
@@ -309,7 +340,9 @@ export default function AddMCQPage() {
                   <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg mr-3">
                     <Brain className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">AI Generator</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    AI Generator
+                  </h3>
                 </div>
                 <AIGenerator
                   type="mcq"
@@ -340,7 +373,9 @@ export default function AddMCQPage() {
                   <div className="p-2 bg-blue-100 rounded-lg mr-3">
                     <BookOpen className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Question</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Question
+                  </h2>
                 </div>
                 <textarea
                   value={mcq.question}
@@ -360,7 +395,9 @@ export default function AddMCQPage() {
                     <div className="p-2 bg-green-100 rounded-lg mr-3">
                       <CheckCircle className="w-5 h-5 text-green-600" />
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">Options</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      Options
+                    </h2>
                   </div>
                   <Button
                     type="button"
@@ -390,7 +427,9 @@ export default function AddMCQPage() {
                         value={option}
                         onChange={(e) => updateOption(index, e.target.value)}
                         className="flex-1 border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder={`Option ${String.fromCharCode(65 + index)}`}
+                        placeholder={`Option ${String.fromCharCode(
+                          65 + index
+                        )}`}
                       />
                       {mcq.options.length > 2 && (
                         <Button
@@ -416,7 +455,9 @@ export default function AddMCQPage() {
                   <div className="p-2 bg-purple-100 rounded-lg mr-3">
                     <AlertCircle className="w-5 h-5 text-purple-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">Explanation</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Explanation
+                  </h2>
                 </div>
                 <textarea
                   value={mcq.explanation}
@@ -438,13 +479,17 @@ export default function AddMCQPage() {
                   <div className="p-2 bg-gray-100 rounded-lg mr-3">
                     <Zap className="w-5 h-5 text-gray-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">Settings</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Settings
+                  </h3>
                 </div>
 
                 <div className="space-y-4">
                   {/* Difficulty */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Difficulty
+                    </label>
                     <div className="grid grid-cols-3 gap-2">
                       {difficulties.map((diff) => (
                         <button
@@ -465,7 +510,9 @@ export default function AddMCQPage() {
 
                   {/* Skill Level */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Skill Level</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Skill Level
+                    </label>
                     <div className="grid grid-cols-3 gap-2">
                       {skillLevels.map((level) => (
                         <button
@@ -486,7 +533,9 @@ export default function AddMCQPage() {
 
                   {/* Priority */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Priority
+                    </label>
                     <div className="grid grid-cols-3 gap-2">
                       {priorities.map((priority) => (
                         <button
@@ -507,7 +556,9 @@ export default function AddMCQPage() {
 
                   {/* Category */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category
+                    </label>
                     <input
                       type="text"
                       value={mcq.category}
@@ -519,7 +570,9 @@ export default function AddMCQPage() {
 
                   {/* Tags */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tags
+                    </label>
                     <input
                       type="text"
                       value={mcq.tags}
@@ -531,7 +584,9 @@ export default function AddMCQPage() {
 
                   {/* Subject */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject
+                    </label>
                     <input
                       type="text"
                       value={mcq.subject}
@@ -543,7 +598,9 @@ export default function AddMCQPage() {
 
                   {/* Topic */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Topic</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Topic
+                    </label>
                     <input
                       type="text"
                       value={mcq.topic}
@@ -555,7 +612,9 @@ export default function AddMCQPage() {
 
                   {/* Tool */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Tool</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tool
+                    </label>
                     <input
                       type="text"
                       value={mcq.tool}
@@ -567,11 +626,15 @@ export default function AddMCQPage() {
 
                   {/* Technology Stack */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Technology Stack</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Technology Stack
+                    </label>
                     <input
                       type="text"
                       value={mcq.technologyStack}
-                      onChange={(e) => updateMCQ("technologyStack", e.target.value)}
+                      onChange={(e) =>
+                        updateMCQ("technologyStack", e.target.value)
+                      }
                       className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., MERN, LAMP, MEAN"
                     />
@@ -579,7 +642,9 @@ export default function AddMCQPage() {
 
                   {/* Domain */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Domain</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Domain
+                    </label>
                     <input
                       type="text"
                       value={mcq.domain}
@@ -591,7 +656,9 @@ export default function AddMCQPage() {
 
                   {/* Job Role */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Job Role</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Job Role
+                    </label>
                     <input
                       type="text"
                       value={mcq.jobRole}
@@ -603,7 +670,9 @@ export default function AddMCQPage() {
 
                   {/* Company Type */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Company Type</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Type
+                    </label>
                     <input
                       type="text"
                       value={mcq.companyType}
@@ -615,11 +684,15 @@ export default function AddMCQPage() {
 
                   {/* Interview Type */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Interview Type</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Interview Type
+                    </label>
                     <input
                       type="text"
                       value={mcq.interviewType}
-                      onChange={(e) => updateMCQ("interviewType", e.target.value)}
+                      onChange={(e) =>
+                        updateMCQ("interviewType", e.target.value)
+                      }
                       className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., Technical, Behavioral, System Design"
                     />
@@ -627,7 +700,9 @@ export default function AddMCQPage() {
 
                   {/* Companies */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Companies</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Companies
+                    </label>
                     <input
                       type="text"
                       value={mcq.companies}
@@ -647,25 +722,38 @@ export default function AddMCQPage() {
                   <div className="p-2 bg-blue-100 rounded-lg mr-3">
                     <Star className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">Quick Stats</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Quick Stats
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Options</span>
-                    <span className="text-sm font-medium text-gray-900">{mcq.options.length}/6</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {mcq.options.length}/6
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Question Length</span>
-                    <span className="text-sm font-medium text-gray-900">{mcq.question.length} chars</span>
+                    <span className="text-sm text-gray-600">
+                      Question Length
+                    </span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {mcq.question.length} chars
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Difficulty</span>
-                    <span className={`text-sm font-medium px-2 py-1 rounded ${
-                      mcq.difficulty === 'easy' ? 'text-green-600 bg-green-100' :
-                      mcq.difficulty === 'medium' ? 'text-yellow-600 bg-yellow-100' :
-                      'text-red-600 bg-red-100'
-                    }`}>
-                      {mcq.difficulty.charAt(0).toUpperCase() + mcq.difficulty.slice(1)}
+                    <span
+                      className={`text-sm font-medium px-2 py-1 rounded ${
+                        mcq.difficulty === "easy"
+                          ? "text-green-600 bg-green-100"
+                          : mcq.difficulty === "medium"
+                          ? "text-yellow-600 bg-yellow-100"
+                          : "text-red-600 bg-red-100"
+                      }`}
+                    >
+                      {mcq.difficulty.charAt(0).toUpperCase() +
+                        mcq.difficulty.slice(1)}
                     </span>
                   </div>
                 </div>
