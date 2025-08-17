@@ -8,14 +8,22 @@ import PageHeader from "@/shared/components/PageHeader";
 import QuestionSelector from "@/shared/components/QuestionSelector";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
-import { CheckCircle, AlertCircle, Save, BookOpen, Sparkles } from "lucide-react";
+import {
+  CheckCircle,
+  AlertCircle,
+  Save,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { BasicInfoSection } from "@/shared/components/exam-form/BasicInfoSection";
 
 export default function AddExamPage() {
   const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
-  const [aiGeneratedContent, setAiGeneratedContent] = useState<GeneratedContent[]>([]);
-  const [useAI, setUseAI] = useState(false);
+  const [aiGeneratedContent, setAiGeneratedContent] = useState<
+    GeneratedContent[]
+  >([]);
+  const [questionMode, setQuestionMode] = useState<'manual' | 'ai' | 'mixed'>('manual');
 
   const {
     formData,
@@ -87,45 +95,66 @@ export default function AddExamPage() {
         backText="Back to Exams"
       />
 
-      {/* Question Selection Method Toggle */}
+      {/* Question Selection Method */}
       <Card className="mb-6">
         <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Question Selection Method
-            </h3>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Use AI Generation</span>
-              <button
-                onClick={() => setUseAI(!useAI)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  useAI ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    useAI ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Question Selection Method
+          </h3>
+          
+          {/* Method Selection Buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+            <button
+              onClick={() => setQuestionMode('manual')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                questionMode === 'manual'
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2 mb-2">
+                <BookOpen className="w-5 h-5" />
+                <span className="font-medium">Manual Selection</span>
+              </div>
+              <p className="text-sm">Select existing questions from database</p>
+            </button>
+
+            <button
+              onClick={() => setQuestionMode('ai')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                questionMode === 'ai'
+                  ? 'border-purple-500 bg-purple-50 text-purple-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2 mb-2">
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">AI Generation</span>
+              </div>
+              <p className="text-sm">Generate new questions with AI</p>
+            </button>
+
+            <button
+              onClick={() => setQuestionMode('mixed')}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                questionMode === 'mixed'
+                  ? 'border-green-500 bg-green-50 text-green-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="flex space-x-1">
+                  <BookOpen className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <span className="font-medium">Mixed Mode</span>
+              </div>
+              <p className="text-sm">Combine both methods</p>
+            </button>
           </div>
 
-          {useAI ? (
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Sparkles className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-medium text-gray-700">
-                  AI Content Generator
-                </span>
-              </div>
-              <AIGenerator
-                type="exam"
-                onContentGenerated={handleAIContentGenerated}
-                onSaveToDatabase={handleSaveAIContentToDatabase}
-              />
-            </div>
-          ) : (
+          {/* Content Based on Selected Mode */}
+          {questionMode === 'manual' && (
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <BookOpen className="w-5 h-5 text-blue-600" />
@@ -139,33 +168,142 @@ export default function AddExamPage() {
               />
             </div>
           )}
+
+          {questionMode === 'ai' && (
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Sparkles className="w-5 h-5 text-purple-600" />
+                <span className="text-sm font-medium text-gray-700">
+                  AI Content Generator
+                </span>
+              </div>
+              <AIGenerator
+                type="exam"
+                onContentGenerated={handleAIContentGenerated}
+                onSaveToDatabase={handleSaveAIContentToDatabase}
+              />
+            </div>
+          )}
+
+          {questionMode === 'mixed' && (
+            <div className="space-y-6">
+              {/* Manual Selection Section */}
+              <div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Select Existing Questions
+                  </span>
+                </div>
+                <QuestionSelector
+                  onQuestionsSelected={handleQuestionsSelected}
+                  selectedQuestions={selectedQuestions}
+                />
+              </div>
+
+              {/* AI Generation Section */}
+              <div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    Generate Additional Questions with AI
+                  </span>
+                </div>
+                <AIGenerator
+                  type="exam"
+                  onContentGenerated={handleAIContentGenerated}
+                  onSaveToDatabase={handleSaveAIContentToDatabase}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 
-            {/* Questions Summary */}
+      {/* Questions Summary */}
       {(selectedQuestions.length > 0 || aiGeneratedContent.length > 0) && (
         <Card className="mb-6">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                {useAI ? "AI Generated Questions" : "Selected Questions"} for Exam (
-                {useAI ? aiGeneratedContent.length : selectedQuestions.length})
+                {questionMode === 'ai' 
+                  ? "AI Generated Questions" 
+                  : questionMode === 'mixed'
+                  ? "Mixed Questions"
+                  : "Selected Questions"} for Exam (
+                {questionMode === 'ai' 
+                  ? aiGeneratedContent.length 
+                  : questionMode === 'mixed'
+                  ? selectedQuestions.length + aiGeneratedContent.length
+                  : selectedQuestions.length})
               </h3>
               <div className="text-sm text-gray-500">
-                {useAI 
+                {questionMode === 'ai'
                   ? "AI will generate these questions when you create the exam"
-                  : "These questions will be included in your exam"
-                }
+                  : questionMode === 'mixed'
+                  ? "Combination of selected and AI-generated questions"
+                  : "These questions will be included in your exam"}
               </div>
             </div>
-            
-            {useAI ? (
+
+            {questionMode === 'ai' ? (
               <div className="bg-purple-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-4 h-4 text-purple-600" />
                   <span className="font-medium text-purple-800">
-                    AI will generate {aiGeneratedContent.length} questions based on your criteria
+                    AI will generate {aiGeneratedContent.length} questions based
+                    on your criteria
                   </span>
+                </div>
+              </div>
+            ) : questionMode === 'mixed' ? (
+              <div className="space-y-4">
+                {/* Manual Questions Summary */}
+                {selectedQuestions.length > 0 && (
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <BookOpen className="w-4 h-4 text-blue-600" />
+                      <span className="font-medium text-blue-800">
+                        Selected from Database: {selectedQuestions.length} questions
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <span className="text-blue-700">
+                        MCQ: {selectedQuestions.filter((q) => q.type === "mcq").length}
+                      </span>
+                      <span className="text-blue-700">
+                        Problems: {selectedQuestions.filter((q) => q.type === "problem").length}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Questions Summary */}
+                {aiGeneratedContent.length > 0 && (
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                      <span className="font-medium text-purple-800">
+                        AI Generated: {aiGeneratedContent.length} questions
+                      </span>
+                    </div>
+                    <div className="text-sm text-purple-700">
+                      Will be generated based on your AI criteria
+                    </div>
+                  </div>
+                )}
+
+                {/* Total Summary */}
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex space-x-1">
+                      <BookOpen className="w-4 h-4 text-green-600" />
+                      <Sparkles className="w-4 h-4 text-green-600" />
+                    </div>
+                    <span className="font-medium text-green-800">
+                      Total Questions: {selectedQuestions.length + aiGeneratedContent.length}
+                    </span>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -179,7 +317,7 @@ export default function AddExamPage() {
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="bg-purple-50 p-4 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
                     <BookOpen className="w-4 h-4 text-purple-600" />
@@ -203,11 +341,18 @@ export default function AddExamPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (useAI && aiGeneratedContent.length > 0) {
-              // Use AI-generated content
+            if (questionMode === 'ai' && aiGeneratedContent.length > 0) {
+              // Use AI-generated content only
               handleSubmit(e, aiGeneratedContent);
+            } else if (questionMode === 'mixed' && (selectedQuestions.length > 0 || aiGeneratedContent.length > 0)) {
+              // Combine both selected and AI-generated content
+              const combinedQuestions = [
+                ...selectedQuestions,
+                ...aiGeneratedContent
+              ];
+              handleSubmit(e, combinedQuestions);
             } else {
-              // Use manually selected questions
+              // Use manually selected questions only
               handleSubmit(e, selectedQuestions);
             }
           }}
