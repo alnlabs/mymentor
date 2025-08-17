@@ -268,6 +268,69 @@ async function generateWithAI(
                  explanation: `For ${100000 + i * 10000} records, a composite index on (email, status, created_at) will dramatically improve query performance.`,
                },
              ];
+           } else if (topic === "DevOps") {
+             mcqTemplates = [
+               {
+                 title: `${language} ${topic} CI/CD Pipeline MCQ ${i + 1}`,
+                 content: `How should you structure a CI/CD pipeline for a ${language} application with ${5 + i} microservices?\n\n**Requirements:**\n- Automated testing on every commit\n- Staging environment deployment\n- Production deployment with approval\n- Rollback capability`,
+                 options: [
+                   "Single pipeline for all services",
+                   "Separate pipeline per service with shared stages",
+                   "Manual deployment only",
+                   "No testing required",
+                 ],
+                 correctAnswer: "Separate pipeline per service with shared stages",
+                 explanation: `For ${language} applications with ${5 + i} microservices, separate pipelines with shared stages provide flexibility and faster deployments.`,
+               },
+               {
+                 title: `${language} ${topic} Container Orchestration MCQ ${i + 1}`,
+                 content: `Which container orchestration tool is best for managing ${10 + i} ${language} microservices in production?\n\n**Requirements:**\n- Auto-scaling based on load\n- Service discovery\n- Load balancing\n- Rolling updates`,
+                 options: [
+                   "Docker Compose - simple container management",
+                   "Kubernetes - full orchestration platform",
+                   "Docker Swarm - basic orchestration",
+                   "No orchestration needed",
+                 ],
+                 correctAnswer: "Kubernetes - full orchestration platform",
+                 explanation: `For ${10 + i} ${language} microservices in production, Kubernetes provides comprehensive orchestration with auto-scaling, service discovery, and rolling updates.`,
+               },
+               {
+                 title: `${language} ${topic} Infrastructure as Code MCQ ${i + 1}`,
+                 content: `How should you manage infrastructure for a ${language} application across ${3 + i} environments?\n\n**Environments:**\n- Development, Staging, Production\n- Different resource requirements\n- Consistent configuration`,
+                 options: [
+                   "Manual server setup for each environment",
+                   "Terraform with environment-specific variables",
+                   "Cloud provider console only",
+                   "No infrastructure management needed",
+                 ],
+                 correctAnswer: "Terraform with environment-specific variables",
+                 explanation: `Terraform with environment-specific variables ensures consistent infrastructure across ${3 + i} environments for ${language} applications.`,
+               },
+               {
+                 title: `${language} ${topic} Monitoring MCQ ${i + 1}`,
+                 content: `Which monitoring strategy is best for a ${language} application serving ${1000 + i * 100} users?\n\n**Requirements:**\n- Real-time performance metrics\n- Error tracking and alerting\n- Resource utilization monitoring\n- User experience metrics`,
+                 options: [
+                   "Manual log checking only",
+                   "Application Performance Monitoring (APM) + Infrastructure monitoring",
+                   "No monitoring needed",
+                   "Basic server monitoring only",
+                 ],
+                 correctAnswer: "Application Performance Monitoring (APM) + Infrastructure monitoring",
+                 explanation: `For ${language} applications serving ${1000 + i * 100} users, APM + infrastructure monitoring provides comprehensive visibility into performance and issues.`,
+               },
+               {
+                 title: `${language} ${topic} Security MCQ ${i + 1}`,
+                 content: `How should you secure a ${language} application's deployment pipeline?\n\n**Requirements:**\n- Secure secrets management\n- Vulnerability scanning\n- Access control\n- Audit logging`,
+                 options: [
+                   "Store secrets in code repository",
+                   "Use secrets management + security scanning + RBAC",
+                   "No security measures needed",
+                   "Basic password protection only",
+                 ],
+                 correctAnswer: "Use secrets management + security scanning + RBAC",
+                 explanation: `For ${language} applications, secrets management, vulnerability scanning, and Role-Based Access Control (RBAC) ensure secure deployments.`,
+               },
+             ];
            } else {
              // Default templates for other topics
             mcqTemplates = [
