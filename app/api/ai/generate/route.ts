@@ -331,16 +331,57 @@ async function generateWithAI(
                  explanation: `For ${language} applications, secrets management, vulnerability scanning, and Role-Based Access Control (RBAC) ensure secure deployments.`,
                },
              ];
-           } else {
+                      } else {
              // Default templates for other topics
-            mcqTemplates = [
-              {
-                title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
-                content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
-                options: ["20, 10", "10, 20", "20, 20", "10, 10"],
-                correctAnswer: "20, 10",
-                explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
-              },
+             mcqTemplates = language === "Python" ? [
+               {
+                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
+                 content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nx = 10\ndef test_scope():\n    x = 20\n    print(x)\ntest_scope()\nprint(x)\n\`\`\``,
+                 options: ["20, 10", "10, 20", "20, 20", "10, 10"],
+                 correctAnswer: "20, 10",
+                 explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
+               },
+               {
+                 title: `${language} ${topic} List Methods MCQ ${i + 1}`,
+                 content: `Which ${language} list method returns a new list without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nnumbers = [1, 2, 3, 4, 5]\ndoubled = [x * 2 for x in numbers]\nprint(numbers)  # What will this output?\n\`\`\``,
+                 options: [
+                   "[2, 4, 6, 8, 10]",
+                   "[1, 2, 3, 4, 5]",
+                   "Error",
+                   "None",
+                 ],
+                 correctAnswer: "[1, 2, 3, 4, 5]",
+                 explanation: `List comprehension creates a new list and doesn't modify the original list in ${language}.`,
+               },
+               {
+                 title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
+                 content: `What will be printed first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nimport asyncio\n\nasync def test():\n    print('1')\n    await asyncio.sleep(0.1)\n    print('2')\n\nprint('3')\nasyncio.run(test())\nprint('4')\n\`\`\``,
+                 options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
+                 correctAnswer: "3, 1, 4, 2",
+                 explanation: `The async function is called but doesn't block execution. '3' prints first, then '1', then '4', and finally '2' after the sleep.`,
+               },
+               {
+                 title: `${language} ${topic} Dictionary MCQ ${i + 1}`,
+                 content: `What is the value of 'name' after this ${language} dictionary operation?\n\n\`\`\`${language.toLowerCase()}\nuser = {'id': 1, 'name': 'John', 'email': 'john@example.com'}\nname = user.get('name', 'Unknown')\nprint(name)\n\`\`\``,
+                 options: ["'John'", "None", "'Unknown'", "Error"],
+                 correctAnswer: "'John'",
+                 explanation: `The .get() method retrieves the 'name' key from the dictionary, which is 'John'.`,
+               },
+               {
+                 title: `${language} ${topic} Generator MCQ ${i + 1}`,
+                 content: `What will this ${language} generator code output?\n\n\`\`\`${language.toLowerCase()}\ndef create_counter():\n    count = 0\n    while True:\n        count += 1\n        yield count\n\ncounter = create_counter()\nprint(next(counter))\nprint(next(counter))\n\`\`\``,
+                 options: ["0, 1", "1, 2", "1, 1", "Error"],
+                 correctAnswer: "1, 2",
+                 explanation: `The generator maintains state and yields incremented values on each call to next().`,
+               },
+             ] : [
+               {
+                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
+                 content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+                 options: ["20, 10", "10, 20", "20, 20", "10, 10"],
+                 correctAnswer: "20, 10",
+                 explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
+               },
               {
                 title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
                 content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
