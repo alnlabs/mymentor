@@ -24,32 +24,8 @@ const defaultUsers = [
     isActive: true,
   },
   {
-    email: 'content@interview-platform.com',
-    name: 'Content Manager',
-    password: 'content123',
-    role: 'admin',
-    provider: 'email',
-    isActive: true,
-  },
-  {
-    email: 'john.doe@example.com',
-    name: 'John Doe',
-    password: 'password123',
-    role: 'user',
-    provider: 'email',
-    isActive: true,
-  },
-  {
-    email: 'jane.smith@example.com',
-    name: 'Jane Smith',
-    password: 'password123',
-    role: 'user',
-    provider: 'email',
-    isActive: true,
-  },
-  {
-    email: 'bob.wilson@example.com',
-    name: 'Bob Wilson',
+    email: 'user@interview-platform.com',
+    name: 'Test User',
     password: 'password123',
     role: 'user',
     provider: 'email',
@@ -97,8 +73,7 @@ async function seedDatabase() {
     console.log('\n👑 Default Login Credentials:');
     console.log('- Super Admin: superadmin@interview-platform.com / superadmin123');
     console.log('- Admin: admin@interview-platform.com / admin123');
-    console.log('- Content Manager: content@interview-platform.com / content123');
-    console.log('- User: john.doe@example.com / password123');
+    console.log('- User: user@interview-platform.com / password123');
 
   } catch (error) {
     console.error('❌ Error seeding database:', error);

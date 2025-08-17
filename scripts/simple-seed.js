@@ -24,8 +24,8 @@ const essentialUsers = [
     isActive: true,
   },
   {
-    email: 'john.doe@example.com',
-    name: 'John Doe',
+    email: 'user@interview-platform.com',
+    name: 'Test User',
     password: 'password123',
     role: 'user',
     provider: 'email',
@@ -73,7 +73,7 @@ async function simpleSeed() {
     console.log('\n👑 Login Credentials:');
     console.log('- Super Admin: superadmin@interview-platform.com / superadmin123');
     console.log('- Admin: admin@interview-platform.com / admin123');
-    console.log('- User: john.doe@example.com / password123');
+    console.log('- User: user@interview-platform.com / password123');
 
   } catch (error) {
     console.error('❌ Error seeding database:', error);
