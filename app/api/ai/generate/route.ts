@@ -22,6 +22,7 @@ async function generateWithAI(
       topic = "General",
       difficulty = "intermediate",
       count = 5,
+      mixTypes = false,
     } = request;
 
     const generatedContent: GeneratedContent[] = [];
@@ -30,11 +31,105 @@ async function generateWithAI(
     const baseTimestamp = Date.now();
     const randomSeed = Math.random().toString(36).substr(2, 9);
 
-    for (let i = 0; i < count; i++) {
-      const id = `ai-generated-${type}-${baseTimestamp + i}-${randomSeed}-${i}`;
-      const uniqueSuffix = `${randomSeed}-${i}`;
+    // Generate content based on type and mixTypes setting
+    if (mixTypes && type === "exam") {
+      // Generate a mix of MCQ and Problem questions
+      const mcqCount = Math.ceil(count * 0.6); // 60% MCQs
+      const problemCount = count - mcqCount; // 40% Problems
+      
+      // Generate MCQs
+      for (let i = 0; i < mcqCount; i++) {
+        const id = `ai-generated-mcq-${baseTimestamp + i}-${randomSeed}-${i}`;
+        const uniqueSuffix = `${randomSeed}-${i}`;
+        
+        // Use existing MCQ generation logic
+        let mcqTemplates = [];
+        if (topic === "System Design") {
+          mcqTemplates = [
+            {
+              title: `${language} ${topic} Load Balancer MCQ ${i + 1}`,
+              content: `Which load balancing algorithm is best for ${language} applications with ${10 + i} servers?`,
+              options: [
+                "Round Robin - distributes requests evenly",
+                "Least Connections - sends to server with fewest active connections",
+                "IP Hash - routes based on client IP",
+                "Random - randomly selects server",
+              ],
+              correctAnswer: "Least Connections - sends to server with fewest active connections",
+              explanation: `For ${language} applications with ${10 + i} servers, Least Connections provides better performance.`,
+            },
+            // Add more templates as needed
+          ];
+        } else {
+          // Default MCQ template
+          mcqTemplates = [
+            {
+              title: `${language} ${topic} MCQ ${i + 1}`,
+              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n// ${topic} related code\nconsole.log("Question ${i + 1}");\n\`\`\``,
+              options: ["Option A", "Option B", "Option C", "Option D"],
+              correctAnswer: "Option A",
+              explanation: `This tests understanding of ${topic} in ${language}.`,
+            },
+          ];
+        }
+        
+        const selectedMCQ = mcqTemplates[i % mcqTemplates.length];
+        generatedContent.push({
+          id,
+          type: "question",
+          title: selectedMCQ.title,
+          content: selectedMCQ.content,
+          difficulty,
+          category: topic,
+          language,
+          options: selectedMCQ.options,
+          correctAnswer: selectedMCQ.correctAnswer,
+          explanation: selectedMCQ.explanation,
+          tags: [language, topic, difficulty, "mcq"],
+          metadata: { generatedType: "mcq" },
+        });
+      }
+      
+      // Generate Problems
+      for (let i = 0; i < problemCount; i++) {
+        const id = `ai-generated-problem-${baseTimestamp + mcqCount + i}-${randomSeed}-${i}`;
+        const uniqueSuffix = `${randomSeed}-${i}`;
+        
+        // Use existing Problem generation logic
+        const problemTemplates = [
+          {
+            title: `${language} ${topic} Problem ${i + 1}`,
+            content: `Implement a function in ${language} to solve the following ${topic} problem:\n\n**Problem:**\nGiven an array of numbers, find the maximum sum of any contiguous subarray.\n\n**Requirements:**\n- Use ${language} syntax\n- Handle edge cases\n- Optimize for performance`,
+            explanation: `This problem tests ${topic} concepts in ${language} programming.`,
+          },
+          {
+            title: `${language} ${topic} Algorithm ${i + 1}`,
+            content: `Write a ${language} function to implement the following ${topic} algorithm:\n\n**Algorithm:**\nSort an array using efficient sorting techniques.\n\n**Constraints:**\n- Time complexity: O(n log n)\n- Space complexity: O(1)\n- Use ${language} best practices`,
+            explanation: `This tests understanding of ${topic} algorithms in ${language}.`,
+          },
+        ];
+        
+        const selectedProblem = problemTemplates[i % problemTemplates.length];
+        generatedContent.push({
+          id,
+          type: "problem",
+          title: selectedProblem.title,
+          content: selectedProblem.content,
+          difficulty,
+          category: topic,
+          language,
+          explanation: selectedProblem.explanation,
+          tags: [language, topic, difficulty, "problem"],
+          metadata: { generatedType: "problem" },
+        });
+      }
+    } else {
+      // Original single-type generation
+      for (let i = 0; i < count; i++) {
+        const id = `ai-generated-${type}-${baseTimestamp + i}-${randomSeed}-${i}`;
+        const uniqueSuffix = `${randomSeed}-${i}`;
 
-      switch (type) {
+        switch (type) {
         case "mcq":
           // Create topic-specific MCQ questions
           let mcqTemplates = [];
@@ -968,6 +1063,7 @@ async function generateWithAI(
           });
           break;
       }
+    }
     }
 
     console.log(

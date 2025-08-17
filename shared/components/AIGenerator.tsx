@@ -46,6 +46,7 @@ interface GenerationConfig {
   difficulty: "beginner" | "intermediate" | "advanced";
   count: number;
   context?: string;
+  mixTypes?: boolean;
 }
 
 export default function AIGenerator({
@@ -126,6 +127,7 @@ export default function AIGenerator({
             currentSettings.tags || ""
           }`
         : undefined,
+      mixTypes: false,
     };
   });
 
@@ -477,6 +479,24 @@ export default function AIGenerator({
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
+        </div>
+
+        <div className="mb-4">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="mixTypes"
+              checked={config.mixTypes || false}
+              onChange={(e) => updateConfig({ mixTypes: e.target.checked })}
+              className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+            />
+            <label htmlFor="mixTypes" className="text-sm font-medium text-gray-700">
+              Mix Question Types
+            </label>
+          </div>
+          <p className="text-xs text-gray-500 mt-1 ml-7">
+            Generate a mix of different question types (MCQ, Problems, etc.) for the selected language
+          </p>
         </div>
 
         <div className="flex gap-3">

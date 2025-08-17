@@ -6,6 +6,7 @@ export interface AIGenerationRequest {
   count?: number;
   context?: string;
   requirements?: string[];
+  mixTypes?: boolean;
 }
 
 export interface AIGenerationResponse {
