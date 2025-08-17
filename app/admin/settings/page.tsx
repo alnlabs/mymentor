@@ -74,6 +74,11 @@ function SettingsPageContent() {
     sortOrder: 0,
   });
 
+  // Content management form states
+  const [selectedField, setSelectedField] = useState("");
+  const [newItemValue, setNewItemValue] = useState("");
+  const [addingItem, setAddingItem] = useState(false);
+
   useEffect(() => {
     fetchAllData();
   }, []);
@@ -100,6 +105,121 @@ function SettingsPageContent() {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const addContentItem = async () => {
+    if (!selectedField || !newItemValue.trim()) {
+      setMessage({
+        type: "error",
+        text: "Please select a field and enter a value",
+      });
+      return;
+    }
+
+    try {
+      setAddingItem(true);
+
+      // Get current value
+      const currentSetting = settings.find((s) => s.key === selectedField);
+      const currentValue = currentSetting?.value || "";
+      const currentItems = currentValue
+        .split(",")
+        .filter(Boolean)
+        .map((item) => item.trim());
+
+      // Check if item already exists
+      if (currentItems.includes(newItemValue.trim())) {
+        setMessage({ type: "error", text: "Item already exists" });
+        return;
+      }
+
+      // Add new item
+      const newItems = [...currentItems, newItemValue.trim()];
+      const newValue = newItems.join(", ");
+
+      // Update setting in database
+      const response = await fetch(
+        `/api/admin/settings/${currentSetting?.id || selectedField}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            value: newValue,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update local state
+        setSettings((prev) =>
+          prev.map((s) =>
+            s.key === selectedField ? { ...s, value: newValue } : s
+          )
+        );
+
+        setMessage({ type: "success", text: "Item added successfully" });
+        setNewItemValue("");
+        setSelectedField("");
+      } else {
+        setMessage({
+          type: "error",
+          text: result.error || "Failed to add item",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding item:", error);
+      setMessage({ type: "error", text: "Failed to add item" });
+    } finally {
+      setAddingItem(false);
+    }
+  };
+
+  const removeContentItem = async (fieldKey: string, itemToRemove: string) => {
+    try {
+      const currentSetting = settings.find((s) => s.key === fieldKey);
+      if (!currentSetting) return;
+
+      const currentItems = currentSetting.value
+        .split(",")
+        .filter(Boolean)
+        .map((item) => item.trim());
+      const newItems = currentItems.filter((item) => item !== itemToRemove);
+      const newValue = newItems.join(", ");
+
+      // Update setting in database
+      const response = await fetch(`/api/admin/settings/${currentSetting.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          value: newValue,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update local state
+        setSettings((prev) =>
+          prev.map((s) => (s.key === fieldKey ? { ...s, value: newValue } : s))
+        );
+
+        setMessage({ type: "success", text: "Item removed successfully" });
+      } else {
+        setMessage({
+          type: "error",
+          text: result.error || "Failed to remove item",
+        });
+      }
+    } catch (error) {
+      console.error("Error removing item:", error);
+      setMessage({ type: "error", text: "Failed to remove item" });
     }
   };
 
@@ -1328,30 +1448,11 @@ function SettingsPageContent() {
                       Select Field
                     </label>
                     <select
-                      id="fieldSelector"
+                      value={selectedField}
                       className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       onChange={(e) => {
-                        const input = document.getElementById(
-                          "newItemInput"
-                        ) as HTMLInputElement;
-                        const addBtn = document.getElementById(
-                          "addItemBtn"
-                        ) as HTMLButtonElement;
-                        const placeholder =
-                          e.target.options[e.target.selectedIndex].getAttribute(
-                            "data-placeholder"
-                          );
-
-                        if (e.target.value) {
-                          input.disabled = false;
-                          addBtn.disabled = false;
-                          input.placeholder =
-                            placeholder || "Enter new item...";
-                        } else {
-                          input.disabled = true;
-                          addBtn.disabled = true;
-                          input.placeholder = "Select a field first...";
-                        }
+                        setSelectedField(e.target.value);
+                        setNewItemValue("");
                       }}
                     >
                       <option value="">Select a field to add to...</option>
@@ -1434,51 +1535,43 @@ function SettingsPageContent() {
                       New Item
                     </label>
                     <input
-                      id="newItemInput"
                       type="text"
-                      placeholder="Select a field first..."
+                      value={newItemValue}
+                      placeholder={
+                        selectedField
+                          ? "Enter new item..."
+                          : "Select a field first..."
+                      }
                       className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 disabled:text-gray-500"
-                      disabled
+                      disabled={!selectedField}
+                      onChange={(e) => setNewItemValue(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (
+                          e.key === "Enter" &&
+                          selectedField &&
+                          newItemValue.trim()
+                        ) {
+                          addContentItem();
+                        }
+                      }}
                     />
                   </div>
                   <button
                     type="button"
-                    id="addItemBtn"
-                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                    onClick={() => {
-                      const selector = document.getElementById(
-                        "fieldSelector"
-                      ) as HTMLSelectElement;
-                      const input = document.getElementById(
-                        "newItemInput"
-                      ) as HTMLInputElement;
-                      const newValue = input.value.trim();
-
-                      if (newValue && selector.value) {
-                        // Find the corresponding list and add the item
-                        const listId =
-                          selector.value.replace("content_", "") + "List";
-                        const list = document.getElementById(listId);
-                        if (list) {
-                          const item = document.createElement("div");
-                          item.className =
-                            "flex items-center justify-between p-2 bg-gray-50 rounded";
-                          item.innerHTML = `
-                             <span class="text-sm text-gray-900">${newValue}</span>
-                             <button type="button" class="text-red-500 hover:text-red-700" onclick="this.parentElement.remove()">
-                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                               </svg>
-                             </button>
-                           `;
-                          list.appendChild(item);
-                          input.value = "";
-                        }
-                      }
-                    }}
+                    className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    disabled={
+                      !selectedField || !newItemValue.trim() || addingItem
+                    }
+                    onClick={addContentItem}
                   >
-                    Add
+                    {addingItem ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Adding...
+                      </>
+                    ) : (
+                      "Add"
+                    )}
                   </button>
                 </div>
               </div>
@@ -1509,8 +1602,11 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem(
+                                "content_programming_languages",
+                                lang.trim()
+                              )
                             }
                           >
                             <svg
@@ -1556,8 +1652,11 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem(
+                                "content_technology_stacks",
+                                stack.trim()
+                              )
                             }
                           >
                             <svg
@@ -1603,8 +1702,8 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem("content_tools", tool.trim())
                             }
                           >
                             <svg
@@ -1650,8 +1749,11 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem(
+                                "content_subjects",
+                                subject.trim()
+                              )
                             }
                           >
                             <svg
@@ -1697,8 +1799,8 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem("content_topics", topic.trim())
                             }
                           >
                             <svg
@@ -1744,8 +1846,11 @@ function SettingsPageContent() {
                           <button
                             type="button"
                             className="text-red-500 hover:text-red-700"
-                            onClick={(e) =>
-                              e.currentTarget.parentElement?.remove()
+                            onClick={() =>
+                              removeContentItem(
+                                "content_domains",
+                                domain.trim()
+                              )
                             }
                           >
                             <svg

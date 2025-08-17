@@ -129,7 +129,7 @@ export default function ExamQuestionsPage({
       if (result.success) {
         fetchExamQuestions();
         // Remove from selected if it was selected
-        setSelectedQuestions(prev => prev.filter(id => id !== questionId));
+        setSelectedQuestions((prev) => prev.filter((id) => id !== questionId));
       }
     } catch (error) {
       console.error("Error removing question:", error);
@@ -144,11 +144,14 @@ export default function ExamQuestionsPage({
 
     try {
       setSaving(true);
-      const response = await fetch(`/api/exams/${examId}/questions/bulk-delete`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ questionIds: selectedQuestions }),
-      });
+      const response = await fetch(
+        `/api/exams/${examId}/questions/bulk-delete`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questionIds: selectedQuestions }),
+        }
+      );
       const result = await response.json();
       if (result.success) {
         setSelectedQuestions([]);
@@ -166,9 +169,12 @@ export default function ExamQuestionsPage({
   const handleDeleteAll = async () => {
     try {
       setSaving(true);
-      const response = await fetch(`/api/exams/${examId}/questions/delete-all`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/exams/${examId}/questions/delete-all`,
+        {
+          method: "DELETE",
+        }
+      );
       const result = await response.json();
       if (result.success) {
         setSelectedQuestions([]);
@@ -185,26 +191,26 @@ export default function ExamQuestionsPage({
 
   const handleUpdateQuestionTimer = async (
     questionId: string,
-    timeLimit: number
+    timeLimit: number | null
   ) => {
     try {
-      setSaving(true);
       const response = await fetch(
         `/api/exams/${examId}/questions/${questionId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ timeLimit }),
+          body: JSON.stringify({ timeLimit: timeLimit || undefined }),
         }
       );
-      const result = await response.json();
-      if (result.success) {
-        fetchExamQuestions();
+
+      if (!response.ok) {
+        throw new Error("Failed to update question timer");
       }
+
+      // Refresh exam questions
+      fetchExamQuestions();
     } catch (error) {
       console.error("Error updating question timer:", error);
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -261,16 +267,16 @@ export default function ExamQuestionsPage({
       setSelectedQuestions([]);
       setSelectAll(false);
     } else {
-      const allIds = filteredQuestions.map(q => q.id);
+      const allIds = filteredQuestions.map((q) => q.id);
       setSelectedQuestions(allIds);
       setSelectAll(true);
     }
   };
 
   const handleSelectQuestion = (questionId: string) => {
-    setSelectedQuestions(prev => {
+    setSelectedQuestions((prev) => {
       if (prev.includes(questionId)) {
-        return prev.filter(id => id !== questionId);
+        return prev.filter((id) => id !== questionId);
       } else {
         return [...prev, questionId];
       }
@@ -566,7 +572,9 @@ export default function ExamQuestionsPage({
                       </h4>
 
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span>ID: {question.questionId.substring(0, 8)}...</span>
+                        <span>
+                          ID: {question.questionId.substring(0, 8)}...
+                        </span>
                         {question.timeLimit && (
                           <span className="flex items-center">
                             <Timer className="w-4 h-4 mr-1" />
@@ -585,8 +593,12 @@ export default function ExamQuestionsPage({
                           max="600"
                           value={question.timeLimit || ""}
                           onChange={(e) => {
-                            const newTimeLimit = parseInt(e.target.value) || null;
-                            handleUpdateQuestionTimer(question.id, newTimeLimit);
+                            const value = e.target.value;
+                            const newTimeLimit = value ? parseInt(value) : null;
+                            handleUpdateQuestionTimer(
+                              question.id,
+                              newTimeLimit
+                            );
                           }}
                           placeholder="Time (s)"
                           className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"

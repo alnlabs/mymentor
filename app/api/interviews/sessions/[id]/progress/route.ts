@@ -11,18 +11,21 @@ export async function PUT(
     const body = await request.json();
     const { currentQuestion, answers } = body;
 
-    const session = await prisma.interviewSession.update({
+    const session = await prisma.mockInterview.update({
       where: { id: params.id },
       data: {
-        currentQuestion: currentQuestion || 0,
-        answers: answers || {},
-        updatedAt: new Date()
-      }
+        notes: JSON.stringify({
+          currentQuestion: currentQuestion || 0,
+          answers: answers || {},
+          lastUpdated: new Date().toISOString(),
+        }),
+        updatedAt: new Date(),
+      },
     });
 
     return NextResponse.json({
       success: true,
-      data: session
+      data: session,
     });
   } catch (error: any) {
     console.error("Error saving progress:", error);

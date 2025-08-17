@@ -12,15 +12,15 @@ export async function POST(
     const { answers } = body;
 
     // Get session and template
-    const session = await prisma.interviewSession.findUnique({
+    const session = await prisma.mockInterview.findUnique({
       where: { id: params.id },
       include: {
         template: {
           include: {
-            questions: true
-          }
-        }
-      }
+            questions: true,
+          },
+        },
+      },
     });
 
     if (!session || !session.template) {
@@ -34,8 +34,9 @@ export async function POST(
     const totalQuestions = session.template.questions.length;
     let totalScore = 0;
     let maxScore = 0;
-    const questionAnalysis = [];
-    const categoryScores = {};
+    const questionAnalysis: any[] = [];
+    const categoryScores: Record<string, { total: number; earned: number }> =
+      {};
 
     for (const question of session.template.questions) {
       maxScore += question.points;
@@ -46,7 +47,7 @@ export async function POST(
 
       // Simple scoring logic (you can enhance this)
       if (userAnswer) {
-        if (question.type === "mcq") {
+        if (question.questionType === "MCQ") {
           // For MCQ, assume correct if answered (you can add correct answer field)
           earnedPoints = question.points;
           correct = true;
@@ -55,7 +56,10 @@ export async function POST(
           // For other types, give partial credit for attempting
           earnedPoints = Math.round(question.points * 0.7);
           correct = earnedPoints >= question.points * 0.6;
-          feedback = earnedPoints >= question.points * 0.8 ? "Excellent response!" : "Good attempt, room for improvement.";
+          feedback =
+            earnedPoints >= question.points * 0.8
+              ? "Excellent response!"
+              : "Good attempt, room for improvement.";
         }
       } else {
         feedback = "No answer provided.";
@@ -63,75 +67,70 @@ export async function POST(
 
       totalScore += earnedPoints;
 
-      // Track category scores
-      if (!categoryScores[question.category]) {
-        categoryScores[question.category] = { total: 0, earned: 0 };
+      // Track category scores (using template category instead)
+      const category = session.template.category || "General";
+      if (!categoryScores[category]) {
+        categoryScores[category] = { total: 0, earned: 0 };
       }
-      categoryScores[question.category].total += question.points;
-      categoryScores[question.category].earned += earnedPoints;
+      categoryScores[category].total += question.points;
+      categoryScores[category].earned += earnedPoints;
 
       questionAnalysis.push({
         questionId: question.id,
-        type: question.type,
+        type: question.questionType,
         points: question.points,
         earnedPoints,
         timeSpent: 120, // Default time (you can track actual time)
         correct,
-        feedback
+        feedback,
       });
     }
 
     // Calculate category percentages
-    const categoryPercentages = {};
+    const categoryPercentages: Record<string, number> = {};
     for (const [category, scores] of Object.entries(categoryScores)) {
-      categoryPercentages[category] = Math.round((scores.earned / scores.total) * 100);
+      categoryPercentages[category] = Math.round(
+        (scores.earned / scores.total) * 100
+      );
     }
 
     const percentage = Math.round((totalScore / maxScore) * 100);
     const passed = percentage >= 60; // 60% passing threshold
 
     // Calculate time spent
-    const timeSpent = Math.round((Date.now() - new Date(session.startTime).getTime()) / 60000);
+    const timeSpent = Math.round(
+      (Date.now() - new Date(session.scheduledAt || new Date()).getTime()) /
+        60000
+    );
 
-    // Create interview result
-    const result = await prisma.interviewResult.create({
-      data: {
-        sessionId: session.id,
-        templateId: session.templateId,
-        userId: session.userId,
-        score: totalScore,
-        maxScore,
-        percentage,
-        passed,
-        timeSpent,
-        startTime: session.startTime,
-        completedAt: new Date(),
-        answers: answers,
-        feedback: `Overall performance: ${percentage}%. ${passed ? 'Congratulations! You passed the interview.' : 'Keep practicing to improve your skills.'}`,
-        categoryScores: categoryPercentages,
-        questionAnalysis
-      }
-    });
-
-    // Update session status
-    await prisma.interviewSession.update({
+    // Update the mock interview with results
+    const updatedSession = await prisma.mockInterview.update({
       where: { id: params.id },
       data: {
         status: "completed",
-        endTime: new Date(),
-        timeSpent
-      }
+        totalScore,
+        maxScore,
+        completedAt: new Date(),
+        notes: JSON.stringify({
+          answers,
+          questionAnalysis,
+          categoryPercentages,
+          percentage,
+          passed,
+          timeSpent,
+        }),
+      },
     });
 
     return NextResponse.json({
       success: true,
       data: {
-        resultId: result.id,
+        resultId: updatedSession.id,
         score: totalScore,
         maxScore,
         percentage,
-        passed
-      }
+        passed,
+      },
     });
   } catch (error: any) {
     console.error("Error completing interview:", error);

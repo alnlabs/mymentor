@@ -9,7 +9,7 @@ export async function GET() {
     const [exams, problems, mcqs] = await Promise.all([
       prisma.exam.findMany({
         include: {
-          questions: true,
+          examQuestions: true,
         },
       }),
       prisma.problem.findMany({

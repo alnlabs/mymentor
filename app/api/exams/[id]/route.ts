@@ -24,6 +24,13 @@ export async function GET(
       },
     });
 
+    if (!exam) {
+      return NextResponse.json(
+        { success: false, error: "Exam not found" },
+        { status: 404 }
+      );
+    }
+
     // Fetch the actual question data for each exam question
     const examQuestionsWithData = await Promise.all(
       exam.examQuestions.map(async (examQuestion) => {
@@ -37,7 +44,10 @@ export async function GET(
             return {
               ...examQuestion,
               question: mcqQuestion.question,
-              options: JSON.parse(mcqQuestion.options),
+              options:
+                typeof mcqQuestion.options === "string"
+                  ? JSON.parse(mcqQuestion.options)
+                  : mcqQuestion.options,
               correctAnswer: mcqQuestion.correctAnswer,
               explanation: mcqQuestion.explanation,
               type: "mcq",
@@ -84,18 +94,14 @@ export async function GET(
       })
     );
 
-    if (!exam) {
-      return NextResponse.json(
-        { success: false, error: "Exam not found" },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json({
-      ...exam,
-      examQuestions: examQuestionsWithData,
-      totalQuestions: exam._count.examQuestions,
-      totalAttempts: exam._count.examResults,
+      success: true,
+      data: {
+        ...exam,
+        examQuestions: examQuestionsWithData,
+        totalQuestions: exam._count.examQuestions,
+        totalAttempts: exam._count.examResults,
+      },
     });
   } catch (error: any) {
     console.error("Error fetching exam:", error);

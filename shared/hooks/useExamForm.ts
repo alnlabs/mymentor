@@ -157,6 +157,27 @@ export const useExamForm = () => {
       setLoading(true);
 
       try {
+        // Determine language based on title or target role
+        let languages: string[] = [];
+        if (formData.title.toLowerCase().includes("java")) {
+          languages = ["Java"];
+        } else if (
+          formData.title.toLowerCase().includes("javascript") ||
+          formData.title.toLowerCase().includes("js")
+        ) {
+          languages = ["Javascript"];
+        } else if (formData.title.toLowerCase().includes("python")) {
+          languages = ["Python"];
+        } else if (formData.title.toLowerCase().includes("react")) {
+          languages = ["Javascript"];
+        } else if (formData.title.toLowerCase().includes("node")) {
+          languages = ["Javascript"];
+        } else if (formData.title.toLowerCase().includes("frontend")) {
+          languages = ["Javascript"];
+        } else if (formData.title.toLowerCase().includes("backend")) {
+          languages = ["Java", "Python"];
+        }
+
         // Prepare auto-generation options based on form data
         const autoGenerateOptions = {
           questionCount: formData.totalQuestions,
@@ -201,7 +222,7 @@ export const useExamForm = () => {
           },
           categories: [formData.category],
           subjects: formData.targetRole ? [formData.targetRole] : ["General"],
-          languages: [],
+          languages: languages,
           includeNonTechnical:
             formData.questionTypes === "Aptitude" ||
             formData.questionTypes === "Mixed",

@@ -57,26 +57,35 @@ export async function POST(
       let points = 0;
 
       console.log(`Processing question ${question.id}:`, {
-        type: question.type,
+        questionType: question.questionType,
         userAnswer,
         userAnswerType: typeof userAnswer,
-        correctAnswer: question.correctAnswer,
       });
 
-      if (question.type === "mcq" && userAnswer !== undefined) {
-        // Convert both to numbers for comparison
-        const userAnswerNum = Number(userAnswer);
-        const correctAnswerNum = Number(question.correctAnswer);
-        isCorrect = userAnswerNum === correctAnswerNum;
-        points = isCorrect ? question.points : 0;
-
-        console.log(`MCQ comparison:`, {
-          userAnswer: userAnswerNum,
-          correctAnswer: correctAnswerNum,
-          isCorrect,
+      if (question.questionType === "MCQ" && userAnswer !== undefined) {
+        // For MCQ questions, we need to fetch the actual question data
+        const mcqQuestion = await prisma.mCQQuestion.findUnique({
+          where: { id: question.questionId },
         });
-      } else if (question.type === "text" || question.type === "coding") {
-        // For text and coding questions, we'll need manual grading
+
+        if (mcqQuestion) {
+          // Convert both to numbers for comparison
+          const userAnswerNum = Number(userAnswer);
+          const correctAnswerNum = mcqQuestion.correctAnswer;
+          isCorrect = userAnswerNum === correctAnswerNum;
+          points = isCorrect ? question.points : 0;
+
+          console.log(`MCQ comparison:`, {
+            userAnswer: userAnswerNum,
+            correctAnswer: correctAnswerNum,
+            isCorrect,
+          });
+        }
+      } else if (
+        question.questionType === "Problem" ||
+        question.questionType === "CODING"
+      ) {
+        // For coding questions, we'll need manual grading
         // For now, we'll store the answer for later review
         points = 0; // Will be updated by admin/grader
       }

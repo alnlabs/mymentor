@@ -52,9 +52,7 @@ export function RouteGuard({
                 You must be logged in as an admin to access this page.
               </p>
               <div className="space-y-3">
-                <Button
-                  onClick={() => (window.location.href = "/superadmin-login")}
-                >
+                <Button onClick={() => (window.location.href = "/login")}>
                   Login as Admin
                 </Button>
                 <Button
@@ -93,9 +91,7 @@ export function RouteGuard({
                 to view this page.
               </p>
               <div className="space-y-3">
-                <Button
-                  onClick={() => (window.location.href = "/superadmin-login")}
-                >
+                <Button onClick={() => (window.location.href = "/login")}>
                   Login as Admin
                 </Button>
                 <Button

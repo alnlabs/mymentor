@@ -97,9 +97,10 @@ export async function POST(request: NextRequest) {
         problemId,
         code,
         language,
-
-        testResults: JSON.stringify(testResults),
         status,
+        score: status === "accepted" ? 100 : 0,
+        runtime: 0, // You can calculate actual runtime
+        memory: 0, // You can calculate actual memory usage
       },
     });
 

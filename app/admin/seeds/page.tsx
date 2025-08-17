@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
+import { useAuthContext } from "@/shared/components/AuthContext";
 import { Loading } from "@/shared/components/Loading";
 import {
   Database,
@@ -35,6 +36,12 @@ interface SeedFile {
 }
 
 export default function SeedsManagementPage() {
+  const {
+    user,
+    loading: authLoading,
+    isAdmin,
+    isSuperAdmin,
+  } = useAuthContext();
   const [seeds, setSeeds] = useState<SeedFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSeeds, setSelectedSeeds] = useState<string[]>([]);
@@ -53,8 +60,10 @@ export default function SeedsManagementPage() {
   }>({});
 
   useEffect(() => {
-    loadSeeds();
-  }, []);
+    if (!authLoading && (isAdmin || isSuperAdmin)) {
+      loadSeeds();
+    }
+  }, [authLoading, isAdmin, isSuperAdmin]);
 
   // Helper function to get filter for a specific section
   const getSectionFilter = (language: string) => {
@@ -108,10 +117,16 @@ export default function SeedsManagementPage() {
   const loadSeeds = async () => {
     try {
       setLoading(true);
+
       const response = await fetch("/api/admin/seeds");
       const data = await response.json();
       if (data.success) {
         setSeeds(data.data);
+      } else {
+        setMessage({
+          type: "error",
+          text: data.error || "Failed to load seeds",
+        });
       }
     } catch (error) {
       console.error("Error loading seeds:", error);
@@ -124,9 +139,12 @@ export default function SeedsManagementPage() {
   const addSeedsToDatabase = async (concepts: string[]) => {
     try {
       setActionLoading(true);
+
       const response = await fetch("/api/admin/seeds", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ concepts }),
       });
       const data = await response.json();
@@ -161,6 +179,10 @@ export default function SeedsManagementPage() {
         return;
       }
 
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
       // Delete from all categories for this language
       const categories = languageSeed.category.split(", ");
       let totalDeleted = 0;
@@ -170,6 +192,7 @@ export default function SeedsManagementPage() {
           `/api/admin/seeds?category=${category.trim()}`,
           {
             method: "DELETE",
+            headers,
           }
         );
         const data = await response.json();
@@ -198,6 +221,7 @@ export default function SeedsManagementPage() {
           !(concept.questionsInDB > 0 || concept.problemsInDB > 0)
       )
       .map((c) => c.name);
+    console.log(availableConcepts, "availableConcepts");
     addSeedsToDatabase(availableConcepts);
   };
 
@@ -213,6 +237,34 @@ export default function SeedsManagementPage() {
     addSeedsToDatabase(conceptNames);
     setSelectedSeeds([]);
   };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loading size="lg" text="Checking authentication..." />
+      </div>
+    );
+  }
+
+  // Redirect non-admin users
+  if (!authLoading && !isAdmin && !isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Access Denied
+          </h2>
+          <p className="text-gray-600 mb-4">
+            You need admin privileges to access this page.
+          </p>
+          <Button onClick={() => (window.location.href = "/login")}>
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -384,7 +436,8 @@ export default function SeedsManagementPage() {
                             )
                         );
                         // Only show Add All button when filter is set to "available"
-                        return availableConcepts.length > 0 && sectionFilter.status === "available" ? (
+                        return availableConcepts.length > 0 &&
+                          sectionFilter.status === "available" ? (
                           <Button
                             onClick={() => addAllFromCategory(seed)}
                             disabled={actionLoading}

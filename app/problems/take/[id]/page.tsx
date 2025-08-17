@@ -387,7 +387,10 @@ export default function TakeProblemPage() {
               <CodeEditor
                 code={code}
                 language={language}
+                onCodeChange={handleCodeChange}
                 onChange={handleCodeChange}
+                onRun={runTests}
+                isRunning={testing}
                 height="400px"
               />
             </Card>
@@ -431,7 +434,10 @@ export default function TakeProblemPage() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                   Test Results
                 </h2>
-                <TestResults submission={submission} testCases={testCases} />
+                <TestResults
+                  submission={submission as any}
+                  testCases={testCases as any}
+                />
               </Card>
             )}
           </div>

@@ -118,7 +118,7 @@ async function generateExamQuestions(examId: string, options: any) {
       );
 
       // Select questions based on difficulty distribution
-      const selectedMcqs = [];
+      const selectedMcqs: any[] = [];
 
       // Add easy questions
       const shuffledEasy = easyQuestions.sort(() => Math.random() - 0.5);
@@ -193,7 +193,7 @@ async function generateExamQuestions(examId: string, options: any) {
       );
 
       // Select problems based on difficulty distribution
-      const selectedProblems = [];
+      const selectedProblems: any[] = [];
 
       // Add easy problems
       const shuffledEasy = easyProblems.sort(() => Math.random() - 0.5);
@@ -278,7 +278,7 @@ async function generateExamQuestions(examId: string, options: any) {
       );
 
       // Select aptitude questions based on difficulty distribution
-      const selectedAptitude = [];
+      const selectedAptitude: any[] = [];
 
       // Add easy aptitude questions
       const shuffledEasy = easyAptitude.sort(() => Math.random() - 0.5);
