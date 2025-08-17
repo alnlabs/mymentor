@@ -271,6 +271,42 @@ export default function AddMCQPage() {
         throw new Error(result.error || "Failed to save AI generated content");
       }
 
+      // Display detailed save results
+      const { imported, skipped, errors, duplicates, totalProcessed } = result.data;
+      console.log("Save to DB Results:", result.data);
+      
+      // Create detailed result message
+      let resultMessage = `✅ Save completed!\n\n`;
+      resultMessage += `📊 Summary:\n`;
+      resultMessage += `• Total processed: ${totalProcessed}\n`;
+      resultMessage += `• Successfully saved: ${imported}\n`;
+      resultMessage += `• Skipped (duplicates): ${skipped}\n`;
+      resultMessage += `• Errors: ${errors.length}\n\n`;
+      
+      if (duplicates.length > 0) {
+        resultMessage += `⚠️ Duplicates found:\n`;
+        duplicates.slice(0, 3).forEach(dup => {
+          resultMessage += `• ${dup}\n`;
+        });
+        if (duplicates.length > 3) {
+          resultMessage += `• ... and ${duplicates.length - 3} more\n`;
+        }
+        resultMessage += `\n`;
+      }
+      
+      if (errors.length > 0) {
+        resultMessage += `❌ Errors:\n`;
+        errors.slice(0, 3).forEach(error => {
+          resultMessage += `• ${error}\n`;
+        });
+        if (errors.length > 3) {
+          resultMessage += `• ... and ${errors.length - 3} more\n`;
+        }
+      }
+
+      // Show detailed results
+      alert(resultMessage);
+
       // Clear the form after successful save
       setMCQ({
         question: "",

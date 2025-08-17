@@ -24,7 +24,7 @@ import {
 interface AIGeneratorProps {
   type: "exam" | "interview" | "mcq" | "problem";
   onContentGenerated?: (content: GeneratedContent[]) => void;
-  onSaveToDatabase?: (content: GeneratedContent[]) => Promise<void>;
+  onSaveToDatabase?: (content: GeneratedContent[]) => Promise<any>;
   className?: string;
   currentSettings?: {
     category?: string;
@@ -174,7 +174,7 @@ export default function AIGenerator({
         count: request.count,
         context: request.context,
         currentSettings,
-        config
+        config,
       });
 
       const response: AIGenerationResponse = await aiService.generateContent(
@@ -218,12 +218,24 @@ export default function AIGenerator({
     if (!onSaveToDatabase || generatedContent.length === 0) return;
 
     setIsSaving(true);
+    setMessage(null);
+    
     try {
-      await onSaveToDatabase(generatedContent);
-      setMessage({
-        type: "success",
-        text: "Content saved to database successfully!",
-      });
+      const result = await onSaveToDatabase(generatedContent);
+      
+      // Check if result has detailed data
+      if (result && result.data) {
+        const { imported, skipped, errors, totalProcessed } = result.data;
+        setMessage({
+          type: "success",
+          text: `Saved to database: ${imported}/${totalProcessed} items saved${skipped > 0 ? `, ${skipped} skipped` : ''}${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+        });
+      } else {
+        setMessage({
+          type: "success",
+          text: "Content saved to database successfully!",
+        });
+      }
     } catch (error) {
       setMessage({
         type: "error",
