@@ -7,13 +7,7 @@ import { Loading } from "@/shared/components/Loading";
 import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
-import {
-  Save,
-  Plus,
-  Trash2,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import { Save, Plus, Trash2, CheckCircle, AlertCircle } from "lucide-react";
 
 interface MCQ {
   question: string;

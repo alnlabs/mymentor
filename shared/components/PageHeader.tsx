@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from './Button';
+import React from "react";
+import { Button } from "./Button";
 
 interface PageHeaderProps {
   title?: string;
@@ -9,12 +9,12 @@ interface PageHeaderProps {
   backText?: string;
 }
 
-export default function PageHeader({ 
-  title, 
-  subtitle, 
-  actions, 
-  backUrl, 
-  backText = "Back" 
+export default function PageHeader({
+  title,
+  subtitle,
+  actions,
+  backUrl,
+  backText = "Back",
 }: PageHeaderProps) {
   if (!title && !subtitle && !actions && !backUrl) {
     return null;
@@ -35,22 +35,12 @@ export default function PageHeader({
             </Button>
           )}
           {title && (
-            <h1 className="text-3xl font-bold text-gray-900">
-              {title}
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
           )}
         </div>
-        {actions && (
-          <div className="flex space-x-3">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="flex space-x-3">{actions}</div>}
       </div>
-      {subtitle && (
-        <p className="text-gray-600">
-          {subtitle}
-        </p>
-      )}
+      {subtitle && <p className="text-gray-600">{subtitle}</p>}
     </div>
   );
 }

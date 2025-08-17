@@ -7,12 +7,7 @@ import { Loading } from "@/shared/components/Loading";
 import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
-import {
-  CheckCircle,
-  AlertCircle,
-  Save,
-  BookOpen,
-} from "lucide-react";
+import { CheckCircle, AlertCircle, Save, BookOpen } from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { AutoFillSection } from "@/shared/components/exam-form/AutoFillSection";
 import { BasicInfoSection } from "@/shared/components/exam-form/BasicInfoSection";
@@ -25,7 +20,7 @@ import {
 } from "@/shared/data/examTemplates";
 
 export default function AddExamPage() {
-  const [showAIGenerator, setShowAIGenerator] = useState(false);
+
 
   const {
     formData,
@@ -186,7 +181,7 @@ export default function AddExamPage() {
           />
 
           {/* Exam Configuration */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200">
+          <div className="p-6">
             <ExamConfigSection
               formData={formData}
               onInputChange={handleInputChange}
@@ -200,9 +195,8 @@ export default function AddExamPage() {
           </div>
 
           {/* Exam Settings */}
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <CheckCircle className="w-6 h-6 mr-3 text-green-600" />
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Exam Settings
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -235,9 +229,8 @@ export default function AddExamPage() {
           </div>
 
           {/* Fresh Graduate Focus Tips */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <AlertCircle className="w-6 h-6 mr-3 text-yellow-600" />
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Fresh Graduate Focus Tips
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
@@ -270,9 +263,8 @@ export default function AddExamPage() {
           </div>
 
           {/* Category Guidance */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl border border-indigo-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <BookOpen className="w-6 h-6 mr-3 text-indigo-600" />
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Category Guidance
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

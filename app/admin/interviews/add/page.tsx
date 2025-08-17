@@ -318,17 +318,11 @@ export default function AddInterviewTemplatePage() {
       />
 
       {/* AI Generator */}
-      <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+              <Card className="mb-6">
         <div className="p-6">
-          <div className="flex items-center space-x-2 mb-4">
-            <Brain className="w-6 h-6 text-purple-600" />
-                            <h3 className="text-lg font-semibold text-gray-900">
-                  AI Generator
-                </h3>
-                <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-                  AI
-                </span>
-          </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              AI Generator
+            </h3>
           <AIGenerator
             type="interview"
             onContentGenerated={handleAIContentGenerated}
