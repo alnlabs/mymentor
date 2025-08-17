@@ -233,7 +233,7 @@ export default function AIGenerator({
               Language
             </label>
             <select
-              value={config.language}
+              value={currentSettings?.tool || config.language}
               onChange={(e) =>
                 setConfig((prev) => ({ ...prev, language: e.target.value }))
               }
@@ -252,7 +252,7 @@ export default function AIGenerator({
               Topic
             </label>
             <select
-              value={config.topic}
+              value={currentSettings?.topic || config.topic}
               onChange={(e) =>
                 setConfig((prev) => ({ ...prev, topic: e.target.value }))
               }
@@ -271,7 +271,10 @@ export default function AIGenerator({
               Difficulty
             </label>
             <select
-              value={config.difficulty}
+              value={currentSettings?.difficulty === "easy" ? "beginner" : 
+                     currentSettings?.difficulty === "medium" ? "intermediate" : 
+                     currentSettings?.difficulty === "hard" ? "advanced" : 
+                     config.difficulty}
               onChange={(e) =>
                 setConfig((prev) => ({
                   ...prev,
@@ -313,7 +316,9 @@ export default function AIGenerator({
             Additional Context (Optional)
           </label>
           <textarea
-            value={config.context || ""}
+            value={currentSettings ? 
+              `Subject: ${currentSettings.subject || ""}, Domain: ${currentSettings.domain || ""}, Category: ${currentSettings.category || ""}, Tags: ${currentSettings.tags || ""}` : 
+              config.context || ""}
             onChange={(e) =>
               setConfig((prev) => ({ ...prev, context: e.target.value }))
             }
