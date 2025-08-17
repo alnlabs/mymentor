@@ -538,25 +538,86 @@ export async function POST(request: NextRequest) {
           `Adding ${selectedQuestions.length} selected questions to exam ${exam.id}`
         );
 
-        for (const question of selectedQuestions) {
-          if (question.type === "mcq") {
-            await prisma.examQuestion.create({
-              data: {
-                examId: exam.id,
-                questionId: question.id,
-                questionType: "mcq",
-                order: 0, // Will be updated by the exam system
-              },
-            });
-          } else if (question.type === "problem") {
-            await prisma.examQuestion.create({
-              data: {
-                examId: exam.id,
-                questionId: question.id,
-                questionType: "coding",
-                order: 0, // Will be updated by the exam system
-              },
-            });
+        for (let i = 0; i < selectedQuestions.length; i++) {
+          const question = selectedQuestions[i];
+          
+          // Check if this is AI-generated content (has content field) or existing question
+          if (question.content) {
+            // This is AI-generated content, create the question directly
+            if (question.type === "mcq") {
+              // Create MCQ question
+              const mcqQuestion = await prisma.mCQQuestion.create({
+                data: {
+                  question: question.content,
+                  options: Array.isArray(question.options) ? question.options : [],
+                  correctAnswer: question.correctAnswer || "",
+                  explanation: question.explanation || "",
+                  category: question.category || "General",
+                  topic: question.topic || question.category || "General",
+                  tool: question.tool || "JavaScript",
+                  difficulty: question.difficulty || "medium",
+                  skillLevel: question.skillLevel || "intermediate",
+                  status: "active",
+                },
+              });
+
+              // Create exam question reference
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: mcqQuestion.id,
+                  questionType: "mcq",
+                  order: i,
+                },
+              });
+            } else if (question.type === "problem") {
+              // Create Problem question
+              const problemQuestion = await prisma.problem.create({
+                data: {
+                  title: question.title || `Problem ${i + 1}`,
+                  description: question.content,
+                  solution: question.explanation || "",
+                  testCases: [],
+                  category: question.category || "General",
+                  topic: question.topic || question.category || "General",
+                  tool: question.tool || "JavaScript",
+                  difficulty: question.difficulty || "medium",
+                  skillLevel: question.skillLevel || "intermediate",
+                  status: "active",
+                },
+              });
+
+              // Create exam question reference
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: problemQuestion.id,
+                  questionType: "coding",
+                  order: i,
+                },
+              });
+            }
+          } else {
+            // This is an existing question, just create the exam reference
+            if (question.type === "mcq") {
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: question.id,
+                  questionType: "mcq",
+                  order: i,
+                },
+              });
+            } else if (question.type === "problem") {
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: question.id,
+                  questionType: "coding",
+                  order: i,
+                },
+              });
+            }
           }
         }
 
