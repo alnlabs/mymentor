@@ -48,42 +48,42 @@ export default function AddExamPage() {
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
     try {
-      // Convert AI generated content to exam format
-      const examData = {
-        title: `AI Generated Exam - ${new Date().toLocaleDateString()}`,
-        description: `AI generated exam with ${content.length} questions`,
-        duration: 60,
-        questions: content.map((item) => ({
-          question: item.content,
-          type: item.type === "question" ? "mcq" : "coding",
-          difficulty: item.difficulty,
-          category: item.category,
-          options: item.options || [],
-          correctAnswer: item.correctAnswer || "",
-          explanation: item.explanation || "",
-        })),
-        difficulty: content[0]?.difficulty || "intermediate",
-        category: content[0]?.category || "General",
-        status: "draft",
-      };
+      // Save individual questions to database
+      const questionsToSave = content.map((item) => ({
+        question: item.content,
+        options: item.options || [],
+        correctAnswer: item.correctAnswer || "",
+        explanation: item.explanation || "",
+        category: item.category,
+        topic: item.category, // Use category as topic
+        tool: item.language || "JavaScript",
+        difficulty: item.difficulty === "beginner" ? "easy" : 
+                   item.difficulty === "intermediate" ? "medium" : "hard",
+        skillLevel: item.difficulty,
+        status: "active",
+        type: item.type === "question" ? "mcq" : "problem",
+      }));
 
-      const response = await fetch("/api/exams", {
+      const response = await fetch("/api/admin/upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(examData),
+        body: JSON.stringify({
+          content: questionsToSave,
+          type: "mixed", // Save as mixed content (MCQs and Problems)
+        }),
       });
 
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || "Failed to save AI generated exam");
+        throw new Error(result.error || "Failed to save questions to database");
       }
 
       return result;
     } catch (error) {
-      console.error("Error saving AI exam content:", error);
+      console.error("Error saving questions to database:", error);
       throw error;
     }
   };

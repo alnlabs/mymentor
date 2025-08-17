@@ -516,7 +516,11 @@ export default function AIGenerator({
               }}
               onBlur={(e) => {
                 const value = e.target.value;
-                if (value === "" || isNaN(parseInt(value)) || parseInt(value) < 1) {
+                if (
+                  value === "" ||
+                  isNaN(parseInt(value)) ||
+                  parseInt(value) < 1
+                ) {
                   updateConfig({ count: 5 });
                 } else if (parseInt(value) > 100) {
                   updateConfig({ count: 100 });
