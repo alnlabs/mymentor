@@ -15,10 +15,11 @@ function generateId(text: string): string {
   ); // Add timestamp
 }
 
-// Check for duplicate content
+// Check for duplicate content (considering language)
 async function checkDuplicateContent(
   type: string,
-  content: string
+  content: string,
+  language?: string
 ): Promise<boolean> {
   if (type === "problems") {
     const existing = await prisma.problem.findFirst({
@@ -26,6 +27,7 @@ async function checkDuplicateContent(
         title: {
           equals: content,
         },
+        tool: language || undefined, // Only consider duplicate if same language
       },
     });
     return !!existing;
@@ -35,6 +37,7 @@ async function checkDuplicateContent(
         question: {
           equals: content,
         },
+        tool: language || undefined, // Only consider duplicate if same language
       },
     });
     return !!existing;
@@ -378,10 +381,11 @@ export async function POST(request: NextRequest) {
     if (type === "problems") {
       for (const problem of processedData) {
         try {
-          // Check for duplicate title
+          // Check for duplicate title (same language only)
           const isDuplicate = await checkDuplicateContent(
             "problems",
-            problem.title
+            problem.title,
+            problem.tool
           );
 
           if (isDuplicate) {
@@ -426,10 +430,11 @@ export async function POST(request: NextRequest) {
             `Processing question: ${question.question.substring(0, 50)}...`
           );
 
-          // Check for duplicate question
+          // Check for duplicate question (same language only)
           const isDuplicate = await checkDuplicateContent(
             "mcq",
-            question.question
+            question.question,
+            question.tool
           );
 
           if (isDuplicate) {
