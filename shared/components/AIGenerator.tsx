@@ -56,6 +56,29 @@ export default function AIGenerator({
   currentSettings,
   clearContent = false,
 }: AIGeneratorProps) {
+  // Form persistence key
+  const formKey = `ai-generator-${type}`;
+
+  // Load saved form data from localStorage
+  const loadSavedForm = (): GenerationConfig | null => {
+    try {
+      const saved = localStorage.getItem(formKey);
+      return saved ? JSON.parse(saved) : null;
+    } catch (error) {
+      console.error("Error loading saved form data:", error);
+      return null;
+    }
+  };
+
+  // Save form data to localStorage
+  const saveFormData = (data: GenerationConfig) => {
+    try {
+      localStorage.setItem(formKey, JSON.stringify(data));
+    } catch (error) {
+      console.error("Error saving form data:", error);
+    }
+  };
+
   const [config, setConfig] = useState<GenerationConfig>(() => {
     // Try to load saved form data first
     const savedForm = loadSavedForm();
@@ -114,29 +137,6 @@ export default function AIGenerator({
     type: "success" | "error";
     text: string;
   } | null>(null);
-
-  // Form persistence key
-  const formKey = `ai-generator-${type}`;
-
-  // Load saved form data from localStorage
-  const loadSavedForm = (): GenerationConfig | null => {
-    try {
-      const saved = localStorage.getItem(formKey);
-      return saved ? JSON.parse(saved) : null;
-    } catch (error) {
-      console.error("Error loading saved form data:", error);
-      return null;
-    }
-  };
-
-  // Save form data to localStorage
-  const saveFormData = (data: GenerationConfig) => {
-    try {
-      localStorage.setItem(formKey, JSON.stringify(data));
-    } catch (error) {
-      console.error("Error saving form data:", error);
-    }
-  };
 
   const languages = [
     "JavaScript",
