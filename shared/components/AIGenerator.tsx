@@ -26,6 +26,17 @@ interface AIGeneratorProps {
   onContentGenerated?: (content: GeneratedContent[]) => void;
   onSaveToDatabase?: (content: GeneratedContent[]) => Promise<void>;
   className?: string;
+  currentSettings?: {
+    category?: string;
+    subject?: string;
+    topic?: string;
+    tool?: string;
+    technologyStack?: string;
+    domain?: string;
+    difficulty?: string;
+    skillLevel?: string;
+    tags?: string;
+  };
 }
 
 interface GenerationConfig {
@@ -41,12 +52,18 @@ export default function AIGenerator({
   onContentGenerated,
   onSaveToDatabase,
   className = "",
+  currentSettings,
 }: AIGeneratorProps) {
   const [config, setConfig] = useState<GenerationConfig>({
-    language: "JavaScript",
-    topic: "General",
-    difficulty: "intermediate",
+    language: currentSettings?.tool || "JavaScript",
+    topic: currentSettings?.topic || "General",
+    difficulty: (currentSettings?.difficulty === "easy" ? "beginner" : 
+                currentSettings?.difficulty === "medium" ? "intermediate" : 
+                currentSettings?.difficulty === "hard" ? "advanced" : "intermediate") as "beginner" | "intermediate" | "advanced",
     count: 5,
+    context: currentSettings ? 
+      `Subject: ${currentSettings.subject || ""}, Domain: ${currentSettings.domain || ""}, Category: ${currentSettings.category || ""}, Tags: ${currentSettings.tags || ""}` : 
+      undefined,
   });
 
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>(
@@ -281,7 +298,7 @@ export default function AIGenerator({
         >
           {isGenerating ? (
             <>
-              <Loading size="sm" className="mr-2" />
+                              <Loading size="sm" />
               Generating...
             </>
           ) : (
@@ -337,7 +354,7 @@ export default function AIGenerator({
                 >
                   {isSaving ? (
                     <>
-                      <Loading size="sm" className="mr-1" />
+                      <Loading size="sm" />
                       Saving...
                     </>
                   ) : (

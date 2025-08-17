@@ -148,8 +148,32 @@ export default function AddMCQPage() {
   };
 
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
-    // Handle AI generated content
+    // Handle AI generated content and auto-populate settings
     console.log("AI generated MCQ content:", content);
+    
+    if (content.length > 0) {
+      const firstItem = content[0];
+      
+      // Auto-populate settings based on generated content
+      updateMCQ("category", firstItem.category || mcq.category);
+      updateMCQ("subject", firstItem.category || mcq.subject);
+      updateMCQ("topic", firstItem.category || mcq.topic);
+      updateMCQ("tool", firstItem.language || mcq.tool);
+      updateMCQ("technologyStack", firstItem.language || mcq.technologyStack);
+      updateMCQ("domain", firstItem.category || mcq.domain);
+      updateMCQ("difficulty", 
+        firstItem.difficulty === "beginner" ? "easy" :
+        firstItem.difficulty === "intermediate" ? "medium" : "hard"
+      );
+      updateMCQ("skillLevel", 
+        firstItem.difficulty === "beginner" ? "beginner" :
+        firstItem.difficulty === "intermediate" ? "intermediate" : "advanced"
+      );
+      updateMCQ("tags", firstItem.tags?.join(", ") || mcq.tags);
+      
+      // Show success message
+      alert(`AI generated ${content.length} MCQs and auto-populated settings!`);
+    }
   };
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
@@ -291,6 +315,17 @@ export default function AddMCQPage() {
                   type="mcq"
                   onContentGenerated={handleAIContentGenerated}
                   onSaveToDatabase={handleSaveAIContentToDatabase}
+                  currentSettings={{
+                    category: mcq.category,
+                    subject: mcq.subject,
+                    topic: mcq.topic,
+                    tool: mcq.tool,
+                    technologyStack: mcq.technologyStack,
+                    domain: mcq.domain,
+                    difficulty: mcq.difficulty,
+                    skillLevel: mcq.skillLevel,
+                    tags: mcq.tags,
+                  }}
                 />
               </div>
             </Card>
