@@ -292,9 +292,6 @@ export default function AddMCQPage() {
         totalProcessed,
       });
 
-      // Clear results after 10 seconds
-      setTimeout(() => setSaveResults(null), 10000);
-
       // Clear the form after successful save
       setMCQ({
         question: "",
