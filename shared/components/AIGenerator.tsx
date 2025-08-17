@@ -159,6 +159,8 @@ export default function AIGenerator({
       );
 
       if (response.success && response.content) {
+        console.log("AI Generator received content:", response.content.length, "items");
+        console.log("First few items:", response.content.slice(0, 3).map(item => ({ id: item.id, title: item.title })));
         setGeneratedContent(response.content);
         onContentGenerated?.(response.content);
         setMessage({
@@ -313,7 +315,7 @@ export default function AIGenerator({
             <input
               type="number"
               min="1"
-              max="20"
+              max="100"
               value={config.count}
               onChange={(e) =>
                 setConfig((prev) => ({
