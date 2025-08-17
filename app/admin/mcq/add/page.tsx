@@ -277,6 +277,25 @@ export default function AddMCQPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* AI Generator - Full Width */}
+          <div className="lg:col-span-3">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-pink-50">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg mr-3">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">AI Generator</h3>
+                </div>
+                <AIGenerator
+                  type="mcq"
+                  onContentGenerated={handleAIContentGenerated}
+                  onSaveToDatabase={handleSaveAIContentToDatabase}
+                />
+              </div>
+            </Card>
+          </div>
+
           {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
             {/* Question Section */}
@@ -377,23 +396,6 @@ export default function AddMCQPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* AI Generator */}
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-pink-50">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg mr-3">
-                    <Brain className="w-5 h-5 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">AI Generator</h3>
-                </div>
-                <AIGenerator
-                  type="mcq"
-                  onContentGenerated={handleAIContentGenerated}
-                  onSaveToDatabase={handleSaveAIContentToDatabase}
-                />
-              </div>
-            </Card>
-
             {/* Settings */}
             <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <div className="p-6">
