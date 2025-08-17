@@ -59,7 +59,7 @@ export default function AIGenerator({
   const [config, setConfig] = useState<GenerationConfig>(() => {
     // Try to load saved form data first
     const savedForm = loadSavedForm();
-    
+
     if (savedForm) {
       return {
         ...savedForm,
@@ -82,7 +82,7 @@ export default function AIGenerator({
           : savedForm.context,
       };
     }
-    
+
     // Default values if no saved data
     return {
       language: currentSettings?.tool || "JavaScript",
@@ -138,13 +138,6 @@ export default function AIGenerator({
     }
   };
 
-  // Update config and save to localStorage
-  const updateConfig = (updates: Partial<GenerationConfig>) => {
-    const newConfig = { ...config, ...updates };
-    setConfig(newConfig);
-    saveFormData(newConfig);
-  };
-
   const languages = [
     "JavaScript",
     "Python",
@@ -167,6 +160,13 @@ export default function AIGenerator({
   ];
   const difficulties = ["beginner", "intermediate", "advanced"];
 
+  // Update config and save to localStorage
+  const updateConfig = (updates: Partial<GenerationConfig>) => {
+    const newConfig = { ...config, ...updates };
+    setConfig(newConfig);
+    saveFormData(newConfig);
+  };
+
   useEffect(() => {
     if (currentSettings) {
       const updatedConfig = {
@@ -186,7 +186,7 @@ export default function AIGenerator({
           currentSettings.tags || ""
         }`,
       };
-      
+
       setConfig(updatedConfig);
       saveFormData(updatedConfig);
     }
@@ -353,9 +353,7 @@ export default function AIGenerator({
             </label>
             <select
               value={currentSettings?.tool || config.language}
-              onChange={(e) =>
-                updateConfig({ language: e.target.value })
-              }
+              onChange={(e) => updateConfig({ language: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               {languages.map((lang) => (
@@ -372,9 +370,7 @@ export default function AIGenerator({
             </label>
             <select
               value={currentSettings?.topic || config.topic}
-              onChange={(e) =>
-                updateConfig({ topic: e.target.value })
-              }
+              onChange={(e) => updateConfig({ topic: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               {topics.map((topic) => (
@@ -401,7 +397,10 @@ export default function AIGenerator({
               }
               onChange={(e) =>
                 updateConfig({
-                  difficulty: e.target.value as "beginner" | "intermediate" | "advanced",
+                  difficulty: e.target.value as
+                    | "beginner"
+                    | "intermediate"
+                    | "advanced",
                 })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -453,9 +452,7 @@ export default function AIGenerator({
           </label>
           <textarea
             value={config.context || ""}
-            onChange={(e) =>
-              updateConfig({ context: e.target.value })
-            }
+            onChange={(e) => updateConfig({ context: e.target.value })}
             placeholder="Add specific requirements or context for the AI..."
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -480,7 +477,7 @@ export default function AIGenerator({
               </>
             )}
           </Button>
-          
+
           <Button
             onClick={() => {
               const defaultConfig = {
