@@ -44,7 +44,7 @@ model User {
 
 model Problem {
   id              String         @id @default(cuid())
-  title           String         @unique
+  title           String
   description     String
   difficulty      String
   category        String
@@ -70,12 +70,13 @@ model Problem {
   submissions     Submission[]
   userProgress    UserProgress[]
 
+  @@unique([title, tool])
   @@map("problems")
 }
 
 model MCQQuestion {
   id              String         @id @default(cuid())
-  question        String         @unique
+  question        String
   options         String
   correctAnswer   Int
   explanation     String?
@@ -98,6 +99,8 @@ model MCQQuestion {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   userProgress    UserProgress[]
+
+  @@unique([question, tool])
 
   @@map("mcq_questions")
 }
