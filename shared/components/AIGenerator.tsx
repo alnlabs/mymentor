@@ -285,7 +285,9 @@ export default function AIGenerator({
               currentSettings.tags || ""
             }`
           : config.context,
-        mixTypes: questionTypes ? questionTypes.mcq && questionTypes.problem : config.mixTypes,
+        mixTypes: questionTypes
+          ? questionTypes.mcq && questionTypes.problem
+          : config.mixTypes,
       };
 
       console.log("AI Generation Request:", {
@@ -639,7 +641,10 @@ export default function AIGenerator({
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              Generated Content ({generatedContent.length} items)
+              {type === "exam" 
+                ? `AI Selected Questions (${generatedContent.length} items)`
+                : `Generated Content (${generatedContent.length} items)`
+              }
             </h3>
             <div className="flex space-x-2">
               <Button
@@ -651,7 +656,7 @@ export default function AIGenerator({
                 <Download className="w-4 h-4 mr-1" />
                 Download
               </Button>
-              {onSaveToDatabase && (
+              {onSaveToDatabase && type !== "exam" && (
                 <Button
                   onClick={handleSaveToDatabase}
                   disabled={isSaving}

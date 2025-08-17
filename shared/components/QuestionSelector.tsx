@@ -89,11 +89,11 @@ export default function QuestionSelector({
   useEffect(() => {
     if (questionTypes) {
       if (questionTypes.mcq && questionTypes.problem) {
-        setFilters(prev => ({ ...prev, type: "all" }));
+        setFilters((prev) => ({ ...prev, type: "all" }));
       } else if (questionTypes.mcq) {
-        setFilters(prev => ({ ...prev, type: "mcq" }));
+        setFilters((prev) => ({ ...prev, type: "mcq" }));
       } else if (questionTypes.problem) {
-        setFilters(prev => ({ ...prev, type: "problem" }));
+        setFilters((prev) => ({ ...prev, type: "problem" }));
       }
     }
   }, [questionTypes]);

@@ -142,7 +142,9 @@ export default function AddExamPage() {
                 <Sparkles className="w-5 h-5" />
                 <span className="font-medium">AI Selection</span>
               </div>
-              <p className="text-sm">AI selects existing questions based on criteria</p>
+              <p className="text-sm">
+                AI selects existing questions based on criteria
+              </p>
             </button>
           </div>
 
@@ -221,8 +223,6 @@ export default function AddExamPage() {
               />
             </div>
           )}
-
-
         </div>
       </Card>
 
@@ -253,8 +253,8 @@ export default function AddExamPage() {
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-4 h-4 text-purple-600" />
                   <span className="font-medium text-purple-800">
-                    AI selected {aiGeneratedContent.length} questions based
-                    on your criteria
+                    AI selected {aiGeneratedContent.length} questions based on
+                    your criteria
                   </span>
                 </div>
               </div>
@@ -293,13 +293,15 @@ export default function AddExamPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            
+
             // Validate question types selection
             if (!questionTypes.mcq && !questionTypes.problem) {
-              alert("Please select at least one question type (MCQ or Problem)");
+              alert(
+                "Please select at least one question type (MCQ or Problem)"
+              );
               return;
             }
-            
+
             if (questionMode === "ai" && aiGeneratedContent.length > 0) {
               // Use AI-selected content
               handleSubmit(e, aiGeneratedContent);
