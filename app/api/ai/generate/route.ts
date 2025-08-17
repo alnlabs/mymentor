@@ -35,25 +35,33 @@ async function generateWithAI(
     const baseTimestamp = Date.now();
     const randomSeed = Math.random().toString(36).substr(2, 9);
 
-        // Generate content based on type and mixTypes setting
+    // Generate content based on type and mixTypes setting
     if (mixTypes && type === "exam") {
       // Generate a mix of MCQ and Problem questions with varied topics and difficulties
       const mcqCount = Math.ceil(count * 0.6); // 60% MCQs
       const problemCount = count - mcqCount; // 40% Problems
-      
+
       // Available topics and difficulties for mixing
-      const availableTopics = ["General", "Algorithms", "Data Structures", "Web Development", "Database", "System Design"];
+      const availableTopics = [
+        "General",
+        "Algorithms",
+        "Data Structures",
+        "Web Development",
+        "Database",
+        "System Design",
+      ];
       const availableDifficulties = ["beginner", "intermediate", "advanced"];
-      
+
       // Generate MCQs
       for (let i = 0; i < mcqCount; i++) {
         const id = `ai-generated-mcq-${baseTimestamp + i}-${randomSeed}-${i}`;
         const uniqueSuffix = `${randomSeed}-${i}`;
-        
+
         // Rotate through different topics and difficulties
         const mixedTopic = availableTopics[i % availableTopics.length];
-        const mixedDifficulty = availableDifficulties[i % availableDifficulties.length];
-        
+        const mixedDifficulty =
+          availableDifficulties[i % availableDifficulties.length];
+
         // Use existing MCQ generation logic with mixed topic
         let mcqTemplates = [];
         if (mixedTopic === "System Design") {
@@ -109,17 +117,19 @@ async function generateWithAI(
         });
       }
 
-            // Generate Problems
+      // Generate Problems
       for (let i = 0; i < problemCount; i++) {
         const id = `ai-generated-problem-${
           baseTimestamp + mcqCount + i
         }-${randomSeed}-${i}`;
         const uniqueSuffix = `${randomSeed}-${i}`;
-        
+
         // Rotate through different topics and difficulties for problems
-        const mixedTopic = availableTopics[(i + mcqCount) % availableTopics.length];
-        const mixedDifficulty = availableDifficulties[(i + mcqCount) % availableDifficulties.length];
-        
+        const mixedTopic =
+          availableTopics[(i + mcqCount) % availableTopics.length];
+        const mixedDifficulty =
+          availableDifficulties[(i + mcqCount) % availableDifficulties.length];
+
         // Use existing Problem generation logic with mixed topic
         const problemTemplates = [
           {
@@ -133,7 +143,7 @@ async function generateWithAI(
             explanation: `This tests understanding of ${mixedTopic} algorithms in ${language}.`,
           },
         ];
-        
+
         const selectedProblem = problemTemplates[i % problemTemplates.length];
         generatedContent.push({
           id,
