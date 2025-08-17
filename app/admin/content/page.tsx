@@ -19,7 +19,6 @@ import {
   CheckCircle,
   AlertCircle,
   TrendingUp,
-  Package,
 } from "lucide-react";
 
 interface ContentStats {
@@ -342,24 +341,6 @@ export default function AdminContentPage() {
             >
               <Upload className="w-4 h-4 mr-2" />
               Bulk Upload
-            </Button>
-          </Card>
-
-          <Card className="p-6">
-            <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Package className="w-5 h-5 mr-2" />
-              Seed Management
-            </h4>
-            <p className="text-sm text-gray-600 mb-4">
-              Manage question seeds and templates for quick content creation
-            </p>
-            <Button
-              onClick={() => (window.location.href = "/admin/seeds")}
-              variant="outline"
-              className="w-full"
-            >
-              <Package className="w-4 h-4 mr-2" />
-              Manage Seeds
             </Button>
           </Card>
         </div>
