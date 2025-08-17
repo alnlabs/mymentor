@@ -24,6 +24,7 @@ import {
   BookOpen,
   Code,
   HelpCircle,
+  Brain,
 } from "lucide-react";
 
 interface SubMenuItem {
