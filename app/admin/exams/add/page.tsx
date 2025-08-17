@@ -330,9 +330,7 @@ export default function AddExamPage() {
               type="button"
               variant="outline"
               onClick={() => (window.location.href = "/admin/exams")}
-              className="flex items-center"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
               Cancel
             </Button>
             <div className="flex space-x-3">
