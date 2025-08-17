@@ -155,7 +155,7 @@ export default function AddExamPage() {
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-3xl font-bold flex items-center">
                 <Plus className="w-8 h-8 mr-3" />
-                Create New Exam
+                Create Exam
               </h1>
               <div className="flex space-x-3">
                 <Button
@@ -178,9 +178,7 @@ export default function AddExamPage() {
               </div>
             </div>
             <p className="text-green-100 text-lg">
-              Create a comprehensive exam for fresh graduates with technical and
-              aptitude questions. Questions will be auto-generated based on your
-              settings.
+              Create comprehensive exams with technical and aptitude questions.
             </p>
             <div className="flex items-center mt-4 space-x-4 text-sm">
               <div className="flex items-center">
@@ -216,10 +214,10 @@ export default function AddExamPage() {
               <div className="flex items-center space-x-2">
                 <Brain className="w-6 h-6 text-blue-600" />
                 <h3 className="text-lg font-semibold text-gray-900">
-                  AI Exam Generator
+                  AI Generator
                 </h3>
                 <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                  Powered by AI
+                  AI
                 </span>
               </div>
               <Button

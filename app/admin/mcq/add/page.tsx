@@ -246,7 +246,7 @@ export default function AddMCQPage() {
               </Button>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center">
                 <FileText className="w-8 h-8 mr-3 text-purple-600" />
-                Add New MCQ
+                Create MCQ
               </h1>
             </div>
             <div className="flex space-x-3">
@@ -275,8 +275,7 @@ export default function AddMCQPage() {
             </div>
           </div>
           <p className="text-gray-600">
-            Create a new MCQ question with comprehensive categorization and
-            details.
+            Create multiple choice questions for assessments.
           </p>
         </div>
 
@@ -288,10 +287,10 @@ export default function AddMCQPage() {
                 <div className="flex items-center space-x-2">
                   <Brain className="w-6 h-6 text-purple-600" />
                   <h3 className="text-lg font-semibold text-gray-900">
-                    AI MCQ Generator
+                    AI Generator
                   </h3>
                   <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-                    Powered by AI
+                    AI
                   </span>
                 </div>
                 <Button

@@ -319,7 +319,7 @@ export default function AddInterviewTemplatePage() {
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-3xl font-bold flex items-center">
                 <Target className="w-8 h-8 mr-3" />
-                Create Interview Template
+                Create Interview
               </h1>
               <div className="flex space-x-3">
                 <Button
@@ -342,43 +342,31 @@ export default function AddInterviewTemplatePage() {
               </div>
             </div>
             <p className="text-purple-100 text-lg">
-              Design position-based interview templates for fresh graduates -
-              Target specific careers, build relevant skills, get hired
+              Create interview templates for different positions and skill levels.
             </p>
           </div>
         </div>
       </div>
 
       {/* AI Generator */}
-      {showAIGenerator && (
-        <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <Brain className="w-6 h-6 text-purple-600" />
-                <h3 className="text-lg font-semibold text-gray-900">
-                  AI Interview Generator
+      <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+        <div className="p-6">
+          <div className="flex items-center space-x-2 mb-4">
+            <Brain className="w-6 h-6 text-purple-600" />
+                            <h3 className="text-lg font-semibold text-gray-900">
+                  AI Generator
                 </h3>
                 <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-                  Powered by AI
+                  AI
                 </span>
-              </div>
-              <Button
-                onClick={() => setShowAIGenerator(false)}
-                variant="outline"
-                size="sm"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <AIGenerator
-              type="interview"
-              onContentGenerated={handleAIContentGenerated}
-              onSaveToDatabase={handleSaveAIContentToDatabase}
-            />
           </div>
-        </Card>
-      )}
+          <AIGenerator
+            type="interview"
+            onContentGenerated={handleAIContentGenerated}
+            onSaveToDatabase={handleSaveAIContentToDatabase}
+          />
+        </div>
+      </Card>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Template Details */}

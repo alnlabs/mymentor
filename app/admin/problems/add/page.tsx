@@ -216,7 +216,7 @@ export default function AddProblemPage() {
               </Button>
               <h1 className="text-3xl font-bold text-gray-900 flex items-center">
                 <Code className="w-8 h-8 mr-3 text-blue-600" />
-                Add New Problem
+                Create Problem
               </h1>
             </div>
             <div className="flex space-x-3">
@@ -245,8 +245,7 @@ export default function AddProblemPage() {
             </div>
           </div>
           <p className="text-gray-600">
-            Create a new coding problem with comprehensive categorization and
-            details.
+            Create coding problems for assessments.
           </p>
         </div>
 
@@ -258,10 +257,10 @@ export default function AddProblemPage() {
                 <div className="flex items-center space-x-2">
                   <Brain className="w-6 h-6 text-orange-600" />
                   <h3 className="text-lg font-semibold text-gray-900">
-                    AI Problem Generator
+                    AI Generator
                   </h3>
                   <span className="px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
-                    Powered by AI
+                    AI
                   </span>
                 </div>
                 <Button
