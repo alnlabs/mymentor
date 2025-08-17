@@ -268,6 +268,195 @@ async function generateWithAI(
                  explanation: `For ${100000 + i * 10000} records, a composite index on (email, status, created_at) will dramatically improve query performance.`,
                },
              ];
+           } else if (topic === "Web Development") {
+             mcqTemplates = [
+               {
+                 title: `${language} ${topic} Frontend Framework MCQ ${i + 1}`,
+                 content: `Which frontend framework is best for building a ${language} application with ${1000 + i * 100} components?`,
+                 options: [
+                   "Vanilla JavaScript - no framework needed",
+                   "React - popular component library",
+                   "Vue.js - progressive framework",
+                   "Angular - full-featured framework",
+                 ],
+                 correctAnswer: "React - popular component library",
+                 explanation: `For ${language} applications with ${1000 + i * 100} components, React provides excellent component reusability.`,
+               },
+               {
+                 title: `${language} ${topic} API Integration MCQ ${i + 1}`,
+                 content: `How should you handle API calls in a ${language} web application with ${10 + i} endpoints?`,
+                 options: [
+                   "Use fetch() for all API calls",
+                   "Implement a centralized API service with error handling",
+                   "Make direct AJAX calls",
+                   "No API integration needed",
+                 ],
+                 correctAnswer: "Implement a centralized API service with error handling",
+                 explanation: `For ${language} web apps with ${10 + i} endpoints, a centralized API service provides better error handling.`,
+               },
+               {
+                 title: `${language} ${topic} State Management MCQ ${i + 1}`,
+                 content: `Which state management solution is best for a ${language} application with ${50 + i * 10} components?`,
+                 options: [
+                   "Local component state only",
+                   "Redux - predictable state container",
+                   "Context API - React built-in",
+                   "No state management needed",
+                 ],
+                 correctAnswer: "Redux - predictable state container",
+                 explanation: `For ${language} apps with ${50 + i * 10} components, Redux provides predictable state management.`,
+               },
+               {
+                 title: `${language} ${topic} Performance MCQ ${i + 1}`,
+                 content: `How should you optimize performance for a ${language} web application with ${1000 + i * 100} users?`,
+                 options: [
+                   "No optimization needed",
+                   "Code splitting + lazy loading + caching",
+                   "Use only server-side rendering",
+                   "Minimize all files manually",
+                 ],
+                 correctAnswer: "Code splitting + lazy loading + caching",
+                 explanation: `For ${language} web apps with ${1000 + i * 100} users, code splitting and caching provide optimal performance.`,
+               },
+               {
+                 title: `${language} ${topic} Testing MCQ ${i + 1}`,
+                 content: `Which testing strategy is best for a ${language} web application with ${100 + i * 10} components?`,
+                 options: [
+                   "Manual testing only",
+                   "Unit tests + Integration tests + E2E tests",
+                   "No testing needed",
+                   "Only unit tests",
+                 ],
+                 correctAnswer: "Unit tests + Integration tests + E2E tests",
+                 explanation: `For ${language} web apps with ${100 + i * 10} components, comprehensive testing ensures reliability.`,
+               },
+             ];
+           } else if (topic === "Mobile Development") {
+             mcqTemplates = [
+               {
+                 title: `${language} ${topic} Cross-Platform MCQ ${i + 1}`,
+                 content: `Which cross-platform framework is best for a ${language} mobile application?`,
+                 options: [
+                   "Native development only",
+                   "React Native - JavaScript framework",
+                   "Flutter - Dart framework",
+                   "Xamarin - C# framework",
+                 ],
+                 correctAnswer: "React Native - JavaScript framework",
+                 explanation: `For ${language} developers, React Native provides excellent cross-platform support.`,
+               },
+               {
+                 title: `${language} ${topic} State Management MCQ ${i + 1}`,
+                 content: `How should you manage state in a ${language} mobile application with ${20 + i * 5} screens?`,
+                 options: [
+                   "Local state only",
+                   "Redux + AsyncStorage + real-time listeners",
+                   "No state management",
+                   "Only AsyncStorage",
+                 ],
+                 correctAnswer: "Redux + AsyncStorage + real-time listeners",
+                 explanation: `For ${language} mobile apps with ${20 + i * 5} screens, Redux with AsyncStorage provides robust state management.`,
+               },
+               {
+                 title: `${language} ${topic} Performance MCQ ${i + 1}`,
+                 content: `How should you optimize performance for a ${language} mobile application?`,
+                 options: [
+                   "No optimization needed",
+                   "Image optimization + lazy loading + memory management",
+                   "Use only native components",
+                   "Disable all animations",
+                 ],
+                 correctAnswer: "Image optimization + lazy loading + memory management",
+                 explanation: `For ${language} mobile apps, image optimization and memory management ensure optimal performance.`,
+               },
+               {
+                 title: `${language} ${topic} Navigation MCQ ${i + 1}`,
+                 content: `Which navigation solution is best for a ${language} mobile application with ${10 + i * 2} screens?`,
+                 options: [
+                   "Manual navigation",
+                   "React Navigation - comprehensive navigation library",
+                   "No navigation needed",
+                   "Only tab navigation",
+                 ],
+                 correctAnswer: "React Navigation - comprehensive navigation library",
+                 explanation: `For ${language} mobile apps with ${10 + i * 2} screens, React Navigation provides comprehensive navigation.`,
+               },
+               {
+                 title: `${language} ${topic} Testing MCQ ${i + 1}`,
+                 content: `Which testing approach is best for a ${language} mobile application with ${50 + i * 5} components?`,
+                 options: [
+                   "Manual testing only",
+                   "Unit tests + Integration tests + Device testing",
+                   "No testing needed",
+                   "Only unit tests",
+                 ],
+                 correctAnswer: "Unit tests + Integration tests + Device testing",
+                 explanation: `For ${language} mobile apps with ${50 + i * 5} components, comprehensive testing ensures quality.`,
+               },
+             ];
+           } else if (topic === "Machine Learning") {
+             mcqTemplates = [
+               {
+                 title: `${language} ${topic} Model Selection MCQ ${i + 1}`,
+                 content: `Which machine learning algorithm is best for a ${language} application with ${1000 + i * 100} data points?`,
+                 options: [
+                   "Deep Neural Network - complex model",
+                   "Random Forest - ensemble method",
+                   "Linear Regression - simple model",
+                   "Support Vector Machine - kernel method",
+                 ],
+                 correctAnswer: "Random Forest - ensemble method",
+                 explanation: `For ${language} applications with ${1000 + i * 100} data points, Random Forest provides good performance.`,
+               },
+               {
+                 title: `${language} ${topic} Data Preprocessing MCQ ${i + 1}`,
+                 content: `How should you preprocess data for a ${language} machine learning model with ${10000 + i * 1000} samples?`,
+                 options: [
+                   "Use raw data without preprocessing",
+                   "Handle missing values + encode categorical + scale features",
+                   "Only remove missing values",
+                   "No preprocessing needed",
+                 ],
+                 correctAnswer: "Handle missing values + encode categorical + scale features",
+                 explanation: `For ${language} ML models with ${10000 + i * 1000} samples, comprehensive preprocessing ensures better performance.`,
+               },
+               {
+                 title: `${language} ${topic} Model Evaluation MCQ ${i + 1}`,
+                 content: `Which evaluation metric is best for a ${language} classification model with imbalanced data?`,
+                 options: [
+                   "Accuracy - overall correctness",
+                   "Precision - true positive rate",
+                   "F1-Score - balanced metric",
+                   "Recall - sensitivity",
+                 ],
+                 correctAnswer: "F1-Score - balanced metric",
+                 explanation: `For ${language} classification with imbalanced data, F1-Score provides balanced evaluation.`,
+               },
+               {
+                 title: `${language} ${topic} Feature Engineering MCQ ${i + 1}`,
+                 content: `How should you engineer features for a ${language} machine learning model with ${50 + i * 5} features?`,
+                 options: [
+                   "Use all original features",
+                   "Feature selection + domain-based features + interaction terms",
+                   "Only use numerical features",
+                   "No feature engineering needed",
+                 ],
+                 correctAnswer: "Feature selection + domain-based features + interaction terms",
+                 explanation: `For ${language} ML models with ${50 + i * 5} features, comprehensive feature engineering improves performance.`,
+               },
+               {
+                 title: `${language} ${topic} Deployment MCQ ${i + 1}`,
+                 content: `How should you deploy a ${language} machine learning model with ${100 + i * 10} requests per second?`,
+                 options: [
+                   "Local deployment only",
+                   "API service + model registry + monitoring",
+                   "Batch processing only",
+                   "No deployment needed",
+                 ],
+                 correctAnswer: "API service + model registry + monitoring",
+                 explanation: `For ${language} ML models with ${100 + i * 10} requests/sec, API deployment with monitoring ensures reliability.`,
+               },
+             ];
            } else if (topic === "DevOps") {
              mcqTemplates = [
                {
@@ -331,57 +520,16 @@ async function generateWithAI(
                  explanation: `For ${language} applications, secrets management, vulnerability scanning, and Role-Based Access Control (RBAC) ensure secure deployments.`,
                },
              ];
-                      } else {
+           } else {
              // Default templates for other topics
-             mcqTemplates = language === "Python" ? [
-               {
-                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
-                 content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nx = 10\ndef test_scope():\n    x = 20\n    print(x)\ntest_scope()\nprint(x)\n\`\`\``,
-                 options: ["20, 10", "10, 20", "20, 20", "10, 10"],
-                 correctAnswer: "20, 10",
-                 explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
-               },
-               {
-                 title: `${language} ${topic} List Methods MCQ ${i + 1}`,
-                 content: `Which ${language} list method returns a new list without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nnumbers = [1, 2, 3, 4, 5]\ndoubled = [x * 2 for x in numbers]\nprint(numbers)  # What will this output?\n\`\`\``,
-                 options: [
-                   "[2, 4, 6, 8, 10]",
-                   "[1, 2, 3, 4, 5]",
-                   "Error",
-                   "None",
-                 ],
-                 correctAnswer: "[1, 2, 3, 4, 5]",
-                 explanation: `List comprehension creates a new list and doesn't modify the original list in ${language}.`,
-               },
-               {
-                 title: `${language} ${topic} Async/Await MCQ ${i + 1}`,
-                 content: `What will be printed first in this ${language} code?\n\n\`\`\`${language.toLowerCase()}\nimport asyncio\n\nasync def test():\n    print('1')\n    await asyncio.sleep(0.1)\n    print('2')\n\nprint('3')\nasyncio.run(test())\nprint('4')\n\`\`\``,
-                 options: ["1, 3, 4, 2", "3, 1, 4, 2", "1, 2, 3, 4", "3, 4, 1, 2"],
-                 correctAnswer: "3, 1, 4, 2",
-                 explanation: `The async function is called but doesn't block execution. '3' prints first, then '1', then '4', and finally '2' after the sleep.`,
-               },
-               {
-                 title: `${language} ${topic} Dictionary MCQ ${i + 1}`,
-                 content: `What is the value of 'name' after this ${language} dictionary operation?\n\n\`\`\`${language.toLowerCase()}\nuser = {'id': 1, 'name': 'John', 'email': 'john@example.com'}\nname = user.get('name', 'Unknown')\nprint(name)\n\`\`\``,
-                 options: ["'John'", "None", "'Unknown'", "Error"],
-                 correctAnswer: "'John'",
-                 explanation: `The .get() method retrieves the 'name' key from the dictionary, which is 'John'.`,
-               },
-               {
-                 title: `${language} ${topic} Generator MCQ ${i + 1}`,
-                 content: `What will this ${language} generator code output?\n\n\`\`\`${language.toLowerCase()}\ndef create_counter():\n    count = 0\n    while True:\n        count += 1\n        yield count\n\ncounter = create_counter()\nprint(next(counter))\nprint(next(counter))\n\`\`\``,
-                 options: ["0, 1", "1, 2", "1, 1", "Error"],
-                 correctAnswer: "1, 2",
-                 explanation: `The generator maintains state and yields incremented values on each call to next().`,
-               },
-             ] : [
-               {
-                 title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
-                 content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
-                 options: ["20, 10", "10, 20", "20, 20", "10, 10"],
-                 correctAnswer: "20, 10",
-                 explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
-               },
+            mcqTemplates = [
+              {
+                title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
+                content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\nlet x = 10;\nfunction testScope() {\n  let x = 20;\n  console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``,
+                options: ["20, 10", "10, 20", "20, 20", "10, 10"],
+                correctAnswer: "20, 10",
+                explanation: `This tests understanding of variable scope in ${language}. The inner 'x' shadows the outer 'x' within the function scope.`,
+              },
               {
                 title: `${language} ${topic} Array Methods MCQ ${i + 1}`,
                 content: `Which ${language} array method returns a new array without modifying the original?\n\n\`\`\`${language.toLowerCase()}\nconst numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map(x => x * 2);\nconsole.log(numbers); // What will this output?\n\`\`\``,
