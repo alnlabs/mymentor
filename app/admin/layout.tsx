@@ -19,8 +19,6 @@ import {
   X,
   Eye,
   MessageSquare,
-  Database,
-  Package,
   ChevronDown,
   ChevronRight,
   BookOpen,
@@ -88,18 +86,7 @@ const navigation: NavigationItem[] = [
     icon: Target,
     description: "Templates & Sessions",
   },
-  {
-    name: "Seeds",
-    href: "/admin/seeds",
-    icon: Package,
-    description: "Question Seeds Management",
-  },
-  {
-    name: "Database",
-    href: "/admin/database",
-    icon: Database,
-    description: "Database Management",
-  },
+
   {
     name: "Users",
     href: "/admin/users",
