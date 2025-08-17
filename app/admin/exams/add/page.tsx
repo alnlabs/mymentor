@@ -101,7 +101,7 @@ export default function AddExamPage() {
     try {
       // Ensure all required fields are provided with defaults if not set
       const examData = {
-        title: formData.title || `AI Generated Exam - ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+        title: formData.title || `AI Generated ${content[0]?.language || 'Programming'} Exam - ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
         description: formData.description || "Exam created from AI-generated questions",
         duration: formData.duration || 60,
         difficulty: formData.difficulty || "Medium",
