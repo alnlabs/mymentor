@@ -160,34 +160,48 @@ export default function AddMCQPage() {
 
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
     // Handle AI generated content
-    console.log('AI generated content:', content);
+    console.log("AI generated content:", content);
   };
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
     try {
       // Convert AI generated content to MCQ format
-      const mcqData = content.map(item => ({
+      const mcqData = content.map((item) => ({
         question: item.content,
-        options: item.options || ['Option A', 'Option B', 'Option C', 'Option D'],
-        correctAnswer: item.options?.indexOf(item.correctAnswer || 'Option A') || 0,
-        explanation: item.explanation || '',
+        options: item.options || [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D",
+        ],
+        correctAnswer:
+          item.options?.indexOf(item.correctAnswer || "Option A") || 0,
+        explanation: item.explanation || "",
         category: item.category,
         subject: item.category,
         topic: item.category,
-        tool: item.language || '',
-        technologyStack: item.language || '',
+        tool: item.language || "",
+        technologyStack: item.language || "",
         domain: item.category,
-        skillLevel: item.difficulty === 'beginner' ? 'beginner' : 
-                   item.difficulty === 'intermediate' ? 'intermediate' : 'advanced',
-        jobRole: '',
-        companyType: '',
-        interviewType: '',
-        difficulty: item.difficulty === 'beginner' ? 'easy' : 
-                   item.difficulty === 'intermediate' ? 'medium' : 'hard',
-        tags: item.tags?.join(', ') || '',
-        companies: '',
-        priority: 'medium',
-        status: 'draft',
+        skillLevel:
+          item.difficulty === "beginner"
+            ? "beginner"
+            : item.difficulty === "intermediate"
+            ? "intermediate"
+            : "advanced",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        difficulty:
+          item.difficulty === "beginner"
+            ? "easy"
+            : item.difficulty === "intermediate"
+            ? "medium"
+            : "hard",
+        tags: item.tags?.join(", ") || "",
+        companies: "",
+        priority: "medium",
+        status: "draft",
       }));
 
       const response = await fetch("/api/admin/upload", {
@@ -202,14 +216,14 @@ export default function AddMCQPage() {
       });
 
       const result = await response.json();
-      
+
       if (!result.success) {
-        throw new Error(result.error || 'Failed to save AI generated content');
+        throw new Error(result.error || "Failed to save AI generated content");
       }
 
       return result;
     } catch (error) {
-      console.error('Error saving AI content:', error);
+      console.error("Error saving AI content:", error);
       throw error;
     }
   };
@@ -242,7 +256,7 @@ export default function AddMCQPage() {
                 className="flex items-center"
               >
                 <Brain className="w-4 h-4 mr-2" />
-                {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+                {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
               </Button>
               <Button
                 onClick={handleSave}
@@ -268,12 +282,32 @@ export default function AddMCQPage() {
 
         {/* AI Generator */}
         {showAIGenerator && (
-          <Card className="mb-6">
-            <AIGenerator
-              type="mcq"
-              onContentGenerated={handleAIContentGenerated}
-              onSaveToDatabase={handleSaveAIContentToDatabase}
-            />
+          <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Brain className="w-6 h-6 text-purple-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    AI MCQ Generator
+                  </h3>
+                  <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                    Powered by AI
+                  </span>
+                </div>
+                <Button
+                  onClick={() => setShowAIGenerator(false)}
+                  variant="outline"
+                  size="sm"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <AIGenerator
+                type="mcq"
+                onContentGenerated={handleAIContentGenerated}
+                onSaveToDatabase={handleSaveAIContentToDatabase}
+              />
+            </div>
           </Card>
         )}
 
@@ -392,7 +426,9 @@ export default function AddMCQPage() {
                     <option value="Frontend">Frontend</option>
                     <option value="Backend">Backend</option>
                     <option value="Full Stack">Full Stack</option>
-                    <option value="Mobile Development">Mobile Development</option>
+                    <option value="Mobile Development">
+                      Mobile Development
+                    </option>
                     <option value="DevOps">DevOps</option>
                     <option value="Machine Learning">Machine Learning</option>
                   </optgroup>
@@ -401,15 +437,21 @@ export default function AddMCQPage() {
                     <option value="Aptitude">Aptitude</option>
                     <option value="Logical Reasoning">Logical Reasoning</option>
                     <option value="Verbal Ability">Verbal Ability</option>
-                    <option value="Quantitative Aptitude">Quantitative Aptitude</option>
+                    <option value="Quantitative Aptitude">
+                      Quantitative Aptitude
+                    </option>
                     <option value="General Knowledge">General Knowledge</option>
                     <option value="English Language">English Language</option>
-                    <option value="Business Communication">Business Communication</option>
+                    <option value="Business Communication">
+                      Business Communication
+                    </option>
                     <option value="Problem Solving">Problem Solving</option>
                     <option value="Critical Thinking">Critical Thinking</option>
                     <option value="Team Management">Team Management</option>
                     <option value="Leadership">Leadership</option>
-                    <option value="Project Management">Project Management</option>
+                    <option value="Project Management">
+                      Project Management
+                    </option>
                   </optgroup>
                 </select>
               </div>
@@ -436,7 +478,9 @@ export default function AddMCQPage() {
                       <option value="programming">Programming</option>
                       <option value="data-science">Data Science</option>
                       <option value="web-development">Web Development</option>
-                      <option value="mobile-development">Mobile Development</option>
+                      <option value="mobile-development">
+                        Mobile Development
+                      </option>
                       <option value="devops">DevOps</option>
                       <option value="ai-ml">AI/ML</option>
                       <option value="database">Database</option>
@@ -448,12 +492,20 @@ export default function AddMCQPage() {
                       <option value="aptitude">Aptitude</option>
                       <option value="reasoning">Logical Reasoning</option>
                       <option value="verbal">Verbal Ability</option>
-                      <option value="quantitative">Quantitative Aptitude</option>
-                      <option value="general-knowledge">General Knowledge</option>
+                      <option value="quantitative">
+                        Quantitative Aptitude
+                      </option>
+                      <option value="general-knowledge">
+                        General Knowledge
+                      </option>
                       <option value="english">English Language</option>
-                      <option value="communication">Business Communication</option>
+                      <option value="communication">
+                        Business Communication
+                      </option>
                       <option value="problem-solving">Problem Solving</option>
-                      <option value="critical-thinking">Critical Thinking</option>
+                      <option value="critical-thinking">
+                        Critical Thinking
+                      </option>
                       <option value="leadership">Leadership</option>
                       <option value="management">Management</option>
                       <option value="business">Business</option>
@@ -612,14 +664,22 @@ export default function AddMCQPage() {
                     <option value="">Select Job Role</option>
                     {/* Technical Roles */}
                     <optgroup label="Technical Roles">
-                      <option value="frontend-developer">Frontend Developer</option>
-                      <option value="backend-developer">Backend Developer</option>
-                      <option value="full-stack-developer">Full Stack Developer</option>
+                      <option value="frontend-developer">
+                        Frontend Developer
+                      </option>
+                      <option value="backend-developer">
+                        Backend Developer
+                      </option>
+                      <option value="full-stack-developer">
+                        Full Stack Developer
+                      </option>
                       <option value="data-scientist">Data Scientist</option>
                       <option value="data-engineer">Data Engineer</option>
                       <option value="devops-engineer">DevOps Engineer</option>
                       <option value="mobile-developer">Mobile Developer</option>
-                      <option value="software-engineer">Software Engineer</option>
+                      <option value="software-engineer">
+                        Software Engineer
+                      </option>
                       <option value="system-architect">System Architect</option>
                       <option value="qa-engineer">QA Engineer</option>
                     </optgroup>
@@ -628,15 +688,25 @@ export default function AddMCQPage() {
                       <option value="business-analyst">Business Analyst</option>
                       <option value="project-manager">Project Manager</option>
                       <option value="product-manager">Product Manager</option>
-                      <option value="marketing-executive">Marketing Executive</option>
+                      <option value="marketing-executive">
+                        Marketing Executive
+                      </option>
                       <option value="sales-executive">Sales Executive</option>
                       <option value="hr-executive">HR Executive</option>
-                      <option value="finance-executive">Finance Executive</option>
-                      <option value="operations-manager">Operations Manager</option>
+                      <option value="finance-executive">
+                        Finance Executive
+                      </option>
+                      <option value="operations-manager">
+                        Operations Manager
+                      </option>
                       <option value="customer-success">Customer Success</option>
                       <option value="content-writer">Content Writer</option>
-                      <option value="digital-marketing">Digital Marketing</option>
-                      <option value="business-development">Business Development</option>
+                      <option value="digital-marketing">
+                        Digital Marketing
+                      </option>
+                      <option value="business-development">
+                        Business Development
+                      </option>
                     </optgroup>
                   </select>
                 </div>

@@ -139,7 +139,7 @@ export default function AddInterviewTemplatePage() {
 
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
     // Handle AI generated interview content
-    console.log('AI generated interview content:', content);
+    console.log("AI generated interview content:", content);
   };
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
@@ -149,15 +149,16 @@ export default function AddInterviewTemplatePage() {
         name: `AI Generated Interview - ${new Date().toLocaleDateString()}`,
         description: `AI generated interview template with ${content.length} questions`,
         duration: 30,
-        difficulty: content[0]?.difficulty || 'intermediate',
-        category: content[0]?.category || 'General',
+        difficulty: content[0]?.difficulty || "intermediate",
+        category: content[0]?.category || "General",
         companies: [],
         questions: content.map((item, index) => ({
-          questionType: item.type === 'interview_question' ? 'behavioral' : 'mcq',
+          questionType:
+            item.type === "interview_question" ? "behavioral" : "mcq",
           question: item.content,
           options: item.options || [],
-          correctAnswer: item.correctAnswer || '',
-          explanation: item.explanation || '',
+          correctAnswer: item.correctAnswer || "",
+          explanation: item.explanation || "",
           points: 5,
           timeLimit: 120,
           order: index,
@@ -173,14 +174,16 @@ export default function AddInterviewTemplatePage() {
       });
 
       const result = await response.json();
-      
+
       if (!result.success) {
-        throw new Error(result.error || 'Failed to save AI generated interview template');
+        throw new Error(
+          result.error || "Failed to save AI generated interview template"
+        );
       }
 
       return result;
     } catch (error) {
-      console.error('Error saving AI interview content:', error);
+      console.error("Error saving AI interview content:", error);
       throw error;
     }
   };
@@ -325,7 +328,7 @@ export default function AddInterviewTemplatePage() {
                   className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
                 >
                   <Brain className="w-4 h-4 mr-2" />
-                  {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+                  {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
                 </Button>
                 <Button
                   variant="outline"
@@ -347,12 +350,32 @@ export default function AddInterviewTemplatePage() {
 
       {/* AI Generator */}
       {showAIGenerator && (
-        <Card className="mb-6">
-          <AIGenerator
-            type="interview"
-            onContentGenerated={handleAIContentGenerated}
-            onSaveToDatabase={handleSaveAIContentToDatabase}
-          />
+        <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <Brain className="w-6 h-6 text-purple-600" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  AI Interview Generator
+                </h3>
+                <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                  Powered by AI
+                </span>
+              </div>
+              <Button
+                onClick={() => setShowAIGenerator(false)}
+                variant="outline"
+                size="sm"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <AIGenerator
+              type="interview"
+              onContentGenerated={handleAIContentGenerated}
+              onSaveToDatabase={handleSaveAIContentToDatabase}
+            />
+          </div>
         </Card>
       )}
 

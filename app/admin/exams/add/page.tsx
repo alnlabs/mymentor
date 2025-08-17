@@ -28,7 +28,7 @@ import {
 
 export default function AddExamPage() {
   const [showAIGenerator, setShowAIGenerator] = useState(false);
-  
+
   const {
     formData,
     loading,
@@ -100,7 +100,7 @@ export default function AddExamPage() {
 
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
     // Handle AI generated exam content
-    console.log('AI generated exam content:', content);
+    console.log("AI generated exam content:", content);
   };
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
@@ -110,18 +110,18 @@ export default function AddExamPage() {
         title: `AI Generated Exam - ${new Date().toLocaleDateString()}`,
         description: `AI generated exam with ${content.length} questions`,
         duration: 60,
-        questions: content.map(item => ({
+        questions: content.map((item) => ({
           question: item.content,
-          type: item.type === 'question' ? 'mcq' : 'coding',
+          type: item.type === "question" ? "mcq" : "coding",
           difficulty: item.difficulty,
           category: item.category,
           options: item.options || [],
-          correctAnswer: item.correctAnswer || '',
-          explanation: item.explanation || '',
+          correctAnswer: item.correctAnswer || "",
+          explanation: item.explanation || "",
         })),
-        difficulty: content[0]?.difficulty || 'intermediate',
-        category: content[0]?.category || 'General',
-        status: 'draft'
+        difficulty: content[0]?.difficulty || "intermediate",
+        category: content[0]?.category || "General",
+        status: "draft",
       };
 
       const response = await fetch("/api/exams", {
@@ -133,14 +133,14 @@ export default function AddExamPage() {
       });
 
       const result = await response.json();
-      
+
       if (!result.success) {
-        throw new Error(result.error || 'Failed to save AI generated exam');
+        throw new Error(result.error || "Failed to save AI generated exam");
       }
 
       return result;
     } catch (error) {
-      console.error('Error saving AI exam content:', error);
+      console.error("Error saving AI exam content:", error);
       throw error;
     }
   };
@@ -164,7 +164,7 @@ export default function AddExamPage() {
                   className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
                 >
                   <Brain className="w-4 h-4 mr-2" />
-                  {showAIGenerator ? 'Hide AI Generator' : 'AI Generator'}
+                  {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
                 </Button>
                 <Button
                   variant="outline"
@@ -209,12 +209,32 @@ export default function AddExamPage() {
 
       {/* AI Generator */}
       {showAIGenerator && (
-        <Card className="mb-6">
-          <AIGenerator
-            type="exam"
-            onContentGenerated={handleAIContentGenerated}
-            onSaveToDatabase={handleSaveAIContentToDatabase}
-          />
+        <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <Brain className="w-6 h-6 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  AI Exam Generator
+                </h3>
+                <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                  Powered by AI
+                </span>
+              </div>
+              <Button
+                onClick={() => setShowAIGenerator(false)}
+                variant="outline"
+                size="sm"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            <AIGenerator
+              type="exam"
+              onContentGenerated={handleAIContentGenerated}
+              onSaveToDatabase={handleSaveAIContentToDatabase}
+            />
+          </div>
         </Card>
       )}
 

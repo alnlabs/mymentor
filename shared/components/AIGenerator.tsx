@@ -1,28 +1,28 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Card } from './Card';
-import { Button } from './Button';
-import { Loading } from './Loading';
-import { 
-  Brain, 
-  Sparkles, 
-  CheckCircle, 
-  AlertCircle, 
+import React, { useState } from "react";
+import { Card } from "./Card";
+import { Button } from "./Button";
+import { Loading } from "./Loading";
+import {
+  Brain,
+  Sparkles,
+  CheckCircle,
+  AlertCircle,
   RefreshCw,
   Settings,
   Download,
-  Copy
-} from 'lucide-react';
-import { 
-  AIGenerationRequest, 
-  AIGenerationResponse, 
+  Copy,
+} from "lucide-react";
+import {
+  AIGenerationRequest,
+  AIGenerationResponse,
   GeneratedContent,
-  aiService 
-} from '@/shared/lib/aiService';
+  aiService,
+} from "@/shared/lib/aiService";
 
 interface AIGeneratorProps {
-  type: 'exam' | 'interview' | 'mcq' | 'problem';
+  type: "exam" | "interview" | "mcq" | "problem";
   onContentGenerated?: (content: GeneratedContent[]) => void;
   onSaveToDatabase?: (content: GeneratedContent[]) => Promise<void>;
   className?: string;
@@ -31,43 +31,60 @@ interface AIGeneratorProps {
 interface GenerationConfig {
   language: string;
   topic: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   count: number;
   context?: string;
 }
 
-export default function AIGenerator({ 
-  type, 
-  onContentGenerated, 
+export default function AIGenerator({
+  type,
+  onContentGenerated,
   onSaveToDatabase,
-  className = "" 
+  className = "",
 }: AIGeneratorProps) {
   const [config, setConfig] = useState<GenerationConfig>({
-    language: 'JavaScript',
-    topic: 'General',
-    difficulty: 'intermediate',
-    count: 5
+    language: "JavaScript",
+    topic: "General",
+    difficulty: "intermediate",
+    count: 5,
   });
-  
-  const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>([]);
+
+  const [generatedContent, setGeneratedContent] = useState<GeneratedContent[]>(
+    []
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{
-    type: 'success' | 'error';
+    type: "success" | "error";
     text: string;
   } | null>(null);
 
-  const languages = ['JavaScript', 'Python', 'Java', 'C++', 'TypeScript', 'Go', 'Rust', 'PHP'];
-  const topics = [
-    'General', 'Algorithms', 'Data Structures', 'Web Development', 
-    'Database', 'System Design', 'Machine Learning', 'DevOps'
+  const languages = [
+    "JavaScript",
+    "Python",
+    "Java",
+    "C++",
+    "TypeScript",
+    "Go",
+    "Rust",
+    "PHP",
   ];
-  const difficulties = ['beginner', 'intermediate', 'advanced'];
+  const topics = [
+    "General",
+    "Algorithms",
+    "Data Structures",
+    "Web Development",
+    "Database",
+    "System Design",
+    "Machine Learning",
+    "DevOps",
+  ];
+  const difficulties = ["beginner", "intermediate", "advanced"];
 
   const handleGenerate = async () => {
     setIsGenerating(true);
     setMessage(null);
-    
+
     try {
       const request: AIGenerationRequest = {
         type,
@@ -75,26 +92,29 @@ export default function AIGenerator({
         topic: config.topic,
         difficulty: config.difficulty,
         count: config.count,
-        context: config.context
+        context: config.context,
       };
 
-      const response: AIGenerationResponse = await aiService.generateContent(request);
-      
+      const response: AIGenerationResponse = await aiService.generateContent(
+        request
+      );
+
       if (response.success && response.content) {
         setGeneratedContent(response.content);
         onContentGenerated?.(response.content);
         setMessage({
-          type: 'success',
-          text: `Successfully generated ${response.content.length} ${type} items!`
+          type: "success",
+          text: `Successfully generated ${response.content.length} ${type} items!`,
         });
       } else {
-        throw new Error(response.error || 'Generation failed');
+        throw new Error(response.error || "Generation failed");
       }
     } catch (error) {
-      console.error('Generation error:', error);
+      console.error("Generation error:", error);
       setMessage({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Failed to generate content'
+        type: "error",
+        text:
+          error instanceof Error ? error.message : "Failed to generate content",
       });
     } finally {
       setIsGenerating(false);
@@ -103,18 +123,18 @@ export default function AIGenerator({
 
   const handleSaveToDatabase = async () => {
     if (!onSaveToDatabase || generatedContent.length === 0) return;
-    
+
     setIsSaving(true);
     try {
       await onSaveToDatabase(generatedContent);
       setMessage({
-        type: 'success',
-        text: 'Content saved to database successfully!'
+        type: "success",
+        text: "Content saved to database successfully!",
       });
     } catch (error) {
       setMessage({
-        type: 'error',
-        text: error instanceof Error ? error.message : 'Failed to save content'
+        type: "error",
+        text: error instanceof Error ? error.message : "Failed to save content",
       });
     } finally {
       setIsSaving(false);
@@ -125,16 +145,16 @@ export default function AIGenerator({
     const textToCopy = `${content.title}\n\n${content.content}`;
     navigator.clipboard.writeText(textToCopy);
     setMessage({
-      type: 'success',
-      text: 'Content copied to clipboard!'
+      type: "success",
+      text: "Content copied to clipboard!",
     });
   };
 
   const handleDownload = () => {
     const dataStr = JSON.stringify(generatedContent, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `ai-generated-${type}-${Date.now()}.json`;
     link.click();
@@ -165,11 +185,15 @@ export default function AIGenerator({
             </label>
             <select
               value={config.language}
-              onChange={(e) => setConfig(prev => ({ ...prev, language: e.target.value }))}
+              onChange={(e) =>
+                setConfig((prev) => ({ ...prev, language: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {languages.map(lang => (
-                <option key={lang} value={lang}>{lang}</option>
+              {languages.map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang}
+                </option>
               ))}
             </select>
           </div>
@@ -180,11 +204,15 @@ export default function AIGenerator({
             </label>
             <select
               value={config.topic}
-              onChange={(e) => setConfig(prev => ({ ...prev, topic: e.target.value }))}
+              onChange={(e) =>
+                setConfig((prev) => ({ ...prev, topic: e.target.value }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {topics.map(topic => (
-                <option key={topic} value={topic}>{topic}</option>
+              {topics.map((topic) => (
+                <option key={topic} value={topic}>
+                  {topic}
+                </option>
               ))}
             </select>
           </div>
@@ -195,11 +223,18 @@ export default function AIGenerator({
             </label>
             <select
               value={config.difficulty}
-              onChange={(e) => setConfig(prev => ({ ...prev, difficulty: e.target.value as any }))}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  difficulty: e.target.value as any,
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {difficulties.map(diff => (
-                <option key={diff} value={diff}>{diff.charAt(0).toUpperCase() + diff.slice(1)}</option>
+              {difficulties.map((diff) => (
+                <option key={diff} value={diff}>
+                  {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                </option>
               ))}
             </select>
           </div>
@@ -213,7 +248,12 @@ export default function AIGenerator({
               min="1"
               max="20"
               value={config.count}
-              onChange={(e) => setConfig(prev => ({ ...prev, count: parseInt(e.target.value) }))}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  count: parseInt(e.target.value),
+                }))
+              }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
@@ -224,8 +264,10 @@ export default function AIGenerator({
             Additional Context (Optional)
           </label>
           <textarea
-            value={config.context || ''}
-            onChange={(e) => setConfig(prev => ({ ...prev, context: e.target.value }))}
+            value={config.context || ""}
+            onChange={(e) =>
+              setConfig((prev) => ({ ...prev, context: e.target.value }))
+            }
             placeholder="Add specific requirements or context for the AI..."
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -255,12 +297,12 @@ export default function AIGenerator({
       {message && (
         <div
           className={`p-4 rounded-lg flex items-center ${
-            message.type === 'success'
-              ? 'bg-green-50 text-green-800'
-              : 'bg-red-50 text-red-800'
+            message.type === "success"
+              ? "bg-green-50 text-green-800"
+              : "bg-red-50 text-red-800"
           }`}
         >
-          {message.type === 'success' ? (
+          {message.type === "success" ? (
             <CheckCircle className="w-5 h-5 mr-2" />
           ) : (
             <AlertCircle className="w-5 h-5 mr-2" />
@@ -329,7 +371,7 @@ export default function AIGenerator({
                     </Button>
                   </div>
                 </div>
-                
+
                 <div className="text-sm text-gray-600 mb-2">
                   <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs mr-2">
                     {content.difficulty}
@@ -352,15 +394,17 @@ export default function AIGenerator({
 
                 {content.options && (
                   <div className="mt-3">
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Options:</h5>
+                    <h5 className="text-sm font-medium text-gray-700 mb-2">
+                      Options:
+                    </h5>
                     <div className="space-y-1">
                       {content.options.map((option, optIndex) => (
                         <div
                           key={optIndex}
                           className={`text-sm p-2 rounded ${
                             option === content.correctAnswer
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-700'
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-700"
                           }`}
                         >
                           {String.fromCharCode(65 + optIndex)}. {option}
@@ -372,7 +416,9 @@ export default function AIGenerator({
 
                 {content.explanation && (
                   <div className="mt-3">
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Explanation:</h5>
+                    <h5 className="text-sm font-medium text-gray-700 mb-2">
+                      Explanation:
+                    </h5>
                     <p className="text-sm text-gray-600 bg-yellow-50 p-3 rounded">
                       {content.explanation}
                     </p>

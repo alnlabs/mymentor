@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
 import {
   ArrowLeft,
   Save,
@@ -12,6 +14,8 @@ import {
   Code,
   CheckCircle,
   AlertCircle,
+  Brain,
+  X,
 } from "lucide-react";
 
 interface Problem {
@@ -40,6 +44,7 @@ interface Problem {
 export default function AddProblemPage() {
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [problem, setProblem] = useState<Problem>({
     title: "",
     description: "",
@@ -128,6 +133,71 @@ export default function AddProblemPage() {
     }
   };
 
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    // Handle AI generated content
+    console.log("AI generated content:", content);
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      // Convert AI generated content to problem format
+      const problemData = content.map((item) => ({
+        title: item.title,
+        description: item.content,
+        difficulty:
+          item.difficulty === "beginner"
+            ? "easy"
+            : item.difficulty === "intermediate"
+            ? "medium"
+            : "hard",
+        category: item.category,
+        subject: item.category,
+        topic: item.category,
+        tool: item.language || "",
+        technologyStack: item.language || "",
+        domain: item.category,
+        skillLevel:
+          item.difficulty === "beginner"
+            ? "beginner"
+            : item.difficulty === "intermediate"
+            ? "intermediate"
+            : "advanced",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        testCases: "Sample test cases will be generated",
+        solution: item.explanation || "",
+        hints: "",
+        tags: item.tags?.join(", ") || "",
+        companies: "",
+        priority: "medium",
+        status: "draft",
+      }));
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "problems",
+          data: problemData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save AI generated content");
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Error saving AI content:", error);
+      throw error;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
@@ -149,26 +219,67 @@ export default function AddProblemPage() {
                 Add New Problem
               </h1>
             </div>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center"
-            >
-              {saving ? (
-                <Loading size="sm" text="Saving..." />
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Problem
-                </>
-              )}
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                onClick={() => setShowAIGenerator(!showAIGenerator)}
+                variant="outline"
+                className="flex items-center"
+              >
+                <Brain className="w-4 h-4 mr-2" />
+                {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center"
+              >
+                {saving ? (
+                  <Loading size="sm" text="Saving..." />
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Problem
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
           <p className="text-gray-600">
             Create a new coding problem with comprehensive categorization and
             details.
           </p>
         </div>
+
+        {/* AI Generator */}
+        {showAIGenerator && (
+          <Card className="mb-6 border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-2">
+                  <Brain className="w-6 h-6 text-orange-600" />
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    AI Problem Generator
+                  </h3>
+                  <span className="px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+                    Powered by AI
+                  </span>
+                </div>
+                <Button
+                  onClick={() => setShowAIGenerator(false)}
+                  variant="outline"
+                  size="sm"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              <AIGenerator
+                type="problem"
+                onContentGenerated={handleAIContentGenerated}
+                onSaveToDatabase={handleSaveAIContentToDatabase}
+              />
+            </div>
+          </Card>
+        )}
 
         {/* Form */}
         <Card className="mb-6">
