@@ -159,8 +159,17 @@ export default function AIGenerator({
       );
 
       if (response.success && response.content) {
-        console.log("AI Generator received content:", response.content.length, "items");
-        console.log("First few items:", response.content.slice(0, 3).map(item => ({ id: item.id, title: item.title })));
+        console.log(
+          "AI Generator received content:",
+          response.content.length,
+          "items"
+        );
+        console.log(
+          "First few items:",
+          response.content
+            .slice(0, 3)
+            .map((item) => ({ id: item.id, title: item.title }))
+        );
         setGeneratedContent(response.content);
         onContentGenerated?.(response.content);
         setMessage({

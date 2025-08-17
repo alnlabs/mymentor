@@ -213,6 +213,8 @@ export default function AddMCQPage() {
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
     try {
+      console.log(`Saving ${content.length} AI-generated items to database`);
+
       // Convert AI generated content to MCQ format
       const mcqData = content.map((item) => ({
         question: item.content,
@@ -421,23 +423,23 @@ export default function AddMCQPage() {
                     AI Generator
                   </h3>
                 </div>
-                                  <AIGenerator
-                    type="mcq"
-                    onContentGenerated={handleAIContentGenerated}
-                    onSaveToDatabase={handleSaveAIContentToDatabase}
-                    clearContent={clearAIContent}
-                    currentSettings={{
-                      category: mcq.category,
-                      subject: mcq.subject,
-                      topic: mcq.topic,
-                      tool: mcq.tool,
-                      technologyStack: mcq.technologyStack,
-                      domain: mcq.domain,
-                      difficulty: mcq.difficulty,
-                      skillLevel: mcq.skillLevel,
-                      tags: mcq.tags,
-                    }}
-                  />
+                <AIGenerator
+                  type="mcq"
+                  onContentGenerated={handleAIContentGenerated}
+                  onSaveToDatabase={handleSaveAIContentToDatabase}
+                  clearContent={clearAIContent}
+                  currentSettings={{
+                    category: mcq.category,
+                    subject: mcq.subject,
+                    topic: mcq.topic,
+                    tool: mcq.tool,
+                    technologyStack: mcq.technologyStack,
+                    domain: mcq.domain,
+                    difficulty: mcq.difficulty,
+                    skillLevel: mcq.skillLevel,
+                    tags: mcq.tags,
+                  }}
+                />
               </div>
             </Card>
           </div>

@@ -26,55 +26,59 @@ async function generateWithAI(
 
     const generatedContent: GeneratedContent[] = [];
 
-    // Simplified content generation to avoid template string issues
+    // Enhanced content generation with more variety and uniqueness
+    const baseTimestamp = Date.now();
+    const randomSeed = Math.random().toString(36).substr(2, 9);
+    
     for (let i = 0; i < count; i++) {
-      const id = `ai-generated-${type}-${Date.now()}-${i}`;
+      const id = `ai-generated-${type}-${baseTimestamp + i}-${randomSeed}-${i}`;
+      const uniqueSuffix = `${randomSeed}-${i}`;
 
       switch (type) {
         case "mcq":
-          // Create different MCQ templates based on index
+          // Create highly varied MCQ templates with unique content
           const mcqTemplates = [
             {
-              title: `${language} ${topic} MCQ ${i + 1}`,
-              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n// ${topic} example\nconsole.log("Hello World");\n\`\`\``,
+              title: `${language} ${topic} Fundamentals MCQ ${i + 1}`,
+              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n// ${topic} example ${uniqueSuffix}\nconst result = ${topic.toLowerCase()}Example${i + 1}();\nconsole.log(result);\n\`\`\``,
               options: [
-                "Hello World",
-                "Error",
-                "Undefined",
-                "None of the above",
+                `Expected ${topic} result ${i + 1}`,
+                "Runtime error",
+                "Compilation error", 
+                "Undefined behavior"
               ],
-              correctAnswer: "Hello World",
-              explanation: `This question tests understanding of ${topic} in ${language}.`,
+              correctAnswer: `Expected ${topic} result ${i + 1}`,
+              explanation: `This question tests fundamental understanding of ${topic} in ${language} with unique scenario ${i + 1}.`,
             },
             {
               title: `${language} ${topic} Best Practices MCQ ${i + 1}`,
-              content: `Which of the following is the best practice for ${topic.toLowerCase()} in ${language}?`,
+              content: `Which of the following is the best practice for ${topic.toLowerCase()} in ${language} when dealing with scenario ${i + 1}?`,
               options: [
-                `Use modern ${language} features and patterns`,
+                `Use modern ${language} features and patterns for ${topic} ${i + 1}`,
                 "Always use legacy approaches for compatibility",
                 "Ignore performance considerations",
                 "Skip error handling for simplicity",
               ],
-              correctAnswer: `Use modern ${language} features and patterns`,
-              explanation: `Best practices for ${topic} in ${language} include using modern features, proper error handling, and performance optimization.`,
+              correctAnswer: `Use modern ${language} features and patterns for ${topic} ${i + 1}`,
+              explanation: `Best practices for ${topic} in ${language} scenario ${i + 1} include using modern features, proper error handling, and performance optimization.`,
             },
             {
               title: `${language} ${topic} Implementation MCQ ${i + 1}`,
-              content: `How would you implement a ${topic.toLowerCase()} solution in ${language}?`,
+              content: `How would you implement a ${topic.toLowerCase()} solution in ${language} for use case ${i + 1}?`,
               options: [
-                `Using appropriate design patterns and ${language} features`,
+                `Using appropriate design patterns and ${language} features for ${topic} ${i + 1}`,
                 "Copy-pasting code from the internet",
                 "Using the most complex approach possible",
                 "Avoiding any external libraries or frameworks",
               ],
-              correctAnswer: `Using appropriate design patterns and ${language} features`,
-              explanation: `Proper implementation of ${topic} in ${language} involves understanding design patterns, language features, and best practices.`,
+              correctAnswer: `Using appropriate design patterns and ${language} features for ${topic} ${i + 1}`,
+              explanation: `Proper implementation of ${topic} in ${language} for use case ${i + 1} involves understanding design patterns, language features, and best practices.`,
             },
             {
               title: `${language} ${topic} Debugging MCQ ${i + 1}`,
-              content: `What would you do to debug this ${topic.toLowerCase()} issue in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Buggy ${topic} code\nfunction process${
+              content: `What would you do to debug this ${topic.toLowerCase()} issue in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Buggy ${topic} code ${uniqueSuffix}\nfunction process${
                 topic.charAt(0).toUpperCase() + topic.slice(1)
-              }() {\n  // TODO: Fix the bug\n}\n\`\`\`\n\n**Questions:**\n1. Use debugging tools and systematic approach\n2. Ignore the issue and move on\n3. Randomly change code until it works\n4. Ask someone else to fix it`,
+              }${i + 1}() {\n  // TODO: Fix the bug in scenario ${i + 1}\n}\n\`\`\`\n\n**Questions:**\n1. Use debugging tools and systematic approach\n2. Ignore the issue and move on\n3. Randomly change code until it works\n4. Ask someone else to fix it`,
               options: [
                 "Use debugging tools and systematic approach",
                 "Ignore the issue and move on",
@@ -82,11 +86,11 @@ async function generateWithAI(
                 "Ask someone else to fix it",
               ],
               correctAnswer: "Use debugging tools and systematic approach",
-              explanation: `Debugging ${topic} issues in ${language} requires systematic analysis, debugging tools, and understanding of the problem domain.`,
+              explanation: `Debugging ${topic} issues in ${language} scenario ${i + 1} requires systematic analysis, debugging tools, and understanding of the problem domain.`,
             },
             {
               title: `${language} ${topic} Performance MCQ ${i + 1}`,
-              content: `How would you optimize the performance of this ${topic.toLowerCase()} code in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation\nfor (let i = 0; i < 1000000; i++) {\n  // Expensive operation\n}\n\`\`\`\n\n**Questions:**\n1. Analyze and optimize the algorithm\n2. Add more hardware resources\n3. Ignore performance issues\n4. Use the slowest possible approach`,
+              content: `How would you optimize the performance of this ${topic.toLowerCase()} code in ${language}?\n\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation ${uniqueSuffix}\nfor (let i = 0; i < ${1000000 + i * 1000}; i++) {\n  // Expensive operation ${i + 1}\n}\n\`\`\`\n\n**Questions:**\n1. Analyze and optimize the algorithm\n2. Add more hardware resources\n3. Ignore performance issues\n4. Use the slowest possible approach`,
               options: [
                 "Analyze and optimize the algorithm",
                 "Add more hardware resources",
@@ -94,7 +98,7 @@ async function generateWithAI(
                 "Use the slowest possible approach",
               ],
               correctAnswer: "Analyze and optimize the algorithm",
-              explanation: `Performance optimization for ${topic} in ${language} involves algorithmic analysis, profiling, and targeted improvements.`,
+              explanation: `Performance optimization for ${topic} in ${language} scenario ${i + 1} involves algorithmic analysis, profiling, and targeted improvements.`,
             },
           ];
 
@@ -125,20 +129,20 @@ async function generateWithAI(
           const problemTemplates = [
             {
               title: `${language} ${topic} Implementation Problem ${i + 1}`,
-              content: `Write a function to solve the following problem:\n\n**Problem Description:**\nCreate a ${topic.toLowerCase()} solution in ${language}.\n\n**Requirements:**\n- Implement using modern ${language} features\n- Handle edge cases and errors gracefully\n- Include proper documentation`,
-              explanation: `This problem tests implementation skills for ${topic} in ${language}.`,
+              content: `Write a function to solve the following problem:\n\n**Problem Description:**\nCreate a ${topic.toLowerCase()} solution in ${language} for scenario ${i + 1}.\n\n**Requirements:**\n- Implement using modern ${language} features\n- Handle edge cases and errors gracefully\n- Include proper documentation\n- Consider performance for ${uniqueSuffix}`,
+              explanation: `This problem tests implementation skills for ${topic} in ${language} scenario ${i + 1}.`,
             },
             {
               title: `${language} ${topic} Optimization Problem ${i + 1}`,
-              content: `Optimize the following ${topic.toLowerCase()} code in ${language}:\n\n**Current Implementation:**\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation\nfunction process${
+              content: `Optimize the following ${topic.toLowerCase()} code in ${language}:\n\n**Current Implementation:**\n\`\`\`${language.toLowerCase()}\n// Inefficient ${topic} implementation ${uniqueSuffix}\nfunction process${
                 topic.charAt(0).toUpperCase() + topic.slice(1)
-              }() {\n  // TODO: Optimize this code\n}\n\`\`\`\n\n**Requirements:**\n- Improve performance and efficiency\n- Maintain functionality and readability\n- Add proper error handling`,
-              explanation: `This problem focuses on optimizing ${topic} implementations in ${language}, considering performance and maintainability.`,
+              }${i + 1}() {\n  // TODO: Optimize this code for scenario ${i + 1}\n}\n\`\`\`\n\n**Requirements:**\n- Improve performance and efficiency\n- Maintain functionality and readability\n- Add proper error handling\n- Consider scalability for ${uniqueSuffix}`,
+              explanation: `This problem focuses on optimizing ${topic} implementations in ${language} scenario ${i + 1}, considering performance and maintainability.`,
             },
             {
               title: `${language} ${topic} Design Problem ${i + 1}`,
-              content: `Design a system for ${topic.toLowerCase()} in ${language}:\n\n**Requirements:**\n- Design scalable architecture\n- Consider performance implications\n- Include error handling strategies\n- Plan for testing and maintenance\n- Document your design decisions`,
-              explanation: `This problem tests system design skills for ${topic} in ${language}, including architecture and scalability considerations.`,
+              content: `Design a system for ${topic.toLowerCase()} in ${language}:\n\n**Requirements:**\n- Design scalable architecture for scenario ${i + 1}\n- Consider performance implications\n- Include error handling strategies\n- Plan for testing and maintenance\n- Document your design decisions\n- Consider ${uniqueSuffix} requirements`,
+              explanation: `This problem tests system design skills for ${topic} in ${language} scenario ${i + 1}, including architecture and scalability considerations.`,
             },
           ];
 
@@ -258,8 +262,18 @@ async function generateWithAI(
       generatedContent.length,
       "items"
     );
-    console.log("First few items:", generatedContent.slice(0, 3).map(item => ({ id: item.id, title: item.title })));
-    console.log("Last few items:", generatedContent.slice(-3).map(item => ({ id: item.id, title: item.title })));
+    console.log(
+      "First few items:",
+      generatedContent
+        .slice(0, 3)
+        .map((item) => ({ id: item.id, title: item.title }))
+    );
+    console.log(
+      "Last few items:",
+      generatedContent
+        .slice(-3)
+        .map((item) => ({ id: item.id, title: item.title }))
+    );
     return generatedContent;
   } catch (error) {
     console.error("Error in generateWithAI:", error);

@@ -416,8 +416,16 @@ export async function POST(request: NextRequest) {
         }
       }
     } else if (type === "mcq") {
+      console.log(
+        `Processing ${processedData.length} MCQ questions for import`
+      );
+
       for (const question of processedData) {
         try {
+          console.log(
+            `Processing question: ${question.question.substring(0, 50)}...`
+          );
+
           // Check for duplicate question
           const isDuplicate = await checkDuplicateContent(
             "mcq",
@@ -425,6 +433,9 @@ export async function POST(request: NextRequest) {
           );
 
           if (isDuplicate) {
+            console.log(
+              `Skipping duplicate: ${question.question.substring(0, 50)}...`
+            );
             duplicates.push(
               `MCQ "${question.question.substring(0, 50)}..." already exists`
             );
@@ -450,7 +461,14 @@ export async function POST(request: NextRequest) {
             },
           });
           imported++;
+          console.log(
+            `Successfully imported question ${imported}: ${question.question.substring(
+              0,
+              50
+            )}...`
+          );
         } catch (error: any) {
+          console.error(`Error importing question: ${error.message}`);
           errors.push(
             `Failed to import MCQ "${question.question}": ${error.message}`
           );
