@@ -639,12 +639,12 @@ export default function AIGenerator({
       {/* Generated Content Display */}
       {generatedContent.length > 0 && (
         <Card className="p-6">
-                      <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {type === "exam"
-                  ? `Create Exam (${generatedContent.length} questions)`
-                  : `Generated Content (${generatedContent.length} items)`}
-              </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {type === "exam"
+                ? `Create Exam (${generatedContent.length} questions)`
+                : `Generated Content (${generatedContent.length} items)`}
+            </h3>
             <div className="flex space-x-2">
               <Button
                 onClick={handleDownload}
@@ -671,6 +671,31 @@ export default function AIGenerator({
                     <>
                       <CheckCircle className="w-4 h-4 mr-1" />
                       Save to DB
+                    </>
+                  )}
+                </Button>
+              )}
+              {type === "exam" && (
+                <Button
+                  onClick={() => {
+                    // Trigger exam creation by calling onSaveToDatabase with the generated content
+                    if (onSaveToDatabase) {
+                      onSaveToDatabase(generatedContent);
+                    }
+                  }}
+                  disabled={isSaving}
+                  size="sm"
+                  className="flex items-center bg-blue-600 hover:bg-blue-700"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loading size="sm" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Create Exam
                     </>
                   )}
                 </Button>
