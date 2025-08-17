@@ -271,10 +271,15 @@ export default function AIGenerator({
               Difficulty
             </label>
             <select
-              value={currentSettings?.difficulty === "easy" ? "beginner" : 
-                     currentSettings?.difficulty === "medium" ? "intermediate" : 
-                     currentSettings?.difficulty === "hard" ? "advanced" : 
-                     config.difficulty}
+              value={
+                currentSettings?.difficulty === "easy"
+                  ? "beginner"
+                  : currentSettings?.difficulty === "medium"
+                  ? "intermediate"
+                  : currentSettings?.difficulty === "hard"
+                  ? "advanced"
+                  : config.difficulty
+              }
               onChange={(e) =>
                 setConfig((prev) => ({
                   ...prev,
@@ -316,9 +321,15 @@ export default function AIGenerator({
             Additional Context (Optional)
           </label>
           <textarea
-            value={currentSettings ? 
-              `Subject: ${currentSettings.subject || ""}, Domain: ${currentSettings.domain || ""}, Category: ${currentSettings.category || ""}, Tags: ${currentSettings.tags || ""}` : 
-              config.context || ""}
+            value={
+              currentSettings
+                ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+                    currentSettings.domain || ""
+                  }, Category: ${currentSettings.category || ""}, Tags: ${
+                    currentSettings.tags || ""
+                  }`
+                : config.context || ""
+            }
             onChange={(e) =>
               setConfig((prev) => ({ ...prev, context: e.target.value }))
             }

@@ -161,13 +161,19 @@ export default function AddMCQPage() {
   };
 
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
-    // Handle AI generated content and auto-populate settings
+    // Handle AI generated content and auto-populate both main form and settings
     console.log("AI generated MCQ content:", content);
 
     if (content.length > 0) {
       const firstItem = content[0];
 
-      // Auto-populate settings based on generated content
+      // Auto-populate MAIN FORM FIELDS (Question, Options, Explanation)
+      updateMCQ("question", firstItem.content || mcq.question);
+      updateMCQ("options", firstItem.options || mcq.options);
+      updateMCQ("correctAnswer", firstItem.options?.indexOf(firstItem.correctAnswer || "Option A") || 0);
+      updateMCQ("explanation", firstItem.explanation || mcq.explanation);
+
+      // Auto-populate SETTINGS FIELDS
       updateMCQ("category", firstItem.category || mcq.category);
       updateMCQ("subject", firstItem.category || mcq.subject);
       updateMCQ("topic", firstItem.category || mcq.topic);
@@ -193,7 +199,7 @@ export default function AddMCQPage() {
       updateMCQ("tags", firstItem.tags?.join(", ") || mcq.tags);
 
       // Show success message
-      alert(`AI generated ${content.length} MCQs and auto-populated settings!`);
+      alert(`AI generated MCQ content and populated both form and settings!`);
     }
   };
 
