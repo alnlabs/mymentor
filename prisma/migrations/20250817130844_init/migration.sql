@@ -5,6 +5,7 @@ CREATE TYPE "public"."UserRole" AS ENUM ('superadmin', 'admin', 'user');
 CREATE TABLE "public"."users" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "username" TEXT,
     "name" TEXT NOT NULL,
     "password" TEXT,
     "avatar" TEXT,
@@ -318,8 +319,51 @@ CREATE TABLE "public"."feedback" (
     CONSTRAINT "feedback_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."global_configs" (
+    "id" TEXT NOT NULL,
+    "key" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "description" TEXT,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "global_configs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."settings" (
+    "id" TEXT NOT NULL,
+    "key" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "description" TEXT,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "settings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."categories" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "description" TEXT,
+    "color" TEXT,
+    "icon" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "sortOrder" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "categories_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_username_key" ON "public"."users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "problems_title_key" ON "public"."problems"("title");
@@ -336,6 +380,15 @@ CREATE UNIQUE INDEX "interview_feedback_interviewId_key" ON "public"."interview_
 -- CreateIndex
 CREATE UNIQUE INDEX "exams_title_key" ON "public"."exams"("title");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "global_configs_key_key" ON "public"."global_configs"("key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "settings_key_key" ON "public"."settings"("key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "categories_name_key" ON "public"."categories"("name");
+
 -- AddForeignKey
 ALTER TABLE "public"."submissions" ADD CONSTRAINT "submissions_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "public"."problems"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -343,10 +396,10 @@ ALTER TABLE "public"."submissions" ADD CONSTRAINT "submissions_problemId_fkey" F
 ALTER TABLE "public"."submissions" ADD CONSTRAINT "submissions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_progress" ADD CONSTRAINT "user_progress_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."mcq_questions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."user_progress" ADD CONSTRAINT "user_progress_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "public"."problems"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."user_progress" ADD CONSTRAINT "user_progress_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "public"."problems"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."user_progress" ADD CONSTRAINT "user_progress_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."mcq_questions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."user_progress" ADD CONSTRAINT "user_progress_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -361,10 +414,10 @@ ALTER TABLE "public"."mock_interviews" ADD CONSTRAINT "mock_interviews_userId_fk
 ALTER TABLE "public"."interview_questions" ADD CONSTRAINT "interview_questions_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "public"."interview_templates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."interview_answers" ADD CONSTRAINT "interview_answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."interview_questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."interview_answers" ADD CONSTRAINT "interview_answers_interviewId_fkey" FOREIGN KEY ("interviewId") REFERENCES "public"."mock_interviews"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."interview_answers" ADD CONSTRAINT "interview_answers_interviewId_fkey" FOREIGN KEY ("interviewId") REFERENCES "public"."mock_interviews"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."interview_answers" ADD CONSTRAINT "interview_answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."interview_questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."interview_feedback" ADD CONSTRAINT "interview_feedback_interviewId_fkey" FOREIGN KEY ("interviewId") REFERENCES "public"."mock_interviews"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -385,10 +438,10 @@ ALTER TABLE "public"."exam_sessions" ADD CONSTRAINT "exam_sessions_examId_fkey" 
 ALTER TABLE "public"."exam_sessions" ADD CONSTRAINT "exam_sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."exam_question_results" ADD CONSTRAINT "exam_question_results_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "public"."exam_sessions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."exam_question_results" ADD CONSTRAINT "exam_question_results_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."exam_questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."exam_question_results" ADD CONSTRAINT "exam_question_results_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "public"."exam_questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."exam_question_results" ADD CONSTRAINT "exam_question_results_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "public"."exam_sessions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."feedback" ADD CONSTRAINT "feedback_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

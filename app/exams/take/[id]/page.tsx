@@ -14,7 +14,6 @@ import {
   Circle,
   Save,
   Play,
-  Pause,
   RotateCcw,
   AlertCircle,
   Target,
@@ -70,7 +69,6 @@ export default function TakeExamPage() {
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const [overallTimeRemaining, setOverallTimeRemaining] = useState<number>(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showConfirmExit, setShowConfirmExit] = useState(false);
@@ -103,7 +101,7 @@ export default function TakeExamPage() {
   }, [exam, currentQuestionIndex]);
 
   useEffect(() => {
-    if (overallTimeRemaining > 0 && !isPaused) {
+    if (overallTimeRemaining > 0) {
       const timer = setInterval(() => {
         setOverallTimeRemaining((prev) => {
           if (prev <= 1) {
@@ -116,10 +114,10 @@ export default function TakeExamPage() {
 
       return () => clearInterval(timer);
     }
-  }, [overallTimeRemaining, isPaused]);
+  }, [overallTimeRemaining]);
 
   useEffect(() => {
-    if (timeRemaining > 0 && !isPaused && exam?.enableTimedQuestions) {
+    if (timeRemaining > 0 && exam?.enableTimedQuestions) {
       const timer = setInterval(() => {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
@@ -132,7 +130,7 @@ export default function TakeExamPage() {
 
       return () => clearInterval(timer);
     }
-  }, [timeRemaining, isPaused]);
+  }, [timeRemaining]);
 
   const loadExam = async () => {
     try {
@@ -547,25 +545,6 @@ export default function TakeExamPage() {
                     </span>
                   </div>
                 </div>
-
-                <div className="flex items-center space-x-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsPaused(!isPaused)}
-                    disabled={
-                      !exam.enableOverallTimer && !exam.enableTimedQuestions
-                    }
-                    className="bg-gradient-to-r from-gray-50 to-slate-50 border-gray-300 hover:from-gray-100 hover:to-slate-100"
-                  >
-                    {isPaused ? (
-                      <Play className="w-4 h-4" />
-                    ) : (
-                      <Pause className="w-4 h-4" />
-                    )}
-                    {isPaused ? "Resume" : "Pause"}
-                  </Button>
-                </div>
               </div>
 
               {/* Question */}
@@ -597,38 +576,46 @@ export default function TakeExamPage() {
                   {currentQuestion.type === "mcq" &&
                     currentQuestion.options && (
                       <div className="space-y-4">
-                        {currentQuestion.options.map(
-                          (option: string, index: number) => (
-                            <button
-                              key={index}
-                              onClick={() =>
-                                handleAnswerChange(currentQuestion.id, index)
+                        {(typeof currentQuestion.options === "string"
+                          ? (() => {
+                              try {
+                                return JSON.parse(currentQuestion.options);
+                              } catch (e) {
+                                console.error("Error parsing options:", e);
+                                return [];
                               }
-                              className={`w-full p-4 text-left border-2 rounded-xl transition-all duration-200 ${
-                                answers[currentQuestion.id] === index
-                                  ? "bg-gradient-to-r from-blue-100 to-indigo-100 border-blue-500 text-blue-900 shadow-md"
-                                  : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-4">
-                                <div
-                                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                                    answers[currentQuestion.id] === index
-                                      ? "bg-blue-600 border-blue-600"
-                                      : "border-gray-400"
-                                  }`}
-                                >
-                                  {answers[currentQuestion.id] === index && (
-                                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                                  )}
-                                </div>
-                                <span className="font-medium text-lg">
-                                  {option}
-                                </span>
+                            })()
+                          : currentQuestion.options
+                        ).map((option: string, index: number) => (
+                          <button
+                            key={index}
+                            onClick={() =>
+                              handleAnswerChange(currentQuestion.id, index)
+                            }
+                            className={`w-full p-4 text-left border-2 rounded-xl transition-all duration-200 ${
+                              answers[currentQuestion.id] === index
+                                ? "bg-gradient-to-r from-blue-100 to-indigo-100 border-blue-500 text-blue-900 shadow-md"
+                                : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50 hover:border-gray-400"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div
+                                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                                  answers[currentQuestion.id] === index
+                                    ? "bg-blue-600 border-blue-600"
+                                    : "border-gray-400"
+                                }`}
+                              >
+                                {answers[currentQuestion.id] === index && (
+                                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                                )}
                               </div>
-                            </button>
-                          )
-                        )}
+                              <span className="font-medium text-lg">
+                                {option}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
                       </div>
                     )}
 

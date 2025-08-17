@@ -24,6 +24,13 @@ export async function GET(
       },
     });
 
+    if (!exam) {
+      return NextResponse.json(
+        { success: false, error: "Exam not found" },
+        { status: 404 }
+      );
+    }
+
     // Fetch the actual question data for each exam question
     const examQuestionsWithData = await Promise.all(
       exam.examQuestions.map(async (examQuestion) => {
@@ -37,7 +44,10 @@ export async function GET(
             return {
               ...examQuestion,
               question: mcqQuestion.question,
-              options: JSON.parse(mcqQuestion.options),
+              options:
+                typeof mcqQuestion.options === "string"
+                  ? JSON.parse(mcqQuestion.options)
+                  : mcqQuestion.options,
               correctAnswer: mcqQuestion.correctAnswer,
               explanation: mcqQuestion.explanation,
               type: "mcq",
@@ -84,13 +94,6 @@ export async function GET(
       })
     );
 
-    if (!exam) {
-      return NextResponse.json(
-        { success: false, error: "Exam not found" },
-        { status: 404 }
-      );
-    }
-
     return NextResponse.json({
       success: true,
       data: {
@@ -126,6 +129,9 @@ export async function PUT(
       questionTypes,
       totalQuestions,
       passingScore,
+      enableTimedQuestions,
+      enableOverallTimer,
+      defaultQuestionTime,
       isActive,
       isPublic,
     } = body;
@@ -169,6 +175,11 @@ export async function PUT(
         questionTypes,
         totalQuestions: totalQuestions ? parseInt(totalQuestions) : undefined,
         passingScore: passingScore ? parseInt(passingScore) : undefined,
+        enableTimedQuestions,
+        enableOverallTimer,
+        defaultQuestionTime: defaultQuestionTime
+          ? parseInt(defaultQuestionTime)
+          : undefined,
         isActive,
         isPublic,
       },

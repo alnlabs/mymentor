@@ -81,31 +81,31 @@ export default function InterviewsPage() {
   }, [templates, searchTerm, selectedDifficulty, selectedCategory]);
 
   const filterTemplates = () => {
-    let filtered = templates.filter((template) => template.isActive);
+    let filtered = templates.filter((template: any) => template.isActive);
 
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(
-        (template) =>
-          template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (template: any) =>
+          template.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
           template.description
-            .toLowerCase()
+            ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          template.category.toLowerCase().includes(searchTerm.toLowerCase())
+          template.category?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Difficulty filter
     if (selectedDifficulty && selectedDifficulty !== "all") {
       filtered = filtered.filter(
-        (template) => template.difficulty === selectedDifficulty
+        (template: any) => template.difficulty === selectedDifficulty
       );
     }
 
     // Category filter
     if (selectedCategory && selectedCategory !== "all") {
       filtered = filtered.filter(
-        (template) => template.category === selectedCategory
+        (template: any) => template.category === selectedCategory
       );
     }
 

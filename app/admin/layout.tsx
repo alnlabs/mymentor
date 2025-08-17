@@ -21,13 +21,34 @@ import {
   MessageSquare,
   Database,
   Package,
+  ChevronDown,
+  ChevronRight,
+  BookOpen,
+  Code,
+  HelpCircle,
 } from "lucide-react";
+
+interface SubMenuItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+}
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  hasSubmenu?: boolean;
+  submenu?: SubMenuItem[];
+}
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const navigation = [
+const navigation: NavigationItem[] = [
   {
     name: "Dashboard",
     href: "/admin",
@@ -39,6 +60,27 @@ const navigation = [
     href: "/admin/content",
     icon: FileText,
     description: "Exams, Problems & MCQs",
+    hasSubmenu: true,
+    submenu: [
+      {
+        name: "Exams",
+        href: "/admin/exams",
+        icon: BookOpen,
+        description: "Manage Exams",
+      },
+      {
+        name: "Coding Problems",
+        href: "/admin/problems",
+        icon: Code,
+        description: "Manage Problems",
+      },
+      {
+        name: "MCQ Questions",
+        href: "/admin/mcq",
+        icon: HelpCircle,
+        description: "Manage MCQs",
+      },
+    ],
   },
   {
     name: "Interviews",
@@ -80,8 +122,40 @@ const navigation = [
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const pathname = usePathname();
   const { user, isAdmin, isSuperAdmin, signOutUser } = useAuthContext();
+
+  // Auto-expand submenu if current path matches a submenu item
+  React.useEffect(() => {
+    const activeSubmenu = navigation.find(
+      (item) =>
+        item.submenu &&
+        item.submenu.some((subItem) => pathname === subItem.href)
+    );
+
+    if (activeSubmenu && !expandedMenus.includes(activeSubmenu.name)) {
+      setExpandedMenus((prev) => [...prev, activeSubmenu.name]);
+    }
+  }, [pathname]); // Remove expandedMenus from dependency to prevent infinite loops
+
+  const toggleSubmenu = (menuName: string) => {
+    console.log("Toggling submenu for:", menuName);
+    console.log("Current expanded menus:", expandedMenus);
+
+    setExpandedMenus((prev) => {
+      const isCurrentlyExpanded = prev.includes(menuName);
+      const newState = isCurrentlyExpanded
+        ? prev.filter((name) => name !== menuName)
+        : [...prev, menuName];
+      console.log("Is currently expanded:", isCurrentlyExpanded);
+      console.log("New expanded menus:", newState);
+      return newState;
+    });
+  };
+
+  const isSubmenuExpanded = (menuName: string) =>
+    expandedMenus.includes(menuName);
 
   const handleSignOut = async () => {
     await signOutUser();
@@ -122,7 +196,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:inset-0 flex flex-col ${
+          className={`fixed inset-y-0 left-0 z-50 w-64 max-w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:inset-0 flex flex-col overflow-hidden ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -143,31 +217,114 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-3 py-6 overflow-y-auto">
+          <nav className="flex-1 px-3 py-6 overflow-y-auto overflow-x-hidden">
+            {/* Debug info - remove in production */}
+            {process.env.NODE_ENV === "development" && (
+              <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+                <div>Expanded: {expandedMenus.join(", ")}</div>
+                <div>Current path: {pathname}</div>
+              </div>
+            )}
             <div className="space-y-1">
               {navigation.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive =
+                  pathname === item.href ||
+                  (item.submenu &&
+                    item.submenu.some((subItem) => pathname === subItem.href));
                 const IconComponent = item.icon;
+                const isExpanded = isSubmenuExpanded(item.name);
+
                 return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors ${
-                      isActive
-                        ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    }`}
-                    onClick={() => setSidebarOpen(false)}
-                    title={item.description}
-                  >
-                    <IconComponent className="w-5 h-5 mr-3" />
-                    <div className="flex-1">
-                      <div>{item.name}</div>
-                      <div className="text-xs text-gray-500 font-normal">
-                        {item.description}
-                      </div>
-                    </div>
-                  </Link>
+                  <div key={item.name}>
+                    {item.hasSubmenu ? (
+                      <>
+                        {/* Main menu item with toggle */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log("Button clicked for:", item.name);
+                            toggleSubmenu(item.name);
+                          }}
+                          className={`group w-full flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                            isActive
+                              ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
+                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                          }`}
+                          title={item.description}
+                        >
+                          <div className="flex items-center flex-1 min-w-0">
+                            <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
+                            <div className="flex-1 text-left min-w-0">
+                              <div className="truncate">{item.name}</div>
+                              <div className="text-xs text-gray-500 font-normal truncate">
+                                {item.description}
+                              </div>
+                            </div>
+                          </div>
+                          <ChevronDown
+                            className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform ${
+                              isExpanded ? "rotate-0" : "-rotate-90"
+                            }`}
+                          />
+                        </button>
+
+                        {/* Submenu */}
+                        {isExpanded && (
+                          <div className="ml-6 mt-1 space-y-1">
+                            {item.submenu?.map((subItem) => {
+                              const isSubActive = pathname === subItem.href;
+                              const SubIconComponent = subItem.icon;
+                              return (
+                                <Link
+                                  key={subItem.name}
+                                  href={subItem.href}
+                                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                                    isSubActive
+                                      ? "bg-blue-50 text-blue-600 border-l-2 border-blue-400"
+                                      : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                  }`}
+                                  onClick={() => setSidebarOpen(false)}
+                                  title={subItem.description}
+                                >
+                                  <SubIconComponent className="w-4 h-4 mr-3 flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="truncate">
+                                      {subItem.name}
+                                    </div>
+                                    <div className="text-xs text-gray-400 font-normal truncate">
+                                      {subItem.description}
+                                    </div>
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* Regular menu item */
+                      <Link
+                        href={item.href}
+                        className={`group flex items-center px-3 py-3 text-sm font-medium rounded-md transition-colors ${
+                          isActive
+                            ? "bg-blue-100 text-blue-700 border-r-2 border-blue-600"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                        onClick={() => setSidebarOpen(false)}
+                        title={item.description}
+                      >
+                        <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="truncate">{item.name}</div>
+                          <div className="text-xs text-gray-500 font-normal truncate">
+                            {item.description}
+                          </div>
+                        </div>
+                      </Link>
+                    )}
+                  </div>
                 );
               })}
             </div>
@@ -176,7 +333,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* User Info */}
           <div className="flex-shrink-0 p-4 border-t border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-sm font-medium">
                   {userInfo.avatar}
                 </span>
@@ -194,7 +351,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden">
+        <div className="flex-1 flex flex-col min-h-screen w-full overflow-x-hidden lg:overflow-y-auto">
           {/* Top bar - aligned with sidebar navigation */}
           <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
             <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">

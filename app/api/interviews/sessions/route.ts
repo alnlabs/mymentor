@@ -20,41 +20,57 @@ export async function POST(request: NextRequest) {
 
     if (action === "create-or-resume") {
       // Check for existing session
-      const existingSession = await prisma.interviewSession.findFirst({
+      const existingSession = await prisma.mockInterview.findFirst({
         where: {
           templateId,
           userId,
           status: {
-            in: ["in-progress", "paused"]
-          }
+            in: ["in-progress", "paused"],
+          },
         },
         orderBy: {
-          createdAt: "desc"
-        }
+          createdAt: "desc",
+        },
       });
 
       if (existingSession) {
         // Resume existing session
+        let currentQuestion = 0;
+        let answers = {};
+
+        try {
+          if (existingSession.notes) {
+            const notes = JSON.parse(existingSession.notes);
+            currentQuestion = notes.currentQuestion || 0;
+            answers = notes.answers || {};
+          }
+        } catch (error) {
+          console.error("Error parsing session notes:", error);
+        }
+
         return NextResponse.json({
           success: true,
           data: {
             session: existingSession,
-            currentQuestion: existingSession.currentQuestion || 0,
-            answers: existingSession.answers || {}
-          }
+            currentQuestion,
+            answers,
+          },
         });
       } else {
         // Create new session
-        const newSession = await prisma.interviewSession.create({
+        const newSession = await prisma.mockInterview.create({
           data: {
             templateId,
             userId,
             status: "in-progress",
-            currentQuestion: 0,
-            answers: {},
-            startTime: new Date(),
-            timeSpent: 0
-          }
+            scheduledAt: new Date(),
+            totalScore: 0,
+            maxScore: 0,
+            notes: JSON.stringify({
+              currentQuestion: 0,
+              answers: {},
+            }),
+          },
         });
 
         return NextResponse.json({
@@ -62,8 +78,8 @@ export async function POST(request: NextRequest) {
           data: {
             session: newSession,
             currentQuestion: 0,
-            answers: {}
-          }
+            answers: {},
+          },
         });
       }
     }

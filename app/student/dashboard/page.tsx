@@ -34,6 +34,8 @@ import {
   Home,
   MessageSquare,
   FileText,
+  CheckSquare,
+  FolderOpen,
 } from "lucide-react";
 
 interface UserStats {
@@ -174,27 +176,71 @@ export default function DashboardPage() {
     );
   }
 
-  const dashboardItems = [
+  const dashboardItems: Array<{
+    title: string;
+    description: string;
+    icon: any;
+    href: string;
+    color: string;
+    adminOnly?: boolean;
+  }> = [
     {
-      title: "Interviews",
-      description: "Practice with realistic interview scenarios",
-      icon: Target,
-      href: "/student/interviews",
+      title: "Practice Problems",
+      description: "Solve coding challenges and improve your skills",
+      icon: Code,
+      href: "/problems",
       color: "bg-blue-500",
     },
     {
-      title: "Exams",
-      description: "Take comprehensive practice exams",
+      title: "MCQ Questions",
+      description: "Test your knowledge with multiple choice questions",
+      icon: CheckSquare,
+      href: "/mcq",
+      color: "bg-green-500",
+    },
+    {
+      title: "Take Exams",
+      description: "Complete timed assessments and track your progress",
       icon: FileText,
       href: "/student/exams",
       color: "bg-purple-500",
     },
     {
-      title: "Admin Interviews",
-      description: "Manage interview templates (Admin Only)",
-      icon: Target,
+      title: "Mock Interviews",
+      description: "Practice with realistic interview scenarios",
+      icon: Users,
+      href: "/student/interviews",
+      color: "bg-orange-500",
+    },
+    {
+      title: "Feedback",
+      description: "View your performance feedback and suggestions",
+      icon: MessageSquare,
+      href: "/student/feedback",
+      color: "bg-pink-500",
+    },
+    {
+      title: "Content Management",
+      description: "Manage problems, MCQs, and exam content",
+      icon: FolderOpen,
+      href: "/admin/content",
+      color: "bg-indigo-500",
+      adminOnly: true,
+    },
+    {
+      title: "Exam Management",
+      description: "Create and manage exams and assessments",
+      icon: FileText,
+      href: "/admin/exams",
+      color: "bg-yellow-500",
+      adminOnly: true,
+    },
+    {
+      title: "Interview Management",
+      description: "Create and manage interview templates",
+      icon: Users,
       href: "/admin/interviews",
-      color: "bg-blue-500",
+      color: "bg-teal-500",
       adminOnly: true,
     },
     {

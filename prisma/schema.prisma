@@ -371,7 +371,7 @@ model Setting {
 
 model Category {
   id          String   @id @default(cuid())
-  name        String
+  name        String   @unique
   type        String   // 'exam', 'question', 'interview'
   description String?
   color       String?  // hex color

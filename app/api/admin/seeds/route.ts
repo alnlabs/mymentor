@@ -113,7 +113,26 @@ export async function GET(request: NextRequest) {
               (concept.questions?.length || concept.problems?.length || 0),
             0
           ),
-          inDatabaseCount: existingQuestions.length + existingProblems.length,
+          inDatabaseCount: content.concepts.reduce(
+            (sum: number, concept: any) => {
+              const conceptQuestions = Array.isArray(concept.questions)
+                ? concept.questions
+                : [];
+              const conceptProblems = Array.isArray(concept.problems)
+                ? concept.problems
+                : [];
+
+              const questionsInDB = conceptQuestions.filter((q: any) =>
+                existingQuestions.some((eq) => eq.question === q.question)
+              ).length;
+              const problemsInDB = conceptProblems.filter((p: any) =>
+                existingProblems.some((ep) => ep.title === p.title)
+              ).length;
+
+              return sum + questionsInDB + problemsInDB;
+            },
+            0
+          ),
         };
 
         // Group by language
@@ -209,6 +228,8 @@ export async function POST(request: NextRequest) {
 
     const seedFiles = findJsonFiles(seedsDir);
 
+    console.log(seedFiles, "seedFiles");
+
     // Process concepts from multiple files
     const conceptMap = new Map(); // Map to store concepts by name
     const processedFiles = [];
@@ -291,11 +312,41 @@ export async function POST(request: NextRequest) {
         // Add MCQ questions
         for (const question of concept.questions) {
           try {
+            // Handle different MCQ data formats
+            let options, correctAnswerIndex;
+
+            if (Array.isArray(question.options)) {
+              // Java format: options is array, correctAnswer is string
+              options = question.options;
+              const correctAnswer = question.correctAnswer;
+              correctAnswerIndex = options.findIndex(
+                (option: string) => option === correctAnswer
+              );
+              if (correctAnswerIndex === -1) {
+                correctAnswerIndex = 0;
+              }
+            } else if (typeof question.options === "string") {
+              // JavaScript/Python format: options is JSON string, correctAnswer is index
+              try {
+                options = JSON.parse(question.options);
+                correctAnswerIndex = question.correctAnswer || 0;
+              } catch (e) {
+                console.error(
+                  `Error parsing options for question: ${question.question}`
+                );
+                options = [];
+                correctAnswerIndex = 0;
+              }
+            } else {
+              options = [];
+              correctAnswerIndex = 0;
+            }
+
             const added = await prisma.mCQQuestion.create({
               data: {
                 question: question.question,
-                options: JSON.stringify(question.options),
-                correctAnswer: question.options.indexOf(question.correctAnswer),
+                options: JSON.stringify(options),
+                correctAnswer: correctAnswerIndex,
                 explanation: question.explanation,
                 category: concept.category,
                 difficulty: concept.difficulty,

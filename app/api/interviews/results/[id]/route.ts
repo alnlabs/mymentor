@@ -8,15 +8,22 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const result = await prisma.interviewResult.findUnique({
+    const result = await prisma.mockInterview.findUnique({
       where: { id: params.id },
       include: {
         template: {
           include: {
-            questions: true
-          }
-        }
-      }
+            questions: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!result) {
@@ -30,8 +37,9 @@ export async function GET(
       success: true,
       data: {
         result,
-        template: result.template
-      }
+        template: result.template,
+        user: result.user,
+      },
     });
   } catch (error: any) {
     console.error("Error fetching interview result:", error);

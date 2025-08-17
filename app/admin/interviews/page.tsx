@@ -33,11 +33,11 @@ export default function AdminInterviewsPage() {
   };
 
   const handleDeleteTemplate = async (templateId: string) => {
-          if (
-        !confirm(
-          "Are you sure you want to delete this template? This action cannot be undone."
-        )
-      ) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this template? This action cannot be undone."
+      )
+    ) {
       return;
     }
 
@@ -163,7 +163,8 @@ export default function AdminInterviewsPage() {
             Interview Management
           </h1>
           <p className="text-gray-600 mt-2">
-            Create and manage position-based interview templates for fresh graduates
+            Create and manage position-based interview templates for fresh
+            graduates
           </p>
         </div>
         <Button
@@ -300,23 +301,43 @@ export default function AdminInterviewsPage() {
               </div>
             </div>
 
-            {template.companies && template.companies.length > 0 && (
+            {template.companies && (
               <div className="mb-4">
                 <p className="text-xs text-gray-500 mb-2">Target Companies:</p>
                 <div className="flex flex-wrap gap-1">
-                  {template.companies.slice(0, 3).map((company, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-                    >
-                      {company}
-                    </span>
-                  ))}
-                  {template.companies.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs rounded-full">
-                      +{template.companies.length - 3} more
-                    </span>
-                  )}
+                  {(() => {
+                    try {
+                      const companies =
+                        typeof template.companies === "string"
+                          ? JSON.parse(template.companies)
+                          : template.companies;
+
+                      if (Array.isArray(companies) && companies.length > 0) {
+                        return (
+                          <>
+                            {companies
+                              .slice(0, 3)
+                              .map((company: string, index: number) => (
+                                <span
+                                  key={index}
+                                  className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                                >
+                                  {company}
+                                </span>
+                              ))}
+                            {companies.length > 3 && (
+                              <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs rounded-full">
+                                +{companies.length - 3} more
+                              </span>
+                            )}
+                          </>
+                        );
+                      }
+                      return null;
+                    } catch (error) {
+                      return null;
+                    }
+                  })()}
                 </div>
               </div>
             )}
@@ -325,7 +346,9 @@ export default function AdminInterviewsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => (window.location.href = `/admin/interviews/${template.id}`)}
+                onClick={() =>
+                  (window.location.href = `/admin/interviews/${template.id}`)
+                }
                 className="flex-1"
               >
                 <Edit className="w-4 h-4 mr-1" />
@@ -352,8 +375,6 @@ export default function AdminInterviewsPage() {
           </Card>
         ))}
       </div>
-
-
 
       {/* Edit Template Modal */}
       {editingTemplate && (

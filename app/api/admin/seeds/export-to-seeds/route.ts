@@ -36,7 +36,15 @@ export async function POST(request: NextRequest) {
     const filePath = join(seedsPath, fileName);
 
     // Check if file exists and read existing content
-    let existingData = {
+    let existingData: {
+      category: string;
+      language: string;
+      concepts: Array<{
+        name: string;
+        difficulty: string;
+        questions: any[];
+      }>;
+    } = {
       category: folderName,
       language: language,
       concepts: [],

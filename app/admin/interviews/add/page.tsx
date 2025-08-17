@@ -102,7 +102,8 @@ export default function AddInterviewTemplatePage() {
   ];
 
   // Use dynamic configuration for companies
-  const { popularCompanies } = useDynamicConfig();
+  const { general } = useDynamicConfig();
+  const popularCompanies = general.popularCompanies || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -443,7 +444,7 @@ export default function AddInterviewTemplatePage() {
               Select companies this template is designed for (optional)
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-              {popularCompanies.map((company) => (
+              {popularCompanies.map((company: string) => (
                 <label
                   key={company}
                   className="flex items-center space-x-2 p-2 rounded-lg border cursor-pointer hover:bg-gray-50"

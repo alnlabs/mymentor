@@ -11,21 +11,24 @@ export async function PUT(
     const body = await request.json();
     const { status } = body;
 
-    if (!status || !["in-progress", "paused", "completed"].includes(status)) {
+    if (
+      !status ||
+      !["scheduled", "in-progress", "paused", "completed"].includes(status)
+    ) {
       return NextResponse.json(
         { success: false, error: "Valid status is required" },
         { status: 400 }
       );
     }
 
-    const session = await prisma.interviewSession.update({
+    const session = await prisma.mockInterview.update({
       where: { id: params.id },
-      data: { status }
+      data: { status },
     });
 
     return NextResponse.json({
       success: true,
-      data: session
+      data: session,
     });
   } catch (error: any) {
     console.error("Error updating session status:", error);

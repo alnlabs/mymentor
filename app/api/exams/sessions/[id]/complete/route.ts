@@ -56,11 +56,36 @@ export async function POST(
       let isCorrect = false;
       let points = 0;
 
-      if (question.type === "mcq" && userAnswer !== undefined) {
-        isCorrect = userAnswer === question.correctAnswer;
-        points = isCorrect ? question.points : 0;
-      } else if (question.type === "text" || question.type === "coding") {
-        // For text and coding questions, we'll need manual grading
+      console.log(`Processing question ${question.id}:`, {
+        questionType: question.questionType,
+        userAnswer,
+        userAnswerType: typeof userAnswer,
+      });
+
+      if (question.questionType === "MCQ" && userAnswer !== undefined) {
+        // For MCQ questions, we need to fetch the actual question data
+        const mcqQuestion = await prisma.mCQQuestion.findUnique({
+          where: { id: question.questionId },
+        });
+
+        if (mcqQuestion) {
+          // Convert both to numbers for comparison
+          const userAnswerNum = Number(userAnswer);
+          const correctAnswerNum = mcqQuestion.correctAnswer;
+          isCorrect = userAnswerNum === correctAnswerNum;
+          points = isCorrect ? question.points : 0;
+
+          console.log(`MCQ comparison:`, {
+            userAnswer: userAnswerNum,
+            correctAnswer: correctAnswerNum,
+            isCorrect,
+          });
+        }
+      } else if (
+        question.questionType === "Problem" ||
+        question.questionType === "CODING"
+      ) {
+        // For coding questions, we'll need manual grading
         // For now, we'll store the answer for later review
         points = 0; // Will be updated by admin/grader
       }
@@ -69,9 +94,19 @@ export async function POST(
 
       totalScore += points;
 
+      const processedUserAnswer =
+        userAnswer !== undefined ? String(userAnswer) : null;
+
+      console.log(`Processed answer for question ${question.id}:`, {
+        original: userAnswer,
+        processed: processedUserAnswer,
+        isCorrect,
+        points,
+      });
+
       questionResults.push({
         questionId: question.id, // Use ExamQuestion ID
-        userAnswer,
+        userAnswer: processedUserAnswer,
         isCorrect,
         points,
       });

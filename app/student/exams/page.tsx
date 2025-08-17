@@ -142,28 +142,30 @@ export default function ExamsPage() {
   }, [exams, searchTerm, selectedDifficulty, selectedCategory]);
 
   const filterExams = () => {
-    let filtered = exams.filter((exam) => exam.isActive);
+    let filtered = exams.filter((exam: any) => exam.isActive);
 
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(
-        (exam) =>
-          exam.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          exam.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          exam.category.toLowerCase().includes(searchTerm.toLowerCase())
+        (exam: any) =>
+          exam.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          exam.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          exam.category?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Difficulty filter
     if (selectedDifficulty) {
       filtered = filtered.filter(
-        (exam) => exam.difficulty === selectedDifficulty
+        (exam: any) => exam.difficulty === selectedDifficulty
       );
     }
 
     // Category filter
     if (selectedCategory) {
-      filtered = filtered.filter((exam) => exam.category === selectedCategory);
+      filtered = filtered.filter(
+        (exam: any) => exam.category === selectedCategory
+      );
     }
 
     setFilteredExams(filtered);

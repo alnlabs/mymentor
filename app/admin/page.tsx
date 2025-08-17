@@ -82,7 +82,12 @@ interface AdminStats {
 }
 
 export default function AdminDashboard() {
-  const { user, loading: authLoading, isAdmin, isSuperAdmin } = useAuthContext();
+  const {
+    user,
+    loading: authLoading,
+    isAdmin,
+    isSuperAdmin,
+  } = useAuthContext();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -94,7 +99,9 @@ export default function AdminDashboard() {
   // Redirect non-admin users
   React.useEffect(() => {
     if (!authLoading && (!user || (!isAdmin && !isSuperAdmin))) {
-      console.log("Admin Dashboard: User not authorized, redirecting to homepage");
+      console.log(
+        "Admin Dashboard: User not authorized, redirecting to homepage"
+      );
       window.location.href = "/";
     }
   }, [user, isAdmin, isSuperAdmin, authLoading]);
@@ -178,7 +185,7 @@ export default function AdminDashboard() {
     );
   }
 
-    return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Dashboard Header */}
       <div className="bg-white shadow-sm border-b">
@@ -216,8 +223,6 @@ export default function AdminDashboard() {
                   Templates & Sessions
                 </span>
               </Button>
-
-
 
               <Button
                 onClick={() => (window.location.href = "/admin/problems")}

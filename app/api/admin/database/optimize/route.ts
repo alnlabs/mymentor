@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       problemCount,
       examCount,
       examSessionCount,
-      interviewCount,
+      mockInterviewCount,
       feedbackCount,
     ] = await Promise.all([
       prisma.user.count(),
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       prisma.problem.count(),
       prisma.exam.count(),
       prisma.examSession.count(),
-      prisma.interview.count(),
+      prisma.mockInterview.count(),
       prisma.feedback.count(),
     ]);
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         problems: problemCount,
         exams: examCount,
         examSessions: examSessionCount,
-        interviews: interviewCount,
+        mockInterviews: mockInterviewCount,
         feedback: feedbackCount,
       },
       status: "completed",

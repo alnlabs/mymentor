@@ -2,9 +2,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  avatar?: string;
-  provider: string;
-  progress: number;
+  role: string;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -13,7 +12,7 @@ export interface Problem {
   id: string;
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   category: string;
   testCases: string; // JSON string
   solution?: string;
@@ -33,8 +32,19 @@ export interface MCQQuestion {
   explanation?: string;
   category: string;
   difficulty: string;
+  subject?: string;
+  topic?: string;
+  skillLevel?: string;
+  jobRole?: string;
+  companyType?: string;
+  interviewType?: string;
+  tool?: string;
+  technologyStack?: string;
+  domain?: string;
   tags?: string; // Comma-separated string
   companies?: string[];
+  priority?: string;
+  status?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -45,10 +55,10 @@ export interface InterviewTemplate {
   id: string;
   name: string;
   description: string;
-  duration: number; // in minutes
-  difficulty: string; // easy, medium, hard
-  category: string; // frontend, backend, fullstack, ml, etc.
-  companies?: string[];
+  duration: number;
+  difficulty: string;
+  category: string;
+  companies?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -57,7 +67,7 @@ export interface InterviewTemplate {
 export interface InterviewQuestion {
   id: string;
   templateId: string;
-  questionType: 'coding' | 'mcq' | 'behavioral' | 'system_design';
+  questionType: "coding" | "mcq" | "behavioral" | "system_design";
   question: string;
   options?: string[]; // For MCQ questions
   correctAnswer?: string; // For MCQ questions
@@ -87,18 +97,25 @@ export interface MockInterview {
   id: string;
   userId: string;
   templateId: string;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  status: string;
   scheduledAt?: string;
   startedAt?: string;
   completedAt?: string;
   totalScore: number;
   maxScore: number;
-  notes?: string; // User's notes during interview
+  notes?: string;
   createdAt: string;
   updatedAt: string;
-  template?: InterviewTemplate;
-  answers?: InterviewAnswer[];
-  feedback?: InterviewFeedback;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  template?: {
+    id: string;
+    name: string;
+    category: string;
+  };
 }
 
 export interface InterviewFeedback {
@@ -108,9 +125,9 @@ export interface InterviewFeedback {
   technicalScore: number;
   communicationScore: number;
   problemSolvingScore: number;
-  strengths?: string[];
-  weaknesses?: string[];
-  suggestions?: string[];
+  strengths?: string;
+  weaknesses?: string;
+  suggestions?: string;
   detailedFeedback?: string;
   createdAt: string;
   updatedAt: string;
@@ -132,7 +149,7 @@ export interface Submission {
   executionTime?: number;
   memoryUsed?: number;
   testResults?: string; // JSON string
-  status: 'accepted' | 'wrong_answer' | 'time_limit' | 'runtime_error';
+  status: "accepted" | "wrong_answer" | "time_limit" | "runtime_error";
   submittedAt: Date;
 }
 
@@ -140,14 +157,13 @@ export interface UserProgress {
   id: string;
   userId: string;
   problemId?: string;
-  mcqId?: string;
-  questionType: 'coding' | 'mcq';
-  status: 'not_started' | 'in_progress' | 'completed' | 'failed';
-  score?: number;
-  timeTaken?: number;
-  completedAt?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  questionId?: string;
+  questionType: string;
+  status: string;
+  score: number;
+  startedAt: string;
+  completedAt?: string;
+  updatedAt: string;
 }
 
 export interface ApiResponse<T = any> {

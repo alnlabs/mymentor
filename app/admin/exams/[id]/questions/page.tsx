@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
@@ -18,6 +19,10 @@ import {
   AlertCircle,
   Timer,
   Target,
+  CheckSquare,
+  Square,
+  Settings,
+  RefreshCw,
 } from "lucide-react";
 
 interface ExamQuestion {
@@ -46,8 +51,9 @@ interface Exam {
 export default function ExamQuestionsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
   const [exam, setExam] = useState<Exam | null>(null);
   const [examQuestions, setExamQuestions] = useState<ExamQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,15 +63,30 @@ export default function ExamQuestionsPage({
   const [showAddQuestion, setShowAddQuestion] = useState(false);
   const [availableQuestions, setAvailableQuestions] = useState<any[]>([]);
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
+  const [examId, setExamId] = useState<string>("");
+  const [selectAll, setSelectAll] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteType, setDeleteType] = useState<"selected" | "all" | null>(null);
+
+  // Handle params as Promise
+  useEffect(() => {
+    const getExamId = async () => {
+      const resolvedParams = await params;
+      setExamId(resolvedParams.id);
+    };
+    getExamId();
+  }, [params]);
 
   useEffect(() => {
-    fetchExam();
-    fetchExamQuestions();
-  }, [params.id]);
+    if (examId) {
+      fetchExam();
+      fetchExamQuestions();
+    }
+  }, [examId]);
 
   const fetchExam = async () => {
     try {
-      const response = await fetch(`/api/exams/${params.id}`);
+      const response = await fetch(`/api/exams/${examId}`);
       const result = await response.json();
       if (result.success) {
         setExam(result.data);
@@ -78,7 +99,7 @@ export default function ExamQuestionsPage({
   const fetchExamQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/exams/${params.id}/questions`);
+      const response = await fetch(`/api/exams/${examId}/questions`);
       const result = await response.json();
       if (result.success) {
         setExamQuestions(result.data);
@@ -101,40 +122,95 @@ export default function ExamQuestionsPage({
 
     try {
       const response = await fetch(
-        `/api/exams/${params.id}/questions?questionId=${questionId}&questionType=${questionType}`,
+        `/api/exams/${examId}/questions?questionId=${questionId}&questionType=${questionType}`,
         { method: "DELETE" }
       );
       const result = await response.json();
       if (result.success) {
         fetchExamQuestions();
+        // Remove from selected if it was selected
+        setSelectedQuestions((prev) => prev.filter((id) => id !== questionId));
       }
     } catch (error) {
       console.error("Error removing question:", error);
     }
   };
 
-  const handleUpdateQuestionTimer = async (
-    questionId: string,
-    timeLimit: number
-  ) => {
+  const handleBulkDelete = async () => {
+    if (selectedQuestions.length === 0) {
+      alert("Please select questions to delete");
+      return;
+    }
+
     try {
       setSaving(true);
       const response = await fetch(
-        `/api/exams/${params.id}/questions/${questionId}`,
+        `/api/exams/${examId}/questions/bulk-delete`,
         {
-          method: "PUT",
+          method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ timeLimit }),
+          body: JSON.stringify({ questionIds: selectedQuestions }),
         }
       );
       const result = await response.json();
       if (result.success) {
+        setSelectedQuestions([]);
+        setSelectAll(false);
         fetchExamQuestions();
+        alert(`Successfully deleted ${result.deletedCount} questions`);
       }
     } catch (error) {
-      console.error("Error updating question timer:", error);
+      console.error("Error bulk deleting questions:", error);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    try {
+      setSaving(true);
+      const response = await fetch(
+        `/api/exams/${examId}/questions/delete-all`,
+        {
+          method: "DELETE",
+        }
+      );
+      const result = await response.json();
+      if (result.success) {
+        setSelectedQuestions([]);
+        setSelectAll(false);
+        fetchExamQuestions();
+        alert(`Successfully deleted all ${result.deletedCount} questions`);
+      }
+    } catch (error) {
+      console.error("Error deleting all questions:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleUpdateQuestionTimer = async (
+    questionId: string,
+    timeLimit: number | null
+  ) => {
+    try {
+      const response = await fetch(
+        `/api/exams/${examId}/questions/${questionId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ timeLimit: timeLimit || undefined }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update question timer");
+      }
+
+      // Refresh exam questions
+      fetchExamQuestions();
+    } catch (error) {
+      console.error("Error updating question timer:", error);
     }
   };
 
@@ -148,7 +224,7 @@ export default function ExamQuestionsPage({
       setSaving(true);
       const promises = selectedQuestions.map(async (questionId) => {
         const question = availableQuestions.find((q) => q.id === questionId);
-        const response = await fetch(`/api/exams/${params.id}/questions`, {
+        const response = await fetch(`/api/exams/${examId}/questions`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -184,6 +260,27 @@ export default function ExamQuestionsPage({
     } catch (error) {
       console.error("Error fetching available questions:", error);
     }
+  };
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedQuestions([]);
+      setSelectAll(false);
+    } else {
+      const allIds = filteredQuestions.map((q) => q.id);
+      setSelectedQuestions(allIds);
+      setSelectAll(true);
+    }
+  };
+
+  const handleSelectQuestion = (questionId: string) => {
+    setSelectedQuestions((prev) => {
+      if (prev.includes(questionId)) {
+        return prev.filter((id) => id !== questionId);
+      } else {
+        return [...prev, questionId];
+      }
+    });
   };
 
   const filteredQuestions = examQuestions.filter((question) => {
@@ -227,14 +324,24 @@ export default function ExamQuestionsPage({
                 <BookOpen className="w-8 h-8 mr-3" />
                 Exam Questions Management
               </h1>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/exams")}
-                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              >
-                ← Back to Exams
-              </Button>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push(`/admin/exams/${examId}/edit`)}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← Back to Exam
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push("/admin/exams")}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
+                  ← All Exams
+                </Button>
+              </div>
             </div>
             {exam && (
               <div>
@@ -262,6 +369,41 @@ export default function ExamQuestionsPage({
         </div>
       </div>
 
+      {/* Bulk Actions */}
+      {selectedQuestions.length > 0 && (
+        <Card>
+          <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-medium text-blue-900">
+                {selectedQuestions.length} question(s) selected
+              </span>
+              <Button
+                onClick={() => setSelectedQuestions([])}
+                variant="outline"
+                size="sm"
+                className="text-blue-600 hover:text-blue-700"
+              >
+                Clear Selection
+              </Button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => {
+                  setDeleteType("selected");
+                  setShowDeleteConfirm(true);
+                }}
+                variant="outline"
+                size="sm"
+                className="text-red-600 hover:text-red-700 border-red-300"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Selected
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* Controls */}
       <Card>
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
@@ -272,6 +414,25 @@ export default function ExamQuestionsPage({
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Questions
+            </Button>
+            <Button
+              onClick={() => {
+                setDeleteType("all");
+                setShowDeleteConfirm(true);
+              }}
+              variant="outline"
+              className="flex items-center text-red-600 hover:text-red-700 border-red-300"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Delete All
+            </Button>
+            <Button
+              onClick={fetchExamQuestions}
+              variant="outline"
+              className="flex items-center"
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
             </Button>
           </div>
 
@@ -346,81 +507,123 @@ export default function ExamQuestionsPage({
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredQuestions.map((question, index) => (
-              <div
-                key={question.id}
-                className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-all duration-200"
+            {/* Select All Header */}
+            <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg border">
+              <button
+                onClick={handleSelectAll}
+                className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-gray-900"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-sm font-medium text-gray-500">
-                        #{question.order}
-                      </span>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeColor(
-                          question.questionType
-                        )}`}
-                      >
-                        {question.questionType}
-                      </span>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                        {question.points} pts
-                      </span>
-                    </div>
+                {selectAll ? (
+                  <CheckSquare className="w-5 h-5 text-blue-600" />
+                ) : (
+                  <Square className="w-5 h-5 text-gray-400" />
+                )}
+                <span>{selectAll ? "Deselect All" : "Select All"}</span>
+              </button>
+              <span className="text-sm text-gray-500">
+                ({filteredQuestions.length} questions)
+              </span>
+            </div>
 
-                    <h4 className="font-medium text-gray-900 mb-2">
-                      {question.questionData?.question ||
-                        question.questionData?.title ||
-                        "Question"}
-                    </h4>
-
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span>ID: {question.questionId.substring(0, 8)}...</span>
-                      {question.timeLimit && (
-                        <span className="flex items-center">
-                          <Timer className="w-4 h-4 mr-1" />
-                          {formatTime(question.timeLimit)}
+            {/* Questions Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {filteredQuestions.map((question, index) => (
+                <div
+                  key={question.id}
+                  className={`border rounded-lg p-4 transition-all duration-200 ${
+                    selectedQuestions.includes(question.id)
+                      ? "border-blue-300 bg-blue-50"
+                      : "border-gray-200 hover:border-blue-300"
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      {/* Selection Checkbox */}
+                      <div className="flex items-center space-x-3 mb-2">
+                        <button
+                          onClick={() => handleSelectQuestion(question.id)}
+                          className="flex items-center space-x-2"
+                        >
+                          {selectedQuestions.includes(question.id) ? (
+                            <CheckSquare className="w-4 h-4 text-blue-600" />
+                          ) : (
+                            <Square className="w-4 h-4 text-gray-400" />
+                          )}
+                        </button>
+                        <span className="text-sm font-medium text-gray-500">
+                          #{question.order}
                         </span>
-                      )}
-                    </div>
-                  </div>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeColor(
+                            question.questionType
+                          )}`}
+                        >
+                          {question.questionType}
+                        </span>
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {question.points} pts
+                        </span>
+                      </div>
 
-                  <div className="flex items-center space-x-2 ml-4">
-                    {/* Timer Input */}
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="number"
-                        min="30"
-                        max="600"
-                        value={question.timeLimit || ""}
-                        onChange={(e) => {
-                          const newTimeLimit = parseInt(e.target.value) || null;
-                          handleUpdateQuestionTimer(question.id, newTimeLimit);
-                        }}
-                        placeholder="Time (s)"
-                        className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-                      />
-                      <span className="text-xs text-gray-500">sec</span>
+                      <h4 className="font-medium text-gray-900 mb-2">
+                        {question.questionData?.question ||
+                          question.questionData?.title ||
+                          "Question"}
+                      </h4>
+
+                      <div className="flex items-center space-x-4 text-sm text-gray-500">
+                        <span>
+                          ID: {question.questionId.substring(0, 8)}...
+                        </span>
+                        {question.timeLimit && (
+                          <span className="flex items-center">
+                            <Timer className="w-4 h-4 mr-1" />
+                            {formatTime(question.timeLimit)}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    <Button
-                      onClick={() =>
-                        handleRemoveQuestion(
-                          question.questionId,
-                          question.questionType
-                        )
-                      }
-                      variant="outline"
-                      size="sm"
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <div className="flex items-center space-x-2 ml-4">
+                      {/* Timer Input */}
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          min="30"
+                          max="600"
+                          value={question.timeLimit || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const newTimeLimit = value ? parseInt(value) : null;
+                            handleUpdateQuestionTimer(
+                              question.id,
+                              newTimeLimit
+                            );
+                          }}
+                          placeholder="Time (s)"
+                          className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="text-xs text-gray-500">sec</span>
+                      </div>
+
+                      <Button
+                        onClick={() =>
+                          handleRemoveQuestion(
+                            question.questionId,
+                            question.questionType
+                          )
+                        }
+                        variant="outline"
+                        size="sm"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </Card>
@@ -523,6 +726,52 @@ export default function ExamQuestionsPage({
                   )}
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <div className="flex items-center mb-4">
+              <AlertCircle className="w-6 h-6 text-red-500 mr-3" />
+              <h3 className="text-lg font-semibold">Confirm Delete</h3>
+            </div>
+            <p className="text-gray-600 mb-6">
+              {deleteType === "all"
+                ? "Are you sure you want to delete ALL questions from this exam? This action cannot be undone."
+                : `Are you sure you want to delete ${selectedQuestions.length} selected question(s)? This action cannot be undone.`}
+            </p>
+            <div className="flex justify-end space-x-3">
+              <Button
+                onClick={() => setShowDeleteConfirm(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (deleteType === "all") {
+                    handleDeleteAll();
+                  } else {
+                    handleBulkDelete();
+                  }
+                  setShowDeleteConfirm(false);
+                }}
+                className="bg-red-600 hover:bg-red-700"
+                disabled={saving}
+              >
+                {saving ? (
+                  <Loading size="sm" text="Deleting..." />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </div>

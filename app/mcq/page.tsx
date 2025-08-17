@@ -30,6 +30,10 @@ interface MCQ {
   questionCount: number;
   participants: number;
   averageScore: number;
+  jobRole?: string;
+  subject?: string;
+  topic?: string;
+  skillLevel?: string;
 }
 
 export default function MCQPage() {
@@ -89,10 +93,10 @@ export default function MCQPage() {
     if (searchTerm) {
       filtered = filtered.filter(
         (mcq) =>
-          mcq.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          mcq.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          mcq.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          getCategoryLabel(mcq.category)
+          mcq.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          mcq.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          mcq.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          getCategoryLabel(mcq.category || "")
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
           (mcq.jobRole &&
@@ -300,8 +304,12 @@ export default function MCQPage() {
   };
 
   const categorizedCategories = categorizeItems(categories);
-  const categorizedSubjects = categorizeItems(subjects);
-  const categorizedTopics = categorizeItems(topics);
+  const categorizedSubjects = categorizeItems(
+    subjects.filter((s): s is string => s !== undefined)
+  );
+  const categorizedTopics = categorizeItems(
+    topics.filter((t): t is string => t !== undefined)
+  );
 
   if (loading || loadingMcqs) {
     return (
@@ -546,7 +554,7 @@ export default function MCQPage() {
                     <optgroup label="Available Positions">
                       {positions.map((position) => (
                         <option key={position} value={position}>
-                          {getPositionLabel(position)}
+                          {getPositionLabel(position || "")}
                         </option>
                       ))}
                     </optgroup>
@@ -567,7 +575,9 @@ export default function MCQPage() {
                   <option value="all">All Levels</option>
                   {skillLevels.map((level) => (
                     <option key={level} value={level}>
-                      {level.charAt(0).toUpperCase() + level.slice(1)}
+                      {level
+                        ? level.charAt(0).toUpperCase() + level.slice(1)
+                        : ""}
                     </option>
                   ))}
                 </select>
@@ -760,7 +770,7 @@ export default function MCQPage() {
                       {getCategoryLabel(mcq.category)}
                     </span>
                     {mcq.jobRole && (
-                      <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                         {getPositionLabel(mcq.jobRole)}
                       </span>
                     )}

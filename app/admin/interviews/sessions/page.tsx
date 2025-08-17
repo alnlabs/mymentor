@@ -10,7 +10,8 @@ import { Eye, Clock, User, Target, TrendingUp } from "lucide-react";
 export default function AdminInterviewSessionsPage() {
   const [sessions, setSessions] = useState<MockInterview[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchSessions();
@@ -18,11 +19,14 @@ export default function AdminInterviewSessionsPage() {
 
   const fetchSessions = async () => {
     try {
-      const response = await fetch("/api/interviews");
+      setLoading(true);
+      const response = await fetch("/api/interviews/sessions");
       const data = await response.json();
 
       if (data.success) {
         setSessions(data.data);
+      } else {
+        console.error("Failed to fetch sessions:", data.error);
       }
     } catch (error) {
       console.error("Error fetching sessions:", error);

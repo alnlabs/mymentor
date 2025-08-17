@@ -4,9 +4,17 @@ services:
   postgres:
     environment:
       POSTGRES_DB: interview_platform_test
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: test_password_123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
     ports:
       - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d interview_platform_test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   redis:
     command: redis-server --appendonly yes --requirepass test_redis_123

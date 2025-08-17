@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { Card } from '@/shared/components/Card';
-import { Button } from '@/shared/components/Button';
-import { InterviewTemplate } from '@/shared/types/common';
-import { Clock, Users, Target, Star } from 'lucide-react';
+import React from "react";
+import { useRouter } from "next/navigation";
+import { Card } from "@/shared/components/Card";
+import { Button } from "@/shared/components/Button";
+import { InterviewTemplate } from "@/shared/types/common";
+import { Clock, Users, Target, Star } from "lucide-react";
 
 interface InterviewCardProps {
   template: InterviewTemplate;
@@ -13,25 +13,39 @@ interface InterviewCardProps {
   isAdmin?: boolean;
 }
 
-export function InterviewCard({ template, onSelect, isAdmin = false }: InterviewCardProps) {
+export function InterviewCard({
+  template,
+  onSelect,
+  isAdmin = false,
+}: InterviewCardProps) {
   const router = useRouter();
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
-      case 'easy': return 'text-green-600 bg-green-100';
-      case 'medium': return 'text-yellow-600 bg-yellow-100';
-      case 'hard': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case "easy":
+        return "text-green-600 bg-green-100";
+      case "medium":
+        return "text-yellow-600 bg-yellow-100";
+      case "hard":
+        return "text-red-600 bg-red-100";
+      default:
+        return "text-gray-600 bg-gray-100";
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category.toLowerCase()) {
-      case 'frontend': return '🎨';
-      case 'backend': return '⚙️';
-      case 'fullstack': return '🔄';
-      case 'ml': return '🤖';
-      case 'mobile': return '📱';
-      default: return '💻';
+      case "frontend":
+        return "🎨";
+      case "backend":
+        return "⚙️";
+      case "fullstack":
+        return "🔄";
+      case "ml":
+        return "🤖";
+      case "mobile":
+        return "📱";
+      default:
+        return "💻";
     }
   };
 
@@ -41,11 +55,17 @@ export function InterviewCard({ template, onSelect, isAdmin = false }: Interview
         <div className="flex items-center space-x-3">
           <span className="text-2xl">{getCategoryIcon(template.category)}</span>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{template.name}</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {template.name}
+            </h3>
             <p className="text-sm text-gray-600">{template.category}</p>
           </div>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(template.difficulty)}`}>
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
+            template.difficulty
+          )}`}
+        >
           {template.difficulty}
         </span>
       </div>
@@ -71,23 +91,43 @@ export function InterviewCard({ template, onSelect, isAdmin = false }: Interview
         </div>
       </div>
 
-      {template.companies && template.companies.length > 0 && (
+      {template.companies && (
         <div className="mb-4">
           <p className="text-xs text-gray-500 mb-2">Target Companies:</p>
           <div className="flex flex-wrap gap-1">
-            {template.companies.slice(0, 3).map((company, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
-              >
-                {company}
-              </span>
-            ))}
-            {template.companies.length > 3 && (
-              <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs rounded-full">
-                +{template.companies.length - 3} more
-              </span>
-            )}
+            {(() => {
+              try {
+                const companies =
+                  typeof template.companies === "string"
+                    ? JSON.parse(template.companies)
+                    : template.companies;
+
+                if (Array.isArray(companies) && companies.length > 0) {
+                  return (
+                    <>
+                      {companies
+                        .slice(0, 3)
+                        .map((company: string, index: number) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
+                          >
+                            {company}
+                          </span>
+                        ))}
+                      {companies.length > 3 && (
+                        <span className="px-2 py-1 bg-gray-50 text-gray-600 text-xs rounded-full">
+                          +{companies.length - 3} more
+                        </span>
+                      )}
+                    </>
+                  );
+                }
+                return null;
+              } catch (error) {
+                return null;
+              }
+            })()}
           </div>
         </div>
       )}
@@ -111,10 +151,7 @@ export function InterviewCard({ template, onSelect, isAdmin = false }: Interview
           </Button>
         )}
         {!isAdmin && (
-          <Button
-            variant="outline"
-            className="px-4"
-          >
+          <Button variant="outline" className="px-4">
             Preview
           </Button>
         )}
