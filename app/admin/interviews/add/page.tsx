@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
 import { useDynamicConfig } from "@/shared/config/dynamicConfig";
 import {
   Plus,
-  ArrowLeft,
   Target,
   Clock,
   Save,
@@ -20,8 +20,6 @@ import {
   Users,
   MessageSquare,
   Code,
-  Brain,
-  X,
 } from "lucide-react";
 
 interface InterviewQuestion {
@@ -312,41 +310,12 @@ export default function AddInterviewTemplatePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-xl p-8 text-white shadow-lg">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-3xl font-bold flex items-center">
-                <Target className="w-8 h-8 mr-3" />
-                Create Interview
-              </h1>
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => setShowAIGenerator(!showAIGenerator)}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
-                >
-                  <Brain className="w-4 h-4 mr-2" />
-                  {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => (window.location.href = "/admin/interviews")}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                >
-                  ← Back to Interviews
-                </Button>
-              </div>
-            </div>
-            <p className="text-purple-100 text-lg">
-              Create interview templates for different positions and skill levels.
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Create Interview"
+        subtitle="Create interview templates for different positions and skill levels."
+        backUrl="/admin/interviews"
+        backText="Back to Interviews"
+      />
 
       {/* AI Generator */}
       <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">

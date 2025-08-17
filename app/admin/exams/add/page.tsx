@@ -4,17 +4,14 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
 import {
-  Plus,
-  ArrowLeft,
   CheckCircle,
   AlertCircle,
   Save,
   BookOpen,
-  Brain,
-  X,
 } from "lucide-react";
 import { useExamForm } from "@/shared/hooks/useExamForm";
 import { AutoFillSection } from "@/shared/components/exam-form/AutoFillSection";
@@ -148,94 +145,26 @@ export default function AddExamPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-700 rounded-xl p-8 text-white shadow-lg">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-3xl font-bold flex items-center">
-                <Plus className="w-8 h-8 mr-3" />
-                Create Exam
-              </h1>
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => setShowAIGenerator(!showAIGenerator)}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 flex items-center"
-                >
-                  <Brain className="w-4 h-4 mr-2" />
-                  {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => (window.location.href = "/admin/exams")}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                >
-                  ← Back to Exams
-                </Button>
-              </div>
-            </div>
-            <p className="text-green-100 text-lg">
-              Create comprehensive exams with technical and aptitude questions.
-            </p>
-            <div className="flex items-center mt-4 space-x-4 text-sm">
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-green-300" />
-                <span>Fresh Graduate Focus</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-green-300" />
-                <span>Timed Assessment</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2 text-green-300" />
-                <span>Performance Tracking</span>
-              </div>
-            </div>
-          </div>
-          <div className="hidden lg:block">
-            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-              <div className="text-center">
-                <div className="text-2xl font-bold">📝</div>
-                <div className="text-sm opacity-90">New Exam</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Create Exam"
+        subtitle="Create comprehensive exams with technical and aptitude questions."
+        backUrl="/admin/exams"
+        backText="Back to Exams"
+      />
 
       {/* AI Generator */}
-      {showAIGenerator && (
-        <Card className="mb-6 border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-2">
-                <Brain className="w-6 h-6 text-blue-600" />
-                <h3 className="text-lg font-semibold text-gray-900">
-                  AI Generator
-                </h3>
-                <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                  AI
-                </span>
-              </div>
-              <Button
-                onClick={() => setShowAIGenerator(false)}
-                variant="outline"
-                size="sm"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-            <AIGenerator
-              type="exam"
-              onContentGenerated={handleAIContentGenerated}
-              onSaveToDatabase={handleSaveAIContentToDatabase}
-            />
-          </div>
-        </Card>
-      )}
+      <Card className="mb-6">
+        <div className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            AI Generator
+          </h3>
+          <AIGenerator
+            type="exam"
+            onContentGenerated={handleAIContentGenerated}
+            onSaveToDatabase={handleSaveAIContentToDatabase}
+          />
+        </div>
+      </Card>
 
       {/* Form */}
       <Card>

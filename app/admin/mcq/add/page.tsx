@@ -4,17 +4,15 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
 import {
-  ArrowLeft,
   Save,
   Plus,
   Trash2,
-  FileText,
   CheckCircle,
   AlertCircle,
-  Brain,
 } from "lucide-react";
 
 interface MCQ {
@@ -231,84 +229,42 @@ export default function AddMCQPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/mcq")}
-                className="mr-4"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to MCQs
-              </Button>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <FileText className="w-8 h-8 mr-3 text-purple-600" />
-                Create MCQ
-              </h1>
-            </div>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowAIGenerator(!showAIGenerator)}
-                variant="outline"
-                className="flex items-center"
-              >
-                <Brain className="w-4 h-4 mr-2" />
-                {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center"
-              >
-                {saving ? (
-                  <Loading size="sm" text="Saving..." />
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save MCQ
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-          <p className="text-gray-600">
-            Create multiple choice questions for assessments.
-          </p>
-        </div>
+        <PageHeader
+          title="Create MCQ"
+          subtitle="Create multiple choice questions for assessments."
+          backUrl="/admin/mcq"
+          backText="Back to MCQs"
+          actions={
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center"
+            >
+              {saving ? (
+                <Loading size="sm" text="Saving..." />
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save MCQ
+                </>
+              )}
+            </Button>
+          }
+        />
 
         {/* AI Generator */}
-        {showAIGenerator && (
-          <Card className="mb-6 border-2 border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
-                  <Brain className="w-6 h-6 text-purple-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    AI Generator
-                  </h3>
-                  <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-                    AI
-                  </span>
-                </div>
-                <Button
-                  onClick={() => setShowAIGenerator(false)}
-                  variant="outline"
-                  size="sm"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <AIGenerator
-                type="mcq"
-                onContentGenerated={handleAIContentGenerated}
-                onSaveToDatabase={handleSaveAIContentToDatabase}
-              />
-            </div>
-          </Card>
-        )}
+        <Card className="mb-6">
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              AI Generator
+            </h3>
+            <AIGenerator
+              type="mcq"
+              onContentGenerated={handleAIContentGenerated}
+              onSaveToDatabase={handleSaveAIContentToDatabase}
+            />
+          </div>
+        </Card>
 
         {/* Form */}
         <Card className="mb-6">

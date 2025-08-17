@@ -4,18 +4,16 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import PageHeader from "@/shared/components/PageHeader";
 import AIGenerator from "@/shared/components/AIGenerator";
 import { GeneratedContent } from "@/shared/lib/aiService";
 import {
-  ArrowLeft,
   Save,
   Plus,
   Trash2,
   Code,
   CheckCircle,
   AlertCircle,
-  Brain,
-  X,
 } from "lucide-react";
 
 interface Problem {
@@ -201,53 +199,28 @@ export default function AddProblemPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => (window.location.href = "/admin/problems")}
-                className="mr-4"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Problems
-              </Button>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Code className="w-8 h-8 mr-3 text-blue-600" />
-                Create Problem
-              </h1>
-            </div>
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => setShowAIGenerator(!showAIGenerator)}
-                variant="outline"
-                className="flex items-center"
-              >
-                <Brain className="w-4 h-4 mr-2" />
-                {showAIGenerator ? "Hide AI Generator" : "AI Generator"}
-              </Button>
-              <Button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center"
-              >
-                {saving ? (
-                  <Loading size="sm" text="Saving..." />
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Problem
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
-          <p className="text-gray-600">
-            Create coding problems for assessments.
-          </p>
-        </div>
+        <PageHeader
+          title="Create Problem"
+          subtitle="Create coding problems for assessments."
+          backUrl="/admin/problems"
+          backText="Back to Problems"
+          actions={
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center"
+            >
+              {saving ? (
+                <Loading size="sm" text="Saving..." />
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Problem
+                </>
+              )}
+            </Button>
+          }
+        />
 
         {/* AI Generator */}
         {showAIGenerator && (
