@@ -122,13 +122,11 @@ export default function AIGenerator({
           ? "advanced"
           : "intermediate") as "beginner" | "intermediate" | "advanced",
         count: prev.count || 5, // Ensure count is preserved
-        context: currentSettings
-          ? `Subject: ${currentSettings.subject || ""}, Domain: ${
-              currentSettings.domain || ""
-            }, Category: ${currentSettings.category || ""}, Tags: ${
-              currentSettings.tags || ""
-            }`
-          : undefined,
+        context: `Subject: ${currentSettings.subject || ""}, Domain: ${
+          currentSettings.domain || ""
+        }, Category: ${currentSettings.category || ""}, Tags: ${
+          currentSettings.tags || ""
+        }`,
       }));
     }
   }, [currentSettings]);
@@ -328,12 +326,22 @@ export default function AIGenerator({
               max="100"
               value={config.count || 5}
               onChange={(e) => {
+                const value = e.target.value;
+                if (value === '') {
+                  setConfig((prev) => ({ ...prev, count: 5 }));
+                } else {
+                  const numValue = parseInt(value);
+                  if (!isNaN(numValue) && numValue >= 1 && numValue <= 100) {
+                    setConfig((prev) => ({ ...prev, count: numValue }));
+                  }
+                }
+              }}
+              onBlur={(e) => {
                 const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 1 && value <= 100) {
-                  setConfig((prev) => ({
-                    ...prev,
-                    count: value,
-                  }));
+                if (isNaN(value) || value < 1) {
+                  setConfig((prev) => ({ ...prev, count: 5 }));
+                } else if (value > 100) {
+                  setConfig((prev) => ({ ...prev, count: 100 }));
                 }
               }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -346,15 +354,7 @@ export default function AIGenerator({
             Additional Context (Optional)
           </label>
           <textarea
-            value={
-              currentSettings
-                ? `Subject: ${currentSettings.subject || ""}, Domain: ${
-                    currentSettings.domain || ""
-                  }, Category: ${currentSettings.category || ""}, Tags: ${
-                    currentSettings.tags || ""
-                  }`
-                : config.context || ""
-            }
+            value={config.context || ""}
             onChange={(e) =>
               setConfig((prev) => ({ ...prev, context: e.target.value }))
             }
