@@ -9,14 +9,17 @@ import {
 async function generateWithAI(
   request: AIGenerationRequest
 ): Promise<GeneratedContent[]> {
-  // This is a mock implementation - replace with actual AI service
-  const {
-    type,
-    language = "JavaScript",
-    topic = "General",
-    difficulty = "intermediate",
-    count = 5,
-  } = request;
+  try {
+    console.log("generateWithAI called with:", JSON.stringify(request, null, 2));
+    
+    // This is a mock implementation - replace with actual AI service
+    const {
+      type,
+      language = "JavaScript",
+      topic = "General",
+      difficulty = "intermediate",
+      count = 5,
+    } = request;
 
   const generatedContent: GeneratedContent[] = [];
 
@@ -422,19 +425,28 @@ async function generateWithAI(
         });
         break;
     }
-  }
+    }
 
-  return generatedContent;
+    console.log("Generated content successfully:", generatedContent.length, "items");
+    return generatedContent;
+  } catch (error) {
+    console.error("Error in generateWithAI:", error);
+    throw error;
+  }
 }
 
 export async function POST(
   request: NextRequest
 ): Promise<NextResponse<AIGenerationResponse>> {
   try {
+    console.log("AI generation request received");
+    
     const body: AIGenerationRequest = await request.json();
+    console.log("Request body:", JSON.stringify(body, null, 2));
 
     // Validate request
     if (!body.type) {
+      console.log("Validation failed: Content type is required");
       return NextResponse.json(
         {
           success: false,
@@ -444,20 +456,11 @@ export async function POST(
       );
     }
 
-    // Mock authentication check - remove this for production with real AI service
-    // const authHeader = request.headers.get("authorization");
-    // if (!authHeader) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       error: "Authentication required",
-    //     },
-    //     { status: 401 }
-    //   );
-    // }
-
+    console.log("Starting AI content generation...");
+    
     // Generate content using AI
     const generatedContent = await generateWithAI(body);
+    console.log(`Generated ${generatedContent.length} content items`);
 
     return NextResponse.json({
       success: true,
@@ -470,6 +473,7 @@ export async function POST(
     });
   } catch (error) {
     console.error("AI generation error:", error);
+    console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
     return NextResponse.json(
       {
         success: false,
