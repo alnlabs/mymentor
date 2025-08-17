@@ -144,14 +144,38 @@ export default function AIGenerator({
     setMessage(null);
 
     try {
+      // Use currentSettings if available, otherwise fall back to config
       const request: AIGenerationRequest = {
         type,
-        language: config.language,
-        topic: config.topic,
-        difficulty: config.difficulty,
-        count: config.count,
-        context: config.context,
+        language: currentSettings?.tool || config.language,
+        topic: currentSettings?.topic || config.topic,
+        difficulty: (currentSettings?.difficulty === "easy"
+          ? "beginner"
+          : currentSettings?.difficulty === "medium"
+          ? "intermediate"
+          : currentSettings?.difficulty === "hard"
+          ? "advanced"
+          : config.difficulty) as "beginner" | "intermediate" | "advanced",
+        count: config.count || 5,
+        context: currentSettings
+          ? `Subject: ${currentSettings.subject || ""}, Domain: ${
+              currentSettings.domain || ""
+            }, Category: ${currentSettings.category || ""}, Tags: ${
+              currentSettings.tags || ""
+            }`
+          : config.context,
       };
+
+      console.log("AI Generation Request:", {
+        type,
+        language: request.language,
+        topic: request.topic,
+        difficulty: request.difficulty,
+        count: request.count,
+        context: request.context,
+        currentSettings,
+        config
+      });
 
       const response: AIGenerationResponse = await aiService.generateContent(
         request
@@ -327,7 +351,7 @@ export default function AIGenerator({
               value={config.count || 5}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value === '') {
+                if (value === "") {
                   setConfig((prev) => ({ ...prev, count: 5 }));
                 } else {
                   const numValue = parseInt(value);
