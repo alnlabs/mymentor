@@ -47,6 +47,13 @@ interface MCQ {
 export default function AddMCQPage() {
   const [saving, setSaving] = useState(false);
   const [clearAIContent, setClearAIContent] = useState(false);
+  const [saveResults, setSaveResults] = useState<{
+    imported: number;
+    skipped: number;
+    errors: string[];
+    duplicates: string[];
+    totalProcessed: number;
+  } | null>(null);
   const [mcq, setMCQ] = useState<MCQ>({
     question: "",
     options: ["", "", "", ""],
@@ -272,40 +279,21 @@ export default function AddMCQPage() {
       }
 
       // Display detailed save results
-      const { imported, skipped, errors, duplicates, totalProcessed } = result.data;
+      const { imported, skipped, errors, duplicates, totalProcessed } =
+        result.data;
       console.log("Save to DB Results:", result.data);
-      
-      // Create detailed result message
-      let resultMessage = `✅ Save completed!\n\n`;
-      resultMessage += `📊 Summary:\n`;
-      resultMessage += `• Total processed: ${totalProcessed}\n`;
-      resultMessage += `• Successfully saved: ${imported}\n`;
-      resultMessage += `• Skipped (duplicates): ${skipped}\n`;
-      resultMessage += `• Errors: ${errors.length}\n\n`;
-      
-      if (duplicates.length > 0) {
-        resultMessage += `⚠️ Duplicates found:\n`;
-        duplicates.slice(0, 3).forEach(dup => {
-          resultMessage += `• ${dup}\n`;
-        });
-        if (duplicates.length > 3) {
-          resultMessage += `• ... and ${duplicates.length - 3} more\n`;
-        }
-        resultMessage += `\n`;
-      }
-      
-      if (errors.length > 0) {
-        resultMessage += `❌ Errors:\n`;
-        errors.slice(0, 3).forEach(error => {
-          resultMessage += `• ${error}\n`;
-        });
-        if (errors.length > 3) {
-          resultMessage += `• ... and ${errors.length - 3} more\n`;
-        }
-      }
 
-      // Show detailed results
-      alert(resultMessage);
+      // Set save results for display
+      setSaveResults({
+        imported,
+        skipped,
+        errors,
+        duplicates,
+        totalProcessed,
+      });
+
+      // Clear results after 10 seconds
+      setTimeout(() => setSaveResults(null), 10000);
 
       // Clear the form after successful save
       setMCQ({
@@ -478,6 +466,104 @@ export default function AddMCQPage() {
                 />
               </div>
             </Card>
+
+            {/* Save Results Display */}
+            {saveResults && (
+              <Card className="border-0 shadow-lg bg-gradient-to-br from-green-50 to-blue-50">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg mr-3">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Save Results
+                      </h3>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSaveResults(null)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ✕
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Summary Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-blue-600">
+                          {saveResults.totalProcessed}
+                        </div>
+                        <div className="text-sm text-gray-600">Total Processed</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-green-600">
+                          {saveResults.imported}
+                        </div>
+                        <div className="text-sm text-gray-600">Successfully Saved</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-yellow-600">
+                          {saveResults.skipped}
+                        </div>
+                        <div className="text-sm text-gray-600">Skipped (Duplicates)</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-red-600">
+                          {saveResults.errors.length}
+                        </div>
+                        <div className="text-sm text-gray-600">Errors</div>
+                      </div>
+                    </div>
+
+                    {/* Duplicates Section */}
+                    {saveResults.duplicates.length > 0 && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-yellow-800 mb-2">
+                          ⚠️ Duplicates Found ({saveResults.duplicates.length})
+                        </h4>
+                        <div className="space-y-1">
+                          {saveResults.duplicates.slice(0, 3).map((dup, index) => (
+                            <div key={index} className="text-sm text-yellow-700">
+                              • {dup}
+                            </div>
+                          ))}
+                          {saveResults.duplicates.length > 3 && (
+                            <div className="text-sm text-yellow-600 italic">
+                              ... and {saveResults.duplicates.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Errors Section */}
+                    {saveResults.errors.length > 0 && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-red-800 mb-2">
+                          ❌ Errors ({saveResults.errors.length})
+                        </h4>
+                        <div className="space-y-1">
+                          {saveResults.errors.slice(0, 3).map((error, index) => (
+                            <div key={index} className="text-sm text-red-700">
+                              • {error}
+                            </div>
+                          ))}
+                          {saveResults.errors.length > 3 && (
+                            <div className="text-sm text-red-600 italic">
+                              ... and {saveResults.errors.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            )}
           </div>
 
           {/* Main Form */}

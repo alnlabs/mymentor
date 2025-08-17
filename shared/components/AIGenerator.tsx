@@ -219,16 +219,18 @@ export default function AIGenerator({
 
     setIsSaving(true);
     setMessage(null);
-    
+
     try {
       const result = await onSaveToDatabase(generatedContent);
-      
+
       // Check if result has detailed data
       if (result && result.data) {
         const { imported, skipped, errors, totalProcessed } = result.data;
         setMessage({
           type: "success",
-          text: `Saved to database: ${imported}/${totalProcessed} items saved${skipped > 0 ? `, ${skipped} skipped` : ''}${errors.length > 0 ? `, ${errors.length} errors` : ''}`,
+          text: `Saved to database: ${imported}/${totalProcessed} items saved${
+            skipped > 0 ? `, ${skipped} skipped` : ""
+          }${errors.length > 0 ? `, ${errors.length} errors` : ""}`,
         });
       } else {
         setMessage({
