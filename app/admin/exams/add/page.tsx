@@ -49,6 +49,7 @@ export default function AddExamPage() {
   const handleAIContentGenerated = (content: GeneratedContent[]) => {
     setAiGeneratedContent(content);
     console.log("AI generated exam content:", content);
+    console.log("First question structure:", content[0]);
   };
 
   const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
@@ -138,6 +139,8 @@ export default function AddExamPage() {
       };
 
       // Use the existing exam form submission logic
+      console.log("Sending exam data to API:", JSON.stringify(examData, null, 2));
+      
       const response = await fetch("/api/exams", {
         method: "POST",
         headers: {

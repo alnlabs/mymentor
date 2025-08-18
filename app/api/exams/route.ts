@@ -537,14 +537,20 @@ export async function POST(request: NextRequest) {
         console.log(
           `Adding ${selectedQuestions.length} selected questions to exam ${exam.id}`
         );
-        console.log("Selected questions data:", JSON.stringify(selectedQuestions, null, 2));
+        console.log(
+          "Selected questions data:",
+          JSON.stringify(selectedQuestions, null, 2)
+        );
 
         for (let i = 0; i < selectedQuestions.length; i++) {
           const question = selectedQuestions[i];
 
           // Check if this is AI-generated content (has content field) or existing question
           if (question.content) {
-            console.log(`Creating AI-generated ${question.type} question ${i + 1}:`, question.title || question.content.substring(0, 50));
+            console.log(
+              `Creating AI-generated ${question.type} question ${i + 1}:`,
+              question.title || question.content.substring(0, 50)
+            );
             // This is AI-generated content, create the question directly
             if (question.type === "mcq") {
               // Create MCQ question
@@ -556,14 +562,17 @@ export async function POST(request: NextRequest) {
                 tool: question.tool,
                 difficulty: question.difficulty,
               });
-              
+
               const mcqQuestion = await prisma.mCQQuestion.create({
                 data: {
                   question: question.content,
                   options: Array.isArray(question.options)
-                    ? question.options
-                    : [],
-                  correctAnswer: question.correctAnswer || "",
+                    ? JSON.stringify(question.options)
+                    : "[]",
+                  correctAnswer:
+                    typeof question.correctAnswer === "string"
+                      ? question.options?.indexOf(question.correctAnswer) || 0
+                      : question.correctAnswer || 0,
                   explanation: question.explanation || "",
                   category: question.category || "General",
                   topic: question.topic || question.category || "General",
@@ -573,7 +582,7 @@ export async function POST(request: NextRequest) {
                   status: "active",
                 },
               });
-              
+
               console.log(`Created MCQ question with ID:`, mcqQuestion.id);
 
               // Create exam question reference
