@@ -102,8 +102,13 @@ export default function AddExamPage() {
     try {
       // Ensure all required fields are provided with defaults if not set
       const examData = {
-        title: formData.title || `AI Generated ${content[0]?.language || 'Programming'} Exam - ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-        description: formData.description || "Exam created from AI-generated questions",
+        title:
+          formData.title ||
+          `AI Generated ${
+            content[0]?.language || "Programming"
+          } Exam - ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+        description:
+          formData.description || "Exam created from AI-generated questions",
         duration: formData.duration || 60,
         difficulty: formData.difficulty || "Medium",
         category: formData.category || "Programming",
@@ -139,8 +144,11 @@ export default function AddExamPage() {
       };
 
       // Use the existing exam form submission logic
-      console.log("Sending exam data to API:", JSON.stringify(examData, null, 2));
-      
+      console.log(
+        "Sending exam data to API:",
+        JSON.stringify(examData, null, 2)
+      );
+
       const response = await fetch("/api/exams", {
         method: "POST",
         headers: {

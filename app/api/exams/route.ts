@@ -551,6 +551,15 @@ export async function POST(request: NextRequest) {
               `Creating AI-generated ${question.type} question ${i + 1}:`,
               question.title || question.content.substring(0, 50)
             );
+            console.log(`Question data:`, {
+              content: question.content,
+              type: question.type,
+              options: question.options,
+              correctAnswer: question.correctAnswer,
+              category: question.category,
+              tool: question.tool,
+              difficulty: question.difficulty,
+            });
             // This is AI-generated content, create the question directly
             if (question.type === "mcq") {
               // Create MCQ question
@@ -563,27 +572,33 @@ export async function POST(request: NextRequest) {
                 difficulty: question.difficulty,
               });
 
-              const mcqQuestion = await prisma.mCQQuestion.create({
-                data: {
-                  question: question.content,
-                  options: Array.isArray(question.options)
-                    ? JSON.stringify(question.options)
-                    : "[]",
-                  correctAnswer:
-                    typeof question.correctAnswer === "string"
-                      ? question.options?.indexOf(question.correctAnswer) || 0
-                      : question.correctAnswer || 0,
-                  explanation: question.explanation || "",
-                  category: question.category || "General",
-                  topic: question.topic || question.category || "General",
-                  tool: question.tool || "JavaScript",
-                  difficulty: question.difficulty || "medium",
-                  skillLevel: question.skillLevel || "intermediate",
-                  status: "active",
-                },
-              });
-
-              console.log(`Created MCQ question with ID:`, mcqQuestion.id);
+                            try {
+                const mcqQuestion = await prisma.mCQQuestion.create({
+                  data: {
+                    question: question.content,
+                    options: Array.isArray(question.options)
+                      ? JSON.stringify(question.options)
+                      : "[]",
+                    correctAnswer:
+                      typeof question.correctAnswer === "string"
+                        ? question.options?.indexOf(question.correctAnswer) || 0
+                        : question.correctAnswer || 0,
+                    explanation: question.explanation || "",
+                    category: question.category || "General",
+                    topic: question.topic || question.category || "General",
+                    tool: question.tool || "JavaScript",
+                    difficulty: question.difficulty || "medium",
+                    skillLevel: question.skillLevel || "intermediate",
+                    status: "active",
+                  },
+                });
+                
+                console.log(`Created MCQ question with ID:`, mcqQuestion.id);
+              } catch (error) {
+                console.error(`Failed to create MCQ question ${i + 1}:`, error);
+                console.error(`Error details:`, error.message);
+                throw error;
+              }
 
               // Create exam question reference
               await prisma.examQuestion.create({
