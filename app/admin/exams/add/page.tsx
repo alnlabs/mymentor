@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
@@ -19,6 +20,7 @@ import { useExamForm } from "@/shared/hooks/useExamForm";
 import { BasicInfoSection } from "@/shared/components/exam-form/BasicInfoSection";
 
 export default function AddExamPage() {
+  const router = useRouter();
   const [selectedQuestions, setSelectedQuestions] = useState<any[]>([]);
   const [aiGeneratedContent, setAiGeneratedContent] = useState<
     GeneratedContent[]
@@ -163,8 +165,11 @@ export default function AddExamPage() {
         throw new Error(result.error || "Failed to create exam");
       }
 
-      // Redirect to exams page on success
-      window.location.href = "/admin/exams";
+      // Show success message and redirect after a short delay
+      alert(`Exam "${examData.title}" created successfully with ${examData.selectedQuestions.length} questions!`);
+      
+      // Redirect to exams page on success using router
+      router.push("/admin/exams");
 
       return result;
     } catch (error) {
