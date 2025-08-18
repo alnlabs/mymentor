@@ -579,10 +579,20 @@ export async function POST(request: NextRequest) {
                     options: Array.isArray(question.options)
                       ? JSON.stringify(question.options)
                       : "[]",
-                    correctAnswer:
-                      typeof question.correctAnswer === "string"
-                        ? question.options?.indexOf(question.correctAnswer) || 0
-                        : question.correctAnswer || 0,
+                                      correctAnswer: (() => {
+                    console.log(`Processing correctAnswer for question ${i + 1}:`, {
+                      correctAnswer: question.correctAnswer,
+                      options: question.options,
+                      type: typeof question.correctAnswer
+                    });
+                    
+                    if (typeof question.correctAnswer === "string") {
+                      const index = question.options?.indexOf(question.correctAnswer);
+                      console.log(`Found index: ${index}`);
+                      return index >= 0 ? index : 0;
+                    }
+                    return question.correctAnswer || 0;
+                  })(),
                     explanation: question.explanation || "",
                     category: question.category || "General",
                     topic: question.topic || question.category || "General",

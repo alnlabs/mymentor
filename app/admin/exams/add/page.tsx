@@ -166,8 +166,10 @@ export default function AddExamPage() {
       }
 
       // Show success message and redirect after a short delay
-      alert(`Exam "${examData.title}" created successfully with ${examData.selectedQuestions.length} questions!`);
-      
+      alert(
+        `Exam "${examData.title}" created successfully with ${examData.selectedQuestions.length} questions!`
+      );
+
       // Redirect to exams page on success using router
       router.push("/admin/exams");
 
