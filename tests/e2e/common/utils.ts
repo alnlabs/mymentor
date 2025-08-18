@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect } from "@playwright/test";
 
 /**
  * Common utilities for E2E tests
@@ -7,25 +7,25 @@ import { Page, expect } from '@playwright/test';
 export interface TestUser {
   email: string;
   password: string;
-  role: 'student' | 'admin' | 'superadmin';
+  role: "student" | "admin" | "superadmin";
 }
 
 export const TEST_USERS = {
   student: {
-    email: 'student@test.com',
-    password: 'testpass123',
-    role: 'student' as const
+    email: "student@test.com",
+    password: "testpass123",
+    role: "student" as const,
   },
   admin: {
-    email: 'admin@test.com',
-    password: 'adminpass123',
-    role: 'admin' as const
+    email: "admin@test.com",
+    password: "adminpass123",
+    role: "admin" as const,
   },
   superadmin: {
-    email: 'superadmin@test.com',
-    password: 'superpass123',
-    role: 'superadmin' as const
-  }
+    email: "superadmin@test.com",
+    password: "superpass123",
+    role: "superadmin" as const,
+  },
 };
 
 /**
@@ -38,41 +38,44 @@ export class AuthHelper {
    * Login with provided credentials
    */
   async login(user: TestUser) {
-    await this.page.goto('/login');
-    
+    await this.page.goto("/login");
+
     // Wait for login form to load
     await this.page.waitForSelector('input[type="email"]');
-    
+
     // Fill login form
     await this.page.fill('input[type="email"]', user.email);
     await this.page.fill('input[type="password"]', user.password);
-    
+
     // Submit form
     await this.page.click('button[type="submit"]');
-    
+
     // Wait for navigation
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Login as super admin
    */
   async loginAsSuperAdmin() {
-    await this.page.goto('/login');
-    
+    await this.page.goto("/login");
+
     // Look for super admin login option
-    const superAdminLink = this.page.locator('text=Super Admin Login');
+    const superAdminLink = this.page.locator("text=Super Admin Login");
     if (await superAdminLink.isVisible()) {
       await superAdminLink.click();
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState("networkidle");
     }
-    
+
     // Fill super admin credentials
     await this.page.fill('input[name="username"]', TEST_USERS.superadmin.email);
-    await this.page.fill('input[name="password"]', TEST_USERS.superadmin.password);
+    await this.page.fill(
+      'input[name="password"]',
+      TEST_USERS.superadmin.password
+    );
     await this.page.click('button[type="submit"]');
-    
-    await this.page.waitForLoadState('networkidle');
+
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -80,11 +83,13 @@ export class AuthHelper {
    */
   async logout() {
     // Look for logout button in header/navigation
-    const logoutButton = this.page.locator('text=Logout, button:has-text("Logout"), [data-testid="logout"]');
-    
+    const logoutButton = this.page.locator(
+      'text=Logout, button:has-text("Logout"), [data-testid="logout"]'
+    );
+
     if (await logoutButton.isVisible()) {
       await logoutButton.click();
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState("networkidle");
     }
   }
 
@@ -94,7 +99,9 @@ export class AuthHelper {
   async isLoggedIn(): Promise<boolean> {
     try {
       // Check for user-specific elements that indicate login
-      const userIndicator = this.page.locator('[data-testid="user-info"], .user-info, text=Dashboard');
+      const userIndicator = this.page.locator(
+        '[data-testid="user-info"], .user-info, text=Dashboard'
+      );
       return await userIndicator.isVisible();
     } catch {
       return false;
@@ -112,48 +119,48 @@ export class NavigationHelper {
    * Navigate to student dashboard
    */
   async goToStudentDashboard() {
-    await this.page.goto('/student/dashboard');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/student/dashboard");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to admin dashboard
    */
   async goToAdminDashboard() {
-    await this.page.goto('/admin');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/admin");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to problems page
    */
   async goToProblems() {
-    await this.page.goto('/problems');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/problems");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to MCQ page
    */
   async goToMCQ() {
-    await this.page.goto('/mcq');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/mcq");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to exams page
    */
   async goToExams() {
-    await this.page.goto('/student/exams');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/student/exams");
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
    * Navigate to interviews page
    */
   async goToInterviews() {
-    await this.page.goto('/student/interviews');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto("/student/interviews");
+    await this.page.waitForLoadState("networkidle");
   }
 }
 
@@ -167,15 +174,18 @@ export class PageHelper {
    * Wait for page to be fully loaded
    */
   async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle');
-    await this.page.waitForLoadState('domcontentloaded');
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("domcontentloaded");
   }
 
   /**
    * Wait for loading spinner to disappear
    */
   async waitForLoadingComplete() {
-    await this.page.waitForSelector('[data-testid="loading"], .loading', { state: 'hidden', timeout: 10000 });
+    await this.page.waitForSelector('[data-testid="loading"], .loading', {
+      state: "hidden",
+      timeout: 10000,
+    });
   }
 
   /**
@@ -193,7 +203,7 @@ export class PageHelper {
    * Get text content of element
    */
   async getText(selector: string): Promise<string> {
-    return await this.page.locator(selector).textContent() || '';
+    return (await this.page.locator(selector).textContent()) || "";
   }
 
   /**
@@ -230,8 +240,9 @@ export class PageHelper {
    * Wait for API response
    */
   async waitForAPIResponse(urlPattern: string) {
-    await this.page.waitForResponse(response => 
-      response.url().includes(urlPattern) && response.status() === 200
+    await this.page.waitForResponse(
+      (response) =>
+        response.url().includes(urlPattern) && response.status() === 200
     );
   }
 
@@ -239,7 +250,9 @@ export class PageHelper {
    * Take screenshot for debugging
    */
   async takeScreenshot(name: string) {
-    await this.page.screenshot({ path: `test-results/screenshots/${name}-${Date.now()}.png` });
+    await this.page.screenshot({
+      path: `test-results/screenshots/${name}-${Date.now()}.png`,
+    });
   }
 }
 
@@ -253,22 +266,30 @@ export class ErrorBoundaryHelper {
    * Check if error boundary is displayed
    */
   async isErrorBoundaryVisible(): Promise<boolean> {
-    return await this.page.locator('text=Something went wrong, text=Error occurred, [data-testid="error-boundary"]').isVisible();
+    return await this.page
+      .locator(
+        'text=Something went wrong, text=Error occurred, [data-testid="error-boundary"]'
+      )
+      .isVisible();
   }
 
   /**
    * Get error boundary message
    */
   async getErrorBoundaryMessage(): Promise<string> {
-    const errorElement = this.page.locator('text=Something went wrong, text=Error occurred, [data-testid="error-boundary"]');
-    return await errorElement.textContent() || '';
+    const errorElement = this.page.locator(
+      'text=Something went wrong, text=Error occurred, [data-testid="error-boundary"]'
+    );
+    return (await errorElement.textContent()) || "";
   }
 
   /**
    * Click retry button in error boundary
    */
   async clickRetryButton() {
-    await this.page.click('text=Retry, button:has-text("Retry"), [data-testid="retry-button"]');
+    await this.page.click(
+      'text=Retry, button:has-text("Retry"), [data-testid="retry-button"]'
+    );
   }
 }
 
@@ -283,18 +304,21 @@ export class TestDataHelper {
    */
   async createTestMCQ() {
     // Navigate to admin MCQ page
-    await this.page.goto('/admin/mcq/add');
-    
+    await this.page.goto("/admin/mcq/add");
+
     // Fill MCQ form
-    await this.page.fill('input[name="question"]', 'Test MCQ Question');
-    await this.page.fill('textarea[name="options"]', 'Option A\nOption B\nOption C\nOption D');
-    await this.page.selectOption('select[name="correctAnswer"]', '0');
-    await this.page.selectOption('select[name="category"]', 'Programming');
-    await this.page.selectOption('select[name="difficulty"]', 'Easy');
-    
+    await this.page.fill('input[name="question"]', "Test MCQ Question");
+    await this.page.fill(
+      'textarea[name="options"]',
+      "Option A\nOption B\nOption C\nOption D"
+    );
+    await this.page.selectOption('select[name="correctAnswer"]', "0");
+    await this.page.selectOption('select[name="category"]', "Programming");
+    await this.page.selectOption('select[name="difficulty"]', "Easy");
+
     // Submit form
     await this.page.click('button[type="submit"]');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   /**
@@ -302,18 +326,21 @@ export class TestDataHelper {
    */
   async createTestProblem() {
     // Navigate to admin problems page
-    await this.page.goto('/admin/problems/add');
-    
+    await this.page.goto("/admin/problems/add");
+
     // Fill problem form
-    await this.page.fill('input[name="title"]', 'Test Problem');
-    await this.page.fill('textarea[name="description"]', 'Test problem description');
-    await this.page.fill('textarea[name="testCases"]', '[]');
-    await this.page.selectOption('select[name="category"]', 'Programming');
-    await this.page.selectOption('select[name="difficulty"]', 'Easy');
-    
+    await this.page.fill('input[name="title"]', "Test Problem");
+    await this.page.fill(
+      'textarea[name="description"]',
+      "Test problem description"
+    );
+    await this.page.fill('textarea[name="testCases"]', "[]");
+    await this.page.selectOption('select[name="category"]', "Programming");
+    await this.page.selectOption('select[name="difficulty"]', "Easy");
+
     // Submit form
     await this.page.click('button[type="submit"]');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 }
 
@@ -362,7 +389,7 @@ export class AssertionHelper {
    * Assert API response status
    */
   async assertAPIResponse(urlPattern: string, expectedStatus: number) {
-    const response = await this.page.waitForResponse(response => 
+    const response = await this.page.waitForResponse((response) =>
       response.url().includes(urlPattern)
     );
     expect(response.status()).toBe(expectedStatus);
