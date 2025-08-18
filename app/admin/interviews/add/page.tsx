@@ -20,6 +20,7 @@ import {
   Users,
   MessageSquare,
   Code,
+  Brain,
 } from "lucide-react";
 
 interface InterviewQuestion {
@@ -318,11 +319,11 @@ export default function AddInterviewTemplatePage() {
       />
 
       {/* AI Generator */}
-              <Card className="mb-6">
+      <Card className="mb-6">
         <div className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              AI Generator
-            </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            AI Generator
+          </h3>
           <AIGenerator
             type="interview"
             onContentGenerated={handleAIContentGenerated}

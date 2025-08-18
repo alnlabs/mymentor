@@ -110,10 +110,10 @@ export default function AddExamPage() {
         },
         body: JSON.stringify({ test: true }),
       });
-      
+
       const result = await response.json();
       console.log("Database test result:", result);
-      
+
       if (result.success) {
         alert("Database test successful! MCQ creation should work.");
       } else {
@@ -127,15 +127,49 @@ export default function AddExamPage() {
 
   const handleCreateExamFromAI = async (content: GeneratedContent[]) => {
     try {
+      // Generate meaningful title based on content
+      const generateMeaningfulTitle = (content: GeneratedContent[]) => {
+        if (formData.title) return formData.title;
+
+        const language = content[0]?.language || "Programming";
+        const topics = [...new Set(content.map((item) => item.category))];
+        const difficulty = content[0]?.difficulty || "intermediate";
+
+        // Create a meaningful title based on content
+        let title = `${language} Assessment`;
+
+        if (topics.length === 1) {
+          title += ` - ${topics[0]}`;
+        } else if (topics.length <= 3) {
+          title += ` - ${topics.slice(0, 2).join(" & ")}`;
+        } else {
+          title += ` - Mixed Topics`;
+        }
+
+        // Add difficulty level
+        const difficultyMap = {
+          beginner: "Beginner",
+          intermediate: "Intermediate",
+          advanced: "Advanced",
+        };
+        title += ` (${
+          difficultyMap[difficulty as keyof typeof difficultyMap] ||
+          "Intermediate"
+        })`;
+
+        return title;
+      };
+
       // Ensure all required fields are provided with defaults if not set
       const examData = {
-        title:
-          formData.title ||
-          `AI Generated ${
-            content[0]?.language || "Programming"
-          } Exam - ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+        title: generateMeaningfulTitle(content),
         description:
-          formData.description || "Exam created from AI-generated questions",
+          formData.description ||
+          `Comprehensive ${
+            content[0]?.language || "Programming"
+          } assessment covering ${
+            content.length
+          } questions across various topics and difficulty levels.`,
         duration: formData.duration || 60,
         difficulty: formData.difficulty || "Medium",
         category: formData.category || "Programming",
@@ -185,7 +219,7 @@ export default function AddExamPage() {
       });
 
       const result = await response.json();
-      
+
       console.log("Exam creation API response:", result);
 
       if (!result.success) {
@@ -422,12 +456,14 @@ export default function AddExamPage() {
               return;
             }
 
-            if (questionMode === "ai" && aiGeneratedContent.length > 0) {
-              // Use AI-selected content
-              handleSubmit(e, aiGeneratedContent);
-            } else {
-              // Use manually selected questions
+            // Only handle form submission for manual mode
+            // AI mode uses the AI Generator's "Save Exam" button
+            if (questionMode === "manual") {
               handleSubmit(e, selectedQuestions);
+            } else {
+              alert(
+                "Please use the 'Save Exam' button in the AI Generator to create the exam."
+              );
             }
           }}
           className="space-y-6"
@@ -548,6 +584,11 @@ export default function AddExamPage() {
               >
                 {loading ? (
                   <Loading size="sm" text="Creating Exam..." />
+                ) : questionMode === "ai" ? (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Manual Mode Only
+                  </>
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />

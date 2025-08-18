@@ -14,6 +14,8 @@ import {
   Code,
   CheckCircle,
   AlertCircle,
+  Brain,
+  X,
 } from "lucide-react";
 
 interface Problem {

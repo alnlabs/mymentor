@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     console.log("Test DB request received:", body);
-    
+
     // Try to create a simple MCQ question
     const testQuestion = await prisma.mCQQuestion.create({
       data: {
@@ -24,16 +24,16 @@ export async function POST(request: NextRequest) {
         status: "active",
       },
     });
-    
+
     console.log("Test question created successfully:", testQuestion.id);
-    
+
     // Delete the test question
     await prisma.mCQQuestion.delete({
       where: { id: testQuestion.id },
     });
-    
+
     console.log("Test question deleted successfully");
-    
+
     return NextResponse.json({
       success: true,
       message: "Database test successful",
@@ -42,10 +42,10 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Database test failed:", error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: error.message,
-        stack: error.stack 
+        stack: error.stack,
       },
       { status: 500 }
     );

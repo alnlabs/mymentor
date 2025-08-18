@@ -86,16 +86,51 @@ async function generateWithAI(
             // Add more templates as needed
           ];
         } else {
-          // Default MCQ template
+          // Get language-specific syntax
+          const getLanguageSyntax = (lang: string) => {
+            switch (lang.toLowerCase()) {
+              case "python":
+                return {
+                  variable: `value${i} = ${i + 1}`,
+                  print: `print(f"Result: {value${i}}")`,
+                };
+              case "java":
+                return {
+                  variable: `int value${i} = ${i + 1};`,
+                  print: `System.out.println("Result: " + value${i});`,
+                };
+              case "c++":
+                return {
+                  variable: `int value${i} = ${i + 1};`,
+                  print: `cout << "Result: " << value${i} << endl;`,
+                };
+              default: // JavaScript
+                return {
+                  variable: `const value${i} = ${i + 1};`,
+                  print: `console.log("Result: " + value${i});`,
+                };
+            }
+          };
+
+          const syntax = getLanguageSyntax(language);
+
+          // Default MCQ template with unique content
           mcqTemplates = [
             {
-              title: `${language} ${topic} MCQ ${i + 1}`,
-              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n// ${topic} related code\nconsole.log("Question ${
+              title: `${language} ${mixedTopic} MCQ ${i + 1}`,
+              content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n# ${mixedTopic} related code - Question ${
                 i + 1
-              }");\n\`\`\``,
-              options: ["Option A", "Option B", "Option C", "Option D"],
-              correctAnswer: "Option A",
-              explanation: `This tests understanding of ${topic} in ${language}.`,
+              }\n${syntax.variable}\n${syntax.print}\n\`\`\``,
+              options: [
+                `Result: ${i + 1}`,
+                `Result: ${i + 2}`,
+                `Result: ${i + 3}`,
+                `Result: ${i + 4}`,
+              ],
+              correctAnswer: `Result: ${i + 1}`,
+              explanation: `This tests understanding of ${mixedTopic} in ${language}. The code outputs "Result: ${
+                i + 1
+              }".`,
             },
           ];
         }
@@ -145,15 +180,31 @@ async function generateWithAI(
         ];
 
         const selectedProblem = problemTemplates[i % problemTemplates.length];
+
+        // Make each problem unique by adding index-specific content
+        const uniqueContent = selectedProblem.content
+          .replace(
+            /array of numbers/g,
+            `array of numbers [${i + 1}, ${i + 2}, ${i + 3}, ${i + 4}, ${
+              i + 5
+            }]`
+          )
+          .replace(
+            /Sort an array/g,
+            `Sort an array [${i + 1}, ${i + 2}, ${i + 3}, ${i + 4}, ${i + 5}]`
+          );
+
         generatedContent.push({
           id,
           type: "problem",
-          title: selectedProblem.title,
-          content: selectedProblem.content,
+          title: `${selectedProblem.title} - Unique ${i + 1}`,
+          content: uniqueContent,
           difficulty: mixedDifficulty,
           category: mixedTopic,
           language,
-          explanation: selectedProblem.explanation,
+          explanation: `${selectedProblem.explanation} (Unique variation ${
+            i + 1
+          })`,
           tags: [language, mixedTopic, mixedDifficulty, "problem"],
           metadata: { generatedType: "problem" },
         });
@@ -168,6 +219,7 @@ async function generateWithAI(
 
         switch (type) {
           case "mcq":
+          case "exam":
             // Create topic-specific MCQ questions
             let mcqTemplates = [];
 
@@ -850,15 +902,18 @@ async function generateWithAI(
               mcqTemplates = [
                 {
                   title: `${language} ${topic} Variable Scope MCQ ${i + 1}`,
-                  content: `What is the output of the following ${language} code?\n\n\`\`\`${language.toLowerCase()}\n${
-                    syntax.variable
-                  }\n${syntax.function}\n  ${syntax.variable.replace(
-                    "10",
-                    "20"
-                  )}\n  ${syntax.print}\n}\n${syntax.function.replace(
-                    "test_scope",
-                    "test_scope"
-                  )}();\n${syntax.print}\n\`\`\``,
+                  content: (() => {
+                    switch (language.toLowerCase()) {
+                      case "python":
+                        return `What is the output of the following Python code?\n\n\`\`\`python\nx = 10\ndef test_scope():\n    x = 20\n    print(x)\ntest_scope()\nprint(x)\n\`\`\``;
+                      case "java":
+                        return `What is the output of the following Java code?\n\n\`\`\`java\nint x = 10;\nvoid testScope() {\n    int x = 20;\n    System.out.println(x);\n}\ntestScope();\nSystem.out.println(x);\n\`\`\``;
+                      case "c++":
+                        return `What is the output of the following C++ code?\n\n\`\`\`cpp\nint x = 10;\nvoid testScope() {\n    int x = 20;\n    cout << x << endl;\n}\ntestScope();\ncout << x << endl;\n\`\`\``;
+                      default:
+                        return `What is the output of the following JavaScript code?\n\n\`\`\`javascript\nlet x = 10;\nfunction testScope() {\n    let x = 20;\n    console.log(x);\n}\ntestScope();\nconsole.log(x);\n\`\`\``;
+                    }
+                  })(),
                   options: ["20, 10", "10, 20", "20, 20", "10, 10"],
                   correctAnswer: "20, 10",
                   explanation: `This tests understanding of variable scope in ${language}. The inner variable shadows the outer variable within the function scope.`,
@@ -1004,15 +1059,31 @@ async function generateWithAI(
             const selectedProblem =
               problemTemplates[i % problemTemplates.length];
 
+            // Make each problem unique by adding index-specific content
+            const uniqueContent = selectedProblem.content
+              .replace(
+                /Input: \[([^\]]+)\]/g,
+                `Input: [${i + 1}, ${i + 2}, ${i + 3}, ${i + 4}, ${i + 5}]`
+              )
+              .replace(/Output: "([^"]+)"/g, `Output: "result-${i + 1}"`)
+              .replace(/Input: "([^"]+)"/g, `Input: "test-${i + 1}"`)
+              .replace(/Input: (\d+)/g, `Input: ${i + 1}`)
+              .replace(
+                /Output: \[([^\]]+)\]/g,
+                `Output: [${i + 1}, ${i + 2}, ${i + 3}, ${i + 4}, ${i + 5}]`
+              );
+
             generatedContent.push({
               id,
               type: "problem",
-              title: selectedProblem.title,
-              content: selectedProblem.content,
+              title: `${selectedProblem.title} - Unique ${i + 1}`,
+              content: uniqueContent,
               difficulty,
               category: topic,
               language,
-              explanation: selectedProblem.explanation,
+              explanation: `${selectedProblem.explanation} (Unique variation ${
+                i + 1
+              })`,
               tags: [language, topic, difficulty, "coding"],
               metadata: {
                 generatedBy: "AI",

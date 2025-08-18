@@ -6,6 +6,8 @@ import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import { StudentHeader } from "@/shared/components/StudentHeader";
+import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
+import { ApiErrorBoundary } from "@/shared/components/ApiErrorBoundary";
 import {
   BookOpen,
   Code,
@@ -296,194 +298,217 @@ export default function DashboardPage() {
   const level = getLevel(userStats.problemsSolved);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gray-50">
       <StudentHeader title="MyMentor Dashboard" currentPage="dashboard" />
-
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back,{" "}
-            {isSuperAdmin
-              ? "SuperAdmin"
-              : user?.displayName || user?.email || "Student"}
-            !
-          </h2>
-          <p className="text-gray-600">
-            Ready to continue your learning journey? Let's get started!
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Problems Solved
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {userStats.problemsSolved}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Code className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  MCQs Completed
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {userStats.mcqCompleted}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Interviews Taken
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {userStats.interviewsTaken}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Target className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Success Rate
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {userStats.successRate}%
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-yellow-600" />
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Level Badge */}
-        <div className="mb-8">
-          <Card className="p-6">
-            <div className="flex items-center space-x-4">
-              <div
-                className={`w-16 h-16 ${level.bg} rounded-full flex items-center justify-center`}
-              >
-                <Trophy className={`w-8 h-8 ${level.color}`} />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Current Level: {level.level}
-                </h3>
-                <p className="text-gray-600">
-                  You've solved {userStats.problemsSolved} problems. Keep going!
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-            Quick Actions
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item) => (
-              <Card
-                key={item.title}
-                className="p-6 hover:shadow-lg transition-shadow cursor-pointer group"
-                onClick={() => (window.location.href = item.href)}
-              >
-                <div className="flex items-center space-x-4">
-                  <div
-                    className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center`}
-                  >
-                    <item.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      {item.title}
-                    </h4>
-                    <p className="text-sm text-gray-600">{item.description}</p>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+        <ErrorBoundary componentName="StudentDashboard">
+          <ApiErrorBoundary>
+            {/* Loading State */}
+            {statsLoading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <Loading size="lg" />
+                  <p className="mt-4 text-gray-600">
+                    {loadingTimeout
+                      ? "Taking longer than expected..."
+                      : "Loading your dashboard..."}
+                  </p>
                 </div>
-              </Card>
-            ))}
-          </div>
-        </div>
+              </div>
+            )}
 
-        {/* Recent Activity */}
-        {userStats.recentActivity.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Recent Activity
-            </h3>
-            <Card className="p-6">
-              <div className="space-y-4">
-                {userStats.recentActivity.slice(0, 5).map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-center justify-between py-2"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                        {activity.status === "completed" ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : activity.status === "failed" ? (
-                          <XCircle className="w-4 h-4 text-red-600" />
-                        ) : (
-                          <Clock className="w-4 h-4 text-yellow-600" />
-                        )}
+            {/* Dashboard Content */}
+            {!statsLoading && (
+              <>
+                {/* Welcome Section */}
+                <div className="mb-8">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    Welcome back,{" "}
+                    {user?.displayName || user?.email || "Student"}!
+                  </h1>
+                  <p className="text-gray-600">
+                    Ready to continue your interview preparation journey?
+                  </p>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <Card className="p-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Code className="w-6 h-6 text-blue-600" />
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {activity.problemTitle}
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">
+                          Problems Solved
                         </p>
-                        <p className="text-sm text-gray-600">
-                          Score: {activity.score} •{" "}
-                          {new Date(activity.createdAt).toLocaleDateString()}
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {userStats.problemsSolved}
                         </p>
                       </div>
                     </div>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        activity.status === "completed"
-                          ? "bg-green-100 text-green-800"
-                          : activity.status === "failed"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {activity.status}
-                    </span>
+                  </Card>
+
+                  <Card className="p-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <CheckSquare className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">
+                          MCQs Completed
+                        </p>
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {userStats.mcqCompleted}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Target className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">
+                          Interviews Taken
+                        </p>
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {userStats.interviewsTaken}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-yellow-600" />
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">
+                          Success Rate
+                        </p>
+                        <p className="text-2xl font-semibold text-gray-900">
+                          {userStats.successRate}%
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Progress Level */}
+                <div className="mb-8">
+                  <Card className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                        <Trophy className={`w-8 h-8 ${level.color}`} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          Current Level: {level.level}
+                        </h3>
+                        <p className="text-gray-600">
+                          You've solved {userStats.problemsSolved} problems.
+                          Keep going!
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Quick Actions
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredItems.map((item) => (
+                      <Card
+                        key={item.title}
+                        className="p-6 hover:shadow-lg transition-shadow cursor-pointer group"
+                        onClick={() => (window.location.href = item.href)}
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div
+                            className={`w-12 h-12 ${item.color} rounded-lg flex items-center justify-center`}
+                          >
+                            <item.icon className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                              {item.title}
+                            </h4>
+                            <p className="text-sm text-gray-600">
+                              {item.description}
+                            </p>
+                          </div>
+                          <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                        </div>
+                      </Card>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        )}
+                </div>
+
+                {/* Recent Activity */}
+                {userStats.recentActivity.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                      Recent Activity
+                    </h3>
+                    <Card className="p-6">
+                      <div className="space-y-4">
+                        {userStats.recentActivity
+                          .slice(0, 5)
+                          .map((activity) => (
+                            <div
+                              key={activity.id}
+                              className="flex items-center justify-between py-2"
+                            >
+                              <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                  {activity.status === "completed" ? (
+                                    <CheckCircle className="w-4 h-4 text-green-600" />
+                                  ) : activity.status === "failed" ? (
+                                    <XCircle className="w-4 h-4 text-red-600" />
+                                  ) : (
+                                    <Clock className="w-4 h-4 text-yellow-600" />
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900">
+                                    {activity.problemTitle}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    Score: {activity.score} •{" "}
+                                    {new Date(
+                                      activity.createdAt
+                                    ).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  activity.status === "completed"
+                                    ? "bg-green-100 text-green-800"
+                                    : activity.status === "failed"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                                }`}
+                              >
+                                {activity.status}
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </Card>
+                  </div>
+                )}
+              </>
+            )}
+          </ApiErrorBoundary>
+        </ErrorBoundary>
       </main>
     </div>
   );

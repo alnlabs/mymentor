@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
+import { ApiErrorBoundary } from "@/shared/components/ApiErrorBoundary";
 import {
   Clock,
   ChevronLeft,
@@ -307,354 +309,353 @@ export default function TakeInterviewPage() {
     ((currentQuestionIndex + 1) / template.questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowConfirmExit(true)}
-                className="flex items-center"
-              >
-                <ChevronLeft className="w-4 h-4 mr-2" />
-                Exit Interview
-              </Button>
-              <div className="hidden md:block">
-                <h1 className="text-lg font-semibold text-gray-900">
-                  {template.name}
-                </h1>
-                <p className="text-sm text-gray-600">{template.category}</p>
-              </div>
-            </div>
+    <ErrorBoundary componentName="TakeInterviewPage">
+      <ApiErrorBoundary>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+          {/* Header */}
+          <div className="bg-white shadow-sm border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowConfirmExit(true)}
+                    className="flex items-center space-x-2"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Exit</span>
+                  </Button>
+                  <div className="h-6 w-px bg-gray-300" />
+                  <div className="flex items-center space-x-2">
+                    <Target className="w-5 h-5 text-blue-600" />
+                    <h1 className="text-lg font-semibold text-gray-900">
+                      {template?.name || "Loading Interview..."}
+                    </h1>
+                  </div>
+                </div>
 
-            <div className="flex items-center space-x-4">
-              {/* Timer */}
-              <div className="flex items-center space-x-2 bg-red-50 px-3 py-2 rounded-lg">
-                <Timer className="w-4 h-4 text-red-600" />
-                <span className="font-mono text-red-600 font-semibold">
-                  {formatTime(timeRemaining)}
-                </span>
-              </div>
+                <div className="flex items-center space-x-4">
+                  {/* Timer */}
+                  <div className="flex items-center space-x-2 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                    <Timer className="w-4 h-4 text-red-600" />
+                    <span className="text-sm font-medium text-red-700">
+                      {Math.floor(timeRemaining / 60)}:
+                      {(timeRemaining % 60).toString().padStart(2, "0")}
+                    </span>
+                  </div>
 
-              {/* Progress */}
-              <div className="hidden md:flex items-center space-x-2">
-                <BarChart3 className="w-4 h-4 text-gray-600" />
-                <span className="text-sm text-gray-600">
-                  {currentQuestionIndex + 1} of {template.questions.length}
-                </span>
-              </div>
+                  {/* Pause/Resume Button */}
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPaused(!isPaused)}
+                    className="flex items-center space-x-2"
+                  >
+                    {isPaused ? (
+                      <>
+                        <Play className="w-4 h-4" />
+                        <span>Resume</span>
+                      </>
+                    ) : (
+                      <>
+                        <Pause className="w-4 h-4" />
+                        <span>Pause</span>
+                      </>
+                    )}
+                  </Button>
 
-              {/* Pause/Resume */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePauseResume}
-                className="flex items-center"
-              >
-                {isPaused ? (
-                  <Play className="w-4 h-4 mr-2" />
-                ) : (
-                  <Pause className="w-4 h-4 mr-2" />
-                )}
-                {isPaused ? "Resume" : "Pause"}
-              </Button>
-
-              {/* Save Progress */}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={saveProgress}
-                disabled={saving}
-                className="flex items-center"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {saving ? "Saving..." : "Save"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            <Card className="p-8">
-              {/* Question Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">
-                    {currentQuestion.type === "mcq"
-                      ? "❓"
-                      : currentQuestion.type === "basic-coding"
-                      ? "💻"
-                      : currentQuestion.type === "behavioral"
-                      ? "💬"
-                      : "🎯"}
-                  </span>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900">
-                      Question {currentQuestionIndex + 1}
-                    </h2>
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeColor(
-                        currentQuestion.type
-                      )}`}
-                    >
-                      {getQuestionTypeLabel(currentQuestion.type)}
+                  {/* Progress */}
+                  <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
+                    <BarChart3 className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-700">
+                      {currentQuestionIndex + 1} /{" "}
+                      {template?.questions.length || 0}
                     </span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-600">Points</div>
-                  <div className="text-lg font-bold text-blue-600">
-                    {currentQuestion.points}
-                  </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <Loading size="lg" />
+                  <p className="mt-4 text-gray-600">Loading interview...</p>
                 </div>
               </div>
+            ) : !template ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Interview Not Found
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    The interview template you're looking for doesn't exist.
+                  </p>
+                  <Button onClick={() => router.push("/student/interviews")}>
+                    Back to Interviews
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {/* Question Content */}
+                <div className="lg:col-span-3">
+                  <Card className="p-8">
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          Question {currentQuestionIndex + 1}
+                        </h2>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm text-gray-600">
+                            {template.questions[currentQuestionIndex]?.points}{" "}
+                            points
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            •{" "}
+                            {
+                              template.questions[currentQuestionIndex]
+                                ?.timeLimit
+                            }
+                            s
+                          </span>
+                        </div>
+                      </div>
 
-              {/* Question Content */}
-              <div className="mb-8">
-                <h3 className="text-lg text-gray-900 mb-6 leading-relaxed">
-                  {currentQuestion.question}
-                </h3>
+                      <div className="prose prose-lg max-w-none">
+                        <p className="text-gray-700 leading-relaxed">
+                          {template.questions[currentQuestionIndex]?.question}
+                        </p>
+                      </div>
+                    </div>
 
-                {/* Answer Section */}
-                {currentQuestion.type === "mcq" && currentQuestion.options && (
-                  <div className="space-y-3">
-                    {currentQuestion.options.map((option, index) => (
-                      <label
-                        key={index}
-                        className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 cursor-pointer transition-colors"
-                      >
-                        <input
-                          type="radio"
-                          name={`question-${currentQuestion.id}`}
-                          value={option}
-                          checked={
-                            answers[currentQuestion.id]?.answer === option
+                    {/* Answer Section */}
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Your Answer
+                      </h3>
+
+                      {template.questions[currentQuestionIndex]?.type ===
+                        "mcq" && (
+                        <div className="space-y-3">
+                          {template.questions[
+                            currentQuestionIndex
+                          ]?.options?.map((option: string, index: number) => (
+                            <label
+                              key={index}
+                              className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"
+                            >
+                              <input
+                                type="radio"
+                                name="answer"
+                                value={index}
+                                checked={
+                                  answers[
+                                    template.questions[currentQuestionIndex]?.id
+                                  ]?.answer === index
+                                }
+                                onChange={(e) =>
+                                  handleAnswerChange(
+                                    template.questions[currentQuestionIndex]
+                                      ?.id,
+                                    parseInt(e.target.value)
+                                  )
+                                }
+                                className="mr-3"
+                              />
+                              <span className="text-gray-900">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                      )}
+
+                      {template.questions[currentQuestionIndex]?.type ===
+                        "behavioral" && (
+                        <textarea
+                          value={
+                            answers[
+                              template.questions[currentQuestionIndex]?.id
+                            ]?.answer || ""
                           }
                           onChange={(e) =>
                             handleAnswerChange(
-                              currentQuestion.id,
+                              template.questions[currentQuestionIndex]?.id,
                               e.target.value
                             )
                           }
-                          className="sr-only"
+                          className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Type your answer here..."
                         />
-                        <div className="flex items-center">
-                          {answers[currentQuestion.id]?.answer === option ? (
-                            <CheckCircle className="w-5 h-5 text-blue-600 mr-3" />
-                          ) : (
-                            <Circle className="w-5 h-5 text-gray-400 mr-3" />
-                          )}
-                          <span className="text-gray-900">{option}</span>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                )}
+                      )}
 
-                {currentQuestion.type === "basic-coding" && (
-                  <div className="space-y-4">
-                    <textarea
-                      value={answers[currentQuestion.id]?.answer || ""}
-                      onChange={(e) =>
-                        handleAnswerChange(currentQuestion.id, e.target.value)
-                      }
-                      placeholder="Write your code here..."
-                      className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                    />
-                    <div className="text-sm text-gray-600">
-                      <p>
-                        💡 <strong>Tip:</strong> Write simple, readable code.
-                        Focus on basic concepts and clear logic.
-                      </p>
+                      {template.questions[currentQuestionIndex]?.type ===
+                        "basic-coding" && (
+                        <textarea
+                          value={
+                            answers[
+                              template.questions[currentQuestionIndex]?.id
+                            ]?.answer || ""
+                          }
+                          onChange={(e) =>
+                            handleAnswerChange(
+                              template.questions[currentQuestionIndex]?.id,
+                              e.target.value
+                            )
+                          }
+                          className="w-full h-48 p-3 border border-gray-300 rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Write your code here..."
+                        />
+                      )}
                     </div>
-                  </div>
-                )}
 
-                {(currentQuestion.type === "behavioral" ||
-                  currentQuestion.type === "scenario") && (
-                  <div className="space-y-4">
-                    <textarea
-                      value={answers[currentQuestion.id]?.answer || ""}
-                      onChange={(e) =>
-                        handleAnswerChange(currentQuestion.id, e.target.value)
-                      }
-                      placeholder="Write your response here..."
-                      className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    <div className="text-sm text-gray-600">
-                      <p>
-                        💡 <strong>Tip:</strong> Be specific and provide real
-                        examples. Show your problem-solving approach.
-                      </p>
+                    {/* Navigation Buttons */}
+                    <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+                      <Button
+                        onClick={handlePreviousQuestion}
+                        disabled={currentQuestionIndex === 0}
+                        variant="outline"
+                        className="flex items-center"
+                      >
+                        <ChevronLeft className="w-4 h-4 mr-2" />
+                        Previous
+                      </Button>
+
+                      {currentQuestionIndex ===
+                      template.questions.length - 1 ? (
+                        <Button
+                          onClick={handleCompleteInterview}
+                          disabled={saving}
+                          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-3 text-lg font-bold"
+                        >
+                          {saving ? "Submitting..." : "Submit Interview"}
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={handleNextQuestion}
+                          className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-6 py-3"
+                        >
+                          Next
+                          <ChevronRight className="w-5 h-5 ml-2" />
+                        </Button>
+                      )}
                     </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Navigation */}
-              <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-                <Button
-                  variant="outline"
-                  onClick={handlePreviousQuestion}
-                  disabled={currentQuestionIndex === 0}
-                  className="flex items-center"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  Previous
-                </Button>
-
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">
-                    {currentQuestionIndex + 1} of {template.questions.length}
-                  </span>
+                  </Card>
                 </div>
 
+                {/* Sidebar */}
+                <div className="lg:col-span-1 space-y-6">
+                  {/* Progress */}
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Progress
+                    </h3>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-blue-600 mb-2">
+                        {currentQuestionIndex + 1}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        of {template.questions.length} questions
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Question Navigator */}
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Questions
+                    </h3>
+                    <div className="grid grid-cols-5 gap-2">
+                      {template.questions.map((question, index) => (
+                        <button
+                          key={question.id}
+                          onClick={() => setCurrentQuestionIndex(index)}
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
+                            index === currentQuestionIndex
+                              ? "bg-blue-600 text-white"
+                              : answers[question.id]?.answer
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          {index + 1}
+                        </button>
+                      ))}
+                    </div>
+                  </Card>
+
+                  {/* Interview Info */}
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Interview Info
+                    </h3>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-gray-600">Category:</span>
+                        <div className="font-medium">{template.category}</div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Difficulty:</span>
+                        <div className="font-medium capitalize">
+                          {template.difficulty}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Duration:</span>
+                        <div className="font-medium">
+                          {template.duration} minutes
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Total Points:</span>
+                        <div className="font-medium">
+                          {template.questions.reduce(
+                            (sum, q) => sum + q.points,
+                            0
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Confirm Exit Modal */}
+        {showConfirmExit && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <Card className="p-6 max-w-md mx-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Exit Interview?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Your progress will be saved automatically. You can resume this
+                interview later.
+              </p>
+              <div className="flex space-x-3">
                 <Button
-                  onClick={handleNextQuestion}
-                  disabled={!answers[currentQuestion.id]?.answer}
-                  className="flex items-center"
+                  variant="outline"
+                  onClick={() => setShowConfirmExit(false)}
+                  className="flex-1"
                 >
-                  {currentQuestionIndex === template.questions.length - 1 ? (
-                    <>
-                      Complete Interview
-                      <CheckCircle className="w-4 h-4 ml-2" />
-                    </>
-                  ) : (
-                    <>
-                      Next
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </>
-                  )}
+                  Continue Interview
+                </Button>
+                <Button
+                  onClick={() => router.push("/student/interviews")}
+                  className="flex-1"
+                >
+                  Exit Interview
                 </Button>
               </div>
             </Card>
           </div>
-
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="space-y-6">
-              {/* Progress Card */}
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Progress
-                </h3>
-                <div className="mb-4">
-                  <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Questions Completed</span>
-                    <span>{Math.round(progress)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {currentQuestionIndex + 1}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    of {template.questions.length} questions
-                  </div>
-                </div>
-              </Card>
-
-              {/* Question Navigator */}
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Questions
-                </h3>
-                <div className="grid grid-cols-5 gap-2">
-                  {template.questions.map((question, index) => (
-                    <button
-                      key={question.id}
-                      onClick={() => setCurrentQuestionIndex(index)}
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
-                        index === currentQuestionIndex
-                          ? "bg-blue-600 text-white"
-                          : answers[question.id]?.answer
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-              </Card>
-
-              {/* Interview Info */}
-              <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Interview Info
-                </h3>
-                <div className="space-y-3 text-sm">
-                  <div>
-                    <span className="text-gray-600">Category:</span>
-                    <div className="font-medium">{template.category}</div>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Difficulty:</span>
-                    <div className="font-medium capitalize">
-                      {template.difficulty}
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Duration:</span>
-                    <div className="font-medium">
-                      {template.duration} minutes
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Total Points:</span>
-                    <div className="font-medium">
-                      {template.questions.reduce((sum, q) => sum + q.points, 0)}
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Confirm Exit Modal */}
-      {showConfirmExit && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="p-6 max-w-md mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Exit Interview?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Your progress will be saved automatically. You can resume this
-              interview later.
-            </p>
-            <div className="flex space-x-3">
-              <Button
-                variant="outline"
-                onClick={() => setShowConfirmExit(false)}
-                className="flex-1"
-              >
-                Continue Interview
-              </Button>
-              <Button
-                onClick={() => router.push("/interviews")}
-                className="flex-1"
-              >
-                Exit Interview
-              </Button>
-            </div>
-          </Card>
-        </div>
-      )}
-    </div>
+        )}
+      </ApiErrorBoundary>
+    </ErrorBoundary>
   );
 }

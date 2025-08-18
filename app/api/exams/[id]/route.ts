@@ -34,7 +34,10 @@ export async function GET(
     // Fetch the actual question data for each exam question
     const examQuestionsWithData = await Promise.all(
       exam.examQuestions.map(async (examQuestion) => {
-        if (examQuestion.questionType === "MCQ") {
+        if (
+          examQuestion.questionType === "MCQ" ||
+          examQuestion.questionType === "mcq"
+        ) {
           // Fetch MCQ question data
           const mcqQuestion = await prisma.mCQQuestion.findUnique({
             where: { id: examQuestion.questionId },
