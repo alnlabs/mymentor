@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/shared/components/Button";
 import { RouteGuard } from "@/shared/components/RouteGuard";
+import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
 import { useAuthContext } from "@/shared/components/AuthContext";
 import {
   BarChart3,
@@ -80,6 +81,7 @@ const navigation: NavigationItem[] = [
       },
     ],
   },
+
   {
     name: "Interviews",
     href: "/admin/interviews",
@@ -483,7 +485,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
           {/* Page content */}
           <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 w-full overflow-x-hidden">
-            {children}
+            <ErrorBoundary>{children}</ErrorBoundary>
           </main>
         </div>
       </div>

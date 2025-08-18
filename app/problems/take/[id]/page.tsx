@@ -7,6 +7,8 @@ import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
 import { CodeEditor } from "@/modules/problems/components/CodeEditor";
 import { TestResults } from "@/modules/problems/components/TestResults";
+import { ErrorBoundary } from "@/shared/components/ErrorBoundary";
+import { ApiErrorBoundary } from "@/shared/components/ApiErrorBoundary";
 import {
   Code,
   Play,
@@ -196,253 +198,252 @@ export default function TakeProblemPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Loading size="lg" text="Loading Problem..." />
-      </div>
-    );
-  }
-
-  if (!problem) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <Card className="p-8 text-center">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Problem Not Found
-          </h2>
-          <p className="text-gray-600 mb-4">
-            The problem you're looking for doesn't exist.
-          </p>
-          <Button onClick={() => router.push("/problems")}>
-            Back to Problems
-          </Button>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                onClick={() => router.push("/problems")}
-                size="sm"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
-              </Button>
-              <Code className="w-8 h-8 text-blue-600" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  {problem.title}
-                </h1>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(
-                      problem.difficulty
-                    )}`}
-                  >
-                    {problem.difficulty}
-                  </span>
-                  <span className="text-sm text-gray-600">
-                    {problem.category}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowHints(!showHints)}
-              >
-                <Lightbulb className="w-4 h-4 mr-2" />
-                Hints
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSolution(!showSolution)}
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                Solution
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Problem Description */}
-          <div className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Problem Description
-              </h2>
-              <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {problem.description}
-                </p>
-              </div>
-            </Card>
-
-            {/* Test Cases */}
-            <Card className="p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Test Cases
-              </h2>
-              <div className="space-y-3">
-                {testCases.map((testCase, index) => (
-                  <div key={index} className="border rounded-lg p-3 bg-gray-50">
-                    <div className="text-sm font-medium text-gray-700 mb-2">
-                      Test Case {index + 1}
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="font-medium text-gray-600">
-                          Input:
-                        </span>
-                        <pre className="mt-1 p-2 bg-white rounded border text-xs overflow-x-auto">
-                          {testCase.input}
-                        </pre>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-600">
-                          Expected Output:
-                        </span>
-                        <pre className="mt-1 p-2 bg-white rounded border text-xs overflow-x-auto">
-                          {testCase.output}
-                        </pre>
-                      </div>
-                    </div>
-                    {testCase.description && (
-                      <div className="mt-2 text-xs text-gray-600">
-                        {testCase.description}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            {/* Hints */}
-            {showHints && problem.hints && (
-              <Card className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <Lightbulb className="w-5 h-5 text-yellow-600 mr-2" />
-                  Hints
-                </h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                    {problem.hints}
-                  </p>
-                </div>
-              </Card>
-            )}
-
-            {/* Solution */}
-            {showSolution && problem.solution && (
-              <Card className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <BookOpen className="w-5 h-5 text-green-600 mr-2" />
-                  Solution
-                </h2>
-                <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                  <pre>{problem.solution}</pre>
-                </div>
-              </Card>
-            )}
-          </div>
-
-          {/* Code Editor */}
-          <div className="space-y-6">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Code Editor
-                </h2>
-                <div className="flex items-center space-x-2">
-                  <select
-                    value={language}
-                    onChange={(e) => handleLanguageChange(e.target.value)}
-                    className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="javascript">JavaScript</option>
-                    <option value="python">Python</option>
-                    <option value="java">Java</option>
-                    <option value="cpp">C++</option>
-                  </select>
-                </div>
-              </div>
-
-              <CodeEditor
-                code={code}
-                language={language}
-                onCodeChange={handleCodeChange}
-                onChange={handleCodeChange}
-                onRun={runTests}
-                isRunning={testing}
-                height="400px"
-              />
-            </Card>
-
-            {/* Action Buttons */}
-            <Card className="p-6">
+    <ErrorBoundary componentName="TakeProblemPage">
+      <ApiErrorBoundary>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+          {/* Header */}
+          <div className="bg-white shadow-lg border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <div className="flex items-center justify-between">
-                <Button
-                  variant="outline"
-                  onClick={resetCode}
-                  disabled={submitting || testing}
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Reset
-                </Button>
-
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <Button
-                    onClick={runTests}
-                    disabled={submitting || testing || !code.trim()}
                     variant="outline"
+                    onClick={() => router.push("/problems")}
+                    className="flex items-center space-x-2"
                   >
-                    <Play className="w-4 h-4 mr-2" />
-                    {testing ? "Running..." : "Run Tests"}
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back to Problems</span>
                   </Button>
+                  <div className="h-6 w-px bg-gray-300" />
+                  <div className="flex items-center space-x-2">
+                    <Code className="w-6 h-6 text-blue-600" />
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {problem?.title || "Loading Problem..."}
+                    </h1>
+                  </div>
+                </div>
 
-                  <Button
-                    onClick={submitSolution}
-                    disabled={submitting || testing || !code.trim()}
-                  >
-                    <Zap className="w-4 h-4 mr-2" />
-                    {submitting ? "Submitting..." : "Submit Solution"}
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg border border-blue-200">
+                    <Target className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-700">
+                      {problem?.difficulty || "Unknown"}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+                    <BookOpen className="w-4 h-4 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-700">
+                      {problem?.category || "Unknown"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <Loading size="lg" />
+                  <p className="mt-4 text-gray-600">Loading problem...</p>
+                </div>
+              </div>
+            ) : !problem ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Problem Not Found
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    The problem you're looking for doesn't exist.
+                  </p>
+                  <Button onClick={() => router.push("/problems")}>
+                    Back to Problems
                   </Button>
                 </div>
               </div>
-            </Card>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Problem Description */}
+                <div className="space-y-6">
+                  <Card className="p-6">
+                    <div className="prose prose-lg max-w-none">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                        Problem Description
+                      </h2>
+                      <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                        {problem.description}
+                      </div>
+                    </div>
+                  </Card>
 
-            {/* Test Results */}
-            {submission && (
-              <Card className="p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Test Results
-                </h2>
-                <TestResults
-                  submission={submission as any}
-                  testCases={testCases as any}
-                />
-              </Card>
+                  {/* Test Cases */}
+                  {testCases.length > 0 && (
+                    <Card className="p-6">
+                      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <Target className="w-5 h-5 text-blue-600 mr-2" />
+                        Test Cases
+                      </h2>
+                      <div className="space-y-4">
+                        {testCases.map((testCase, index) => (
+                          <div
+                            key={index}
+                            className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                          >
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="font-medium text-gray-900 mb-2">
+                                  Input:
+                                </h4>
+                                <pre className="bg-white p-2 rounded border text-sm overflow-x-auto">
+                                  {testCase.input}
+                                </pre>
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-gray-900 mb-2">
+                                  Expected Output:
+                                </h4>
+                                <pre className="bg-white p-2 rounded border text-sm overflow-x-auto">
+                                  {testCase.output}
+                                </pre>
+                              </div>
+                            </div>
+                            {testCase.description && (
+                              <p className="text-sm text-gray-600 mt-2">
+                                {testCase.description}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  )}
+
+                  {/* Hints */}
+                  {problem.hints && (
+                    <Card className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900 flex items-center">
+                          <Lightbulb className="w-5 h-5 text-yellow-600 mr-2" />
+                          Hints
+                        </h2>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowHints(!showHints)}
+                        >
+                          {showHints ? "Hide" : "Show"} Hints
+                        </Button>
+                      </div>
+                      {showHints && (
+                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                          <p className="text-gray-700">{problem.hints}</p>
+                        </div>
+                      )}
+                    </Card>
+                  )}
+
+                  {/* Solution */}
+                  {showSolution && problem.solution && (
+                    <Card className="p-6">
+                      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <BookOpen className="w-5 h-5 text-green-600 mr-2" />
+                        Solution
+                      </h2>
+                      <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+                        <pre>{problem.solution}</pre>
+                      </div>
+                    </Card>
+                  )}
+                </div>
+
+                {/* Code Editor */}
+                <div className="space-y-6">
+                  <Card className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Code Editor
+                      </h2>
+                      <div className="flex items-center space-x-2">
+                        <select
+                          value={language}
+                          onChange={(e) => handleLanguageChange(e.target.value)}
+                          className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="javascript">JavaScript</option>
+                          <option value="python">Python</option>
+                          <option value="java">Java</option>
+                          <option value="cpp">C++</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <CodeEditor
+                      code={code}
+                      language={language}
+                      onCodeChange={handleCodeChange}
+                      onChange={handleCodeChange}
+                      onRun={runTests}
+                      isRunning={testing}
+                      height="400px"
+                    />
+                  </Card>
+
+                  {/* Action Buttons */}
+                  <Card className="p-6">
+                    <div className="flex items-center justify-between">
+                      <Button
+                        variant="outline"
+                        onClick={resetCode}
+                        disabled={submitting || testing}
+                      >
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        Reset
+                      </Button>
+
+                      <div className="flex items-center space-x-3">
+                        <Button
+                          onClick={runTests}
+                          disabled={submitting || testing || !code.trim()}
+                          variant="outline"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          {testing ? "Running..." : "Run Tests"}
+                        </Button>
+
+                        <Button
+                          onClick={submitSolution}
+                          disabled={submitting || testing || !code.trim()}
+                        >
+                          <Zap className="w-4 h-4 mr-2" />
+                          {submitting ? "Submitting..." : "Submit Solution"}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Test Results */}
+                  {submission && (
+                    <Card className="p-6">
+                      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                        Test Results
+                      </h2>
+                      <TestResults
+                        submission={submission as any}
+                        testCases={testCases as any}
+                      />
+                    </Card>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </ApiErrorBoundary>
+    </ErrorBoundary>
   );
 }

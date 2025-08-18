@@ -141,7 +141,7 @@ export const useExamForm = () => {
   }, []);
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.FormEvent, selectedQuestions?: any[]) => {
       e.preventDefault();
 
       // Validate form
@@ -236,8 +236,9 @@ export const useExamForm = () => {
 
         const examData = {
           ...formData,
-          autoGenerate: true,
+          autoGenerate: selectedQuestions && selectedQuestions.length > 0 ? false : true,
           autoGenerateOptions,
+          selectedQuestions: selectedQuestions || [],
         };
 
         const response = await fetch("/api/exams", {

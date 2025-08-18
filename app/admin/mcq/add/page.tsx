@@ -4,41 +4,56 @@ import React, { useState } from "react";
 import { Card } from "@/shared/components/Card";
 import { Button } from "@/shared/components/Button";
 import { Loading } from "@/shared/components/Loading";
+import PageHeader from "@/shared/components/PageHeader";
+import AIGenerator from "@/shared/components/AIGenerator";
+import { GeneratedContent } from "@/shared/lib/aiService";
 import {
-  ArrowLeft,
   Save,
   Plus,
   Trash2,
-  FileText,
   CheckCircle,
   AlertCircle,
+  Brain,
+  Zap,
+  Target,
+  BookOpen,
+  Users,
+  Building,
+  Star,
 } from "lucide-react";
 
 interface MCQ {
   question: string;
   options: string[];
   correctAnswer: number;
-  explanation?: string;
+  explanation: string;
   category: string;
   subject: string;
   topic: string;
   tool: string;
   technologyStack: string;
   domain: string;
-  skillLevel: "beginner" | "intermediate" | "advanced";
+  skillLevel: string;
   jobRole: string;
   companyType: string;
   interviewType: string;
-  difficulty: "easy" | "medium" | "hard";
-  tags?: string;
-  companies?: string;
-  priority: "high" | "medium" | "low";
-  status: "draft" | "active" | "archived";
+  difficulty: string;
+  tags: string;
+  companies: string;
+  priority: string;
+  status: string;
 }
 
 export default function AddMCQPage() {
   const [saving, setSaving] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [clearAIContent, setClearAIContent] = useState(false);
+  const [saveResults, setSaveResults] = useState<{
+    imported: number;
+    skipped: number;
+    errors: string[];
+    duplicates: string[];
+    totalProcessed: number;
+  } | null>(null);
   const [mcq, setMCQ] = useState<MCQ>({
     question: "",
     options: ["", "", "", ""],
@@ -93,18 +108,17 @@ export default function AddMCQPage() {
   };
 
   const handleSave = async () => {
-    if (
-      !mcq.question ||
-      mcq.options.some((opt) => !opt.trim()) ||
-      mcq.options.length < 2
-    ) {
-      alert("Please fill in the question and at least 2 options");
+    if (!mcq.question.trim()) {
+      alert("Please enter a question");
+      return;
+    }
+
+    if (mcq.options.some((option) => !option.trim())) {
+      alert("Please fill in all options");
       return;
     }
 
     setSaving(true);
-    setResult(null);
-
     try {
       const response = await fetch("/api/admin/upload", {
         method: "POST",
@@ -118,10 +132,10 @@ export default function AddMCQPage() {
       });
 
       const result = await response.json();
-      setResult(result);
 
       if (result.success) {
-        // Reset form on success
+        alert("MCQ saved successfully!");
+        // Reset form to initial state
         setMCQ({
           question: "",
           options: ["", "", "", ""],
@@ -143,627 +157,809 @@ export default function AddMCQPage() {
           priority: "medium",
           status: "draft",
         });
+
+        // Clear AI Generator content
+        setClearAIContent(true);
+        setTimeout(() => setClearAIContent(false), 100);
+      } else {
+        alert("Failed to save MCQ: " + result.error);
       }
-    } catch (error: any) {
-      setResult({
-        success: false,
-        error: error.message || "Failed to save MCQ",
-      });
+    } catch (error) {
+      console.error("Error saving MCQ:", error);
+      alert("Failed to save MCQ");
     } finally {
       setSaving(false);
     }
   };
 
+  const handleAIContentGenerated = (content: GeneratedContent[]) => {
+    // Handle AI generated content and auto-populate both main form and settings
+    console.log("AI generated MCQ content:", content);
+
+    if (content.length > 0) {
+      const firstItem = content[0];
+
+      // Auto-populate MAIN FORM FIELDS (Question, Options, Explanation)
+      updateMCQ("question", firstItem.content || mcq.question);
+      updateMCQ("options", firstItem.options || mcq.options);
+      updateMCQ(
+        "correctAnswer",
+        firstItem.options?.indexOf(firstItem.correctAnswer || "Option A") || 0
+      );
+      updateMCQ("explanation", firstItem.explanation || mcq.explanation);
+
+      // Auto-populate SETTINGS FIELDS
+      updateMCQ("category", firstItem.category || mcq.category);
+      updateMCQ("subject", firstItem.category || mcq.subject);
+      updateMCQ("topic", firstItem.category || mcq.topic);
+      updateMCQ("tool", firstItem.language || mcq.tool);
+      updateMCQ("technologyStack", firstItem.language || mcq.technologyStack);
+      updateMCQ("domain", firstItem.category || mcq.domain);
+      updateMCQ(
+        "difficulty",
+        firstItem.difficulty === "beginner"
+          ? "easy"
+          : firstItem.difficulty === "intermediate"
+          ? "medium"
+          : "hard"
+      );
+      updateMCQ(
+        "skillLevel",
+        firstItem.difficulty === "beginner"
+          ? "beginner"
+          : firstItem.difficulty === "intermediate"
+          ? "intermediate"
+          : "advanced"
+      );
+      updateMCQ("tags", firstItem.tags?.join(", ") || mcq.tags);
+
+      // Show success message
+      alert(`AI generated MCQ content and populated both form and settings!`);
+    }
+  };
+
+  const handleSaveAIContentToDatabase = async (content: GeneratedContent[]) => {
+    try {
+      console.log(`Saving ${content.length} AI-generated items to database`);
+
+      // Convert AI generated content to MCQ format
+      const mcqData = content.map((item) => ({
+        question: item.content,
+        options: item.options || [
+          "Option A",
+          "Option B",
+          "Option C",
+          "Option D",
+        ],
+        correctAnswer:
+          item.options?.indexOf(item.correctAnswer || "Option A") || 0,
+        explanation: item.explanation || "",
+        category: item.category,
+        subject: item.category,
+        topic: item.category,
+        tool: item.language || "",
+        technologyStack: item.language || "",
+        domain: item.category,
+        skillLevel:
+          item.difficulty === "beginner"
+            ? "beginner"
+            : item.difficulty === "intermediate"
+            ? "intermediate"
+            : "advanced",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        difficulty:
+          item.difficulty === "beginner"
+            ? "easy"
+            : item.difficulty === "intermediate"
+            ? "medium"
+            : "hard",
+        tags: item.tags?.join(", ") || "",
+        companies: "",
+        priority: "medium",
+        status: "draft",
+      }));
+
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "mcq",
+          data: mcqData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save AI generated content");
+      }
+
+      // Display detailed save results
+      const { imported, skipped, errors, duplicates, totalProcessed } =
+        result.data;
+      console.log("Save to DB Results:", result.data);
+
+      // Set save results for display
+      setSaveResults({
+        imported,
+        skipped,
+        errors,
+        duplicates,
+        totalProcessed,
+      });
+
+      // Clear the form after successful save
+      setMCQ({
+        question: "",
+        options: ["", "", "", ""],
+        correctAnswer: 0,
+        explanation: "",
+        category: "",
+        subject: "",
+        topic: "",
+        tool: "",
+        technologyStack: "",
+        domain: "",
+        skillLevel: "beginner",
+        jobRole: "",
+        companyType: "",
+        interviewType: "",
+        difficulty: "easy",
+        tags: "",
+        companies: "",
+        priority: "medium",
+        status: "draft",
+      });
+
+      // Clear AI Generator content
+      setClearAIContent(true);
+      setTimeout(() => setClearAIContent(false), 100);
+
+      return result;
+    } catch (error) {
+      console.error("Error saving AI content:", error);
+      throw error;
+    }
+  };
+
+  const difficulties = [
+    { value: "easy", label: "Easy", color: "text-green-600 bg-green-50" },
+    { value: "medium", label: "Medium", color: "text-yellow-600 bg-yellow-50" },
+    { value: "hard", label: "Hard", color: "text-red-600 bg-red-50" },
+  ];
+
+  const skillLevels = [
+    { value: "beginner", label: "Beginner", color: "text-blue-600 bg-blue-50" },
+    {
+      value: "intermediate",
+      label: "Intermediate",
+      color: "text-purple-600 bg-purple-50",
+    },
+    {
+      value: "advanced",
+      label: "Advanced",
+      color: "text-orange-600 bg-orange-50",
+    },
+  ];
+
+  const priorities = [
+    { value: "low", label: "Low", color: "text-gray-600 bg-gray-50" },
+    { value: "medium", label: "Medium", color: "text-blue-600 bg-blue-50" },
+    { value: "high", label: "High", color: "text-red-600 bg-red-50" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="max-w-6xl mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
+                <Target className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Create MCQ</h1>
+                <p className="text-gray-600 mt-1">
+                  Build engaging multiple choice questions
+                </p>
+              </div>
+            </div>
+            <div className="flex space-x-3">
               <Button
                 variant="outline"
-                size="sm"
                 onClick={() => (window.location.href = "/admin/mcq")}
-                className="mr-4"
+                className="flex items-center"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to MCQs
+                ← Back to MCQs
               </Button>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <FileText className="w-8 h-8 mr-3 text-purple-600" />
-                Add New MCQ
-              </h1>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (confirm("Are you sure you want to clear the form?")) {
+                    setMCQ({
+                      question: "",
+                      options: ["", "", "", ""],
+                      correctAnswer: 0,
+                      explanation: "",
+                      category: "",
+                      subject: "",
+                      topic: "",
+                      tool: "",
+                      technologyStack: "",
+                      domain: "",
+                      skillLevel: "beginner",
+                      jobRole: "",
+                      companyType: "",
+                      interviewType: "",
+                      difficulty: "easy",
+                      tags: "",
+                      companies: "",
+                      priority: "medium",
+                      status: "draft",
+                    });
+
+                    // Clear AI Generator content
+                    setClearAIContent(true);
+                    setTimeout(() => setClearAIContent(false), 100);
+                  }
+                }}
+                className="flex items-center"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear Form
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              >
+                {saving ? (
+                  <Loading size="sm" text="Saving..." />
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Save MCQ
+                  </>
+                )}
+              </Button>
             </div>
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center"
-            >
-              {saving ? (
-                <Loading size="sm" text="Saving..." />
-              ) : (
-                <>
-                  <Save className="w-4 h-4 mr-2" />
-                  Save MCQ
-                </>
-              )}
-            </Button>
           </div>
-          <p className="text-gray-600">
-            Create a new MCQ question with comprehensive categorization and
-            details.
-          </p>
         </div>
 
-        {/* Form */}
-        <Card className="mb-6">
-          <div className="p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              MCQ Details
-            </h2>
-
-            {/* Question */}
-            <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Question *
-              </label>
-              <textarea
-                value={mcq.question}
-                onChange={(e) => updateMCQ("question", e.target.value)}
-                rows={4}
-                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter the MCQ question..."
-              />
-            </div>
-
-            {/* Options */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Options *
-                </label>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={addOption}
-                  disabled={mcq.options.length >= 6}
-                  className="flex items-center"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add Option
-                </Button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* AI Generator - Full Width */}
+          <div className="lg:col-span-3">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-50 to-pink-50">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg mr-3">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    AI Generator
+                  </h3>
+                </div>
+                <AIGenerator
+                  type="mcq"
+                  onContentGenerated={handleAIContentGenerated}
+                  onSaveToDatabase={handleSaveAIContentToDatabase}
+                  clearContent={clearAIContent}
+                  currentSettings={{
+                    category: mcq.category,
+                    subject: mcq.subject,
+                    topic: mcq.topic,
+                    tool: mcq.tool,
+                    technologyStack: mcq.technologyStack,
+                    domain: mcq.domain,
+                    difficulty: mcq.difficulty,
+                    skillLevel: mcq.skillLevel,
+                    tags: mcq.tags,
+                  }}
+                />
               </div>
+            </Card>
 
-              <div className="space-y-3">
-                {mcq.options.map((option, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      name="correctAnswer"
-                      checked={mcq.correctAnswer === index}
-                      onChange={() => updateMCQ("correctAnswer", index)}
-                      className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                    />
-                    <input
-                      type="text"
-                      value={option}
-                      onChange={(e) => updateOption(index, e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={`Option ${index + 1}`}
-                    />
-                    {mcq.options.length > 2 && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeOption(index)}
-                        className="text-red-600 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+            {/* Save Results Display */}
+            {saveResults && (
+              <Card className="border-0 shadow-lg bg-gradient-to-br from-green-50 to-blue-50">
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg mr-3">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Save Results
+                      </h3>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSaveResults(null)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ✕
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Summary Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-blue-600">
+                          {saveResults.totalProcessed}
+                        </div>
+                        <div className="text-sm text-gray-600">Total Processed</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-green-600">
+                          {saveResults.imported}
+                        </div>
+                        <div className="text-sm text-gray-600">Successfully Saved</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-yellow-600">
+                          {saveResults.skipped}
+                        </div>
+                        <div className="text-sm text-gray-600">Skipped (Duplicates)</div>
+                      </div>
+                      <div className="text-center p-3 bg-white rounded-lg shadow-sm">
+                        <div className="text-2xl font-bold text-red-600">
+                          {saveResults.errors.length}
+                        </div>
+                        <div className="text-sm text-gray-600">Errors</div>
+                      </div>
+                    </div>
+
+                    {/* Duplicates Section */}
+                    {saveResults.duplicates.length > 0 && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-yellow-800 mb-2">
+                          ⚠️ Duplicates Found ({saveResults.duplicates.length})
+                        </h4>
+                        <div className="space-y-1">
+                          {saveResults.duplicates.slice(0, 3).map((dup, index) => (
+                            <div key={index} className="text-sm text-yellow-700">
+                              • {dup}
+                            </div>
+                          ))}
+                          {saveResults.duplicates.length > 3 && (
+                            <div className="text-sm text-yellow-600 italic">
+                              ... and {saveResults.duplicates.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Errors Section */}
+                    {saveResults.errors.length > 0 && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-red-800 mb-2">
+                          ❌ Errors ({saveResults.errors.length})
+                        </h4>
+                        <div className="space-y-1">
+                          {saveResults.errors.slice(0, 3).map((error, index) => (
+                            <div key={index} className="text-sm text-red-700">
+                              • {error}
+                            </div>
+                          ))}
+                          {saveResults.errors.length > 3 && (
+                            <div className="text-sm text-red-600 italic">
+                              ... and {saveResults.errors.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     )}
                   </div>
-                ))}
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Select the correct answer by clicking the radio button next to
-                the option
-              </p>
-            </div>
-
-            {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Difficulty *
-                </label>
-                <select
-                  value={mcq.difficulty}
-                  onChange={(e) => updateMCQ("difficulty", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
-                </label>
-                <select
-                  value={mcq.category}
-                  onChange={(e) => updateMCQ("category", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Category</option>
-                  {/* Technical Categories */}
-                  <optgroup label="Technical Categories">
-                    <option value="Programming">Programming</option>
-                    <option value="Data Structures">Data Structures</option>
-                    <option value="Algorithms">Algorithms</option>
-                    <option value="Web Development">Web Development</option>
-                    <option value="Database">Database</option>
-                    <option value="System Design">System Design</option>
-                    <option value="Frontend">Frontend</option>
-                    <option value="Backend">Backend</option>
-                    <option value="Full Stack">Full Stack</option>
-                    <option value="Mobile Development">Mobile Development</option>
-                    <option value="DevOps">DevOps</option>
-                    <option value="Machine Learning">Machine Learning</option>
-                  </optgroup>
-                  {/* Non-Technical Categories */}
-                  <optgroup label="Non-Technical Categories">
-                    <option value="Aptitude">Aptitude</option>
-                    <option value="Logical Reasoning">Logical Reasoning</option>
-                    <option value="Verbal Ability">Verbal Ability</option>
-                    <option value="Quantitative Aptitude">Quantitative Aptitude</option>
-                    <option value="General Knowledge">General Knowledge</option>
-                    <option value="English Language">English Language</option>
-                    <option value="Business Communication">Business Communication</option>
-                    <option value="Problem Solving">Problem Solving</option>
-                    <option value="Critical Thinking">Critical Thinking</option>
-                    <option value="Team Management">Team Management</option>
-                    <option value="Leadership">Leadership</option>
-                    <option value="Project Management">Project Management</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-
-            {/* Categorization */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Categorization
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
-                  </label>
-                  <select
-                    value={mcq.subject}
-                    onChange={(e) => updateMCQ("subject", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Subject</option>
-                    {/* Technical Subjects */}
-                    <optgroup label="Technical Subjects">
-                      <option value="programming">Programming</option>
-                      <option value="data-science">Data Science</option>
-                      <option value="web-development">Web Development</option>
-                      <option value="mobile-development">Mobile Development</option>
-                      <option value="devops">DevOps</option>
-                      <option value="ai-ml">AI/ML</option>
-                      <option value="database">Database</option>
-                      <option value="cybersecurity">Cybersecurity</option>
-                      <option value="system-design">System Design</option>
-                    </optgroup>
-                    {/* Non-Technical Subjects */}
-                    <optgroup label="Non-Technical Subjects">
-                      <option value="aptitude">Aptitude</option>
-                      <option value="reasoning">Logical Reasoning</option>
-                      <option value="verbal">Verbal Ability</option>
-                      <option value="quantitative">Quantitative Aptitude</option>
-                      <option value="general-knowledge">General Knowledge</option>
-                      <option value="english">English Language</option>
-                      <option value="communication">Business Communication</option>
-                      <option value="problem-solving">Problem Solving</option>
-                      <option value="critical-thinking">Critical Thinking</option>
-                      <option value="leadership">Leadership</option>
-                      <option value="management">Management</option>
-                      <option value="business">Business</option>
-                    </optgroup>
-                  </select>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Topic
-                  </label>
-                  <select
-                    value={mcq.topic}
-                    onChange={(e) => updateMCQ("topic", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Topic</option>
-                    <option value="arrays">Arrays</option>
-                    <option value="strings">Strings</option>
-                    <option value="linked-lists">Linked Lists</option>
-                    <option value="stacks-queues">Stacks & Queues</option>
-                    <option value="trees">Trees</option>
-                    <option value="graphs">Graphs</option>
-                    <option value="dynamic-programming">
-                      Dynamic Programming
-                    </option>
-                    <option value="greedy-algorithms">Greedy Algorithms</option>
-                    <option value="backtracking">Backtracking</option>
-                    <option value="binary-search">Binary Search</option>
-                    <option value="sorting">Sorting</option>
-                    <option value="hashing">Hashing</option>
-                    <option value="recursion">Recursion</option>
-                    <option value="bit-manipulation">Bit Manipulation</option>
-                    <option value="math">Math</option>
-                    <option value="design-patterns">Design Patterns</option>
-                    <option value="system-design">System Design</option>
-                    <option value="database-design">Database Design</option>
-                    <option value="api-design">API Design</option>
-                    <option value="security">Security</option>
-                    <option value="testing">Testing</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tool/Technology
-                  </label>
-                  <select
-                    value={mcq.tool}
-                    onChange={(e) => updateMCQ("tool", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Tool</option>
-                    <option value="python">Python</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="java">Java</option>
-                    <option value="cpp">C++</option>
-                    <option value="react">React</option>
-                    <option value="nodejs">Node.js</option>
-                    <option value="sql">SQL</option>
-                    <option value="mongodb">MongoDB</option>
-                    <option value="docker">Docker</option>
-                    <option value="kubernetes">Kubernetes</option>
-                    <option value="aws">AWS</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Technical Details */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Technical Details
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Technology Stack
-                  </label>
-                  <select
-                    value={mcq.technologyStack}
-                    onChange={(e) =>
-                      updateMCQ("technologyStack", e.target.value)
-                    }
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Stack</option>
-                    <option value="frontend">Frontend</option>
-                    <option value="backend">Backend</option>
-                    <option value="full-stack">Full Stack</option>
-                    <option value="mobile">Mobile</option>
-                    <option value="data">Data</option>
-                    <option value="devops">DevOps</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Domain
-                  </label>
-                  <select
-                    value={mcq.domain}
-                    onChange={(e) => updateMCQ("domain", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Domain</option>
-                    <option value="web">Web</option>
-                    <option value="mobile">Mobile</option>
-                    <option value="ai-ml">AI/ML</option>
-                    <option value="data">Data</option>
-                    <option value="cloud">Cloud</option>
-                    <option value="security">Security</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="fintech">FinTech</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="ecommerce">E-commerce</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Skill Level
-                  </label>
-                  <select
-                    value={mcq.skillLevel}
-                    onChange={(e) => updateMCQ("skillLevel", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Professional Context */}
-            <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Professional Context
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Job Role
-                  </label>
-                  <select
-                    value={mcq.jobRole}
-                    onChange={(e) => updateMCQ("jobRole", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Job Role</option>
-                    {/* Technical Roles */}
-                    <optgroup label="Technical Roles">
-                      <option value="frontend-developer">Frontend Developer</option>
-                      <option value="backend-developer">Backend Developer</option>
-                      <option value="full-stack-developer">Full Stack Developer</option>
-                      <option value="data-scientist">Data Scientist</option>
-                      <option value="data-engineer">Data Engineer</option>
-                      <option value="devops-engineer">DevOps Engineer</option>
-                      <option value="mobile-developer">Mobile Developer</option>
-                      <option value="software-engineer">Software Engineer</option>
-                      <option value="system-architect">System Architect</option>
-                      <option value="qa-engineer">QA Engineer</option>
-                    </optgroup>
-                    {/* Non-Technical Roles */}
-                    <optgroup label="Non-Technical Roles">
-                      <option value="business-analyst">Business Analyst</option>
-                      <option value="project-manager">Project Manager</option>
-                      <option value="product-manager">Product Manager</option>
-                      <option value="marketing-executive">Marketing Executive</option>
-                      <option value="sales-executive">Sales Executive</option>
-                      <option value="hr-executive">HR Executive</option>
-                      <option value="finance-executive">Finance Executive</option>
-                      <option value="operations-manager">Operations Manager</option>
-                      <option value="customer-success">Customer Success</option>
-                      <option value="content-writer">Content Writer</option>
-                      <option value="digital-marketing">Digital Marketing</option>
-                      <option value="business-development">Business Development</option>
-                    </optgroup>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Type
-                  </label>
-                  <select
-                    value={mcq.companyType}
-                    onChange={(e) => updateMCQ("companyType", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Company Type</option>
-                    <option value="tech">Tech</option>
-                    <option value="finance">Finance</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="ecommerce">E-commerce</option>
-                    <option value="consulting">Consulting</option>
-                    <option value="startup">Startup</option>
-                    <option value="enterprise">Enterprise</option>
-                    <option value="government">Government</option>
-                    <option value="education">Education</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Interview Type
-                  </label>
-                  <select
-                    value={mcq.interviewType}
-                    onChange={(e) => updateMCQ("interviewType", e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Interview Type</option>
-                    {/* Technical Interview Types */}
-                    <optgroup label="Technical Interview Types">
-                      <option value="technical">Technical</option>
-                      <option value="system-design">System Design</option>
-                      <option value="coding">Coding</option>
-                      <option value="data-structures">Data Structures</option>
-                      <option value="algorithms">Algorithms</option>
-                      <option value="database">Database</option>
-                      <option value="frontend">Frontend</option>
-                      <option value="backend">Backend</option>
-                    </optgroup>
-                    {/* Non-Technical Interview Types */}
-                    <optgroup label="Non-Technical Interview Types">
-                      <option value="behavioral">Behavioral</option>
-                      <option value="aptitude">Aptitude</option>
-                      <option value="case-study">Case Study</option>
-                      <option value="group-discussion">Group Discussion</option>
-                      <option value="presentation">Presentation</option>
-                      <option value="assessment">Assessment</option>
-                      <option value="screening">Screening</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Explanation */}
-            <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Explanation
-              </label>
-              <textarea
-                value={mcq.explanation}
-                onChange={(e) => updateMCQ("explanation", e.target.value)}
-                rows={4}
-                className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Explain why this is the correct answer..."
-              />
-            </div>
-
-            {/* Tags and Companies */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tags
-                </label>
-                <input
-                  type="text"
-                  value={mcq.tags}
-                  onChange={(e) => updateMCQ("tags", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="algorithms, complexity, binary-search"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  Comma-separated tags
-                </p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Companies
-                </label>
-                <input
-                  type="text"
-                  value={mcq.companies}
-                  onChange={(e) => updateMCQ("companies", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Google, Amazon, Microsoft"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  Companies that ask this type of question
-                </p>
-              </div>
-            </div>
-
-            {/* Priority and Status */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Priority
-                </label>
-                <select
-                  value={mcq.priority}
-                  onChange={(e) => updateMCQ("priority", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
-                </label>
-                <select
-                  value={mcq.status}
-                  onChange={(e) => updateMCQ("status", e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="draft">Draft</option>
-                  <option value="active">Active</option>
-                  <option value="archived">Archived</option>
-                </select>
-              </div>
-            </div>
+              </Card>
+            )}
           </div>
-        </Card>
 
-        {/* Result */}
-        {result && (
-          <Card
-            className={`border-2 ${
-              result.success
-                ? "border-green-200 bg-green-50"
-                : "border-red-200 bg-red-50"
-            }`}
-          >
-            <div className="p-6">
-              <div className="flex items-start">
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 ${
-                    result.success ? "bg-green-100" : "bg-red-100"
-                  }`}
-                >
-                  {result.success ? (
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                  ) : (
-                    <AlertCircle className="w-6 h-6 text-red-600" />
-                  )}
+          {/* Main Form */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Question Section */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                    <BookOpen className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Question
+                  </h2>
                 </div>
-                <div className="flex-1">
-                  <h4
-                    className={`text-lg font-semibold mb-2 ${
-                      result.success ? "text-green-800" : "text-red-800"
-                    }`}
-                  >
-                    {result.success
-                      ? "🎉 MCQ Saved Successfully!"
-                      : "❌ Failed to Save MCQ"}
-                  </h4>
-                  <p
-                    className={`text-base ${
-                      result.success ? "text-green-700" : "text-red-700"
-                    }`}
-                  >
-                    {result.message || result.error}
-                  </p>
-                  {result.success && (
-                    <div className="mt-4">
-                      <Button
-                        onClick={() => (window.location.href = "/admin/mcq")}
-                        variant="outline"
-                        className="mr-3"
-                      >
-                        View All MCQs
-                      </Button>
-                      <Button
-                        onClick={() => window.location.reload()}
-                        variant="outline"
-                      >
-                        Add Another MCQ
-                      </Button>
+                <textarea
+                  value={mcq.question}
+                  onChange={(e) => updateMCQ("question", e.target.value)}
+                  rows={4}
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  placeholder="Enter your question here..."
+                />
+              </div>
+            </Card>
+
+            {/* Options Section */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-green-100 rounded-lg mr-3">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
                     </div>
-                  )}
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      Options
+                    </h2>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addOption}
+                    disabled={mcq.options.length >= 6}
+                    className="flex items-center bg-white hover:bg-gray-50"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Option
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {mcq.options.map((option, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        name="correctAnswer"
+                        checked={mcq.correctAnswer === index}
+                        onChange={() => updateMCQ("correctAnswer", index)}
+                        className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-2 border-gray-300"
+                      />
+                      <input
+                        type="text"
+                        value={option}
+                        onChange={(e) => updateOption(index, e.target.value)}
+                        className="flex-1 border-2 border-gray-200 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder={`Option ${String.fromCharCode(
+                          65 + index
+                        )}`}
+                      />
+                      {mcq.options.length > 2 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removeOption(index)}
+                          className="text-red-600 hover:bg-red-50 border-red-200"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          </Card>
-        )}
+            </Card>
+
+            {/* Explanation Section */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-purple-100 rounded-lg mr-3">
+                    <AlertCircle className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Explanation
+                  </h2>
+                </div>
+                <textarea
+                  value={mcq.explanation}
+                  onChange={(e) => updateMCQ("explanation", e.target.value)}
+                  rows={3}
+                  className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  placeholder="Explain why this answer is correct..."
+                />
+              </div>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Settings */}
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <div className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className="p-2 bg-gray-100 rounded-lg mr-3">
+                    <Zap className="w-5 h-5 text-gray-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Settings
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Difficulty */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Difficulty
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {difficulties.map((diff) => (
+                        <button
+                          key={diff.value}
+                          type="button"
+                          onClick={() => updateMCQ("difficulty", diff.value)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            mcq.difficulty === diff.value
+                              ? `${diff.color} ring-2 ring-offset-2 ring-blue-500`
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {diff.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Skill Level */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Skill Level
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {skillLevels.map((level) => (
+                        <button
+                          key={level.value}
+                          type="button"
+                          onClick={() => updateMCQ("skillLevel", level.value)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            mcq.skillLevel === level.value
+                              ? `${level.color} ring-2 ring-offset-2 ring-blue-500`
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {level.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Priority */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Priority
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {priorities.map((priority) => (
+                        <button
+                          key={priority.value}
+                          type="button"
+                          onClick={() => updateMCQ("priority", priority.value)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            mcq.priority === priority.value
+                              ? `${priority.color} ring-2 ring-offset-2 ring-blue-500`
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {priority.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.category}
+                      onChange={(e) => updateMCQ("category", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Frontend, Backend, Algorithms"
+                    />
+                  </div>
+
+                  {/* Tags */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tags
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.tags}
+                      onChange={(e) => updateMCQ("tags", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., javascript, react, hooks"
+                    />
+                  </div>
+
+                  {/* Subject */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.subject}
+                      onChange={(e) => updateMCQ("subject", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Programming, Data Structures, Algorithms"
+                    />
+                  </div>
+
+                  {/* Topic */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Topic
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.topic}
+                      onChange={(e) => updateMCQ("topic", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Variables, Functions, Classes"
+                    />
+                  </div>
+
+                  {/* Tool */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Tool
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.tool}
+                      onChange={(e) => updateMCQ("tool", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., React, Node.js, MongoDB"
+                    />
+                  </div>
+
+                  {/* Technology Stack */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Technology Stack
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.technologyStack}
+                      onChange={(e) =>
+                        updateMCQ("technologyStack", e.target.value)
+                      }
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., MERN, LAMP, MEAN"
+                    />
+                  </div>
+
+                  {/* Domain */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Domain
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.domain}
+                      onChange={(e) => updateMCQ("domain", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Web Development, Mobile, AI/ML"
+                    />
+                  </div>
+
+                  {/* Job Role */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Job Role
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.jobRole}
+                      onChange={(e) => updateMCQ("jobRole", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Frontend Developer, Backend Engineer"
+                    />
+                  </div>
+
+                  {/* Company Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Type
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.companyType}
+                      onChange={(e) => updateMCQ("companyType", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Startup, Enterprise, Agency"
+                    />
+                  </div>
+
+                  {/* Interview Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Interview Type
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.interviewType}
+                      onChange={(e) =>
+                        updateMCQ("interviewType", e.target.value)
+                      }
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Technical, Behavioral, System Design"
+                    />
+                  </div>
+
+                  {/* Companies */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Companies
+                    </label>
+                    <input
+                      type="text"
+                      value={mcq.companies}
+                      onChange={(e) => updateMCQ("companies", e.target.value)}
+                      className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Google, Amazon, Microsoft"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Quick Stats */}
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50">
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                    <Star className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Quick Stats
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Options</span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {mcq.options.length}/6
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">
+                      Question Length
+                    </span>
+                    <span className="text-sm font-medium text-gray-900">
+                      {mcq.question.length} chars
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Difficulty</span>
+                    <span
+                      className={`text-sm font-medium px-2 py-1 rounded ${
+                        mcq.difficulty === "easy"
+                          ? "text-green-600 bg-green-100"
+                          : mcq.difficulty === "medium"
+                          ? "text-yellow-600 bg-yellow-100"
+                          : "text-red-600 bg-red-100"
+                      }`}
+                    >
+                      {mcq.difficulty.charAt(0).toUpperCase() +
+                        mcq.difficulty.slice(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -479,6 +479,7 @@ export async function POST(request: NextRequest) {
       isPublic,
       autoGenerate,
       autoGenerateOptions,
+      selectedQuestions,
     } = body;
 
     // Validate required fields
@@ -530,8 +531,223 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Auto-generate questions if enabled
-    if (autoGenerate && autoGenerateOptions) {
+    // Handle selected questions or auto-generate questions
+    if (selectedQuestions && selectedQuestions.length > 0) {
+      try {
+        console.log(
+          `Adding ${selectedQuestions.length} selected questions to exam ${exam.id}`
+        );
+        console.log(
+          "Selected questions data:",
+          JSON.stringify(selectedQuestions, null, 2)
+        );
+        let linkedQuestionsCount = 0;
+
+        for (let i = 0; i < selectedQuestions.length; i++) {
+          const question = selectedQuestions[i];
+
+          // Check if this is AI-generated content (has content field) or existing question
+          if (question.content) {
+            console.log(
+              `Creating AI-generated ${question.type} question ${i + 1}:`,
+              question.title || question.content.substring(0, 50)
+            );
+            console.log(`Question data:`, {
+              content: question.content,
+              type: question.type,
+              options: question.options,
+              correctAnswer: question.correctAnswer,
+              category: question.category,
+              tool: question.tool,
+              difficulty: question.difficulty,
+            });
+            // This is AI-generated content, create the question directly
+            if (question.type === "mcq") {
+              // Create MCQ question
+              console.log(`Creating MCQ question with data:`, {
+                question: question.content.substring(0, 100) + "...",
+                options: question.options,
+                correctAnswer: question.correctAnswer,
+                category: question.category,
+                tool: question.tool,
+                difficulty: question.difficulty,
+              });
+
+              let mcqQuestion;
+              const toolForMcq = question.tool || "JavaScript";
+              try {
+                mcqQuestion = await prisma.mCQQuestion.create({
+                  data: {
+                    question: question.content,
+                    options: Array.isArray(question.options)
+                      ? JSON.stringify(question.options)
+                      : "[]",
+                    correctAnswer: (() => {
+                      console.log(
+                        `Processing correctAnswer for question ${i + 1}:`,
+                        {
+                          correctAnswer: question.correctAnswer,
+                          options: question.options,
+                          type: typeof question.correctAnswer,
+                        }
+                      );
+
+                      if (typeof question.correctAnswer === "string") {
+                        const index = question.options?.indexOf(
+                          question.correctAnswer
+                        );
+                        console.log(`Found index: ${index}`);
+                        return index >= 0 ? index : 0;
+                      }
+                      return question.correctAnswer || 0;
+                    })(),
+                    explanation: question.explanation || "",
+                    category: question.category || "General",
+                    topic: question.topic || question.category || "General",
+                    tool: toolForMcq,
+                    difficulty: question.difficulty || "medium",
+                    skillLevel: question.skillLevel || "intermediate",
+                    isActive: true,
+                  },
+                });
+
+                console.log(`Created MCQ question with ID:`, mcqQuestion.id);
+              } catch (error: any) {
+                // If duplicate (unique constraint on question+tool), link existing question instead of failing
+                if (error?.code === "P2002") {
+                  console.warn(
+                    `Duplicate MCQ detected for exam ${exam.id}. Linking existing question instead.`
+                  );
+                  mcqQuestion = await prisma.mCQQuestion.findFirst({
+                    where: {
+                      question: question.content,
+                      tool: toolForMcq,
+                    },
+                  });
+                  if (!mcqQuestion) {
+                    // Unexpected: duplicate reported but not found; rethrow original error
+                    throw error;
+                  }
+                } else {
+                  console.error(
+                    `Failed to create MCQ question ${i + 1}:`,
+                    error
+                  );
+                  console.error(`Error details:`, error.message);
+                  throw error;
+                }
+              }
+
+              // Create exam question reference
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: mcqQuestion.id,
+                  questionType: "mcq",
+                  order: i,
+                },
+              });
+              linkedQuestionsCount++;
+            } else if (question.type === "problem") {
+              // Create Problem question
+              let problemQuestion;
+              const toolForProblem = question.tool || "JavaScript";
+              try {
+                problemQuestion = await prisma.problem.create({
+                  data: {
+                    title: question.title || `Problem ${i + 1}`,
+                    description: question.content,
+                    solution: question.explanation || "",
+                    testCases: "[]",
+                    category: question.category || "General",
+                    topic: question.topic || question.category || "General",
+                    tool: toolForProblem,
+                    difficulty: question.difficulty || "medium",
+                    skillLevel: question.skillLevel || "intermediate",
+                    isActive: true,
+                  },
+                });
+              } catch (error: any) {
+                if (error?.code === "P2002") {
+                  console.warn(
+                    `Duplicate Problem detected for exam ${exam.id}. Linking existing question instead.`
+                  );
+                  problemQuestion = await prisma.problem.findFirst({
+                    where: {
+                      title: question.title || `Problem ${i + 1}`,
+                      tool: toolForProblem,
+                    },
+                  });
+                  if (!problemQuestion) {
+                    throw error;
+                  }
+                } else {
+                  throw error;
+                }
+              }
+
+              // Create exam question reference
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: problemQuestion.id,
+                  questionType: "coding",
+                  order: i,
+                },
+              });
+              linkedQuestionsCount++;
+            }
+          } else {
+            // This is an existing question, just create the exam reference
+            if (question.type === "mcq") {
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: question.id,
+                  questionType: "mcq",
+                  order: i,
+                },
+              });
+              linkedQuestionsCount++;
+            } else if (question.type === "problem") {
+              await prisma.examQuestion.create({
+                data: {
+                  examId: exam.id,
+                  questionId: question.id,
+                  questionType: "coding",
+                  order: i,
+                },
+              });
+              linkedQuestionsCount++;
+            }
+          }
+        }
+
+        console.log(
+          `Successfully linked ${linkedQuestionsCount} questions to exam ${exam.id}`
+        );
+
+        // Update the exam's totalQuestions field to the actual linked count
+        await prisma.exam.update({
+          where: { id: exam.id },
+          data: { totalQuestions: linkedQuestionsCount },
+        });
+
+        // Update the exam object for the response
+        exam.totalQuestions = linkedQuestionsCount;
+      } catch (error) {
+        console.error("Error adding selected questions:", error);
+        console.error(
+          "Error details:",
+          error instanceof Error ? error.message : "Unknown error"
+        );
+        console.error(
+          "Error stack:",
+          error instanceof Error ? error.stack : "No stack trace"
+        );
+        // Continue with exam creation even if adding questions fails
+      }
+    } else if (autoGenerate && autoGenerateOptions) {
       try {
         const questionsGenerated = await generateExamQuestions(
           exam.id,
@@ -551,12 +767,23 @@ export async function POST(request: NextRequest) {
       data: exam,
       message: "Exam created successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating exam:", error);
-    console.error("Error details:", error.message);
-    console.error("Error stack:", error.stack);
+    console.error(
+      "Error details:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack trace"
+    );
     return NextResponse.json(
-      { success: false, error: `Failed to create exam: ${error.message}` },
+      {
+        success: false,
+        error: `Failed to create exam: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`,
+      },
       { status: 500 }
     );
   }
