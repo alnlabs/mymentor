@@ -217,7 +217,21 @@ export async function DELETE(
       );
     }
 
-    // Delete exam questions first
+    // Delete exam question results first (they reference exam questions)
+    await prisma.examQuestionResult.deleteMany({
+      where: {
+        question: {
+          examId: id,
+        },
+      },
+    });
+
+    // Delete exam sessions
+    await prisma.examSession.deleteMany({
+      where: { examId: id },
+    });
+
+    // Delete exam questions
     await prisma.examQuestion.deleteMany({
       where: { examId: id },
     });

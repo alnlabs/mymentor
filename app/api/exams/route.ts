@@ -540,7 +540,7 @@ export async function POST(request: NextRequest) {
 
         for (let i = 0; i < selectedQuestions.length; i++) {
           const question = selectedQuestions[i];
-          
+
           // Check if this is AI-generated content (has content field) or existing question
           if (question.content) {
             // This is AI-generated content, create the question directly
@@ -549,7 +549,9 @@ export async function POST(request: NextRequest) {
               const mcqQuestion = await prisma.mCQQuestion.create({
                 data: {
                   question: question.content,
-                  options: Array.isArray(question.options) ? question.options : [],
+                  options: Array.isArray(question.options)
+                    ? question.options
+                    : [],
                   correctAnswer: question.correctAnswer || "",
                   explanation: question.explanation || "",
                   category: question.category || "General",
