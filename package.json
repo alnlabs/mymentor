@@ -11,7 +11,12 @@
     "test": "node scripts/test-features.js",
     "test:features": "node scripts/test-features.js",
     "test:visual": "echo 'Run visual testing using VISUAL_TESTING_CHECKLIST.md'",
-    "test:all": "npm run lint && npm run build && npm run test:features",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:all": "npm run lint && npm run build && npm run test:features && npm run test:e2e",
     "setup": "node scripts/setup.js",
     "setup-superadmin": "node scripts/setup-superadmin.js",
     "switch-env": "./switch-env.sh",
@@ -71,11 +76,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.54.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "playwright": "^1.54.2",
     "typescript": "^5"
   }
 }
