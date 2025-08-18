@@ -100,6 +100,31 @@ export default function AddExamPage() {
     }
   };
 
+  const testDatabase = async () => {
+    try {
+      console.log("Testing database connection...");
+      const response = await fetch("/api/test-db", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ test: true }),
+      });
+      
+      const result = await response.json();
+      console.log("Database test result:", result);
+      
+      if (result.success) {
+        alert("Database test successful! MCQ creation should work.");
+      } else {
+        alert(`Database test failed: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Database test error:", error);
+      alert(`Database test error: ${error}`);
+    }
+  };
+
   const handleCreateExamFromAI = async (content: GeneratedContent[]) => {
     try {
       // Ensure all required fields are provided with defaults if not set
@@ -160,6 +185,8 @@ export default function AddExamPage() {
       });
 
       const result = await response.json();
+      
+      console.log("Exam creation API response:", result);
 
       if (!result.success) {
         throw new Error(result.error || "Failed to create exam");
@@ -192,9 +219,19 @@ export default function AddExamPage() {
       {/* Question Selection Method */}
       <Card className="mb-6">
         <div className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Question Selection Method
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Question Selection Method
+            </h3>
+            <Button
+              onClick={testDatabase}
+              variant="outline"
+              size="sm"
+              className="text-xs"
+            >
+              Test Database
+            </Button>
+          </div>
 
           {/* Method Selection Buttons */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
