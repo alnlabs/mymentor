@@ -537,15 +537,26 @@ export async function POST(request: NextRequest) {
         console.log(
           `Adding ${selectedQuestions.length} selected questions to exam ${exam.id}`
         );
+        console.log("Selected questions data:", JSON.stringify(selectedQuestions, null, 2));
 
         for (let i = 0; i < selectedQuestions.length; i++) {
           const question = selectedQuestions[i];
 
           // Check if this is AI-generated content (has content field) or existing question
           if (question.content) {
+            console.log(`Creating AI-generated ${question.type} question ${i + 1}:`, question.title || question.content.substring(0, 50));
             // This is AI-generated content, create the question directly
             if (question.type === "mcq") {
               // Create MCQ question
+              console.log(`Creating MCQ question with data:`, {
+                question: question.content.substring(0, 100) + "...",
+                options: question.options,
+                correctAnswer: question.correctAnswer,
+                category: question.category,
+                tool: question.tool,
+                difficulty: question.difficulty,
+              });
+              
               const mcqQuestion = await prisma.mCQQuestion.create({
                 data: {
                   question: question.content,
@@ -562,6 +573,8 @@ export async function POST(request: NextRequest) {
                   status: "active",
                 },
               });
+              
+              console.log(`Created MCQ question with ID:`, mcqQuestion.id);
 
               // Create exam question reference
               await prisma.examQuestion.create({
@@ -628,6 +641,8 @@ export async function POST(request: NextRequest) {
         );
       } catch (error) {
         console.error("Error adding selected questions:", error);
+        console.error("Error details:", error.message);
+        console.error("Error stack:", error.stack);
         // Continue with exam creation even if adding questions fails
       }
     } else if (autoGenerate && autoGenerateOptions) {
