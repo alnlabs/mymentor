@@ -572,7 +572,7 @@ export async function POST(request: NextRequest) {
                 difficulty: question.difficulty,
               });
 
-                            try {
+              try {
                 const mcqQuestion = await prisma.mCQQuestion.create({
                   data: {
                     question: question.content,
@@ -592,7 +592,7 @@ export async function POST(request: NextRequest) {
                     status: "active",
                   },
                 });
-                
+
                 console.log(`Created MCQ question with ID:`, mcqQuestion.id);
               } catch (error) {
                 console.error(`Failed to create MCQ question ${i + 1}:`, error);
